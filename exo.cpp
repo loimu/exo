@@ -1,7 +1,6 @@
-#include <cstdlib>
-
 #include <QtGui>
-#include <QApplication>
+#include <QTimer>
+#include <QProcess>
 
 #include "exo.h"
 
@@ -9,6 +8,10 @@ Exo::Exo() {
 
     createActions();
     createTrayIcon();
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateToolTip()));
+    timer->start(10000);
 
     trayIcon->show();
 }
@@ -60,34 +63,58 @@ void Exo::createTrayIcon() {
     trayIcon->setContextMenu(trayIconMenu);
     QIcon icon(":/images/exo.png");
     trayIcon->setIcon(icon);
+
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+              SLOT(clicked(QSystemTrayIcon::ActivationReason)));
 }
 
-int Exo::play() {
-    int ret = std::system("mocp -p");
-    return ret;
+void Exo::clicked(QSystemTrayIcon::ActivationReason reason) {
+    switch (reason) {
+        case QSystemTrayIcon::DoubleClick:
+        case QSystemTrayIcon::Trigger:
+            break;
+        case QSystemTrayIcon::MiddleClick:
+            pause();
+            break;
+        default:
+            break;
+    }
 }
 
-int Exo::pause() {
-    int ret = std::system("mocp -G");
-    return ret;
+void Exo::updateToolTip() {
+    QProcess proc;
+    proc.start("mocp", QStringList() << "-Q" << "%title");
+    proc.waitForFinished(-1);
+    QString output = proc.readAllStandardOutput();
+    trayIcon->setToolTip(output);
 }
 
-int Exo::prev() {
-    int ret = std::system("mocp -r");
-    return ret;
+void Exo::play() {
+    QProcess proc;
+    proc.startDetached("mocp", QStringList() << "-p");
 }
 
-int Exo::next() {
-    int ret = std::system("mocp -f");
-    return ret;
+void Exo::pause() {
+    QProcess proc;
+    proc.startDetached("mocp", QStringList() << "-G");
 }
 
-int Exo::stop() {
-    int ret = std::system("mocp -s");
-    return ret;
+void Exo::prev() {
+    QProcess proc;
+    proc.startDetached("mocp", QStringList() << "-r");
 }
 
-int Exo::quit() {
-    //int ret = std::system("mocp -x");
-    return 0;
+void Exo::next() {
+    QProcess proc;
+    proc.startDetached("mocp", QStringList() << "-f");
+}
+
+void Exo::stop() {
+    QProcess proc;
+    proc.startDetached("mocp", QStringList() << "-s");
+}
+
+void Exo::quit() {
+    //QProcess proc;
+    //proc.startDetached("mocp", QStringList() << "-x");
 }

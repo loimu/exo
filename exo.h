@@ -27,12 +27,14 @@ public:
 signals:
 
 private slots:
-    int play();
-    int pause();
-    int prev();
-    int next();
-    int stop();
-    int quit();
+    void clicked(QSystemTrayIcon::ActivationReason);
+    void updateToolTip();
+    void play();
+    void pause();
+    void prev();
+    void next();
+    void stop();
+    void quit();
 
 private:
     //void closeEvent();
