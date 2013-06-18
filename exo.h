@@ -1,6 +1,9 @@
 #ifndef EXO_H
 #define EXO_H
 
+#if QT_VERSION >= 0x050000
+    #include <QtWidgets>
+#endif
 #include <QSystemTrayIcon>
 #include <QWidget>
 
@@ -29,20 +32,27 @@ signals:
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip();
+    void updateInfo();
     void play();
     void pause();
     void prev();
     void next();
     void stop();
     void quit();
+    void openWindow();
+    void showLyricsWindow();
 
 private:
-    //void closeEvent();
     void createActions();
     void createTrayIcon();
+    bool serverRunning();
+    void runServer();
+    QString getArtist();
+    QString getTitle();
 
     QMenu *trayIconMenu;
 
+    QAction *lyricsAction;
     QAction *playAction;
     QAction *pauseAction;
     QAction *prevAction;

@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    Exo instance;
-    instance.hide();
+    Exo exo;
+    exo.hide();
     return app.exec();
 }
