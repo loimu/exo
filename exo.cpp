@@ -88,22 +88,6 @@ void Exo::runServer() {
     proc.startDetached("mocp", QStringList() << "-S");
 }
 
-QString Exo::getArtist() {
-    QProcess proc;
-    proc.start("mocp", QStringList() << "-Q" << "%artist");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    return output.simplified();
-}
-
-QString Exo::getTitle() {
-    QProcess proc;
-    proc.start("mocp", QStringList() << "-Q" << "%song");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    return output.simplified();
-}
-
 void Exo::clicked(QSystemTrayIcon::ActivationReason reason) {
     switch (reason) {
         case QSystemTrayIcon::DoubleClick:
@@ -173,8 +157,6 @@ void Exo::openWindow() {
 }
 
 void Exo::showLyricsWindow() {
-    QString artist = getArtist();
-    QString title = getTitle();
-    LyricsWindow *lyricsWindow = new LyricsWindow(artist, title);
+    LyricsWindow *lyricsWindow = new LyricsWindow();
     lyricsWindow->show();
 }

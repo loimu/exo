@@ -47,8 +47,6 @@ private:
     void createTrayIcon();
     bool serverRunning();
     void runServer();
-    QString getArtist();
-    QString getTitle();
 
     QMenu *trayIconMenu;
 

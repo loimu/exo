@@ -7,8 +7,8 @@
 
 class QAction;
 class QLabel;
-class FindDialog;
-class Spreadsheet;
+//class FindDialog;
+//class Spreadsheet;
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -16,18 +16,21 @@ class LyricsWindow : public QWidget
 {
     Q_OBJECT
 public:
-    LyricsWindow(const QString &artist, const QString &title, QWidget *parent = 0);
+    LyricsWindow(QWidget *parent = 0);
     ~LyricsWindow();
 
 private slots:
     void showText(QNetworkReply *reply);
     void on_searchPushButton_clicked();
+    void on_updatePushButton_clicked();
 
 private:
     Ui::LyricsWindow ui;
     QNetworkAccessManager *m_http;
     QNetworkReply *m_requestReply;
     QString m_artist, m_title;
+    QString getArtist();
+    QString getTitle();
 };
 
 #endif // LYRICSWINDOW_H
