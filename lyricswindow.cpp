@@ -13,12 +13,9 @@ LyricsWindow::LyricsWindow(QWidget *parent) : QWidget(parent) {
     setAttribute(Qt::WA_QuitOnClose, false);
     m_requestReply = 0;
     m_http = new QNetworkAccessManager(this);
-    connect(m_http, SIGNAL(finished (QNetworkReply *)), SLOT(showText(QNetworkReply *)));
+    connect(m_http, SIGNAL(finished(QNetworkReply *)), SLOT(showText(QNetworkReply *)));
     on_updatePushButton_clicked();
-    on_searchPushButton_clicked();
 }
-
-LyricsWindow::~LyricsWindow() {}
 
 void LyricsWindow::showText(QNetworkReply *reply) {
     ui.stateLabel->setText(tr("Done"));
@@ -90,20 +87,18 @@ void LyricsWindow::showText(QNetworkReply *reply) {
     reply->deleteLater();
 }
 
-void LyricsWindow::on_searchPushButton_clicked() {
-    ui.stateLabel->setText(tr("Receiving"));
-    setWindowTitle(QString(tr("Lyrics: %1 - %2")).arg(ui.artistLineEdit->text())
-                   .arg(ui.titleLineEdit->text()));
-    QNetworkRequest request;
-    request.setUrl(QUrl("http://lyrics.wikia.com/api.php?action=lyrics&artist=" +
-                        ui.artistLineEdit->text()+"&song=" + ui.titleLineEdit->text() + "&fmt=xml"));
-    request.setRawHeader("User-Agent", QString("Mozilla/5.0").toAscii());
-    m_requestReply = m_http->get(request);
+void LyricsWindow::on_artistLineEdit_returnPressed() {
+    search();
+}
+
+void LyricsWindow::on_titleLineEdit_returnPressed() {
+    search();
 }
 
 void LyricsWindow::on_updatePushButton_clicked() {
     ui.artistLineEdit->setText(getArtist());
     ui.titleLineEdit->setText(getTitle());
+    search();
 }
 
 QString LyricsWindow::getArtist() {
@@ -120,4 +115,16 @@ QString LyricsWindow::getTitle() {
     proc.waitForFinished(-1);
     QString output = QString::fromUtf8(proc.readAllStandardOutput());
     return output.simplified();
+}
+
+void LyricsWindow::search() {
+    ui.stateLabel->setText(tr("Receiving"));
+    setWindowTitle(QString(tr("Lyrics: %1 - %2")).arg(ui.artistLineEdit->text())
+                   .arg(ui.titleLineEdit->text()));
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://lyrics.wikia.com/api.php?action=lyrics&artist="+
+                        ui.artistLineEdit->text() + "&song=" +
+                        ui.titleLineEdit->text() + "&fmt=xml"));
+    request.setRawHeader("User-Agent", QString("Mozilla/5.0").toAscii());
+    m_requestReply = m_http->get(request);
 }

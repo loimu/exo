@@ -11,3 +11,4 @@ syntax: regexp
 
 ^local$
 ^.kdev4$
+^build$

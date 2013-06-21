@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QApplication>
+
 #include "ui_lyricswindow.h"
 
 class QAction;
@@ -17,11 +18,11 @@ class LyricsWindow : public QWidget
     Q_OBJECT
 public:
     LyricsWindow(QWidget *parent = 0);
-    ~LyricsWindow();
 
 private slots:
     void showText(QNetworkReply *reply);
-    void on_searchPushButton_clicked();
+    void on_artistLineEdit_returnPressed();
+    void on_titleLineEdit_returnPressed();
     void on_updatePushButton_clicked();
 
 private:
@@ -31,6 +32,7 @@ private:
     QString m_artist, m_title;
     QString getArtist();
     QString getTitle();
+    void search();
 };
 
 #endif // LYRICSWINDOW_H

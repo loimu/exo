@@ -32,7 +32,6 @@ signals:
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip();
-    void updateInfo();
     void play();
     void pause();
     void prev();
@@ -41,12 +40,16 @@ private slots:
     void quit();
     void openWindow();
     void showLyricsWindow();
+    void updateInfo();
 
 private:
     void createActions();
     void createTrayIcon();
     bool serverRunning();
     void runServer();
+    QString coverPath();
+
+    QStringList m_info;
 
     QMenu *trayIconMenu;
 

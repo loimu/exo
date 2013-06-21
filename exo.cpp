@@ -2,8 +2,6 @@
 #include <QTimer>
 #include <QProcess>
 
-#include <QDebug>
-
 #include "exo.h"
 #include "lyricswindow.h"
 
@@ -104,21 +102,20 @@ void Exo::clicked(QSystemTrayIcon::ActivationReason reason) {
 }
 
 void Exo::updateToolTip() {
-    QProcess proc;
-    proc.start("mocp", QStringList() << "-Q" << "%title");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    trayIcon->setToolTip(output.simplified());
-}
-
-void Exo::updateInfo() {
-    QProcess proc;
-    proc.start("mocp", QStringList() << "-i");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    QStringList list = output.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
-    for (int i = 0; i < list.size(); ++i)
-        qDebug() << list.at(i);
+    updateInfo();
+    QString tooltip = "<html><b>Stopped</b>";
+    if(serverRunning()) {
+        if(m_info.at(0) != "STOP") {
+            tooltip = "<html><b>" + m_info.at(2) + "</b>";
+            if(!m_info.at(1).startsWith("http"))
+                tooltip += "<br /><img src='" + coverPath() + "' width='250' />";
+        }
+        tooltip += "</html>";
+    }
+    else {
+        tooltip = "mocp is not running, then make a doubleclick.";
+    }
+    trayIcon->setToolTip(tooltip);
 }
 
 void Exo::play() {
@@ -154,9 +151,33 @@ void Exo::quit() {
 void Exo::openWindow() {
     QProcess proc;
     proc.startDetached("x-terminal-emulator", QStringList() << "-e" << "mocp");
+    updateInfo();
 }
 
 void Exo::showLyricsWindow() {
     LyricsWindow *lyricsWindow = new LyricsWindow();
     lyricsWindow->show();
+}
+
+void Exo::updateInfo() {
+    QProcess proc;
+    proc.start("mocp", QStringList() << "-i");
+    proc.waitForFinished(-1);
+    QString output = QString::fromUtf8(proc.readAllStandardOutput());
+    QStringList list = output.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
+//    for (int i = 0; i < list.size(); ++i) {
+//        qDebug("debug: %s", qPrintable(list.at(i)));
+//    }
+    m_info = list;
+}
+
+QString Exo::coverPath() {
+    QString repl = m_info.at(1);
+    QString path = repl.replace(QRegExp("(.*)/(.*)"), "\\1");
+    QDir dir(path);
+    QStringList filters;
+    filters << "*.png" << "*.jpg" << "*.jpeg";
+    dir.setNameFilters(filters);
+    return path + "/" + dir.entryList().at(0);
 }
