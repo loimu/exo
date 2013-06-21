@@ -7,5 +7,6 @@
         <file>images/next.png</file>
         <file>images/stop.png</file>
         <file>images/close.png</file>
+        <file>images/nocover.png</file>
     </qresource>
 </RCC>

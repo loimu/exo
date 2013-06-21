@@ -108,7 +108,7 @@ void Exo::updateToolTip() {
         if(m_info.at(0) != "STOP") {
             tooltip = "<html><b>" + m_info.at(2) + "</b>";
             if(!m_info.at(1).startsWith("http"))
-                tooltip += "<br /><img src='" + coverPath() + "' width='250' />";
+                tooltip += "<br /><img src='" + coverPath() + "' width='300' />";
         }
         tooltip += "</html>";
     }
@@ -151,7 +151,6 @@ void Exo::quit() {
 void Exo::openWindow() {
     QProcess proc;
     proc.startDetached("x-terminal-emulator", QStringList() << "-e" << "mocp");
-    updateInfo();
 }
 
 void Exo::showLyricsWindow() {
@@ -179,5 +178,8 @@ QString Exo::coverPath() {
     QStringList filters;
     filters << "*.png" << "*.jpg" << "*.jpeg";
     dir.setNameFilters(filters);
-    return path + "/" + dir.entryList().at(0);
+    if(dir.entryList().size() > 0)
+        return path + "/" + dir.entryList().at(0);
+    else
+        return ":/images/nocover.png";
 }
