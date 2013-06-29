@@ -92,7 +92,7 @@ void TrayIcon::updateToolTip() {
         tooltip += "</html>";
     }
     else {
-        tooltip = "mocp is not running, then do the doubleclick.";
+        tooltip = tr("mocp is not running, do the doubleclick.");
     }
     trayIcon->setToolTip(tooltip);
 }
