@@ -96,9 +96,17 @@ void LyricsWindow::on_titleLineEdit_returnPressed() {
 }
 
 void LyricsWindow::on_updatePushButton_clicked() {
-    ui.artistLineEdit->setText(getArtist());
-    ui.titleLineEdit->setText(getTitle());
-    search();
+    QString artist = getArtist();
+    QString title = getTitle();
+    if(artist.isEmpty() && !title.isEmpty()) {
+        artist = title;
+        artist.replace(QRegExp("^([\\s\\w]+)\\s-\\s.*"), "\\1");
+        title.replace(QRegExp("^[\\s\\w]+\\s-\\s(.*)"), "\\1");
+    }
+    ui.artistLineEdit->setText(artist);
+    ui.titleLineEdit->setText(title);
+    if(!artist.isEmpty())
+        search();
 }
 
 QString LyricsWindow::getArtist() {

@@ -1,55 +1,35 @@
-#ifndef EXO_H
-#define EXO_H
-
+#ifndef TRAYICON_H
+#define TRAYICON_H
 #if QT_VERSION >= 0x050000
     #include <QtWidgets>
 #endif
-#include <QSystemTrayIcon>
+
 #include <QWidget>
+#include <QSystemTrayIcon>
 
-QT_BEGIN_NAMESPACE
-class QAction;
-//class QCheckBox;
-//class QComboBox;
-//class QGroupBox;
-//class QLabel;
-//class QLineEdit;
-class QMenu;
-//class QPushButton;
-//class QSpinBox;
-//class QTextEdit;
-QT_END_NAMESPACE
+class PlayerInterface;
 
-class Exo : public QWidget
+class TrayIcon : public QWidget
 {
     Q_OBJECT
-
 public:
-    Exo();
-
+    explicit TrayIcon(QWidget *parent = 0);
+    
 signals:
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip();
-    void play();
-    void pause();
-    void prev();
-    void next();
-    void stop();
-    void quit();
-    void openWindow();
     void showLyricsWindow();
-    void updateInfo();
+    
+public slots:
 
 private:
     void createActions();
     void createTrayIcon();
-    bool serverRunning();
-    void runServer();
     QString coverPath();
 
-    QStringList m_info;
+    PlayerInterface *m_player;
 
     QMenu *trayIconMenu;
 
@@ -62,6 +42,7 @@ private:
     QAction *quitAction;
 
     QSystemTrayIcon *trayIcon;
+    
 };
 
-#endif // EXO_H
+#endif // TRAYICON_H

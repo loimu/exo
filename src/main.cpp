@@ -5,8 +5,6 @@ int main(int argc, char *argv[]) {
 
     Q_INIT_RESOURCE(exo);
 
-    QApplication app(argc, argv);
-
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, QObject::tr("Systray"),
                               QObject::tr("I couldn't detect any system tray "
@@ -15,7 +13,6 @@ int main(int argc, char *argv[]) {
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    Exo exo;
-    exo.hide();
+    Exo app(argc, argv);
     return app.exec();
 }

@@ -1,15 +1,15 @@
 #ifndef LYRICSWINDOW_H
 #define LYRICSWINDOW_H
+#if QT_VERSION >= 0x050000
+    #include <QtWidgets>
+#endif
 
 #include <QWidget>
-#include <QApplication>
 
 #include "ui_lyricswindow.h"
 
 class QAction;
 class QLabel;
-//class FindDialog;
-//class Spreadsheet;
 class QNetworkAccessManager;
 class QNetworkReply;
 
