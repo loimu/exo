@@ -83,7 +83,7 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
 void TrayIcon::updateToolTip() {
     QStringList info = m_player->m_list;
     QString tooltip = "<html><b>Stopped</b>";
-    if(m_player->isServerRunning()) {
+    if(m_player->isServerRunning() && info.size() > 0) {
         if(info.at(0) != "STOP") {
             tooltip = "<html><b>" + info.at(2) + "</b>";
             if(!info.at(1).startsWith("http"))
@@ -92,7 +92,7 @@ void TrayIcon::updateToolTip() {
         tooltip += "</html>";
     }
     else {
-        tooltip = tr("mocp is not running, do the doubleclick.");
+        tooltip = tr("Player is not running, make a doubleclick.");
     }
     trayIcon->setToolTip(tooltip);
 }
