@@ -1,8 +1,28 @@
+/* ========================================================================
+*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*
+*    This file is part of eXo.
+*
+*    eXo is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    eXo is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
+* ======================================================================== */
+
 #include <QtGui>
 
 #include "trayicon.h"
 #include "playerinterface.h"
 #include "lyricswindow.h"
+#include "aboutdialog.h"
 
 TrayIcon::TrayIcon(QWidget *parent) : QWidget(parent) {
 
@@ -37,6 +57,8 @@ void TrayIcon::createActions() {
     connect(stopAction, SIGNAL(triggered()), m_player, SLOT(stop()));
     QIcon stopIcon(":/images/stop.png");
     stopAction->setIcon(stopIcon);
+    aboutAction = new QAction(tr("&About"), this);
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), m_player, SLOT(quit()));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -54,11 +76,13 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(nextAction);
     trayIconMenu->addAction(stopAction);
     trayIconMenu->addSeparator();
+    trayIconMenu->addAction(aboutAction);
+    trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
-    QIcon icon(":/images/exo.png");
+    QIcon icon(":/images/22.png");
     trayIcon->setIcon(icon);
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -100,6 +124,11 @@ void TrayIcon::updateToolTip() {
 void TrayIcon::showLyricsWindow() {
     LyricsWindow *lyricsWindow = new LyricsWindow(this);
     lyricsWindow->show();
+}
+
+void TrayIcon::showAboutDialog() {
+    AboutDialog *aboutdialog = new AboutDialog(this);
+    aboutdialog->show();
 }
 
 QString TrayIcon::coverPath() {

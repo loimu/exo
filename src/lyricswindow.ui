@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>398</width>
-    <height>498</height>
+    <width>392</width>
+    <height>492</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -18,10 +18,6 @@
   </property>
   <property name="windowTitle">
    <string>Lyrics Window</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="exo.qrc">
-    <normaloff>:/images/exo.png</normaloff>:/images/exo.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -114,6 +110,12 @@
    </item>
    <item row="1" column="0" colspan="3">
     <widget class="QTextBrowser" name="textBrowser">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="openExternalLinks">
       <bool>true</bool>
      </property>
@@ -121,9 +123,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="exo.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>closeButton</sender>

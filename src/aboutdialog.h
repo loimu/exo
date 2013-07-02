@@ -17,53 +17,27 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef TRAYICON_H
-#define TRAYICON_H
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
+#ifndef ABOUTDIALOG_H
+#define ABOUTDIALOG_H
 
 #include <QWidget>
-#include <QSystemTrayIcon>
 
-class PlayerInterface;
+#include "ui_aboutdialog.h"
 
-class TrayIcon : public QWidget
+class AboutDialog : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TrayIcon(QWidget *parent = 0);
+    AboutDialog(QWidget *parent = 0);
+
+private:
+    Ui::AboutDialog ui;
+    void addText();
 
 signals:
 
-private slots:
-    void clicked(QSystemTrayIcon::ActivationReason);
-    void updateToolTip();
-    void showLyricsWindow();
-    void showAboutDialog();
-
 public slots:
-
-private:
-    void createActions();
-    void createTrayIcon();
-    QString coverPath();
-
-    PlayerInterface *m_player;
-
-    QMenu *trayIconMenu;
-
-    QAction *lyricsAction;
-    QAction *playAction;
-    QAction *pauseAction;
-    QAction *prevAction;
-    QAction *nextAction;
-    QAction *stopAction;
-    QAction *aboutAction;
-    QAction *quitAction;
-
-    QSystemTrayIcon *trayIcon;
 
 };
 
-#endif // TRAYICON_H
+#endif // ABOUTDIALOG_H

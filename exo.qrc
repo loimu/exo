@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/exo.png</file>
         <file>images/play.png</file>
         <file>images/pause.png</file>
         <file>images/prev.png</file>
@@ -8,5 +7,7 @@
         <file>images/stop.png</file>
         <file>images/close.png</file>
         <file>images/nocover.png</file>
+        <file>images/22.png</file>
+        <file>images/64.png</file>
     </qresource>
 </RCC>
