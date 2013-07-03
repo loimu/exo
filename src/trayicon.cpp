@@ -9,7 +9,7 @@
 *    (at your option) any later version.
 *
 *    eXo is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
 *
@@ -57,7 +57,7 @@ void TrayIcon::createActions() {
     connect(stopAction, SIGNAL(triggered()), m_player, SLOT(stop()));
     QIcon stopIcon(":/images/stop.png");
     stopAction->setIcon(stopIcon);
-    aboutAction = new QAction(tr("&About"), this);
+    aboutAction = new QAction(tr("A&bout"), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), m_player, SLOT(quit()));
@@ -106,14 +106,16 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
 
 void TrayIcon::updateToolTip() {
     QStringList info = m_player->m_list;
-    QString tooltip = "<html><b>Stopped</b>";
+    QString tooltip = tr("<html><b>Stopped</b>");
     if(m_player->isServerRunning() && info.size() > 0) {
         if(info.at(0) != "STOP") {
-            tooltip = "<html><b>" + info.at(2) + "</b>";
-            if(!info.at(1).startsWith("http"))
-                tooltip += "<br /><img src='" + coverPath() + "' width='300' />";
+            tooltip = QString("<html><b>%1</b>").arg(info.at(2));
+            if(!info.at(1).startsWith("http")) {
+                tooltip.append(tr("<br />Current Time: %1/%2").arg(info.at(9)).arg(info.at(6)));
+                tooltip.append(QString("<br /><img src='%1' width='300' />").arg(coverPath()));
+            }
         }
-        tooltip += "</html>";
+        tooltip.append("</html>");
     }
     else {
         tooltip = tr("Player is not running, make a doubleclick.");

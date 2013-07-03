@@ -9,7 +9,7 @@
 *    (at your option) any later version.
 *
 *    eXo is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *    GNU General Public License for more details.
 *
@@ -32,7 +32,8 @@ AboutDialog::AboutDialog(QWidget *parent) :
 void AboutDialog::addText() {
     QString text;
 
-    text.append("<html><head/><body><p><b>eXo</b> \251 2013 Blaze<br />&lt;blaze@jabster.pl&gt;</p>");
+    text.append("<html><head/><body>");
+    text.append(QString("<p><b>eXo</b> %1 \251 2013 Blaze<br />&lt;blaze@jabster.pl&gt;</p>").arg(HG_REV));
     text.append(tr("<p>Qt %1 (built with Qt %2)<br />").arg(qVersion()).arg(QT_VERSION_STR));
     text.append(tr("Licensed under GPL v3 or later.</p>"));
     text.append(tr("<p><b>Links:</b><br />"));

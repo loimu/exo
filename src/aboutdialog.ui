@@ -2,12 +2,15 @@
 <ui version="4.0">
  <class>AboutDialog</class>
  <widget class="QWidget" name="AboutDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>348</width>
-    <height>208</height>
+    <width>344</width>
+    <height>204</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -55,6 +58,12 @@
        <widget class="QPushButton" name="okButton">
         <property name="text">
          <string>OK</string>
+        </property>
+        <property name="autoDefault">
+         <bool>true</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
