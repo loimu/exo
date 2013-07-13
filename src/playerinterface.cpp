@@ -34,7 +34,7 @@ PlayerInterface::PlayerInterface(QObject *parent) :
         runServer();
 
     QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateInfo()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     connect(timer, SIGNAL(timeout()), parent, SLOT(updateToolTip()));
     timer->start(1000);
 }
@@ -89,7 +89,7 @@ void PlayerInterface::quit() {
     proc.startDetached("mocp", QStringList() << "-x");
 }
 
-void PlayerInterface::updateInfo() {
+void PlayerInterface::update() {
     QProcess proc;
     proc.start("mocp", QStringList() << "-i");
     proc.waitForFinished(-1);

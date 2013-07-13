@@ -91,6 +91,12 @@ void TrayIcon::createTrayIcon() {
 
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
     switch (reason) {
+        case QSystemTrayIcon::Context:
+            if(m_about)
+                aboutAction->setEnabled(false);
+            else
+                aboutAction->setEnabled(true);
+            break;
         case QSystemTrayIcon::DoubleClick:
             m_player->openWindow();
             break;
@@ -117,9 +123,8 @@ void TrayIcon::updateToolTip() {
         }
         tooltip.append("</html>");
     }
-    else {
+    else
         tooltip = tr("Player is not running, make a doubleclick.");
-    }
     trayIcon->setToolTip(tooltip);
 }
 
@@ -129,8 +134,8 @@ void TrayIcon::showLyricsWindow() {
 }
 
 void TrayIcon::showAboutDialog() {
-    AboutDialog *aboutdialog = new AboutDialog(this);
-    aboutdialog->show();
+    m_about = new AboutDialog(this);
+    m_about->show();
 }
 
 QString TrayIcon::coverPath() {

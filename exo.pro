@@ -4,7 +4,6 @@ TEMPLATE = app
 TARGET = exo
 
 #INCLUDEPATH += . src
-DEFINES += "HG_REV=\"\\\"$$system(hg log -r tip --template 'r{rev}')\\\"\""
 
 # Input
 HEADERS += src/exo.h src/lyricswindow.h src/playerinterface.h src/trayicon.h \

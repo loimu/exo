@@ -33,7 +33,7 @@ void AboutDialog::addText() {
     QString text;
 
     text.append("<html><head/><body>");
-    text.append(QString("<p><b>eXo</b> %1 \251 2013 Blaze<br />&lt;blaze@jabster.pl&gt;</p>").arg(HG_REV));
+    text.append("<p><b>eXo</b> \251 2013 Blaze<br />&lt;blaze@jabster.pl&gt;</p>");
     text.append(tr("<p>Qt %1 (built with Qt %2)<br />").arg(qVersion()).arg(QT_VERSION_STR));
     text.append(tr("Licensed under GPL v3 or later.</p>"));
     text.append(tr("<p><b>Links:</b><br />"));

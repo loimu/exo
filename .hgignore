@@ -3,7 +3,7 @@ syntax: glob
 
 *~
 *.kdev4
-*.pro.user
+*.pro.user*
 Makefile
 
 # switch to regexp syntax.

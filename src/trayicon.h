@@ -24,9 +24,11 @@
 #endif
 
 #include <QWidget>
+#include <QPointer>
 #include <QSystemTrayIcon>
 
 class PlayerInterface;
+class AboutDialog;
 
 class TrayIcon : public QWidget
 {
@@ -50,6 +52,7 @@ private:
     QString coverPath();
 
     PlayerInterface *m_player;
+    QPointer<AboutDialog> m_about;
 
     QMenu *trayIconMenu;
 

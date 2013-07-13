@@ -33,6 +33,8 @@ public:
     bool isServerRunning();
     void openWindow();
 
+    QString m_title;
+    QString m_progress;
     QStringList m_list;
 
 signals:
@@ -46,7 +48,7 @@ public slots:
     void quit();
 
 private slots:
-    void updateInfo();
+    void update();
 
 private:
     void runServer();
