@@ -30,12 +30,14 @@ PlayerInterface::PlayerInterface(QObject *parent) :
         qFatal("PlayerInterface: only one instance is allowed");
     m_instance = this;
 
+    m_unlistened = false;
+    m_title = "";
+
     if(!isServerRunning())
         runServer();
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    connect(timer, SIGNAL(timeout()), parent, SLOT(updateToolTip()));
     timer->start(1000);
 }
 
@@ -100,6 +102,20 @@ void PlayerInterface::update() {
 //        qDebug("debug: %s", qPrintable(list.at(i)));
 //    }
     m_list = list;
+    emit timerSignal();
+    if(m_list.size() > 11) {
+        int currentTime = m_list.at(10).toInt();
+        int totalTime = m_list.at(8).toInt();
+        if(m_unlistened && currentTime > totalTime/2) {
+            m_unlistened = false;
+            emit trackListened();
+        }
+        if(m_title != m_list.at(2)) {
+            m_title = m_list.at(2);
+            m_unlistened = true;
+            emit trackChanged();
+        }
+    }
 }
 
 void PlayerInterface::openWindow() {

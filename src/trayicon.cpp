@@ -24,14 +24,15 @@
 #include "lyricswindow.h"
 #include "aboutdialog.h"
 
-TrayIcon::TrayIcon(QWidget *parent) : QWidget(parent) {
-
-    m_player = new PlayerInterface(this);
+TrayIcon::TrayIcon(PlayerInterface *player) {
+    m_player = player;
 
     createActions();
     createTrayIcon();
 
     trayIcon->show();
+
+    connect(m_player, SIGNAL(timerSignal()), this, SLOT(updateToolTip()));
 }
 
 void TrayIcon::createActions() {

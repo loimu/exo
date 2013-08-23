@@ -34,7 +34,7 @@ class TrayIcon : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TrayIcon(QWidget *parent = 0);
+    explicit TrayIcon(PlayerInterface *player = 0);
 
 signals:
 

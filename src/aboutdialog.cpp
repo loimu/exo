@@ -37,8 +37,8 @@ void AboutDialog::addText() {
     text.append(tr("<p>Qt %1 (built with Qt %2)<br />").arg(qVersion()).arg(QT_VERSION_STR));
     text.append(tr("Licensed under GPL v3 or later.</p>"));
     text.append(tr("<p><b>Links:</b><br />"));
-    text.append(tr("News: <a href=\"http://latitude52.tk/tag/exo/\">http://latitude52.tk/tag/exo/</a><br />"));
-    text.append(tr("Bugreports: <a href=\"https://bitbucket.org/blaze/exo/issues\">https://bitbucket.org/blaze/exo/issues</a></p>"));
+    text.append(tr("News: <a href='http://latitude52.tk/tag/exo/'>http://latitude52.tk/tag/exo/</a><br />"));
+    text.append(tr("Project: <a href='https://bitbucket.org/blaze/exo'>https://bitbucket.org/blaze/exo</a></p>"));
     text.append("</body></html>");
 
     ui.label->setText(text);

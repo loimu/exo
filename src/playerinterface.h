@@ -34,10 +34,12 @@ public:
     void openWindow();
 
     QString m_title;
-    QString m_progress;
     QStringList m_list;
 
 signals:
+    void timerSignal();
+    void trackListened();
+    void trackChanged();
 
 public slots:
     void play();
@@ -54,6 +56,7 @@ private:
     void runServer();
 
     static PlayerInterface* m_instance;
+    bool m_unlistened;
 
 };
 
