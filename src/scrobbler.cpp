@@ -21,7 +21,10 @@ Scrobbler::Scrobbler(QObject *parent, QSettings *settings, PlayerInterface* play
     QString password = m_settings->value("scrobbler/password").toString();
     lastfm::ws::Username = username;
 
-    auth(username, password);
+    QString key = m_settings->value("scrobbler/sessionkey").toString();
+    lastfm::ws::SessionKey = key;
+    if(!key.length() > 0)
+        auth(username, password);
 
     connect(m_player, SIGNAL(trackChanged()), this, SLOT(init()));
     connect(m_player, SIGNAL(trackListened()), this, SLOT(submit()));
