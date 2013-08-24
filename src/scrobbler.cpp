@@ -88,9 +88,23 @@ void Scrobbler::authReplyFinished() {
 
 void Scrobbler::init() {
     lastfm::MutableTrack t;
-    t.setArtist(m_player->m_list.at(3));
-    t.setTitle(m_player->m_list.at(4));
-    t.setDuration(m_player->m_list.at(8).toInt()/2);
+    if(m_player->m_list.at(3).isEmpty()) {
+        QString artist, title;
+        artist = title = m_player->m_list.at(4);
+        artist.replace(QRegExp("^([\\s\\w\\(\\)]+)\\s-\\s.*"), "\\1");
+        title.replace(QRegExp("^[\\s\\w\\(\\)]+\\s-\\s(.*)"), "\\1");
+        t.setArtist(artist);
+        t.setTitle(title);
+        t.setDuration(8*60);
+    }
+    else if(m_player->m_list.at(4).isEmpty()) {
+        qDebug() << "empty track";
+    }
+    else {
+        t.setArtist(m_player->m_list.at(3));
+        t.setTitle(m_player->m_list.at(4));
+        t.setDuration(m_player->m_list.at(8).toInt());
+    }
 
     as->nowPlaying(t);
 }
@@ -100,7 +114,7 @@ void Scrobbler::submit() {
     t.setArtist(m_player->m_list.at(3));
     t.setTitle(m_player->m_list.at(4));
     t.setAlbum(m_player->m_list.at(5));
-    t.setDuration(m_player->m_list.at(8).toInt()/2);
+    t.setDuration(m_player->m_list.at(8).toInt());
     t.stamp(); //sets track start time
 
     as->cache(t);

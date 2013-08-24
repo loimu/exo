@@ -106,13 +106,20 @@ void PlayerInterface::update() {
     if(m_list.size() > 11) {
         int currentTime = m_list.at(10).toInt();
         int totalTime = m_list.at(8).toInt();
-        if(m_unlistened && currentTime > totalTime/2) {
+        if(m_unlistened && (currentTime > totalTime/2 ||
+                            (currentTime > 4*60 && totalTime > 8*60))) {
             m_unlistened = false;
             emit trackListened();
         }
+        if(!m_unlistened && ((currentTime < totalTime/2 && totalTime < 8*60) ||
+                             (currentTime < 4*60 && totalTime > 8*60))) {
+            m_unlistened = true;
+            emit trackChanged();
+        }
+    }
+    else if(m_list.size() == 11) {
         if(m_title != m_list.at(2)) {
             m_title = m_list.at(2);
-            m_unlistened = true;
             emit trackChanged();
         }
     }
