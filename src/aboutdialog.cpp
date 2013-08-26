@@ -19,9 +19,7 @@
 
 #include "aboutdialog.h"
 
-AboutDialog::AboutDialog(QWidget *parent) :
-    QWidget(parent)
-{
+AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent) {
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
@@ -32,14 +30,18 @@ AboutDialog::AboutDialog(QWidget *parent) :
 void AboutDialog::addText() {
     QString text;
 
-    text.append("<html><head/><body>");
-    text.append("<p><b>eXo</b> \251 2013 Blaze<br />&lt;blaze@jabster.pl&gt;</p>");
-    text.append(tr("<p>Qt %1 (built with Qt %2)<br />").arg(qVersion()).arg(QT_VERSION_STR));
-    text.append(tr("Licensed under GPL v3 or later.</p>"));
-    text.append(tr("<p><b>Links:</b><br />"));
-    text.append(tr("News: <a href='http://latitude52.tk/tag/exo/'>http://latitude52.tk/tag/exo/</a><br />"));
-    text.append(tr("Project: <a href='https://bitbucket.org/blaze/exo'>https://bitbucket.org/blaze/exo</a></p>"));
-    text.append("</body></html>");
+    text.append(QString("<html><head/><body><p><b>eXo</b> v%1 ")
+                .arg(qApp->applicationVersion()));
+    text.append("\251 2013 Blaze<br />&lt;blaze@jabster.pl&gt;</p>");
+    text.append(tr("<p>Qt %1 (built with Qt %2)<br />").arg(qVersion())
+                .arg(QT_VERSION_STR));
+    text.append(tr("Licensed under GPL v3 or later.</p>"
+                   "<p><b>Links:</b><br />News:"));
+    text.append(" <a href='http://latitude52.tk/tag/exo/'>"
+                "http://latitude52.tk/tag/exo/</a><br />");
+    text.append(tr("Project:"));
+    text.append(" <a href='https://bitbucket.org/blaze/exo'>"
+                "https://bitbucket.org/blaze/exo</a></p></body></html>");
 
     ui.label->setText(text);
 }

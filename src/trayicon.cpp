@@ -118,8 +118,10 @@ void TrayIcon::updateToolTip() {
         if(info.at(0) != "STOP") {
             tooltip = QString("<html><b>%1</b>").arg(info.at(2));
             if(!info.at(1).startsWith("http")) {
-                tooltip.append(tr("<br />Current Time: %1/%2").arg(info.at(9)).arg(info.at(6)));
-                tooltip.append(QString("<br /><img src='%1' width='300' />").arg(coverPath()));
+                tooltip.append(tr("<br />Current Time: %1/%2").arg(info.at(9))
+                               .arg(info.at(6)));
+                tooltip.append(QString("<br /><img src='%1' width='300' />")
+                               .arg(coverPath()));
             }
         }
         tooltip.append("</html>");

@@ -13,7 +13,8 @@ LyricsWindow::LyricsWindow(QWidget *parent) : QWidget(parent) {
     setAttribute(Qt::WA_QuitOnClose, false);
     m_requestReply = 0;
     m_http = new QNetworkAccessManager(this);
-    connect(m_http, SIGNAL(finished(QNetworkReply *)), SLOT(showText(QNetworkReply *)));
+    connect(m_http, SIGNAL(finished(QNetworkReply *)),
+            SLOT(showText(QNetworkReply *)));
     on_updatePushButton_clicked();
 }
 
@@ -56,7 +57,8 @@ void LyricsWindow::showText(QNetworkReply *reply) {
 
         QString temp = url_rgex.cap(1).toAscii();
         //qDebug("LyricsWindow: received url = %s", qPrintable(temp));
-        temp.replace("http://lyrics.wikia.com/","http://lyrics.wikia.com/index.php?title=");
+        temp.replace("http://lyrics.wikia.com/",
+                     "http://lyrics.wikia.com/index.php?title=");
         temp.append("&action=edit");
 
         QUrl url = QUrl::fromEncoded(temp.toAscii());
@@ -127,7 +129,7 @@ QString LyricsWindow::getTitle() {
 
 void LyricsWindow::search() {
     ui.stateLabel->setText(tr("Receiving"));
-    setWindowTitle(QString(tr("Lyrics: %1 - %2")).arg(ui.artistLineEdit->text())
+    setWindowTitle(QString(tr("%1 - %2")).arg(ui.artistLineEdit->text())
                    .arg(ui.titleLineEdit->text()));
     QNetworkRequest request;
     request.setUrl(QUrl("http://lyrics.wikia.com/api.php?action=lyrics&artist="+

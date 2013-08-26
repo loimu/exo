@@ -30,7 +30,8 @@
 #include "playerinterface.h"
 #include "scrobbler.h"
 
-Scrobbler::Scrobbler(QObject *parent, QSettings *settings, PlayerInterface* player) : QObject(parent) {
+Scrobbler::Scrobbler(QObject *parent, QSettings *settings,
+                     PlayerInterface* player) : QObject(parent) {
     m_player = player;
     m_settings = settings;
 
@@ -55,19 +56,18 @@ void Scrobbler::auth(const QString& username, const QString& password) {
     QMap<QString, QString> params;
     params["method"] = "auth.getMobileSession";
     params["username"] = username;
-    params["authToken"] = lastfm::md5((username + lastfm::md5(password.toUtf8())).toUtf8());
+    params["authToken"] =
+            lastfm::md5((username +lastfm::md5(password.toUtf8())).toUtf8());
 
     QNetworkReply* reply = lastfm::ws::post(params);
     connect(reply, SIGNAL(finished()), SLOT(authReplyFinished()));
-    // If we need more detailed error reporting, handle error(NetworkError) signal
+    // If we need more detailed error report, handle error(NetworkError) signal
 }
 
 void Scrobbler::authReplyFinished() {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    if (!reply) {
-        emit AuthenticationComplete(false);
+    if(!reply)
         return;
-    }
     reply->deleteLater();
 
     // Parse the reply
@@ -79,11 +79,8 @@ void Scrobbler::authReplyFinished() {
         // Save the session key
         m_settings->setValue("scrobbler/login", lastfm::ws::Username);
         m_settings->setValue("scrobbler/sessionkey", lastfm::ws::SessionKey);
-    } else {
-        emit AuthenticationComplete(false);
+    } else
         return;
-    }
-    emit AuthenticationComplete(true);
 }
 
 void Scrobbler::init() {
@@ -125,13 +122,14 @@ lastfm::XmlQuery Scrobbler::EmptyXmlQuery() {
   return lastfm::XmlQuery();
 }
 
-bool Scrobbler::ParseQuery(const QByteArray& data, lastfm::XmlQuery* query, bool* connection_problems) {
-  const bool ret = query->parse(data);
+bool Scrobbler::ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
+                           bool* connection_problems) {
+    const bool ret = query->parse(data);
 
-  if (connection_problems) {
-    *connection_problems =
-        !ret && query->parseError().enumValue() == lastfm::ws::MalformedResponse;
-  }
+    if(connection_problems) {
+        *connection_problems = !ret && query->parseError().enumValue() ==
+                lastfm::ws::MalformedResponse;
+    }
 
-  return ret;
+    return ret;
 }
