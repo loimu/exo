@@ -30,7 +30,7 @@ PlayerInterface::PlayerInterface(QObject *parent) :
         qFatal("PlayerInterface: only one instance is allowed");
     m_instance = this;
 
-    m_unlistened = false;
+    m_listened = true;
     m_title = "";
 
     if(!isServerRunning())
@@ -96,33 +96,30 @@ void PlayerInterface::update() {
     proc.start("mocp", QStringList() << "-i");
     proc.waitForFinished(-1);
     QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    QStringList list = output.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
-    list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
+    m_list = output.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    m_list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
 //    for (int i = 0; i < list.size(); ++i) {
 //        qDebug("debug: %s", qPrintable(list.at(i)));
 //    }
-    m_list = list;
-    emit timerSignal();
-    if(m_list.size() > 11) {
+    if(m_list.size() >= 11) {
         int currentTime = m_list.at(10).toInt();
         int totalTime = m_list.at(8).toInt();
-        if(m_unlistened && (currentTime > totalTime/2 ||
-                            (currentTime > 4*60 && totalTime > 8*60))) {
-            m_unlistened = false;
-            emit trackListened();
-        }
-        if(!m_unlistened && ((currentTime < totalTime/2 && totalTime < 8*60) ||
-                             (currentTime < 4*60 && totalTime > 8*60))) {
-            m_unlistened = true;
-            emit trackChanged();
-        }
-    }
-    else if(m_list.size() == 11) {
+
         if(m_title != m_list.at(2)) {
             m_title = m_list.at(2);
             emit trackChanged();
         }
+        else if(m_listened && ((currentTime < totalTime/2 && totalTime < 8*60)||
+                             (currentTime < 4*60 && totalTime > 8*60))) {
+            m_listened = false;
+        }
+        else if(!m_listened && (currentTime > totalTime/2 ||
+                            (currentTime > 4*60 && totalTime > 8*60))) {
+            m_listened = true;
+            emit trackListened();
+        }
     }
+    updateStatus();
 }
 
 void PlayerInterface::openWindow() {

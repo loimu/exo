@@ -28,9 +28,6 @@ class Exo : public QApplication
 
 public:
     explicit Exo(int &argc, char **argv);
-
-private slots:
-
 };
 
 #endif // EXO_H

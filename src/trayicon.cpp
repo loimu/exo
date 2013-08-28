@@ -32,7 +32,7 @@ TrayIcon::TrayIcon(PlayerInterface *player) {
 
     trayIcon->show();
 
-    connect(m_player, SIGNAL(timerSignal()), this, SLOT(updateToolTip()));
+    connect(m_player, SIGNAL(updateStatus()), this, SLOT(updateToolTip()));
 }
 
 void TrayIcon::createActions() {

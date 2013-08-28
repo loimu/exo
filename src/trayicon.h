@@ -66,7 +66,6 @@ private:
     QAction *quitAction;
 
     QSystemTrayIcon *trayIcon;
-
 };
 
 #endif // TRAYICON_H

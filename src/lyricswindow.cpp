@@ -102,8 +102,8 @@ void LyricsWindow::on_updatePushButton_clicked() {
     QString title = getTitle();
     if(artist.isEmpty() && !title.isEmpty()) {
         artist = title;
-        artist.replace(QRegExp("^([\\s\\w\\(\\)]+)\\s-\\s.*"), "\\1");
-        title.replace(QRegExp("^[\\s\\w\\(\\)]+\\s-\\s(.*)"), "\\1");
+        artist.replace(QRegExp("^(.+)\\s-\\s.*"), "\\1");
+        title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
     }
     ui.artistLineEdit->setText(artist);
     ui.titleLineEdit->setText(title);

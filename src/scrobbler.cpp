@@ -88,8 +88,8 @@ void Scrobbler::init() {
     if(m_player->m_list.at(3).isEmpty()) {
         QString artist, title;
         artist = title = m_player->m_list.at(4);
-        artist.replace(QRegExp("^([\\s\\w\\(\\)]+)\\s-\\s.*"), "\\1");
-        title.replace(QRegExp("^[\\s\\w\\(\\)]+\\s-\\s(.*)"), "\\1");
+        artist.replace(QRegExp("^(.+)\\s-\\s.*"), "\\1");
+        title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
         t.setArtist(artist);
         t.setTitle(title);
         t.setDuration(8*60);
@@ -119,17 +119,17 @@ void Scrobbler::submit() {
 }
 
 lastfm::XmlQuery Scrobbler::EmptyXmlQuery() {
-  return lastfm::XmlQuery();
+    return lastfm::XmlQuery();
 }
 
 bool Scrobbler::ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
-                           bool* connection_problems) {
-    const bool ret = query->parse(data);
+                           bool* connectionProblems) {
+    const bool dataParsed = query->parse(data);
 
-    if(connection_problems) {
-        *connection_problems = !ret && query->parseError().enumValue() ==
+    if(connectionProblems) {
+        *connectionProblems = !dataParsed && query->parseError().enumValue() ==
                 lastfm::ws::MalformedResponse;
     }
 
-    return ret;
+    return dataParsed;
 }

@@ -26,6 +26,12 @@
 class PlayerInterface : public QObject
 {
     Q_OBJECT
+
+    void runServer();
+
+    static PlayerInterface* m_instance;
+    bool m_listened;
+
 public:
     PlayerInterface(QObject *parent = 0);
     ~PlayerInterface();
@@ -37,9 +43,9 @@ public:
     QStringList m_list;
 
 signals:
-    void timerSignal();
     void trackListened();
     void trackChanged();
+    void updateStatus();
 
 public slots:
     void play();
@@ -51,13 +57,6 @@ public slots:
 
 private slots:
     void update();
-
-private:
-    void runServer();
-
-    static PlayerInterface* m_instance;
-    bool m_unlistened;
-
 };
 
 #endif // PLAYERINTERFACE_H

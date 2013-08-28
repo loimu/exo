@@ -34,10 +34,6 @@ private:
     Ui::AboutDialog ui;
     void addText();
 
-signals:
-
-public slots:
-
 };
 
 #endif // ABOUTDIALOG_H

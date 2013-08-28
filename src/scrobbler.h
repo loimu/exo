@@ -36,13 +36,14 @@ class Scrobbler : public QObject
     void auth(const QString& username, const QString& password);
     lastfm::XmlQuery EmptyXmlQuery();
     bool ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
-                    bool* connection_problems = NULL);
+                    bool* connectionProblems = NULL);
 
     PlayerInterface* m_player;
     QSettings* m_settings;
     lastfm::Audioscrobbler* as;
 public:
-    Scrobbler(QObject *parent = 0, QSettings *settings = 0, PlayerInterface *player = 0);
+    Scrobbler(QObject *parent = 0, QSettings *settings = 0,
+              PlayerInterface *player = 0);
 private slots:
     void init();
     void submit();

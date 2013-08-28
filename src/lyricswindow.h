@@ -16,6 +16,7 @@ class QNetworkReply;
 class LyricsWindow : public QWidget
 {
     Q_OBJECT
+
 public:
     LyricsWindow(QWidget *parent = 0);
 
