@@ -1,5 +1,9 @@
 #! /usr/bin/env python3
 
+# Copyright (c) 2013 Blaze <blaze@jabster.pl>
+# Licensed under the GNU General Public License, version 3 or later.
+# See the file http://www.gnu.org/copyleft/gpl.txt.
+
 import os
 import re
 import subprocess
