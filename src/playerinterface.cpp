@@ -107,6 +107,7 @@ void PlayerInterface::update() {
         int currentTime = m_list.at(10).toInt();
         int totalTime = m_list.at(8).toInt();
 
+        artist = m_list.at(3);
         title = m_list.at(4);
         if(artist.isEmpty() && !title.isEmpty()) {
             artist = title;
@@ -114,10 +115,8 @@ void PlayerInterface::update() {
             title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
             totalSec = 8*60;
         }
-        else {
-            artist = m_list.at(3);
+        else
             totalSec = m_list.at(8).toInt();
-        }
 
         if(m_nowPlaying != m_list.at(2)) {
             m_nowPlaying = m_list.at(2);
