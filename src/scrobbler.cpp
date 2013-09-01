@@ -24,7 +24,6 @@
 #include <lastfm/Audioscrobbler.h>
 #include <lastfm/Track.h>
 
-#include <QDebug>
 #include <QSettings>
 
 #include "playerinterface.h"
@@ -85,33 +84,19 @@ void Scrobbler::authReplyFinished() {
 
 void Scrobbler::init() {
     lastfm::MutableTrack t;
-    if(m_player->m_list.at(3).isEmpty()) {
-        QString artist, title;
-        artist = title = m_player->m_list.at(4);
-        artist.replace(QRegExp("^(.+)\\s-\\s.*"), "\\1");
-        title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
-        t.setArtist(artist);
-        t.setTitle(title);
-        t.setDuration(8*60);
-    }
-    else if(m_player->m_list.at(4).isEmpty()) {
-        qDebug() << "empty track";
-    }
-    else {
-        t.setArtist(m_player->m_list.at(3));
-        t.setTitle(m_player->m_list.at(4));
-        t.setDuration(m_player->m_list.at(8).toInt());
-    }
+    t.setArtist(m_player->artist);
+    t.setTitle(m_player->title);
+    t.setDuration(m_player->totalSec);
 
     as->nowPlaying(t);
 }
 
 void Scrobbler::submit() {
     lastfm::MutableTrack t;
-    t.setArtist(m_player->m_list.at(3));
-    t.setTitle(m_player->m_list.at(4));
+    t.setArtist(m_player->artist);
+    t.setTitle(m_player->title);
     t.setAlbum(m_player->m_list.at(5));
-    t.setDuration(m_player->m_list.at(8).toInt());
+    t.setDuration(m_player->totalSec);
     t.stamp(); //sets track start time
 
     as->cache(t);

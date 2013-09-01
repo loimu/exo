@@ -32,13 +32,13 @@ class ScrobblerSettings : public QWidget
 {
     Q_OBJECT
 
+    Ui::ScrobblerSettings *ui;
+    QSettings* m_settings;
+
 public:
     explicit ScrobblerSettings(QSettings* settings);
     ~ScrobblerSettings();
 
-private:
-    Ui::ScrobblerSettings *ui;
-    QSettings* m_settings;
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();

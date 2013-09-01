@@ -27,13 +27,12 @@
 class AboutDialog : public QWidget
 {
     Q_OBJECT
-public:
-    AboutDialog(QWidget *parent = 0);
 
-private:
     Ui::AboutDialog ui;
     void addText();
 
+public:
+    AboutDialog(QWidget *parent = 0);
 };
 
 #endif // ABOUTDIALOG_H

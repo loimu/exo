@@ -31,7 +31,9 @@ PlayerInterface::PlayerInterface(QObject *parent) :
     m_instance = this;
 
     m_listened = true;
-    m_title = "";
+    m_nowPlaying = "";
+    artist = "";
+    title = "";
 
     if(!isServerRunning())
         runServer();
@@ -105,8 +107,20 @@ void PlayerInterface::update() {
         int currentTime = m_list.at(10).toInt();
         int totalTime = m_list.at(8).toInt();
 
-        if(m_title != m_list.at(2)) {
-            m_title = m_list.at(2);
+        title = m_list.at(4);
+        if(artist.isEmpty() && !title.isEmpty()) {
+            artist = title;
+            artist.replace(QRegExp("^(.+)\\s-\\s.*"), "\\1");
+            title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
+            totalSec = 8*60;
+        }
+        else {
+            artist = m_list.at(3);
+            totalSec = m_list.at(8).toInt();
+        }
+
+        if(m_nowPlaying != m_list.at(2)) {
+            m_nowPlaying = m_list.at(2);
             emit trackChanged();
         }
         else if(m_listened && ((currentTime < totalTime/2 && totalTime < 8*60)||

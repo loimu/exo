@@ -39,8 +39,11 @@ public:
     bool isServerRunning();
     void openWindow();
 
-    QString m_title;
+    QString m_nowPlaying;
     QStringList m_list;
+    QString artist;
+    QString title;
+    int totalSec;
 
 signals:
     void trackListened();

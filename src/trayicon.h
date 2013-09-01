@@ -33,20 +33,7 @@ class AboutDialog;
 class TrayIcon : public QWidget
 {
     Q_OBJECT
-public:
-    explicit TrayIcon(PlayerInterface *player = 0);
 
-signals:
-
-private slots:
-    void clicked(QSystemTrayIcon::ActivationReason);
-    void updateToolTip();
-    void showLyricsWindow();
-    void showAboutDialog();
-
-public slots:
-
-private:
     void createActions();
     void createTrayIcon();
     QString coverPath();
@@ -66,6 +53,15 @@ private:
     QAction *quitAction;
 
     QSystemTrayIcon *trayIcon;
+
+public:
+    explicit TrayIcon(PlayerInterface *player = 0);
+
+private slots:
+    void clicked(QSystemTrayIcon::ActivationReason);
+    void updateToolTip();
+    void showLyricsWindow();
+    void showAboutDialog();
 };
 
 #endif // TRAYICON_H

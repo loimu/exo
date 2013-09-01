@@ -41,6 +41,7 @@ class Scrobbler : public QObject
     PlayerInterface* m_player;
     QSettings* m_settings;
     lastfm::Audioscrobbler* as;
+
 public:
     Scrobbler(QObject *parent = 0, QSettings *settings = 0,
               PlayerInterface *player = 0);

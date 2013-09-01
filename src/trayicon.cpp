@@ -132,7 +132,7 @@ void TrayIcon::updateToolTip() {
 }
 
 void TrayIcon::showLyricsWindow() {
-    LyricsWindow *lyricsWindow = new LyricsWindow(this);
+    LyricsWindow *lyricsWindow = new LyricsWindow(this, m_player);
     lyricsWindow->show();
 }
 

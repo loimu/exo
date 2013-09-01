@@ -2,11 +2,14 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QRegExp>
-#include <QProcess>
 
+#include "playerinterface.h"
 #include "lyricswindow.h"
 
-LyricsWindow::LyricsWindow(QWidget *parent) : QWidget(parent) {
+LyricsWindow::LyricsWindow(QWidget *parent, PlayerInterface *player)
+    : QWidget(parent) {
+    m_player = player;
+
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
@@ -98,33 +101,10 @@ void LyricsWindow::on_titleLineEdit_returnPressed() {
 }
 
 void LyricsWindow::on_updatePushButton_clicked() {
-    QString artist = getArtist();
-    QString title = getTitle();
-    if(artist.isEmpty() && !title.isEmpty()) {
-        artist = title;
-        artist.replace(QRegExp("^(.+)\\s-\\s.*"), "\\1");
-        title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
-    }
-    ui.artistLineEdit->setText(artist);
-    ui.titleLineEdit->setText(title);
-    if(!artist.isEmpty())
+    ui.artistLineEdit->setText(m_player->artist);
+    ui.titleLineEdit->setText(m_player->title);
+    if(!m_player->artist.isEmpty())
         search();
-}
-
-QString LyricsWindow::getArtist() {
-    QProcess proc;
-    proc.start("mocp", QStringList() << "-Q" << "%artist");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    return output.simplified();
-}
-
-QString LyricsWindow::getTitle() {
-    QProcess proc;
-    proc.start("mocp", QStringList() << "-Q" << "%song");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    return output.simplified();
 }
 
 void LyricsWindow::search() {
