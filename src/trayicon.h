@@ -29,6 +29,7 @@
 
 class PlayerInterface;
 class AboutDialog;
+class QSettings;
 
 class TrayIcon : public QWidget
 {
@@ -39,9 +40,11 @@ class TrayIcon : public QWidget
     QString coverPath();
 
     PlayerInterface *m_player;
+    QSettings *m_settings;
     QPointer<AboutDialog> m_about;
 
     QMenu *trayIconMenu;
+    QMenu *settingsMenu;
 
     QAction *lyricsAction;
     QAction *playAction;
@@ -51,17 +54,21 @@ class TrayIcon : public QWidget
     QAction *stopAction;
     QAction *aboutAction;
     QAction *quitAction;
+    QAction *setQuitBehaviourAction;
+    QAction *setScrobblingAction;
 
     QSystemTrayIcon *trayIcon;
 
 public:
-    explicit TrayIcon(PlayerInterface *player = 0);
+    explicit TrayIcon(PlayerInterface *player = 0, QSettings *settings = 0);
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip();
     void showLyricsWindow();
     void showAboutDialog();
+    void setQuitBehaviour();
+    void setScrobbling();
 };
 
 #endif // TRAYICON_H

@@ -39,12 +39,12 @@ class Scrobbler : public QObject
                     bool* connectionProblems = NULL);
 
     PlayerInterface* m_player;
-    QSettings* m_settings;
+    QSettings *m_settings;
     lastfm::Audioscrobbler* as;
 
 public:
-    Scrobbler(QObject *parent = 0, QSettings *settings = 0,
-              PlayerInterface *player = 0);
+    Scrobbler(QObject *parent = 0, PlayerInterface *player = 0,
+              QSettings *settings = 0);
 private slots:
     void init();
     void submit();

@@ -29,8 +29,9 @@
 #include "playerinterface.h"
 #include "scrobbler.h"
 
-Scrobbler::Scrobbler(QObject *parent, QSettings *settings,
-                     PlayerInterface* player) : QObject(parent) {
+Scrobbler::Scrobbler(QObject *parent, PlayerInterface* player,
+                     QSettings *settings) : QObject(parent) {
+
     m_player = player;
     m_settings = settings;
 

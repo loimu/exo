@@ -24,8 +24,9 @@
 #include "lyricswindow.h"
 #include "aboutdialog.h"
 
-TrayIcon::TrayIcon(PlayerInterface *player) {
+TrayIcon::TrayIcon(PlayerInterface *player, QSettings *settings) {
     m_player = player;
+    m_settings = settings;
 
     createActions();
     createTrayIcon();
@@ -61,14 +62,31 @@ void TrayIcon::createActions() {
     aboutAction = new QAction(tr("A&bout"), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
     quitAction = new QAction(tr("&Quit"), this);
-    connect(quitAction, SIGNAL(triggered()), m_player, SLOT(quit()));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     QIcon quitIcon(":/images/close.png");
     quitAction->setIcon(quitIcon);
+    setQuitBehaviourAction = new QAction(tr("Shutdown moc on exit"), this);
+    setQuitBehaviourAction->setCheckable(true);
+    connect(setQuitBehaviourAction, SIGNAL(triggered()),
+            this, SLOT(setQuitBehaviour()));
+    setScrobblingAction = new QAction(tr("Enable scrobbling"), this);
+    setScrobblingAction->setCheckable(true);
+    connect(setScrobblingAction, SIGNAL(triggered()),
+            this, SLOT(setScrobbling()));
+
+    if(m_settings->value("player/quitmoc").toBool()) {
+        connect(quitAction, SIGNAL(triggered()), m_player, SLOT(quit()));
+        setQuitBehaviourAction->setChecked(true);
+    }
+    if(m_settings->value("scrobbler/enabled").toBool()) {
+        setScrobblingAction->setChecked(true);
+    }
 }
 
 void TrayIcon::createTrayIcon() {
     trayIconMenu = new QMenu(this);
+    settingsMenu = new QMenu(trayIconMenu);
+    settingsMenu->setTitle(tr("Settings"));
     trayIconMenu->addAction(lyricsAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(playAction);
@@ -77,6 +95,9 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(nextAction);
     trayIconMenu->addAction(stopAction);
     trayIconMenu->addSeparator();
+    trayIconMenu->addAction(settingsMenu->menuAction());
+    settingsMenu->addAction(setQuitBehaviourAction);
+    settingsMenu->addAction(setScrobblingAction);
     trayIconMenu->addAction(aboutAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
@@ -132,7 +153,7 @@ void TrayIcon::updateToolTip() {
 }
 
 void TrayIcon::showLyricsWindow() {
-    LyricsWindow *lyricsWindow = new LyricsWindow(this, m_player);
+    QPointer<LyricsWindow> lyricsWindow = new LyricsWindow(this, m_player);
     lyricsWindow->show();
 }
 
@@ -152,4 +173,24 @@ QString TrayIcon::coverPath() {
         return path + "/" + dir.entryList().at(0);
     else
         return ":/images/nocover.png";
+}
+
+void TrayIcon::setQuitBehaviour() {
+    if(setQuitBehaviourAction->isChecked()) {
+        connect(quitAction, SIGNAL(triggered()), m_player, SLOT(quit()));
+        m_settings->setValue("player/quitmoc", true);
+    }
+    else {
+        disconnect(quitAction, 0, m_player, 0);
+        m_settings->setValue("player/quitmoc", false);
+    }
+}
+
+void TrayIcon::setScrobbling() {
+    if(setScrobblingAction->isChecked()) {
+        m_settings->setValue("scrobbler/enabled", true);
+    }
+    else {
+        m_settings->setValue("scrobbler/enabled", false);
+    }
 }

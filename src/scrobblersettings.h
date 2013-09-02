@@ -33,10 +33,10 @@ class ScrobblerSettings : public QWidget
     Q_OBJECT
 
     Ui::ScrobblerSettings *ui;
-    QSettings* m_settings;
+    QSettings *m_settings;
 
 public:
-    explicit ScrobblerSettings(QSettings* settings);
+    explicit ScrobblerSettings(QSettings *settings);
     ~ScrobblerSettings();
 
 private slots:

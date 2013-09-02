@@ -22,9 +22,9 @@
 #include "scrobblersettings.h"
 #include "ui_scrobblersettings.h"
 
-ScrobblerSettings::ScrobblerSettings(QSettings* settings) :
-    ui(new Ui::ScrobblerSettings)
-{
+ScrobblerSettings::ScrobblerSettings(QSettings *settings)
+    : ui(new Ui::ScrobblerSettings) {
+
     ui->setupUi(this);
     m_settings = settings;
 }
