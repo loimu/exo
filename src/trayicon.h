@@ -38,6 +38,7 @@ class TrayIcon : public QWidget
     void createActions();
     void createTrayIcon();
     QString coverPath();
+    void showConfigurationDialog();
 
     PlayerInterface *m_player;
     QSettings *m_settings;

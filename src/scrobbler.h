@@ -20,23 +20,18 @@
 #ifndef SCROBBLER_H
 #define SCROBBLER_H
 
-#include <lastfm/ws.h>
-#include <lastfm/Audioscrobbler.h>
-#include <lastfm/XmlQuery.h>
-
 #include <QObject>
 
 class QSettings;
 class PlayerInterface;
 
+namespace lastfm {
+    class Audioscrobbler;
+}
+
 class Scrobbler : public QObject
 {
     Q_OBJECT
-
-    void auth(const QString& username, const QString& password);
-    lastfm::XmlQuery EmptyXmlQuery();
-    bool ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
-                    bool* connectionProblems = NULL);
 
     PlayerInterface* m_player;
     QSettings *m_settings;
@@ -45,10 +40,10 @@ class Scrobbler : public QObject
 public:
     Scrobbler(QObject *parent = 0, PlayerInterface *player = 0,
               QSettings *settings = 0);
+    ~Scrobbler();
 private slots:
     void init();
     void submit();
-    void authReplyFinished();
 };
 
 #endif // SCROBBLER_H

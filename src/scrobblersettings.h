@@ -22,6 +22,9 @@
 
 #include <QWidget>
 
+#include <lastfm/ws.h>
+#include <lastfm/XmlQuery.h>
+
 class QSettings;
 
 namespace Ui {
@@ -31,6 +34,11 @@ class ScrobblerSettings;
 class ScrobblerSettings : public QWidget
 {
     Q_OBJECT
+
+    void auth(const QString& username, const QString& password);
+    lastfm::XmlQuery EmptyXmlQuery();
+    bool ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
+                    bool* connectionProblems = NULL);
 
     Ui::ScrobblerSettings *ui;
     QSettings *m_settings;
@@ -42,6 +50,7 @@ public:
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
+    void authReplyFinished();
 };
 
 #endif // SCROBBLERSETTINGS_H

@@ -22,24 +22,17 @@
 #include "scrobbler.h"
 #include "trayicon.h"
 #include "playerinterface.h"
-#include "scrobblersettings.h"
 #include "exo.h"
 
 Exo::Exo(int &argc, char **argv) : QApplication(argc, argv) {
 
-    QSettings *settings = new QSettings("latitude52", "eXo");
-
-    if(!settings->value("scrobbler/configured").toBool()) {
-        ScrobblerSettings *settingsDialog = new ScrobblerSettings(settings);
-        settingsDialog->show();
-    }
+    QSettings *settings = new QSettings("exo", "eXo");
 
     PlayerInterface *player = new PlayerInterface(this);
 
-    if(settings->value("scrobbler/enabled").toBool()) {
-        Scrobbler *scrobbler = new Scrobbler(this, player, settings);
-    }
-
     TrayIcon *trayicon = new TrayIcon(player, settings);
     trayicon->hide();
+
+    if(settings->value("scrobbler/sessionkey").toBool())
+        Scrobbler *scrobbler = new Scrobbler(this, player, settings);
 }

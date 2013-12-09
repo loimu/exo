@@ -23,10 +23,14 @@
 #include "playerinterface.h"
 #include "lyricswindow.h"
 #include "aboutdialog.h"
+#include "scrobblersettings.h"
 
 TrayIcon::TrayIcon(PlayerInterface *player, QSettings *settings) {
     m_player = player;
     m_settings = settings;
+
+    if(!m_settings->value("scrobbler/configured").toBool())
+        showConfigurationDialog();
 
     createActions();
     createTrayIcon();
@@ -65,7 +69,7 @@ void TrayIcon::createActions() {
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     QIcon quitIcon(":/images/close.png");
     quitAction->setIcon(quitIcon);
-    setQuitBehaviourAction = new QAction(tr("Shutdown moc on exit"), this);
+    setQuitBehaviourAction = new QAction(tr("Close moc on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
     connect(setQuitBehaviourAction, SIGNAL(triggered()),
             this, SLOT(setQuitBehaviour()));
@@ -137,13 +141,15 @@ void TrayIcon::updateToolTip() {
     QString tooltip = tr("<html><b>Stopped</b>");
     if(m_player->isServerRunning() && info.size() > 0) {
         if(info.at(0) != "STOP") {
-            tooltip = QString("<html><b>%1</b>").arg(info.at(2));
+            tooltip = "<table width=\"300\"><tr><td>";
+            tooltip.append(QString("<html><b>%1</b>").arg(info.at(2)));
+            tooltip.append("</td></tr></table>");
             if(!info.at(1).startsWith("http")) {
                 tooltip.append(tr("<br />Current Time: %1/%2").arg(info.at(9))
                                .arg(info.at(6)));
-                tooltip.append(QString("<br /><img src='%1' width='300' />")
-                               .arg(coverPath()));
             }
+            tooltip.append(QString("<br /><img src='%1' width='300' />")
+                           .arg(coverPath()));
         }
         tooltip.append("</html>");
     }
@@ -189,8 +195,15 @@ void TrayIcon::setQuitBehaviour() {
 void TrayIcon::setScrobbling() {
     if(setScrobblingAction->isChecked()) {
         m_settings->setValue("scrobbler/enabled", true);
+        if(!m_settings->value("scrobbler/sessionkey").toBool())
+            showConfigurationDialog();
     }
     else {
         m_settings->setValue("scrobbler/enabled", false);
     }
+}
+
+void TrayIcon::showConfigurationDialog() {
+    ScrobblerSettings *settingsDialog = new ScrobblerSettings(m_settings);
+    settingsDialog->show();
 }

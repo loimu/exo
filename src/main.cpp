@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
                                           "on this system."));
         return 1;
     }
-    QApplication::setOrganizationName("latitude52");
+
     QApplication::setApplicationName("eXo");
-    QApplication::setApplicationVersion("0.0");
+    QApplication::setApplicationVersion("0.1");
     QApplication::setQuitOnLastWindowClosed(false);
 
     return app.exec();
