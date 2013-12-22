@@ -50,6 +50,8 @@ public:
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
+    void on_usernameLineEdit_returnPressed();
+    void on_passwordLineEdit_returnPressed();
     void authReplyFinished();
 };
 

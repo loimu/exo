@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>88</height>
+    <width>395</width>
+    <height>86</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,14 +26,14 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLineEdit" name="Username">
+       <widget class="QLineEdit" name="usernameLineEdit">
         <property name="placeholderText">
          <string>login</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="Password">
+       <widget class="QLineEdit" name="passwordLineEdit">
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
         </property>

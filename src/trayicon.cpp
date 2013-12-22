@@ -21,7 +21,7 @@
 
 #include "trayicon.h"
 #include "playerinterface.h"
-#include "lyricswindow.h"
+#include "lyricsdialog.h"
 #include "aboutdialog.h"
 #include "scrobblersettings.h"
 
@@ -159,8 +159,8 @@ void TrayIcon::updateToolTip() {
 }
 
 void TrayIcon::showLyricsWindow() {
-    QPointer<LyricsWindow> lyricsWindow = new LyricsWindow(this, m_player);
-    lyricsWindow->show();
+    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog(this, m_player);
+    lyricsDialog->show();
 }
 
 void TrayIcon::showAboutDialog() {

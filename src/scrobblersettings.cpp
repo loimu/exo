@@ -39,21 +39,29 @@ ScrobblerSettings::~ScrobblerSettings() {
 }
 
 void ScrobblerSettings::on_buttonBox_accepted() {
-    if(ui->Username && ui->Password) {
+    if(ui->usernameLineEdit && ui->passwordLineEdit) {
         m_settings->setValue("scrobbler/enabled", true);
         m_settings->setValue("scrobbler/configured", true);
-        QString username = ui->Username->text();
-        QString password = ui->Password->text();
+        QString username = ui->usernameLineEdit->text();
+        QString password = ui->passwordLineEdit->text();
         lastfm::ws::ApiKey = "75ca28a33e04af35b315c086736a6e7c";
         lastfm::ws::SharedSecret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
         auth(username, password);
 
         QMessageBox msgBox;
         msgBox.setText(tr("Please restart application for the changes to take"
-                          "effect."));
+                          " effect."));
         msgBox.exec();
     }
     this->close();
+}
+
+void ScrobblerSettings::on_usernameLineEdit_returnPressed() {
+    on_buttonBox_accepted();
+}
+
+void ScrobblerSettings::on_passwordLineEdit_returnPressed() {
+    on_buttonBox_accepted();
 }
 
 void ScrobblerSettings::on_buttonBox_rejected() {

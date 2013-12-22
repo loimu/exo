@@ -7,19 +7,19 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
 set(exo_SRCS src/exo.cpp src/main.cpp
              src/aboutdialog.cpp
-             src/lyricswindow.cpp
+             src/lyricsdialog.cpp
              src/playerinterface.cpp
              src/scrobbler.cpp
              src/scrobblersettings.cpp
              src/trayicon.cpp)
 set(exo_HDRS src/exo.h
              src/aboutdialog.h
-             src/lyricswindow.h
+             src/lyricsdialog.h
              src/playerinterface.h
              src/scrobbler.h
              src/scrobblersettings.h
              src/trayicon.h)
-set(exo_FRMS src/aboutdialog.ui src/lyricswindow.ui src/scrobblersettings.ui)
+set(exo_FRMS src/aboutdialog.ui src/lyricsdialog.ui src/scrobblersettings.ui)
 set(exo_RSRCS exo.qrc)
 
 qt4_automoc(${exo_SRCS})
