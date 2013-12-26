@@ -4,9 +4,9 @@
 #include <QRegExp>
 
 #include "playerinterface.h"
-#include "lyricswindow.h"
+#include "lyricsdialog.h"
 
-LyricsWindow::LyricsWindow(QWidget *parent, PlayerInterface *player)
+LyricsDialog::LyricsDialog(QWidget *parent, PlayerInterface *player)
     : QWidget(parent) {
     m_player = player;
 
@@ -21,7 +21,7 @@ LyricsWindow::LyricsWindow(QWidget *parent, PlayerInterface *player)
     on_updatePushButton_clicked();
 }
 
-void LyricsWindow::showText(QNetworkReply *reply) {
+void LyricsDialog::showText(QNetworkReply *reply) {
     ui.stateLabel->setText(tr("Done"));
     if (reply->error() != QNetworkReply::NoError) {
         ui.stateLabel->setText(tr("Error"));
@@ -59,14 +59,12 @@ void LyricsWindow::showText(QNetworkReply *reply) {
         }
 
         QString temp = url_rgex.cap(1).toAscii();
-        //qDebug("LyricsWindow: received url = %s", qPrintable(temp));
         temp.replace("http://lyrics.wikia.com/",
                      "http://lyrics.wikia.com/index.php?title=");
         temp.append("&action=edit");
 
         QUrl url = QUrl::fromEncoded(temp.toAscii());
         QString referer = url_rgex.cap(1);
-        //qDebug("LyricsWindow: request url = %s", url.toEncoded().constData());
         QNetworkRequest request;
         request.setUrl(url);
         request.setRawHeader("Referer", referer.toAscii());
@@ -92,22 +90,22 @@ void LyricsWindow::showText(QNetworkReply *reply) {
     reply->deleteLater();
 }
 
-void LyricsWindow::on_artistLineEdit_returnPressed() {
+void LyricsDialog::on_artistLineEdit_returnPressed() {
     search();
 }
 
-void LyricsWindow::on_titleLineEdit_returnPressed() {
+void LyricsDialog::on_titleLineEdit_returnPressed() {
     search();
 }
 
-void LyricsWindow::on_updatePushButton_clicked() {
+void LyricsDialog::on_updatePushButton_clicked() {
     ui.artistLineEdit->setText(m_player->artist);
     ui.titleLineEdit->setText(m_player->title);
     if(!m_player->artist.isEmpty())
         search();
 }
 
-void LyricsWindow::search() {
+void LyricsDialog::search() {
     ui.stateLabel->setText(tr("Receiving"));
     setWindowTitle(QString(tr("%1 - %2")).arg(ui.artistLineEdit->text())
                    .arg(ui.titleLineEdit->text()));
