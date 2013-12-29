@@ -37,7 +37,7 @@ class TrayIcon : public QWidget
 
     void createActions();
     void createTrayIcon();
-    QString coverPath();
+    QString coverPath(QString);
     void showConfigurationDialog();
 
     PlayerInterface *m_player;
@@ -65,7 +65,7 @@ public:
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
-    void updateToolTip();
+    void updateToolTip(QString, QString, QString, QString);
     void showLyricsWindow();
     void showAboutDialog();
     void setQuitBehaviour();

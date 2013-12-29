@@ -30,21 +30,17 @@
 
 Scrobbler::Scrobbler(QObject *parent, PlayerInterface* player,
                      QSettings *settings) : QObject(parent) {
-
-    m_player = player;
     m_settings = settings;
-
     lastfm::ws::ApiKey = "75ca28a33e04af35b315c086736a6e7c";
     lastfm::ws::SharedSecret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
     QString username = m_settings->value("scrobbler/login").toString();
     lastfm::ws::Username = username;
-
     QString key = m_settings->value("scrobbler/sessionkey").toString();
     lastfm::ws::SessionKey = key;
-
-    connect(m_player, SIGNAL(trackChanged()), this, SLOT(init()));
-    connect(m_player, SIGNAL(trackListened()), this, SLOT(submit()));
-
+    connect(player, SIGNAL(trackChanged(QString, QString, int)),
+            this, SLOT(init(QString, QString, int)));
+    connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
+            this, SLOT(submit(QString, QString, QString, int)));
     as = new lastfm::Audioscrobbler("eXo");
 }
 
@@ -52,24 +48,23 @@ Scrobbler::~Scrobbler() {
     delete as;
 }
 
-void Scrobbler::init() {
+void Scrobbler::init(QString artist, QString title, int totalSec) {
     lastfm::MutableTrack t;
-    t.setArtist(m_player->artist);
-    t.setTitle(m_player->title);
-    t.setDuration(m_player->totalSec);
-
+    t.setArtist(artist);
+    t.setTitle(title);
+    t.setDuration(totalSec);
     if(m_settings->value("scrobbler/enabled").toBool())
         as->nowPlaying(t);
 }
 
-void Scrobbler::submit() {
+void Scrobbler::submit(QString artist, QString title,
+                       QString album,int totalSec) {
     lastfm::MutableTrack t;
-    t.setArtist(m_player->artist);
-    t.setTitle(m_player->title);
-    t.setAlbum(m_player->m_list.at(5));
-    t.setDuration(m_player->totalSec);
+    t.setArtist(artist);
+    t.setTitle(title);
+    t.setAlbum(album);
+    t.setDuration(totalSec);
     t.stamp(); //sets track start time
-
     if(m_settings->value("scrobbler/enabled").toBool()) {
         as->cache(t);
         as->submit();

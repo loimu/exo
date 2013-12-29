@@ -29,15 +29,10 @@ PlayerInterface::PlayerInterface(QObject *parent) :
     if(m_instance)
         qFatal("PlayerInterface: only one instance is allowed");
     m_instance = this;
-
-    m_listened = true;
-    m_nowPlaying = "";
-    artist = "";
-    title = "";
-
+    m_artist = QString();
+    m_title = QString();
     if(!isServerRunning())
         runServer();
-
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(1000);
@@ -98,44 +93,83 @@ void PlayerInterface::update() {
     proc.start("mocp", QStringList() << "-i");
     proc.waitForFinished(-1);
     QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    m_list = output.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
-    m_list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
+    QStringList list = output.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
+    int listSize = list.size();
+    static bool listened = true;
+    static QString nowPlaying = QString();
+    static QString message = QString();
+    QString currentTime = QString();
+    static QString totalTime = QString();
+    static QString path = QString();
+    QString album = QString();
+    static int totalSec = 0;
+    static const int streamListSize = 11;
 //    for (int i = 0; i < list.size(); ++i) {
 //        qDebug("debug: %s", qPrintable(list.at(i)));
 //    }
-    if(m_list.size() >= 11) {
-        int currentTime = m_list.at(10).toInt();
-        int totalTime = m_list.at(8).toInt();
-
-        artist = m_list.at(3);
-        title = m_list.at(4);
-        if(artist.isEmpty() && !title.isEmpty()) {
-            artist = title;
-            artist.replace(QRegExp("^(.+)\\s-\\s.*"), "\\1");
-            title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
-            totalSec = 8*60;
+    // condition is true if file or stream is playing
+    if(listSize >= streamListSize) {
+        int currentSec = list.at(10).toInt();
+        currentTime = list.at(9);
+        album = list.at(5);
+        // condition is true if track have changed
+        if(nowPlaying != list.at(2)) {
+            nowPlaying = list.at(2);
+            message = nowPlaying;
+            m_title = list.at(4);
+            // condition is true for radio streams
+            if(listSize == streamListSize) {
+                totalSec = 8*60;
+                if(!m_title.isEmpty()) {
+                    m_artist = m_title;
+                    m_artist.replace(QRegExp("^(.+)\\s-\\s.*"), "\\1");
+                    m_title.replace(QRegExp("^.+\\s-\\s(.*)"), "\\1");
+                }
+            }
+            else {
+                m_artist = list.at(3);
+                totalSec = list.at(8).toInt();
+                totalTime = list.at(6);
+                path = list.at(1);
+            }
+            // 1st signal for scrobbler
+            emit trackChanged(m_artist, m_title, totalSec);
         }
-        else
-            totalSec = m_list.at(8).toInt();
-
-        if(m_nowPlaying != m_list.at(2)) {
-            m_nowPlaying = m_list.at(2);
-            emit trackChanged();
-        }
-        else if(m_listened && ((currentTime < totalTime/2 && totalTime < 8*60)||
-                             (currentTime < 4*60 && totalTime > 8*60))) {
-            m_listened = false;
-        }
-        else if(!m_listened && (currentTime > totalTime/2 ||
-                            (currentTime > 4*60 && totalTime > 8*60))) {
-            m_listened = true;
-            emit trackListened();
+        else if(listSize > streamListSize) {
+            if(listened && ((currentSec < totalSec/2 && totalSec < 8*60)||
+                                   (currentSec < 4*60 && totalSec > 8*60))) {
+                listened = false;
+            }
+            else if(!listened && (currentSec > totalSec/2 ||
+                                    (currentSec > 4*60 && totalSec > 8*60))) {
+                listened = true;
+                // 2nd signal for scrobbler
+                emit trackListened(m_artist, m_title, album, totalSec);
+            }
         }
     }
-    updateStatus();
+    else {
+        if(listSize == 0)
+            message = tr("Player is not running, make a doubleclick.");
+        else if (listSize == 1)
+            message = tr("Stopped");
+        currentTime = QString();
+        path = QString();
+    }
+    // signal for trayicon
+    emit updateStatus(message, currentTime, totalTime, path);
 }
 
 void PlayerInterface::openWindow() {
     QProcess proc;
     proc.startDetached("x-terminal-emulator", QStringList() << "-e" << "mocp");
+}
+
+QString PlayerInterface::artist() {
+    return QString(m_artist);
+}
+
+QString PlayerInterface::title() {
+    return QString(m_title);
 }

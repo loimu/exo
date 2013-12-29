@@ -28,16 +28,13 @@
 TrayIcon::TrayIcon(PlayerInterface *player, QSettings *settings) {
     m_player = player;
     m_settings = settings;
-
     if(!m_settings->value("scrobbler/configured").toBool())
         showConfigurationDialog();
-
     createActions();
     createTrayIcon();
-
     trayIcon->show();
-
-    connect(m_player, SIGNAL(updateStatus()), this, SLOT(updateToolTip()));
+    connect(m_player, SIGNAL(updateStatus(QString, QString, QString, QString)),
+            this, SLOT(updateToolTip(QString, QString, QString, QString)));
 }
 
 void TrayIcon::createActions() {
@@ -136,26 +133,30 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
     }
 }
 
-void TrayIcon::updateToolTip() {
-    QStringList info = m_player->m_list;
-    QString tooltip = tr("<html><b>Stopped</b>");
-    if(m_player->isServerRunning() && info.size() > 0) {
-        if(info.at(0) != "STOP") {
-            tooltip = "<table width=\"300\"><tr><td>";
-            tooltip.append(QString("<html><b>%1</b>").arg(info.at(2)));
-            tooltip.append("</td></tr></table>");
-            if(!info.at(1).startsWith("http")) {
-                tooltip.append(tr("<br />Current Time: %1/%2").arg(info.at(9))
-                               .arg(info.at(6)));
-            }
-            tooltip.append(QString("<br /><img src='%1' width='300' />")
-                           .arg(coverPath()));
-        }
-        tooltip.append("</html>");
+void TrayIcon::updateToolTip(QString message, QString currentTime,
+                             QString totalTime, QString path) {
+    QString tooltip = QString("<table width=\"300\"><tr><td><b>%1</b>"
+                              "</td></tr></table>").arg(message);
+    if(!path.isEmpty()) {
+        tooltip.append(QString("<br />Current time: %1/%2<br />"
+                               "<img src=\"%3\" width=\"300\" />")
+                       .arg(currentTime)
+                       .arg(totalTime)
+                       .arg(coverPath(path)));
     }
-    else
-        tooltip = tr("Player is not running, make a doubleclick.");
     trayIcon->setToolTip(tooltip);
+}
+
+QString TrayIcon::coverPath(QString path) {
+    path.replace(QRegExp("(.*)/(.*)"), "\\1");
+    QDir dir(path);
+    QStringList filters;
+    filters << "*.png" << "*.jpg" << "*.jpeg";
+    dir.setNameFilters(filters);
+    if(dir.entryList().size() > 0)
+        return path + "/" + dir.entryList().at(0);
+    else
+        return ":/images/nocover.png";
 }
 
 void TrayIcon::showLyricsWindow() {
@@ -166,19 +167,6 @@ void TrayIcon::showLyricsWindow() {
 void TrayIcon::showAboutDialog() {
     m_about = new AboutDialog(this);
     m_about->show();
-}
-
-QString TrayIcon::coverPath() {
-    QString repl = m_player->m_list.at(1);
-    QString path = repl.replace(QRegExp("(.*)/(.*)"), "\\1");
-    QDir dir(path);
-    QStringList filters;
-    filters << "*.png" << "*.jpg" << "*.jpeg";
-    dir.setNameFilters(filters);
-    if(dir.entryList().size() > 0)
-        return path + "/" + dir.entryList().at(0);
-    else
-        return ":/images/nocover.png";
 }
 
 void TrayIcon::setQuitBehaviour() {

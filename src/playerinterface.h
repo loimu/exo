@@ -28,27 +28,22 @@ class PlayerInterface : public QObject
     Q_OBJECT
 
     void runServer();
-
+    bool isServerRunning();
     static PlayerInterface* m_instance;
-    bool m_listened;
+    QString m_artist;
+    QString m_title;
 
 public:
     PlayerInterface(QObject *parent = 0);
     ~PlayerInterface();
-
-    bool isServerRunning();
     void openWindow();
-
-    QString m_nowPlaying;
-    QStringList m_list;
-    QString artist;
-    QString title;
-    int totalSec;
+    QString artist();
+    QString title();
 
 signals:
-    void trackListened();
-    void trackChanged();
-    void updateStatus();
+    void trackListened(QString, QString, QString, int);
+    void trackChanged(QString, QString, int);
+    void updateStatus(QString, QString, QString, QString);
 
 public slots:
     void play();

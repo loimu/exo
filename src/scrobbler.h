@@ -33,7 +33,6 @@ class Scrobbler : public QObject
 {
     Q_OBJECT
 
-    PlayerInterface* m_player;
     QSettings *m_settings;
     lastfm::Audioscrobbler* as;
 
@@ -42,8 +41,8 @@ public:
               QSettings *settings = 0);
     ~Scrobbler();
 private slots:
-    void init();
-    void submit();
+    void init(QString, QString, int);
+    void submit(QString, QString, QString, int);
 };
 
 #endif // SCROBBLER_H
