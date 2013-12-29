@@ -99,25 +99,22 @@ void PlayerInterface::update() {
     static bool listened = true;
     static QString nowPlaying = QString();
     static QString message = QString();
-    QString currentTime = QString();
     static QString totalTime = QString();
     static QString path = QString();
-    QString album = QString();
     static int totalSec = 0;
     static const int streamListSize = 11;
-//    for (int i = 0; i < list.size(); ++i) {
-//        qDebug("debug: %s", qPrintable(list.at(i)));
-//    }
+    QString currentTime = QString();
     // condition is true if file or stream is playing
     if(listSize >= streamListSize) {
+        QString album = QString();
         int currentSec = list.at(10).toInt();
         currentTime = list.at(9);
-        album = list.at(5);
         // condition is true if track have changed
         if(nowPlaying != list.at(2)) {
             nowPlaying = list.at(2);
             message = nowPlaying;
             m_title = list.at(4);
+            album = list.at(5);
             // condition is true for radio streams
             if(listSize == streamListSize) {
                 totalSec = 8*60;
