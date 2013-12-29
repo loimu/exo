@@ -18,8 +18,6 @@
 * ======================================================================== */
 
 #include <lastfm/ws.h>
-#include <lastfm/misc.h>
-#include <lastfm/Artist.h>
 #include <lastfm/Audioscrobbler.h>
 #include <lastfm/Track.h>
 
