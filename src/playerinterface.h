@@ -27,6 +27,7 @@ class PlayerInterface : public QObject
 {
     Q_OBJECT
 
+    void sendOption(QString);
     void runServer();
     bool isServerRunning();
     static PlayerInterface* m_instance;

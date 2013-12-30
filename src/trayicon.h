@@ -39,14 +39,11 @@ class TrayIcon : public QWidget
     void createTrayIcon();
     QString coverPath(QString);
     void showConfigurationDialog();
-
     PlayerInterface *m_player;
     QSettings *m_settings;
     QPointer<AboutDialog> m_about;
-
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
-
     QAction *lyricsAction;
     QAction *playAction;
     QAction *pauseAction;
@@ -57,7 +54,6 @@ class TrayIcon : public QWidget
     QAction *quitAction;
     QAction *setQuitBehaviourAction;
     QAction *setScrobblingAction;
-
     QSystemTrayIcon *trayIcon;
 
 public:

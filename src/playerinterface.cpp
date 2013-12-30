@@ -53,39 +53,37 @@ bool PlayerInterface::isServerRunning() {
         return false;
 }
 
-void PlayerInterface::runServer() {
+void PlayerInterface::sendOption(QString option) {
     QProcess proc;
-    proc.startDetached("mocp", QStringList() << "-S");
+    proc.startDetached("mocp", QStringList() << option);
+}
+
+void PlayerInterface::runServer() {
+    sendOption("-S");
 }
 
 void PlayerInterface::play() {
-    QProcess proc;
-    proc.startDetached("mocp", QStringList() << "-p");
+    sendOption("-p");
 }
 
 void PlayerInterface::pause() {
-    QProcess proc;
-    proc.startDetached("mocp", QStringList() << "-G");
+    sendOption("-G");
 }
 
 void PlayerInterface::prev() {
-    QProcess proc;
-    proc.startDetached("mocp", QStringList() << "-r");
+    sendOption("-r");
 }
 
 void PlayerInterface::next() {
-    QProcess proc;
-    proc.startDetached("mocp", QStringList() << "-f");
+    sendOption("-f");
 }
 
 void PlayerInterface::stop() {
-    QProcess proc;
-    proc.startDetached("mocp", QStringList() << "-s");
+    sendOption("-s");
 }
 
 void PlayerInterface::quit() {
-    QProcess proc;
-    proc.startDetached("mocp", QStringList() << "-x");
+    sendOption("-x");
 }
 
 void PlayerInterface::update() {
