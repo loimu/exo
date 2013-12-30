@@ -43,14 +43,17 @@ PlayerInterface::~PlayerInterface() {
 }
 
 bool PlayerInterface::isServerRunning() {
-    QProcess proc;
-    proc.start("pidof", QStringList() << "mocp");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    if(output.length() > 1)
+    if(execute("pidof", "mocp").length() > 1)
         return true;
     else
         return false;
+}
+
+QString PlayerInterface::execute(QString program, QString option) {
+    QProcess proc;
+    proc.start(program, QStringList() << option);
+    proc.waitForFinished(-1);
+    return QString::fromUtf8(proc.readAllStandardOutput());
 }
 
 void PlayerInterface::sendOption(QString option) {
@@ -87,11 +90,8 @@ void PlayerInterface::quit() {
 }
 
 void PlayerInterface::update() {
-    QProcess proc;
-    proc.start("mocp", QStringList() << "-i");
-    proc.waitForFinished(-1);
-    QString output = QString::fromUtf8(proc.readAllStandardOutput());
-    QStringList list = output.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    QStringList list = execute("mocp", "-i").split(QRegExp("[\r\n]"),
+                                                   QString::SkipEmptyParts);
     list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
     int listSize = list.size();
     static bool listened = true;
@@ -102,7 +102,7 @@ void PlayerInterface::update() {
     static int totalSec = 0;
     static const int streamListSize = 11;
     QString currentTime = QString();
-    // condition is true if file or stream is playing
+    // the following condition is true if file or stream is playing
     if(listSize >= streamListSize) {
         QString album = QString();
         int currentSec = list.at(10).toInt();
