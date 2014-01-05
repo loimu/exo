@@ -56,7 +56,7 @@ void Scrobbler::init(QString artist, QString title, int totalSec) {
 }
 
 void Scrobbler::submit(QString artist, QString title,
-                       QString album,int totalSec) {
+                       QString album, int totalSec) {
     lastfm::MutableTrack t;
     t.setArtist(artist);
     t.setTitle(title);

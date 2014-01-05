@@ -104,7 +104,6 @@ void PlayerInterface::update() {
     QString currentTime = QString();
     // the following condition is true if file or stream is playing
     if(listSize >= streamListSize) {
-        QString album = QString();
         int currentSec = list.at(10).toInt();
         currentTime = list.at(9);
         // condition is true if track have changed
@@ -112,7 +111,6 @@ void PlayerInterface::update() {
             nowPlaying = list.at(2);
             message = nowPlaying;
             m_title = list.at(4);
-            album = list.at(5);
             // condition is true for radio streams
             if(listSize == streamListSize) {
                 totalSec = 8*60;
@@ -139,6 +137,7 @@ void PlayerInterface::update() {
             else if(!listened && (currentSec > totalSec/2 ||
                                     (currentSec > 4*60 && totalSec > 8*60))) {
                 listened = true;
+                QString album = list.at(5);
                 // 2nd signal for scrobbler
                 emit trackListened(m_artist, m_title, album, totalSec);
             }
