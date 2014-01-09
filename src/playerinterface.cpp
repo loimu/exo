@@ -89,6 +89,22 @@ void PlayerInterface::quit() {
     sendOption("-x");
 }
 
+void PlayerInterface::volu() {
+    sendOption("-v+2");
+}
+
+void PlayerInterface::vold() {
+    sendOption("-v-2");
+}
+
+void PlayerInterface::rewd() {
+    sendOption("-k-10");
+}
+
+void PlayerInterface::frwd() {
+    sendOption("-k10");
+}
+
 void PlayerInterface::update() {
     QStringList list = execute("mocp", "-i").split(QRegExp("[\r\n]"),
                                                    QString::SkipEmptyParts);

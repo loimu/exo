@@ -35,10 +35,11 @@ class TrayIcon : public QWidget
 {
     Q_OBJECT
 
-    void createActions();
+    void createActions(PlayerInterface *player);
     void createTrayIcon();
     QString coverPath(QString);
     void showConfigurationDialog();
+    bool eventFilter(QObject *, QEvent *);
     PlayerInterface *m_player;
     QSettings *m_settings;
     QPointer<AboutDialog> m_about;
@@ -58,6 +59,16 @@ class TrayIcon : public QWidget
 
 public:
     explicit TrayIcon(PlayerInterface *player = 0, QSettings *settings = 0);
+
+signals:
+    void playerOpenWindow();
+    void playerTogglePause();
+    void playerVolumeUp();
+    void playerVolumeDown();
+    void playerNext();
+    void playerPrevious();
+    void playerForward();
+    void playerRewind();
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);

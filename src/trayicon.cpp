@@ -30,34 +30,38 @@ TrayIcon::TrayIcon(PlayerInterface *player, QSettings *settings) {
     m_settings = settings;
     if(!m_settings->value("scrobbler/configured").toBool())
         showConfigurationDialog();
-    createActions();
+    createActions(player);
     createTrayIcon();
     trayIcon->show();
-    connect(m_player, SIGNAL(updateStatus(QString, QString, QString, QString)),
+    connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             this, SLOT(updateToolTip(QString, QString, QString, QString)));
+    connect(this, SIGNAL(playerOpenWindow()), player, SLOT(openWindow()));
+    connect(this, SIGNAL(playerTogglePause()), player, SLOT(pause()));
+    connect(this, SIGNAL(playerVolumeDown()), player, SLOT(vold()));
+    connect(this, SIGNAL(playerVolumeUp()), player, SLOT(volu()));
 }
 
-void TrayIcon::createActions() {
+void TrayIcon::createActions(PlayerInterface *player) {
     lyricsAction = new QAction(tr("&Lyrics"), this);
     connect(lyricsAction, SIGNAL(triggered()), this, SLOT(showLyricsWindow()));
     playAction = new QAction(tr("&Play"), this);
-    connect(playAction, SIGNAL(triggered()), m_player, SLOT(play()));
+    connect(playAction, SIGNAL(triggered()), player, SLOT(play()));
     QIcon playIcon(":/images/play.png");
     playAction->setIcon(playIcon);
     pauseAction = new QAction(tr("P&ause"), this);
-    connect(pauseAction, SIGNAL(triggered()), m_player, SLOT(pause()));
+    connect(pauseAction, SIGNAL(triggered()), player, SLOT(pause()));
     QIcon pauseIcon(":/images/pause.png");
     pauseAction->setIcon(pauseIcon);
     prevAction = new QAction(tr("P&rev"), this);
-    connect(prevAction, SIGNAL(triggered()), m_player, SLOT(prev()));
+    connect(prevAction, SIGNAL(triggered()), player, SLOT(prev()));
     QIcon prevIcon(":/images/prev.png");
     prevAction->setIcon(prevIcon);
     nextAction = new QAction(tr("&Next"), this);
-    connect(nextAction, SIGNAL(triggered()), m_player, SLOT(next()));
+    connect(nextAction, SIGNAL(triggered()), player, SLOT(next()));
     QIcon nextIcon(":/images/next.png");
     nextAction->setIcon(nextIcon);
     stopAction = new QAction(tr("&Stop"), this);
-    connect(stopAction, SIGNAL(triggered()), m_player, SLOT(stop()));
+    connect(stopAction, SIGNAL(triggered()), player, SLOT(stop()));
     QIcon stopIcon(":/images/stop.png");
     stopAction->setIcon(stopIcon);
     aboutAction = new QAction(tr("A&bout"), this);
@@ -76,7 +80,7 @@ void TrayIcon::createActions() {
             this, SLOT(setScrobbling()));
 
     if(m_settings->value("player/quitmoc").toBool()) {
-        connect(quitAction, SIGNAL(triggered()), m_player, SLOT(quit()));
+        connect(quitAction, SIGNAL(triggered()), player, SLOT(quit()));
         setQuitBehaviourAction->setChecked(true);
     }
     if(m_settings->value("scrobbler/enabled").toBool()) {
@@ -107,6 +111,7 @@ void TrayIcon::createTrayIcon() {
     trayIcon->setContextMenu(trayIconMenu);
     QIcon icon(":/images/22.png");
     trayIcon->setIcon(icon);
+    trayIcon->installEventFilter(this);
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                       SLOT(clicked(QSystemTrayIcon::ActivationReason)));
@@ -121,16 +126,32 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
                 aboutAction->setEnabled(true);
             break;
         case QSystemTrayIcon::DoubleClick:
-            m_player->openWindow();
+            emit playerOpenWindow();
             break;
         case QSystemTrayIcon::Trigger:
             break;
         case QSystemTrayIcon::MiddleClick:
-            m_player->pause();
+            emit playerTogglePause();
             break;
         default:
             break;
     }
+}
+
+bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
+    if (QObject::eventFilter(object, event))
+        return true;
+    if (object != trayIcon)
+        return false;
+    if (event->type() == QEvent::Wheel) {
+        QWheelEvent* e = static_cast<QWheelEvent*>(event);
+        if (e->delta() < 0)
+            emit playerVolumeDown();
+        else
+            emit playerVolumeUp();
+        return true;
+    }
+    return false;
 }
 
 void TrayIcon::updateToolTip(QString message, QString currentTime,

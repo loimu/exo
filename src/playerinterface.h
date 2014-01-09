@@ -38,7 +38,6 @@ class PlayerInterface : public QObject
 public:
     PlayerInterface(QObject *parent = 0);
     ~PlayerInterface();
-    void openWindow();
     QString artist();
     QString title();
 
@@ -54,6 +53,11 @@ public slots:
     void next();
     void stop();
     void quit();
+    void volu();
+    void vold();
+    void rewd();
+    void frwd();
+    void openWindow();
 
 private slots:
     void update();
