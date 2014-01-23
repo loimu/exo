@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -22,10 +22,11 @@
 
 #include <QWidget>
 
-#include <lastfm/ws.h>
-#include <lastfm/XmlQuery.h>
-
 class QSettings;
+
+namespace lastfm {
+class XmlQuery;
+}
 
 namespace Ui {
 class ScrobblerSettings;
@@ -39,12 +40,10 @@ class ScrobblerSettings : public QWidget
     lastfm::XmlQuery EmptyXmlQuery();
     bool ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
                     bool* connectionProblems = NULL);
-
     Ui::ScrobblerSettings *ui;
-    QSettings *m_settings;
 
 public:
-    explicit ScrobblerSettings(QSettings *settings);
+    explicit ScrobblerSettings(QObject *parent = 0);
     ~ScrobblerSettings();
 
 private slots:
@@ -52,7 +51,12 @@ private slots:
     void on_buttonBox_rejected();
     void on_usernameLineEdit_returnPressed();
     void on_passwordLineEdit_returnPressed();
+    void on_usernameLineEdit_textChanged();
+    void on_passwordLineEdit_textChanged();
     void authReplyFinished();
+
+signals:
+    void configured();
 };
 
 #endif // SCROBBLERSETTINGS_H

@@ -9,7 +9,6 @@
 LyricsDialog::LyricsDialog(QWidget *parent, PlayerInterface *player)
     : QWidget(parent) {
     m_player = player;
-
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);

@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -19,27 +19,21 @@
 
 #include <QProcess>
 #include <QTimer>
+#include <QSettings>
 
 #include "playerinterface.h"
 
-PlayerInterface *PlayerInterface::m_instance=0;
+const char* PlayerInterface::settingsGroup = "player";
 
-PlayerInterface::PlayerInterface(QObject *parent) :
-    QObject(parent) {
-    if(m_instance)
-        qFatal("PlayerInterface: only one instance is allowed");
-    m_instance = this;
-    m_artist = QString();
-    m_title = QString();
+PlayerInterface::PlayerInterface(QObject *parent) : QObject(parent),
+    m_artist(QString()),
+    m_title(QString())
+{
     if(!isServerRunning())
         runServer();
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(1000);
-}
-
-PlayerInterface::~PlayerInterface() {
-    m_instance = 0;
 }
 
 bool PlayerInterface::isServerRunning() {
@@ -86,7 +80,10 @@ void PlayerInterface::stop() {
 }
 
 void PlayerInterface::quit() {
-    sendOption("-x");
+    QSettings settings;
+    settings.beginGroup(settingsGroup);
+    if(settings.value("quit").toBool())
+        sendOption("-x");
 }
 
 void PlayerInterface::volu() {

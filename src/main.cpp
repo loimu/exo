@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -17,25 +17,15 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QtGui>
+#include <QApplication>
 #include "exo.h"
 
 int main(int argc, char *argv[]) {
-
     Q_INIT_RESOURCE(exo);
-
     Exo app(argc, argv);
-
-    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-        QMessageBox::critical(0, QObject::tr("Systray"),
-                              QObject::tr("I couldn't detect any system tray "
-                                          "on this system."));
-        return 1;
-    }
-
-    QApplication::setApplicationName("eXo");
-    QApplication::setApplicationVersion("0.1");
-    QApplication::setQuitOnLastWindowClosed(false);
-
+    app.setApplicationName("eXo");
+    app.setOrganizationName("exo");
+    app.setApplicationVersion("0.1");
+    app.setQuitOnLastWindowClosed(false);
     return app.exec();
 }

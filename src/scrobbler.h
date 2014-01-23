@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -22,9 +22,6 @@
 
 #include <QObject>
 
-class QSettings;
-class PlayerInterface;
-
 namespace lastfm {
     class Audioscrobbler;
 }
@@ -33,13 +30,15 @@ class Scrobbler : public QObject
 {
     Q_OBJECT
 
-    QSettings *m_settings;
     lastfm::Audioscrobbler* as;
 
 public:
-    Scrobbler(QObject *parent = 0, PlayerInterface *player = 0,
-              QSettings *settings = 0);
+    Scrobbler(QObject *parent = 0);
     ~Scrobbler();
+    static const char* settingsGroup;
+    static const char* apiKey;
+    static const char* secret;
+
 private slots:
     void init(QString, QString, int);
     void submit(QString, QString, QString, int);

@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -38,10 +38,8 @@ class TrayIcon : public QWidget
     void createActions(PlayerInterface *player);
     void createTrayIcon();
     QString coverPath(QString);
-    void showConfigurationDialog();
     bool eventFilter(QObject *, QEvent *);
     PlayerInterface *m_player;
-    QSettings *m_settings;
     QPointer<AboutDialog> m_about;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
@@ -58,7 +56,7 @@ class TrayIcon : public QWidget
     QSystemTrayIcon *trayIcon;
 
 public:
-    explicit TrayIcon(PlayerInterface *player = 0, QSettings *settings = 0);
+    explicit TrayIcon(PlayerInterface *player = 0);
 
 signals:
     void playerOpenWindow();
@@ -69,6 +67,8 @@ signals:
     void playerPrevious();
     void playerForward();
     void playerRewind();
+    void loadScrobbler();
+    void unloadScrobbler();
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);

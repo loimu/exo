@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -18,20 +18,17 @@
 * ======================================================================== */
 
 #include <QSettings>
-#include <QMessageBox>
 
 #include <lastfm/ws.h>
 #include <lastfm/misc.h>
 #include <lastfm/XmlQuery.h>
 
+#include "scrobbler.h"
 #include "scrobblersettings.h"
 #include "ui_scrobblersettings.h"
 
-ScrobblerSettings::ScrobblerSettings(QSettings *settings)
-    : ui(new Ui::ScrobblerSettings) {
-
+ScrobblerSettings::ScrobblerSettings(QObject *parent) : ui(new Ui::ScrobblerSettings) {
     ui->setupUi(this);
-    m_settings = settings;
 }
 
 ScrobblerSettings::~ScrobblerSettings() {
@@ -39,21 +36,15 @@ ScrobblerSettings::~ScrobblerSettings() {
 }
 
 void ScrobblerSettings::on_buttonBox_accepted() {
-    if(ui->usernameLineEdit && ui->passwordLineEdit) {
-        m_settings->setValue("scrobbler/enabled", true);
-        m_settings->setValue("scrobbler/configured", true);
+    if(ui->usernameLineEdit->text().size() > 1 &&
+            ui->passwordLineEdit->text().size() > 1) {
         QString username = ui->usernameLineEdit->text();
         QString password = ui->passwordLineEdit->text();
-        lastfm::ws::ApiKey = "75ca28a33e04af35b315c086736a6e7c";
-        lastfm::ws::SharedSecret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
+        lastfm::ws::ApiKey = Scrobbler::apiKey;
+        lastfm::ws::SharedSecret = Scrobbler::secret;
         auth(username, password);
-
-        QMessageBox msgBox;
-        msgBox.setText(tr("Please restart application for the changes to take"
-                          " effect."));
-        msgBox.exec();
-    }
-    this->close();
+    } else
+        ui->label->setText(tr("enter username and password"));
 }
 
 void ScrobblerSettings::on_usernameLineEdit_returnPressed() {
@@ -64,8 +55,15 @@ void ScrobblerSettings::on_passwordLineEdit_returnPressed() {
     on_buttonBox_accepted();
 }
 
+void ScrobblerSettings::on_usernameLineEdit_textChanged() {
+    ui->label->setText("");
+}
+
+void ScrobblerSettings::on_passwordLineEdit_textChanged() {
+    ui->label->setText("");
+}
+
 void ScrobblerSettings::on_buttonBox_rejected() {
-    m_settings->setValue("scrobbler/configured", true);
     this->close();
 }
 
@@ -75,29 +73,32 @@ void ScrobblerSettings::auth(const QString& username, const QString& password) {
     params["username"] = username;
     params["authToken"] =
             lastfm::md5((username +lastfm::md5(password.toUtf8())).toUtf8());
-
     QNetworkReply* reply = lastfm::ws::post(params);
     connect(reply, SIGNAL(finished()), SLOT(authReplyFinished()));
-    // If we need more detailed error report, handle error(NetworkError) signal
+    // for more detailed error report handle error(NetworkError) signal
 }
 
 void ScrobblerSettings::authReplyFinished() {
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    if(!reply)
+    if(!reply) {
+        ui->label->setText(tr("network error, try again"));
         return;
+    }
     reply->deleteLater();
-
     // Parse the reply
     lastfm::XmlQuery lfm(EmptyXmlQuery());
     if (ParseQuery(reply->readAll(), &lfm)) {
         lastfm::ws::Username = lfm["session"]["name"].text();
         lastfm::ws::SessionKey = lfm["session"]["key"].text();
-
         // Save the session key
-        m_settings->setValue("scrobbler/login", lastfm::ws::Username);
-        m_settings->setValue("scrobbler/sessionkey", lastfm::ws::SessionKey);
+        QSettings settings;
+        settings.beginGroup(Scrobbler::settingsGroup);
+        settings.setValue("login", lastfm::ws::Username);
+        settings.setValue("sessionkey", lastfm::ws::SessionKey);
+        emit configured();
+        this->close();
     } else
-        return;
+        ui->label->setText(tr("wrong data, try again"));
 }
 
 lastfm::XmlQuery ScrobblerSettings::EmptyXmlQuery() {
@@ -107,10 +108,8 @@ lastfm::XmlQuery ScrobblerSettings::EmptyXmlQuery() {
 bool ScrobblerSettings::ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
                                    bool* connectionProblems) {
     const bool dataParsed = query->parse(data);
-
     if(connectionProblems)
         *connectionProblems = !dataParsed && query->parseError().enumValue() ==
                 lastfm::ws::MalformedResponse;
-
     return dataParsed;
 }

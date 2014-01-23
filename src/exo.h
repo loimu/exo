@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -21,13 +21,26 @@
 #define EXO_H
 
 #include <QApplication>
+#include <QPointer>
+
+class Scrobbler;
+class PlayerInterface;
 
 class Exo : public QApplication
 {
     Q_OBJECT
 
+    QPointer<Scrobbler> m_scrobbler;
+    PlayerInterface *m_player;
+
 public:
     explicit Exo(int &argc, char **argv);
+
+private slots:
+    void configureScrobbler();
+    void loadScrobbler();
+    void unloadScrobbler();
+    void enableScrobbler();
 };
 
 #endif // EXO_H

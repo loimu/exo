@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -17,28 +17,25 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include <QSettings>
+
 #include <lastfm/ws.h>
 #include <lastfm/Audioscrobbler.h>
 #include <lastfm/Track.h>
 
-#include <QSettings>
-
-#include "playerinterface.h"
 #include "scrobbler.h"
 
-Scrobbler::Scrobbler(QObject *parent, PlayerInterface* player,
-                     QSettings *settings) : QObject(parent) {
-    m_settings = settings;
-    lastfm::ws::ApiKey = "75ca28a33e04af35b315c086736a6e7c";
-    lastfm::ws::SharedSecret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
-    QString username = m_settings->value("scrobbler/login").toString();
-    lastfm::ws::Username = username;
-    QString key = m_settings->value("scrobbler/sessionkey").toString();
-    lastfm::ws::SessionKey = key;
-    connect(player, SIGNAL(trackChanged(QString, QString, int)),
-            this, SLOT(init(QString, QString, int)));
-    connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
-            this, SLOT(submit(QString, QString, QString, int)));
+const char* Scrobbler::settingsGroup = "scrobbler";
+const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";
+const char* Scrobbler::secret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
+
+Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
+    QSettings settings("exo", "eXo");
+    settings.beginGroup(settingsGroup);
+    lastfm::ws::Username = settings.value("login").toString();
+    lastfm::ws::SessionKey = settings.value("sessionkey").toString();
+    lastfm::ws::ApiKey = apiKey;
+    lastfm::ws::SharedSecret = secret;
     as = new lastfm::Audioscrobbler("eXo");
 }
 
@@ -51,8 +48,7 @@ void Scrobbler::init(QString artist, QString title, int totalSec) {
     t.setArtist(artist);
     t.setTitle(title);
     t.setDuration(totalSec);
-    if(m_settings->value("scrobbler/enabled").toBool())
-        as->nowPlaying(t);
+    as->nowPlaying(t);
 }
 
 void Scrobbler::submit(QString artist, QString title,
@@ -63,8 +59,6 @@ void Scrobbler::submit(QString artist, QString title,
     t.setAlbum(album);
     t.setDuration(totalSec);
     t.stamp(); //sets track start time
-    if(m_settings->value("scrobbler/enabled").toBool()) {
-        as->cache(t);
-        as->submit();
-    }
+    as->cache(t);
+    as->submit();
 }

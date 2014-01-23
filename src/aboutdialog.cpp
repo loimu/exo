@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -29,19 +29,15 @@ AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent) {
 
 void AboutDialog::addText() {
     QString text;
-
-    text.append(QString("<html><head/><body><p><b>eXo</b> v%1 ")
-                .arg(qApp->applicationVersion()));
-    text.append("\251 2013 Blaze<br />&lt;blaze@jabster.pl&gt;</p>");
-    text.append(QString("<p>Qt %1 (built with Qt %2)<br />").arg(qVersion())
+    text.append(QString("<p><b>eXo</b> v%1 \251 2013-2014 Blaze<br />&lt;blaze@"
+                        "jabster.pl&gt;</p><p>Qt %2 (built with Qt %3)<br />"
+                        "Licensed under GPL v3 or later.</p><p><b>Links:</b>"
+                        "<br />News: <a href=\"http://loimu.tk/tag/exo/\">"
+                        "http://loimu.tk/tag/exo/</a><br />Project: "
+                        "<a href=\"https://bitbucket.org/blaze/exo\">"
+                        "https://bitbucket.org/blaze/exo</a></p>")
+                .arg(qApp->applicationVersion())
+                .arg(qVersion())
                 .arg(QT_VERSION_STR));
-    text.append("Licensed under GPL v3 or later.</p>"
-                "<p><b>Links:</b><br />News:"
-                " <a href='http://loimu.tk/tag/exo/'>"
-                "http://loimu.tk/tag/exo/</a><br />");
-    text.append(tr("Project"));
-    text.append(": <a href='https://bitbucket.org/blaze/exo'>"
-                "https://bitbucket.org/blaze/exo</a></p></body></html>");
-
     ui.label->setText(text);
 }

@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -21,7 +21,6 @@
 #define PLAYERINTERFACE_H
 
 #include <QObject>
-#include <QStringList>
 
 class PlayerInterface : public QObject
 {
@@ -31,15 +30,14 @@ class PlayerInterface : public QObject
     void sendOption(QString);
     void runServer();
     bool isServerRunning();
-    static PlayerInterface* m_instance;
     QString m_artist;
     QString m_title;
 
 public:
     PlayerInterface(QObject *parent = 0);
-    ~PlayerInterface();
     QString artist();
     QString title();
+    static const char* settingsGroup;
 
 signals:
     void trackListened(QString, QString, QString, int);

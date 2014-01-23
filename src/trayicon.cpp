@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
 *
 *    This file is part of eXo.
 *
@@ -17,19 +17,23 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QtGui>
+#include <QAction>
+#include <QIcon>
+#include <QMenu>
+#include <QSystemTrayIcon>
+#include <QWheelEvent>
+#include <QPointer>
+#include <QDir>
+#include <QSettings>
 
-#include "trayicon.h"
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 #include "aboutdialog.h"
-#include "scrobblersettings.h"
+#include "scrobbler.h"
+#include "trayicon.h"
 
-TrayIcon::TrayIcon(PlayerInterface *player, QSettings *settings) {
+TrayIcon::TrayIcon(PlayerInterface *player) {
     m_player = player;
-    m_settings = settings;
-    if(!m_settings->value("scrobbler/configured").toBool())
-        showConfigurationDialog();
     createActions(player);
     createTrayIcon();
     trayIcon->show();
@@ -67,6 +71,7 @@ void TrayIcon::createActions(PlayerInterface *player) {
     aboutAction = new QAction(tr("A&bout"), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
     quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), player, SLOT(quit()));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     QIcon quitIcon(":/images/close.png");
     quitAction->setIcon(quitIcon);
@@ -78,14 +83,6 @@ void TrayIcon::createActions(PlayerInterface *player) {
     setScrobblingAction->setCheckable(true);
     connect(setScrobblingAction, SIGNAL(triggered()),
             this, SLOT(setScrobbling()));
-
-    if(m_settings->value("player/quitmoc").toBool()) {
-        connect(quitAction, SIGNAL(triggered()), player, SLOT(quit()));
-        setQuitBehaviourAction->setChecked(true);
-    }
-    if(m_settings->value("scrobbler/enabled").toBool()) {
-        setScrobblingAction->setChecked(true);
-    }
 }
 
 void TrayIcon::createTrayIcon() {
@@ -106,24 +103,30 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(aboutAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
-
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
     QIcon icon(":/images/22.png");
     trayIcon->setIcon(icon);
     trayIcon->installEventFilter(this);
-
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                       SLOT(clicked(QSystemTrayIcon::ActivationReason)));
 }
 
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
+    QSettings settings;
     switch (reason) {
         case QSystemTrayIcon::Context:
             if(m_about)
                 aboutAction->setEnabled(false);
             else
                 aboutAction->setEnabled(true);
+            settings.beginGroup(Scrobbler::settingsGroup);
+            if(!settings.value("disabled").toBool())
+                setScrobblingAction->setChecked(true);
+            settings.endGroup();
+            settings.beginGroup(PlayerInterface::settingsGroup);
+            if(settings.value("quit").toBool())
+                setQuitBehaviourAction->setChecked(true);
             break;
         case QSystemTrayIcon::DoubleClick:
             emit playerOpenWindow();
@@ -191,28 +194,17 @@ void TrayIcon::showAboutDialog() {
 }
 
 void TrayIcon::setQuitBehaviour() {
-    if(setQuitBehaviourAction->isChecked()) {
-        connect(quitAction, SIGNAL(triggered()), m_player, SLOT(quit()));
-        m_settings->setValue("player/quitmoc", true);
-    }
-    else {
-        disconnect(quitAction, 0, m_player, 0);
-        m_settings->setValue("player/quitmoc", false);
-    }
+    QSettings settings;
+    settings.beginGroup(PlayerInterface::settingsGroup);
+    if(setQuitBehaviourAction->isChecked())
+        settings.setValue("quit", true);
+    else
+        settings.setValue("quit", false);
 }
 
 void TrayIcon::setScrobbling() {
-    if(setScrobblingAction->isChecked()) {
-        m_settings->setValue("scrobbler/enabled", true);
-        if(!m_settings->value("scrobbler/sessionkey").toBool())
-            showConfigurationDialog();
-    }
-    else {
-        m_settings->setValue("scrobbler/enabled", false);
-    }
-}
-
-void TrayIcon::showConfigurationDialog() {
-    ScrobblerSettings *settingsDialog = new ScrobblerSettings(m_settings);
-    settingsDialog->show();
+    if(setScrobblingAction->isChecked())
+        emit loadScrobbler();
+    else
+        emit unloadScrobbler();
 }
