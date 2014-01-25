@@ -34,7 +34,7 @@ class Exo : public QApplication
     PlayerInterface *m_player;
 
 public:
-    explicit Exo(int &argc, char **argv);
+    explicit Exo(int &argc, char **argv, bool hasGui);
 
 private slots:
     void configureScrobbler();

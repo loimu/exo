@@ -25,20 +25,24 @@
 #include "playerinterface.h"
 #include "exo.h"
 
-Exo::Exo(int &argc, char **argv) : QApplication(argc, argv) {
+Exo::Exo(int &argc, char **argv, bool hasGui)
+    : QApplication(argc, argv, hasGui)
+{
     m_player = new PlayerInterface(this);
     QSettings settings("exo", "eXo");
     settings.beginGroup(Scrobbler::settingsGroup);
     if(!settings.value("disabled").toBool() &&
             settings.value("sessionkey").toBool())
         loadScrobbler();
-    if(QSystemTrayIcon::isSystemTrayAvailable()) {
-        TrayIcon *trayicon = new TrayIcon(m_player);
-        trayicon->hide();
-        connect(trayicon, SIGNAL(loadScrobbler()),
-                this, SLOT(configureScrobbler()));
-        connect(trayicon, SIGNAL(unloadScrobbler()),
-                this, SLOT(unloadScrobbler()));
+    if(hasGui) {
+        if(QSystemTrayIcon::isSystemTrayAvailable()) {
+            TrayIcon *trayicon = new TrayIcon(m_player);
+            trayicon->hide();
+            connect(trayicon, SIGNAL(loadScrobbler()),
+                    this, SLOT(configureScrobbler()));
+            connect(trayicon, SIGNAL(unloadScrobbler()),
+                    this, SLOT(unloadScrobbler()));
+        }
     }
 }
 

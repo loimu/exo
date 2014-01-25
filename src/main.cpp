@@ -17,12 +17,17 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QApplication>
 #include "exo.h"
 
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(exo);
-    Exo app(argc, argv);
+    bool hasGui = true;
+    for(int i=1; i<argc; i++) {
+        QByteArray arg = argv[i];
+        if(arg == "-d" || arg == "--daemonize")
+            hasGui = false;
+    }
+    Exo app(argc, argv, hasGui);
     app.setApplicationName("eXo");
     app.setOrganizationName("exo");
     app.setApplicationVersion("0.1");
