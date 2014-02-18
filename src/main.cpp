@@ -17,6 +17,8 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include <QNetworkProxy>
+#include <QRegExp>
 #include "exo.h"
 
 int main(int argc, char *argv[]) {
@@ -26,6 +28,17 @@ int main(int argc, char *argv[]) {
         QByteArray arg = argv[i];
         if(arg == "-d" || arg == "--daemonize")
             hasGui = false;
+        else if(arg == "-p" || arg == "--proxy") {
+            QString host = argv[++i];
+            QString port = host;
+            host.replace(QRegExp("([\\w.]+):\\d+"), "\\1");
+            port.replace(QRegExp("[\\w.]+:(\\d+)"), "\\1");
+            QNetworkProxy proxy;
+            proxy.setType(QNetworkProxy::HttpProxy);
+            proxy.setHostName(host);
+            proxy.setPort(port.toInt());
+            QNetworkProxy::setApplicationProxy(proxy);
+        }
     }
     Exo app(argc, argv, hasGui);
     app.setApplicationName("eXo");
