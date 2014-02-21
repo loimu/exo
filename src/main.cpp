@@ -31,8 +31,8 @@ int main(int argc, char *argv[]) {
         else if(arg == "-p" || arg == "--proxy") {
             QString host = argv[++i];
             QString port = host;
-            host.replace(QRegExp("([\\w.]+):\\d+"), "\\1");
-            port.replace(QRegExp("[\\w.]+:(\\d+)"), "\\1");
+            host.replace(QRegExp("([\\w\\.]+):\\d+"), "\\1");
+            port.replace(QRegExp("[\\w\\.]+:(\\d+)"), "\\1");
             QNetworkProxy proxy;
             proxy.setType(QNetworkProxy::HttpProxy);
             proxy.setHostName(host);

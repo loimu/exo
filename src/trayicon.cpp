@@ -161,6 +161,7 @@ void TrayIcon::updateToolTip(QString message, QString currentTime,
                              QString totalTime, QString path) {
     QString tooltip = QString("<table width=\"300\"><tr><td><b>%1</b>"
                               "</td></tr></table>").arg(message);
+    // NOTE: path variable should be empty if radio stream is playing
     if(!path.isEmpty()) {
         tooltip.append(QString("<br />Current time: %1/%2<br />"
                                "<img src=\"%3\" width=\"300\" />")

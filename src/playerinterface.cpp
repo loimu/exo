@@ -108,10 +108,10 @@ void PlayerInterface::update() {
     list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
     int listSize = list.size();
     static bool listened = true;
-    static QString nowPlaying = QString();
     static QString message = QString();
     static QString totalTime = QString();
     static QString path = QString();
+    static QString nowPlaying = QString();
     static int totalSec = 0;
     static const int streamListSize = 11;
     QString currentTime = QString();
@@ -120,10 +120,13 @@ void PlayerInterface::update() {
         int currentSec = list.at(10).toInt();
         currentTime = list.at(9);
         // condition is true if track have changed
-        if(nowPlaying != list.at(2)) {
+        if(path != list.at(1) || nowPlaying != list.at(2)) {
+            path = list.at(1);
             nowPlaying = list.at(2);
-            message = nowPlaying;
+            message = list.at(2);
             m_title = list.at(4);
+            if(message.isEmpty())
+                message = path;
             // condition is true for radio streams
             if(listSize == streamListSize) {
                 totalSec = 8*60;
@@ -137,10 +140,10 @@ void PlayerInterface::update() {
                 m_artist = list.at(3);
                 totalSec = list.at(8).toInt();
                 totalTime = list.at(6);
-                path = list.at(1);
             }
             // 1st signal for scrobbler
-            emit trackChanged(m_artist, m_title, totalSec);
+            if(!m_title.isEmpty())
+                emit trackChanged(m_artist, m_title, totalSec);
         }
         else if(listSize > streamListSize) {
             if(listened && ((currentSec < totalSec/2 && totalSec < 8*60)||
@@ -157,15 +160,17 @@ void PlayerInterface::update() {
         }
     }
     else {
+        path = QString();
         if(listSize == 0)
             message = tr("Player is not running, make a doubleclick.");
         else if (listSize == 1)
             message = tr("Stopped");
-        currentTime = QString();
-        path = QString();
     }
+    QString mediaPath;
+    if(path.startsWith("/"))
+        mediaPath = path;
     // signal for trayicon
-    emit updateStatus(message, currentTime, totalTime, path);
+    emit updateStatus(message, currentTime, totalTime, mediaPath);
 }
 
 void PlayerInterface::openWindow() {
