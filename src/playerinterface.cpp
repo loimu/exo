@@ -146,12 +146,12 @@ void PlayerInterface::update() {
                 emit trackChanged(m_artist, m_title, totalSec);
         }
         else if(listSize > streamListSize) {
-            if(listened && ((currentSec < totalSec/2 && totalSec < 8*60)||
-                                   (currentSec < 4*60 && totalSec > 8*60))) {
+            if(listened && ((currentSec < (totalSec/2)-1 && totalSec < 8*60)||
+                                   (currentSec < 4*60-1 && totalSec > 8*60))) {
                 listened = false;
             }
-            else if(!listened && (currentSec > totalSec/2 ||
-                                    (currentSec > 4*60 && totalSec > 8*60))) {
+            else if(!listened && (currentSec > (totalSec/2)+1 ||
+                                    (currentSec > 4*60+1 && totalSec > 8*60))) {
                 listened = true;
                 QString album = list.at(5);
                 // 2nd signal for scrobbler
