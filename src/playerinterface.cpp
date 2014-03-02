@@ -43,16 +43,16 @@ bool PlayerInterface::isServerRunning() {
         return false;
 }
 
-QString PlayerInterface::execute(QString program, QString option) {
+QString PlayerInterface::execute(QString program, QString option,
+                                 QString secondOption) {
     QProcess proc;
-    proc.start(program, QStringList() << option);
+    proc.start(program, QStringList() << option << secondOption);
     proc.waitForFinished(-1);
     return QString::fromUtf8(proc.readAllStandardOutput());
 }
 
 void PlayerInterface::sendOption(QString option) {
-    QProcess proc;
-    proc.startDetached("mocp", QStringList() << option);
+    execute("mocp", option);
 }
 
 void PlayerInterface::runServer() {
@@ -174,8 +174,7 @@ void PlayerInterface::update() {
 }
 
 void PlayerInterface::openWindow() {
-    QProcess proc;
-    proc.startDetached("x-terminal-emulator", QStringList() << "-e" << "mocp");
+    execute("x-terminal-emulator", "-e", "mocp");
 }
 
 QString PlayerInterface::artist() {

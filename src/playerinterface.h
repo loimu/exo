@@ -26,7 +26,7 @@ class PlayerInterface : public QObject
 {
     Q_OBJECT
 
-    QString execute(QString, QString);
+    QString execute(QString program, QString option, QString secondOption = "");
     void sendOption(QString);
     void runServer();
     bool isServerRunning();
