@@ -27,6 +27,7 @@ class LyricsDialog : public QWidget
     QString getArtist();
     QString getTitle();
     void search();
+    QString format(QString);
 
 public:
     LyricsDialog(QWidget *parent = 0, PlayerInterface *player = 0);

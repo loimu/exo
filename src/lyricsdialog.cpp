@@ -98,10 +98,15 @@ void LyricsDialog::on_titleLineEdit_returnPressed() {
 }
 
 void LyricsDialog::on_updatePushButton_clicked() {
-    ui.artistLineEdit->setText(m_player->artist());
-    ui.titleLineEdit->setText(m_player->title());
+    ui.artistLineEdit->setText(format(m_player->artist()));
+    ui.titleLineEdit->setText(format(m_player->title()));
     if(!m_player->artist().isEmpty())
         search();
+}
+
+QString LyricsDialog::format(QString string) {
+    string.replace("&", "and");
+    return string;
 }
 
 void LyricsDialog::search() {
