@@ -32,8 +32,8 @@ void AboutDialog::addText() {
     text.append(QString("<p><b>eXo</b> v%1 \251 2013-2014 Blaze<br />&lt;blaze@"
                         "jabster.pl&gt;</p><p>Qt %2 (built with Qt %3)<br />"
                         "Licensed under GPL v3 or later.</p><p><b>Links:</b>"
-                        "<br />News: <a href=\"http://loimu.tk/tag/exo/\">"
-                        "http://loimu.tk/tag/exo/</a><br />Project: "
+                        "<br />News: <a href=\"http://exo.loimu.tk/\">"
+                        "http://exo.loimu.tk/</a><br />Project: "
                         "<a href=\"https://bitbucket.org/blaze/exo\">"
                         "https://bitbucket.org/blaze/exo</a></p>")
                 .arg(qApp->applicationVersion())
