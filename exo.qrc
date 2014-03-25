@@ -7,7 +7,7 @@
         <file>images/stop.png</file>
         <file>images/close.png</file>
         <file>images/nocover.png</file>
-        <file>images/22.png</file>
-        <file>images/64.png</file>
+        <file>images/32.png</file>
+        <file>images/128.png</file>
     </qresource>
 </RCC>

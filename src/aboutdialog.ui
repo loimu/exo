@@ -70,17 +70,17 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>20</y>
-     <width>64</width>
-     <height>64</height>
+     <x>215</x>
+     <y>5</y>
+     <width>128</width>
+     <height>128</height>
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="../exo.qrc">:/images/64.png</pixmap>
+    <pixmap resource="../exo.qrc">:/images/128.png</pixmap>
    </property>
   </widget>
  </widget>

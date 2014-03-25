@@ -105,7 +105,7 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(quitAction);
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
-    QIcon icon(":/images/22.png");
+    QIcon icon(":/images/32.png");
     trayIcon->setIcon(icon);
     trayIcon->installEventFilter(this);
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
