@@ -26,8 +26,7 @@
 #include "exo.h"
 
 Exo::Exo(int &argc, char **argv, bool hasGui)
-    : QApplication(argc, argv, hasGui)
-{
+    : QApplication(argc, argv, hasGui) {
     m_player = new PlayerInterface(this);
     QSettings settings("exo", "eXo");
     settings.beginGroup(Scrobbler::settingsGroup);

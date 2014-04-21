@@ -19,6 +19,9 @@
 
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H
+#if QT_VERSION >= 0x050000
+    #include <QtWidgets>
+#endif
 
 #include <QWidget>
 

@@ -19,13 +19,10 @@ class LyricsDialog : public QWidget
     Q_OBJECT
 
     PlayerInterface *m_player;
-
     Ui::LyricsDialog ui;
     QNetworkAccessManager *m_http;
     QNetworkReply *m_requestReply;
     QString m_artist, m_title;
-    QString getArtist();
-    QString getTitle();
     void search();
     QString format(QString);
 
@@ -37,6 +34,8 @@ private slots:
     void on_artistLineEdit_returnPressed();
     void on_titleLineEdit_returnPressed();
     void on_updatePushButton_clicked();
+    void on_prevButton_clicked();
+    void on_nextButton_clicked();
 };
 
 #endif // LYRICSDIALOG_H

@@ -25,10 +25,9 @@
 
 const char* PlayerInterface::settingsGroup = "player";
 
-PlayerInterface::PlayerInterface(QObject *parent) : QObject(parent),
-    m_artist(QString()),
-    m_title(QString())
-{
+PlayerInterface::PlayerInterface(QObject* parent) :
+    QObject(parent),
+    m_artist(QString()), m_title(QString()) {
     if(!isServerRunning())
         runServer();
     QTimer *timer = new QTimer(this);

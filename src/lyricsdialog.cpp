@@ -30,7 +30,6 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         return;
     }
     QString content = QString::fromUtf8(reply->readAll().constData());
-
     if(m_requestReply == reply) {
         m_requestReply = 0;
         reply->deleteLater();
@@ -42,7 +41,6 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         lyrics_rgex.setMinimal(true);
         QRegExp url_rgex("<url>(.*)</url>");
         url_rgex.setMinimal(true);
-
         if(artist_rgex.indexIn(content) < 0 || song_rgex.indexIn(content) < 0 ||
            lyrics_rgex.indexIn(content) < 0 || url_rgex.indexIn(content) < 0) {
             ui.textBrowser->setHtml("<b>" + tr("Error") + "</b>");
@@ -56,17 +54,15 @@ void LyricsDialog::showText(QNetworkReply *reply) {
             m_artist = artist_rgex.cap(1);
             m_title = song_rgex.cap(1);
         }
-
-        QString temp = url_rgex.cap(1).toAscii();
-        temp.replace("http://lyrics.wikia.com/",
+        QString urlString = url_rgex.cap(1).toLatin1();
+        urlString.replace("http://lyrics.wikia.com/",
                      "http://lyrics.wikia.com/index.php?title=");
-        temp.append("&action=edit");
-
-        QUrl url = QUrl::fromEncoded(temp.toAscii());
+        urlString.append("&action=edit");
+        QUrl url = QUrl::fromEncoded(urlString.toLatin1());
         QString referer = url_rgex.cap(1);
         QNetworkRequest request;
         request.setUrl(url);
-        request.setRawHeader("Referer", referer.toAscii());
+        request.setRawHeader("Referer", referer.toLatin1());
         ui.stateLabel->setText(tr("Receiving"));
         m_http->get(request);
         reply->deleteLater();
@@ -75,7 +71,6 @@ void LyricsDialog::showText(QNetworkReply *reply) {
     content.replace("&lt;", "<");
     QRegExp lyrics_rgex("<lyrics>(.*)</lyrics>");
     lyrics_rgex.indexIn(content);
-
     QString text = "<h2>" + m_artist + " - " + m_title + "</h2>";
     QString lyrics = lyrics_rgex.cap(1);
     lyrics = lyrics.trimmed();
@@ -104,6 +99,14 @@ void LyricsDialog::on_updatePushButton_clicked() {
         search();
 }
 
+void LyricsDialog::on_prevButton_clicked() {
+    m_player->prev();
+}
+
+void LyricsDialog::on_nextButton_clicked() {
+    m_player->next();
+}
+
 QString LyricsDialog::format(QString string) {
     string.replace("&", "and");
     return string;
@@ -117,6 +120,6 @@ void LyricsDialog::search() {
     request.setUrl(QUrl("http://lyrics.wikia.com/api.php?action=lyrics&artist="+
                         ui.artistLineEdit->text() + "&song=" +
                         ui.titleLineEdit->text() + "&fmt=xml"));
-    request.setRawHeader("User-Agent", QString("Mozilla/5.0").toAscii());
+    request.setRawHeader("User-Agent", QString("Mozilla/5.0").toLatin1());
     m_requestReply = m_http->get(request);
 }
