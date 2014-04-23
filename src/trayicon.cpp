@@ -32,8 +32,8 @@
 #include "scrobbler.h"
 #include "trayicon.h"
 
-TrayIcon::TrayIcon(PlayerInterface *player) {
-    m_player = player;
+TrayIcon::TrayIcon() {
+    PlayerInterface* player = PlayerInterface::instance();
     createActions(player);
     createTrayIcon();
     trayIcon->show();
@@ -185,7 +185,7 @@ QString TrayIcon::coverPath(QString path) {
 }
 
 void TrayIcon::showLyricsWindow() {
-    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog(this, m_player);
+    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog(this);
     lyricsDialog->show();
 }
 

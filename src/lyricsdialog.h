@@ -12,13 +12,11 @@ class QAction;
 class QLabel;
 class QNetworkAccessManager;
 class QNetworkReply;
-class PlayerInterface;
 
 class LyricsDialog : public QWidget
 {
     Q_OBJECT
 
-    PlayerInterface *m_player;
     Ui::LyricsDialog ui;
     QNetworkAccessManager *m_http;
     QNetworkReply *m_requestReply;
@@ -27,7 +25,7 @@ class LyricsDialog : public QWidget
     QString format(QString);
 
 public:
-    LyricsDialog(QWidget *parent = 0, PlayerInterface *player = 0);
+    LyricsDialog(QWidget *parent = 0);
 
 private slots:
     void showText(QNetworkReply *reply);

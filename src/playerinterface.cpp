@@ -24,10 +24,13 @@
 #include "playerinterface.h"
 
 const char* PlayerInterface::settingsGroup = "player";
+PlayerInterface* PlayerInterface::m_instance = 0;
 
-PlayerInterface::PlayerInterface(QObject* parent) :
-    QObject(parent),
+PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent),
     m_artist(QString()), m_title(QString()) {
+    if(m_instance)
+        qFatal("only one instance is allowed");
+    m_instance = this;
     if(!isServerRunning())
         runServer();
     QTimer *timer = new QTimer(this);
@@ -140,7 +143,7 @@ void PlayerInterface::update() {
                 totalSec = list.at(8).toInt();
                 totalTime = list.at(6);
             }
-            // 1st signal for scrobbler
+            // signal for scrobbler
             if(!m_title.isEmpty())
                 emit trackChanged(m_artist, m_title, totalSec);
         }
@@ -153,12 +156,14 @@ void PlayerInterface::update() {
                                     (currentSec > 4*60 && totalSec > 8*60))) {
                 listened = true;
                 QString album = list.at(5);
-                // 2nd signal for scrobbler
+                // signal for scrobbler
                 emit trackListened(m_artist, m_title, album, totalSec);
             }
         }
     }
     else {
+        m_artist = QString();
+        m_title = QString();
         path = QString();
         if(listSize == 0)
             message = tr("Player is not running, make a doubleclick.");
@@ -182,4 +187,8 @@ QString PlayerInterface::artist() {
 
 QString PlayerInterface::title() {
     return QString(m_title);
+}
+
+PlayerInterface* PlayerInterface::instance() {
+    return m_instance;
 }

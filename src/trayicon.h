@@ -39,7 +39,6 @@ class TrayIcon : public QWidget
     void createTrayIcon();
     QString coverPath(QString);
     bool eventFilter(QObject *, QEvent *);
-    PlayerInterface *m_player;
     QPointer<AboutDialog> m_about;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
@@ -56,7 +55,7 @@ class TrayIcon : public QWidget
     QSystemTrayIcon *trayIcon;
 
 public:
-    explicit TrayIcon(PlayerInterface *player = 0);
+    explicit TrayIcon();
 
 signals:
     void playerOpenWindow();

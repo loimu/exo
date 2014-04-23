@@ -32,12 +32,14 @@ class PlayerInterface : public QObject
     bool isServerRunning();
     QString m_artist;
     QString m_title;
+    static PlayerInterface* m_instance;
 
 public:
     PlayerInterface(QObject *parent = 0);
     QString artist();
     QString title();
     static const char* settingsGroup;
+    static PlayerInterface* instance();
 
 signals:
     void trackListened(QString, QString, QString, int);

@@ -6,9 +6,7 @@
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 
-LyricsDialog::LyricsDialog(QWidget *parent, PlayerInterface *player)
-    : QWidget(parent) {
-    m_player = player;
+LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent) {
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
@@ -93,18 +91,19 @@ void LyricsDialog::on_titleLineEdit_returnPressed() {
 }
 
 void LyricsDialog::on_updatePushButton_clicked() {
-    ui.artistLineEdit->setText(format(m_player->artist()));
-    ui.titleLineEdit->setText(format(m_player->title()));
-    if(!m_player->artist().isEmpty())
+    PlayerInterface* player = PlayerInterface::instance();
+    ui.artistLineEdit->setText(format(player->artist()));
+    ui.titleLineEdit->setText(format(player->title()));
+    if(!player->artist().isEmpty())
         search();
 }
 
 void LyricsDialog::on_prevButton_clicked() {
-    m_player->prev();
+    PlayerInterface::instance()->prev();
 }
 
 void LyricsDialog::on_nextButton_clicked() {
-    m_player->next();
+    PlayerInterface::instance()->next();
 }
 
 QString LyricsDialog::format(QString string) {

@@ -25,8 +25,7 @@
 #include "playerinterface.h"
 #include "exo.h"
 
-Exo::Exo(int &argc, char **argv, bool hasGui)
-    : QApplication(argc, argv, hasGui) {
+Exo::Exo(int &argc, char **argv, bool hasGui) : QApplication(argc, argv, hasGui) {
     m_player = new PlayerInterface(this);
     QSettings settings("exo", "eXo");
     settings.beginGroup(Scrobbler::settingsGroup);
@@ -35,11 +34,11 @@ Exo::Exo(int &argc, char **argv, bool hasGui)
         loadScrobbler();
     if(hasGui) {
         if(QSystemTrayIcon::isSystemTrayAvailable()) {
-            TrayIcon *trayicon = new TrayIcon(m_player);
-            trayicon->hide();
-            connect(trayicon, SIGNAL(loadScrobbler()),
+            TrayIcon *trayIcon = new TrayIcon();
+            trayIcon->hide();
+            connect(trayIcon, SIGNAL(loadScrobbler()),
                     this, SLOT(configureScrobbler()));
-            connect(trayicon, SIGNAL(unloadScrobbler()),
+            connect(trayIcon, SIGNAL(unloadScrobbler()),
                     this, SLOT(unloadScrobbler()));
         }
     }
