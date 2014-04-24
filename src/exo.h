@@ -37,7 +37,7 @@ class Exo : public QApplication
     void init(bool);
 
 public:
-    explicit Exo(int &argc, char **argv, bool useGui);
+    explicit Exo(int &argc, char **argv, bool, QString, QString);
     static Exo* app();
     QSettings* settings();
 

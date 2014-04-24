@@ -115,7 +115,7 @@ void TrayIcon::createTrayIcon() {
 }
 
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
-    QSettings* settings = Exo::settings();
+    QSettings* settings = Exo::app()->settings();
     switch (reason) {
         case QSystemTrayIcon::Context:
             if(m_about)
@@ -197,7 +197,7 @@ void TrayIcon::showAboutDialog() {
 }
 
 void TrayIcon::setQuitBehaviour() {
-    QSettings* settings = Exo::settings();
+    QSettings* settings = Exo::app()->settings();
     settings->beginGroup(PlayerInterface::settingsGroup);
     if(setQuitBehaviourAction->isChecked())
         settings->setValue("quit", true);

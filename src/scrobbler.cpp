@@ -31,7 +31,7 @@ const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";
 const char* Scrobbler::secret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
 
 Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
-    QSettings* settings = Exo::settings();
+    QSettings* settings = Exo::app()->settings();
     settings->beginGroup(settingsGroup);
     lastfm::ws::Username = settings->value("login").toString();
     lastfm::ws::SessionKey = settings->value("sessionkey").toString();

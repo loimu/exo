@@ -40,9 +40,9 @@ int main(int argc, char *argv[]) {
             QNetworkProxy::setApplicationProxy(proxy);
         }
     }
-    Exo app(argc, argv, useGui);
-    app.setApplicationName("eXo");
-    app.setOrganizationName("exo");
+    QString appName = "eXo";
+    QString orgName = "exo";
+    Exo app(argc, argv, useGui, appName, orgName);
     app.setApplicationVersion("0.1");
     app.setQuitOnLastWindowClosed(false);
     return app.exec();

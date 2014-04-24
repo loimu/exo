@@ -83,7 +83,7 @@ void PlayerInterface::stop() {
 }
 
 void PlayerInterface::quit() {
-    QSettings* settings = Exo::settings();
+    QSettings* settings = Exo::app()->settings();
     settings->beginGroup(settingsGroup);
     if(settings->value("quit").toBool())
         sendOption("-x");

@@ -18,6 +18,7 @@
 * ======================================================================== */
 
 #include <QSettings>
+#include <QDebug>
 
 #include "scrobblersettings.h"
 #include "scrobbler.h"
@@ -25,13 +26,12 @@
 #include "playerinterface.h"
 #include "exo.h"
 
-Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui),
-    m_pSettings(0) {
-    m_pSettings = new QSettings(this->applicationName(),
-                                this->organizationName(),
-                                this);
+Exo::Exo(int &argc, char **argv, bool useGui, QString appName, QString orgName)
+    : QApplication(argc, argv, useGui), m_pSettings(0) {
+    m_pSettings = new QSettings(appName, orgName, this);
     m_pPlayer = new PlayerInterface(this);
     init(useGui);
+    qDebug() << "DEBUG: " << appName << orgName;
 }
 
 Exo* Exo::app() {
