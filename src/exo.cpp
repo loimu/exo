@@ -18,7 +18,6 @@
 * ======================================================================== */
 
 #include <QSettings>
-#include <QDebug>
 
 #include "scrobblersettings.h"
 #include "scrobbler.h"
@@ -28,10 +27,9 @@
 
 Exo::Exo(int &argc, char **argv, bool useGui, QString appName, QString orgName)
     : QApplication(argc, argv, useGui), m_pSettings(0) {
-    m_pSettings = new QSettings(appName, orgName, this);
+    m_pSettings = new QSettings(orgName, appName, this);
     m_pPlayer = new PlayerInterface(this);
     init(useGui);
-    qDebug() << "DEBUG: " << appName << orgName;
 }
 
 Exo* Exo::app() {
@@ -44,9 +42,8 @@ QSettings* Exo::settings() {
 
 void Exo::init(bool useGui) {
     QSettings* settings = m_pSettings;
-    settings->beginGroup(Scrobbler::settingsGroup);
-    if(!settings->value("disabled").toBool() &&
-            settings->value("sessionkey").toBool())
+    if(!settings->value("scrobbler/disabled").toBool() &&
+            settings->value("scrobbler/sessionkey").toBool())
         loadScrobbler();
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
         TrayIcon *trayIcon = new TrayIcon();
@@ -60,8 +57,7 @@ void Exo::init(bool useGui) {
 
 void Exo::configureScrobbler() {
     QSettings* settings = m_pSettings;
-    settings->beginGroup(Scrobbler::settingsGroup);
-    if(!settings->value("sessionkey").toBool()) {
+    if(!settings->value("scrobbler/sessionkey").toBool()) {
         ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
         settingsDialog->show();
         connect(settingsDialog, SIGNAL(configured()),
@@ -86,8 +82,7 @@ void Exo::loadScrobbler() {
 
 void Exo::unloadScrobbler() {
     QSettings* settings = m_pSettings;
-    settings->beginGroup(Scrobbler::settingsGroup);
-    settings->setValue("disabled", true);
+    settings->setValue("scrobbler/disabled", true);
     if(m_scrobbler) {
         m_scrobbler->deleteLater();
     }
@@ -95,6 +90,5 @@ void Exo::unloadScrobbler() {
 
 void Exo::enableScrobbler() {
     QSettings* settings = m_pSettings;
-    settings->beginGroup(Scrobbler::settingsGroup);
-    settings->setValue("disabled", false);
+    settings->setValue("scrobbler/disabled", false);
 }

@@ -24,7 +24,6 @@
 #include "exo.h"
 #include "playerinterface.h"
 
-const char* PlayerInterface::settingsGroup = "player";
 PlayerInterface* PlayerInterface::m_instance = 0;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent),
@@ -84,8 +83,7 @@ void PlayerInterface::stop() {
 
 void PlayerInterface::quit() {
     QSettings* settings = Exo::app()->settings();
-    settings->beginGroup(settingsGroup);
-    if(settings->value("quit").toBool())
+    if(settings->value("player/quit").toBool())
         sendOption("-x");
 }
 

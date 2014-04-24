@@ -26,7 +26,7 @@ class PlayerInterface : public QObject
 {
     Q_OBJECT
 
-    QString execute(QString program, QString option, QString secondOption = "");
+    QString execute(QString, QString, QString secondOption = "");
     void sendOption(QString);
     void runServer();
     bool isServerRunning();
@@ -38,7 +38,6 @@ public:
     PlayerInterface(QObject *parent = 0);
     QString artist();
     QString title();
-    static const char* settingsGroup;
     static PlayerInterface* instance();
 
 signals:

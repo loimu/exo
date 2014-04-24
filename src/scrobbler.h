@@ -35,7 +35,6 @@ class Scrobbler : public QObject
 public:
     Scrobbler(QObject *parent = 0);
     ~Scrobbler();
-    static const char* settingsGroup;
     static const char* apiKey;
     static const char* secret;
 

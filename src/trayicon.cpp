@@ -122,12 +122,9 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
                 aboutAction->setEnabled(false);
             else
                 aboutAction->setEnabled(true);
-            settings->beginGroup(Scrobbler::settingsGroup);
-            if(!settings->value("disabled").toBool())
+            if(!settings->value("scrobbler/disabled").toBool())
                 setScrobblingAction->setChecked(true);
-            settings->endGroup();
-            settings->beginGroup(PlayerInterface::settingsGroup);
-            if(settings->value("quit").toBool())
+            if(settings->value("player/quit").toBool())
                 setQuitBehaviourAction->setChecked(true);
             break;
         case QSystemTrayIcon::DoubleClick:
@@ -198,11 +195,10 @@ void TrayIcon::showAboutDialog() {
 
 void TrayIcon::setQuitBehaviour() {
     QSettings* settings = Exo::app()->settings();
-    settings->beginGroup(PlayerInterface::settingsGroup);
     if(setQuitBehaviourAction->isChecked())
-        settings->setValue("quit", true);
+        settings->setValue("player/quit", true);
     else
-        settings->setValue("quit", false);
+        settings->setValue("player/quit", false);
 }
 
 void TrayIcon::setScrobbling() {
