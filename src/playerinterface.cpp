@@ -21,6 +21,7 @@
 #include <QTimer>
 #include <QSettings>
 
+#include "exo.h"
 #include "playerinterface.h"
 
 const char* PlayerInterface::settingsGroup = "player";
@@ -82,9 +83,9 @@ void PlayerInterface::stop() {
 }
 
 void PlayerInterface::quit() {
-    QSettings settings;
-    settings.beginGroup(settingsGroup);
-    if(settings.value("quit").toBool())
+    QSettings* settings = Exo::settings();
+    settings->beginGroup(settingsGroup);
+    if(settings->value("quit").toBool())
         sendOption("-x");
 }
 

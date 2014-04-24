@@ -23,11 +23,11 @@
 
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(exo);
-    bool hasGui = true;
+    bool useGui = true;
     for(int i=1; i<argc; i++) {
         QByteArray arg = argv[i];
         if(arg == "-d" || arg == "--daemonize")
-            hasGui = false;
+            useGui = false;
         else if(arg == "-p" || arg == "--proxy") {
             QString host = argv[++i];
             QString port = host;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
             QNetworkProxy::setApplicationProxy(proxy);
         }
     }
-    Exo app(argc, argv, hasGui);
+    Exo app(argc, argv, useGui);
     app.setApplicationName("eXo");
     app.setOrganizationName("exo");
     app.setApplicationVersion("0.1");

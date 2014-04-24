@@ -35,7 +35,7 @@ class TrayIcon : public QWidget
 {
     Q_OBJECT
 
-    void createActions(PlayerInterface *player);
+    void createActions();
     void createTrayIcon();
     QString coverPath(QString);
     bool eventFilter(QObject *, QEvent *);

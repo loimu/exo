@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QSettings>
 
+#include "exo.h"
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 #include "aboutdialog.h"
@@ -34,7 +35,7 @@
 
 TrayIcon::TrayIcon() {
     PlayerInterface* player = PlayerInterface::instance();
-    createActions(player);
+    createActions();
     createTrayIcon();
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
@@ -45,7 +46,8 @@ TrayIcon::TrayIcon() {
     connect(this, SIGNAL(playerVolumeUp()), player, SLOT(volu()));
 }
 
-void TrayIcon::createActions(PlayerInterface *player) {
+void TrayIcon::createActions() {
+    PlayerInterface* player = PlayerInterface::instance();
     lyricsAction = new QAction(tr("&Lyrics"), this);
     connect(lyricsAction, SIGNAL(triggered()), this, SLOT(showLyricsWindow()));
     playAction = new QAction(tr("&Play"), this);
@@ -113,19 +115,19 @@ void TrayIcon::createTrayIcon() {
 }
 
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
-    QSettings settings;
+    QSettings* settings = Exo::settings();
     switch (reason) {
         case QSystemTrayIcon::Context:
             if(m_about)
                 aboutAction->setEnabled(false);
             else
                 aboutAction->setEnabled(true);
-            settings.beginGroup(Scrobbler::settingsGroup);
-            if(!settings.value("disabled").toBool())
+            settings->beginGroup(Scrobbler::settingsGroup);
+            if(!settings->value("disabled").toBool())
                 setScrobblingAction->setChecked(true);
-            settings.endGroup();
-            settings.beginGroup(PlayerInterface::settingsGroup);
-            if(settings.value("quit").toBool())
+            settings->endGroup();
+            settings->beginGroup(PlayerInterface::settingsGroup);
+            if(settings->value("quit").toBool())
                 setQuitBehaviourAction->setChecked(true);
             break;
         case QSystemTrayIcon::DoubleClick:
@@ -195,12 +197,12 @@ void TrayIcon::showAboutDialog() {
 }
 
 void TrayIcon::setQuitBehaviour() {
-    QSettings settings;
-    settings.beginGroup(PlayerInterface::settingsGroup);
+    QSettings* settings = Exo::settings();
+    settings->beginGroup(PlayerInterface::settingsGroup);
     if(setQuitBehaviourAction->isChecked())
-        settings.setValue("quit", true);
+        settings->setValue("quit", true);
     else
-        settings.setValue("quit", false);
+        settings->setValue("quit", false);
 }
 
 void TrayIcon::setScrobbling() {

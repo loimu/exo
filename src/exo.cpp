@@ -25,29 +25,43 @@
 #include "playerinterface.h"
 #include "exo.h"
 
-Exo::Exo(int &argc, char **argv, bool hasGui) : QApplication(argc, argv, hasGui) {
-    m_player = new PlayerInterface(this);
-    QSettings settings("exo", "eXo");
-    settings.beginGroup(Scrobbler::settingsGroup);
-    if(!settings.value("disabled").toBool() &&
-            settings.value("sessionkey").toBool())
+Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui),
+    m_pSettings(0) {
+    m_pSettings = new QSettings(this->applicationName(),
+                                this->organizationName(),
+                                this);
+    m_pPlayer = new PlayerInterface(this);
+    init(useGui);
+}
+
+Exo* Exo::app() {
+    return (Exo*)qApp;
+}
+
+QSettings* Exo::settings() {
+    return m_pSettings;
+}
+
+void Exo::init(bool useGui) {
+    QSettings* settings = m_pSettings;
+    settings->beginGroup(Scrobbler::settingsGroup);
+    if(!settings->value("disabled").toBool() &&
+            settings->value("sessionkey").toBool())
         loadScrobbler();
-    if(hasGui) {
-        if(QSystemTrayIcon::isSystemTrayAvailable()) {
-            TrayIcon *trayIcon = new TrayIcon();
-            trayIcon->hide();
-            connect(trayIcon, SIGNAL(loadScrobbler()),
-                    this, SLOT(configureScrobbler()));
-            connect(trayIcon, SIGNAL(unloadScrobbler()),
-                    this, SLOT(unloadScrobbler()));
-        }
+    if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
+        TrayIcon *trayIcon = new TrayIcon();
+        trayIcon->hide();
+        connect(trayIcon, SIGNAL(loadScrobbler()),
+                this, SLOT(configureScrobbler()));
+        connect(trayIcon, SIGNAL(unloadScrobbler()),
+                this, SLOT(unloadScrobbler()));
     }
 }
 
 void Exo::configureScrobbler() {
-    QSettings settings;
-    settings.beginGroup(Scrobbler::settingsGroup);
-    if(!settings.value("sessionkey").toBool()) {
+    QSettings* settings = m_pSettings;
+    settings->beginGroup(Scrobbler::settingsGroup);
+    if(!settings->value("sessionkey").toBool()) {
         ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
         settingsDialog->show();
         connect(settingsDialog, SIGNAL(configured()),
@@ -63,24 +77,24 @@ void Exo::configureScrobbler() {
 void Exo::loadScrobbler() {
     if(!m_scrobbler) {
         m_scrobbler = new Scrobbler(this);
-        connect(m_player, SIGNAL(trackChanged(QString, QString, int)),
+        connect(m_pPlayer, SIGNAL(trackChanged(QString, QString, int)),
                 m_scrobbler, SLOT(init(QString, QString, int)));
-        connect(m_player, SIGNAL(trackListened(QString, QString, QString, int)),
+        connect(m_pPlayer, SIGNAL(trackListened(QString, QString, QString, int)),
                 m_scrobbler, SLOT(submit(QString, QString, QString, int)));
     }
 }
 
 void Exo::unloadScrobbler() {
-    QSettings settings;
-    settings.beginGroup(Scrobbler::settingsGroup);
-    settings.setValue("disabled", true);
+    QSettings* settings = m_pSettings;
+    settings->beginGroup(Scrobbler::settingsGroup);
+    settings->setValue("disabled", true);
     if(m_scrobbler) {
         m_scrobbler->deleteLater();
     }
 }
 
 void Exo::enableScrobbler() {
-    QSettings settings;
-    settings.beginGroup(Scrobbler::settingsGroup);
-    settings.setValue("disabled", false);
+    QSettings* settings = m_pSettings;
+    settings->beginGroup(Scrobbler::settingsGroup);
+    settings->setValue("disabled", false);
 }

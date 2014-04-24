@@ -23,6 +23,7 @@
 #include <lastfm/misc.h>
 #include <lastfm/XmlQuery.h>
 
+#include "exo.h"
 #include "scrobbler.h"
 #include "scrobblersettings.h"
 #include "ui_scrobblersettings.h"
@@ -91,10 +92,10 @@ void ScrobblerSettings::authReplyFinished() {
         lastfm::ws::Username = lfm["session"]["name"].text();
         lastfm::ws::SessionKey = lfm["session"]["key"].text();
         // Save the session key
-        QSettings settings;
-        settings.beginGroup(Scrobbler::settingsGroup);
-        settings.setValue("login", lastfm::ws::Username);
-        settings.setValue("sessionkey", lastfm::ws::SessionKey);
+        QSettings* settings = Exo::settings();
+        settings->beginGroup(Scrobbler::settingsGroup);
+        settings->setValue("login", lastfm::ws::Username);
+        settings->setValue("sessionkey", lastfm::ws::SessionKey);
         emit configured();
         this->close();
     } else

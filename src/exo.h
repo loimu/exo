@@ -25,16 +25,21 @@
 
 class Scrobbler;
 class PlayerInterface;
+class QSettings;
 
 class Exo : public QApplication
 {
     Q_OBJECT
 
     QPointer<Scrobbler> m_scrobbler;
-    PlayerInterface *m_player;
+    PlayerInterface* m_pPlayer;
+    QSettings* m_pSettings;
+    void init(bool);
 
 public:
-    explicit Exo(int &argc, char **argv, bool hasGui);
+    explicit Exo(int &argc, char **argv, bool useGui);
+    static Exo* app();
+    QSettings* settings();
 
 private slots:
     void configureScrobbler();

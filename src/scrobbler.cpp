@@ -23,6 +23,7 @@
 #include <lastfm/Audioscrobbler.h>
 #include <lastfm/Track.h>
 
+#include "exo.h"
 #include "scrobbler.h"
 
 const char* Scrobbler::settingsGroup = "scrobbler";
@@ -30,10 +31,10 @@ const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";
 const char* Scrobbler::secret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
 
 Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
-    QSettings settings("exo", "eXo");
-    settings.beginGroup(settingsGroup);
-    lastfm::ws::Username = settings.value("login").toString();
-    lastfm::ws::SessionKey = settings.value("sessionkey").toString();
+    QSettings* settings = Exo::settings();
+    settings->beginGroup(settingsGroup);
+    lastfm::ws::Username = settings->value("login").toString();
+    lastfm::ws::SessionKey = settings->value("sessionkey").toString();
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
     as = new lastfm::Audioscrobbler("eXo");
