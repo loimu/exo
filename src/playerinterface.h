@@ -26,19 +26,19 @@ class PlayerInterface : public QObject
 {
     Q_OBJECT
 
+    static PlayerInterface* m_instance;
     QString execute(QString, QString, QString secondOption = "");
     void sendOption(QString);
     void runServer();
     bool isServerRunning();
     QString m_artist;
     QString m_title;
-    static PlayerInterface* m_instance;
 
 public:
     PlayerInterface(QObject *parent = 0);
+    static PlayerInterface* instance();
     QString artist();
     QString title();
-    static PlayerInterface* instance();
 
 signals:
     void trackListened(QString, QString, QString, int);
