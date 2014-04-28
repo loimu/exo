@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     QString appName = "eXo";
     QString orgName = "exo";
     Exo app(argc, argv, useGui, appName, orgName);
-    app.setApplicationVersion("0.1");
+    app.setApplicationVersion("0.2");
     app.setQuitOnLastWindowClosed(false);
     return app.exec();
 }

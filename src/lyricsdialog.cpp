@@ -67,6 +67,7 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         reply->deleteLater();
         return;
     }
+    content.replace("&lt;", "<");
     QRegExp lyricsRgx("<lyrics>(.*)</lyrics>");
     lyricsRgx.indexIn(content);
     QString text = QString("<h2>%1 - %2</h2>").arg(m_artist).arg(m_title);
