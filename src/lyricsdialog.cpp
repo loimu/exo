@@ -2,6 +2,7 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QRegExp>
+#include <QTimer>
 
 #include "playerinterface.h"
 #include "lyricsdialog.h"
@@ -100,10 +101,14 @@ void LyricsDialog::on_updatePushButton_clicked() {
 
 void LyricsDialog::on_prevButton_clicked() {
     PlayerInterface::instance()->prev();
+    ui.textBrowser->setHtml("");
+    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_clicked()));
 }
 
 void LyricsDialog::on_nextButton_clicked() {
     PlayerInterface::instance()->next();
+    ui.textBrowser->setHtml("");
+    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_clicked()));
 }
 
 QString LyricsDialog::format(QString string) {
