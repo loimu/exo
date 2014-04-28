@@ -136,10 +136,13 @@ void PlayerInterface::update() {
             if(listSize == streamListSize) {
                 totalSec = 8*60;
                 if(!m_title.isEmpty()) {
-                    QRegExp titleRgx("^([^-]+)\\s-\\s(.*)");
+                    QRegExp artistRgx("^(.*)\\s-\\s");
+                    artistRgx.setMinimal(true);
+                    QRegExp titleRgx("\\s-\\s(.*)$");
+                    artistRgx.indexIn(m_title);
                     titleRgx.indexIn(m_title);
-                    m_artist = titleRgx.cap(1);
-                    m_title = titleRgx.cap(2);
+                    m_artist = artistRgx.cap(1);
+                    m_title = titleRgx.cap(1);
                 }
             }
             else {

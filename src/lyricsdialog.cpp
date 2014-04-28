@@ -21,7 +21,7 @@ LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent) {
 
 void LyricsDialog::showText(QNetworkReply *reply) {
     ui.stateLabel->setText(tr("Done"));
-    if (reply->error() != QNetworkReply::NoError) {
+    if(reply->error() != QNetworkReply::NoError) {
         ui.stateLabel->setText(tr("Error"));
         ui.textBrowser->setText(reply->errorString());
         m_requestReply = 0;
@@ -67,10 +67,9 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         reply->deleteLater();
         return;
     }
-    content.replace("&lt;", "<");
     QRegExp lyricsRgx("<lyrics>(.*)</lyrics>");
     lyricsRgx.indexIn(content);
-    QString text = "<h2>" + m_artist + " - " + m_title + "</h2>";
+    QString text = QString("<h2>%1 - %2</h2>").arg(m_artist).arg(m_title);
     QString lyrics = lyricsRgx.cap(1);
     lyrics = lyrics.trimmed();
     lyrics.replace("\n", "<br>");
