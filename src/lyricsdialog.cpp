@@ -32,33 +32,33 @@ void LyricsDialog::showText(QNetworkReply *reply) {
     if(m_requestReply == reply) {
         m_requestReply = 0;
         reply->deleteLater();
-        QRegExp artist_rgex("<artist>(.*)</artist>");
-        artist_rgex.setMinimal(true);
-        QRegExp song_rgex("<song>(.*)</song>");
-        song_rgex.setMinimal(true);
-        QRegExp lyrics_rgex("<lyrics>(.*)</lyrics>");
-        lyrics_rgex.setMinimal(true);
-        QRegExp url_rgex("<url>(.*)</url>");
-        url_rgex.setMinimal(true);
-        if(artist_rgex.indexIn(content) < 0 || song_rgex.indexIn(content) < 0 ||
-           lyrics_rgex.indexIn(content) < 0 || url_rgex.indexIn(content) < 0) {
+        QRegExp artistRgx("<artist>(.*)</artist>");
+        artistRgx.setMinimal(true);
+        QRegExp songRgx("<song>(.*)</song>");
+        songRgx.setMinimal(true);
+        QRegExp lyricsRgx("<lyrics>(.*)</lyrics>");
+        lyricsRgx.setMinimal(true);
+        QRegExp urlRgx("<url>(.*)</url>");
+        urlRgx.setMinimal(true);
+        if(artistRgx.indexIn(content) < 0 || songRgx.indexIn(content) < 0 ||
+           lyricsRgx.indexIn(content) < 0 || urlRgx.indexIn(content) < 0) {
             ui.textBrowser->setHtml("<b>" + tr("Error") + "</b>");
             return;
         }
-        else if(lyrics_rgex.cap(1) == "Not found") {
+        else if(lyricsRgx.cap(1) == "Not found") {
             ui.textBrowser->setHtml("<b>" + tr("Not found") + "</b>");
             return;
         }
         else {
-            m_artist = artist_rgex.cap(1);
-            m_title = song_rgex.cap(1);
+            m_artist = artistRgx.cap(1);
+            m_title = songRgx.cap(1);
         }
-        QString urlString = url_rgex.cap(1).toLatin1();
+        QString urlString = urlRgx.cap(1).toLatin1();
         urlString.replace("http://lyrics.wikia.com/",
                      "http://lyrics.wikia.com/index.php?title=");
         urlString.append("&action=edit");
         QUrl url = QUrl::fromEncoded(urlString.toLatin1());
-        QString referer = url_rgex.cap(1);
+        QString referer = urlRgx.cap(1);
         QNetworkRequest request;
         request.setUrl(url);
         request.setRawHeader("Referer", referer.toLatin1());
@@ -68,10 +68,10 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         return;
     }
     content.replace("&lt;", "<");
-    QRegExp lyrics_rgex("<lyrics>(.*)</lyrics>");
-    lyrics_rgex.indexIn(content);
+    QRegExp lyricsRgx("<lyrics>(.*)</lyrics>");
+    lyricsRgx.indexIn(content);
     QString text = "<h2>" + m_artist + " - " + m_title + "</h2>";
-    QString lyrics = lyrics_rgex.cap(1);
+    QString lyrics = lyricsRgx.cap(1);
     lyrics = lyrics.trimmed();
     lyrics.replace("\n", "<br>");
     if(lyrics.isEmpty())
