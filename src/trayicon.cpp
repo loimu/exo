@@ -25,6 +25,7 @@
 #include <QPointer>
 #include <QDir>
 #include <QSettings>
+#include <QFileDialog>
 
 #include "exo.h"
 #include "playerinterface.h"
@@ -48,6 +49,8 @@ TrayIcon::TrayIcon() {
 
 void TrayIcon::createActions() {
     PlayerInterface* player = PlayerInterface::instance();
+    filesAction = new QAction(tr("A&dd ..."), this);
+    connect(filesAction, SIGNAL(triggered()), this, SLOT(addFiles()));
     lyricsAction = new QAction(tr("&Lyrics"), this);
     connect(lyricsAction, SIGNAL(triggered()), this, SLOT(showLyricsWindow()));
     playAction = new QAction(tr("&Play"), this);
@@ -91,6 +94,7 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu = new QMenu(this);
     settingsMenu = new QMenu(trayIconMenu);
     settingsMenu->setTitle(tr("Settings"));
+    trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(playAction);
@@ -206,4 +210,16 @@ void TrayIcon::setScrobbling() {
         emit loadScrobbler();
     else
         emit unloadScrobbler();
+}
+
+void TrayIcon::addFiles() {
+    QStringList files = QFileDialog::getOpenFileNames(this,
+                                                     "Add files to playlist",
+                                                     "",
+                                                     "Media (*.ogg *.mp3 *.flac)");
+    QStringList::Iterator it = files.begin();
+    while(it != files.end()) {
+        PlayerInterface::instance()->appendFile(*it);
+        ++it;
+    }
 }

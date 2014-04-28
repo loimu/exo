@@ -103,6 +103,10 @@ void PlayerInterface::frwd() {
     sendOption("-k10");
 }
 
+void PlayerInterface::appendFile(QString file) {
+    execute("mocp", "-a", file);
+}
+
 void PlayerInterface::update() {
     QStringList list = execute("mocp", "-i").split(QRegExp("[\r\n]"),
                                                    QString::SkipEmptyParts);

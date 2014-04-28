@@ -57,6 +57,7 @@ public slots:
     void rewd();
     void frwd();
     void openWindow();
+    void appendFile(QString);
 
 private slots:
     void update();

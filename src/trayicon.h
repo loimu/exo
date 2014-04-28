@@ -42,6 +42,7 @@ class TrayIcon : public QWidget
     QPointer<AboutDialog> m_about;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
+    QAction *filesAction;
     QAction *lyricsAction;
     QAction *playAction;
     QAction *pauseAction;
@@ -76,6 +77,7 @@ private slots:
     void showAboutDialog();
     void setQuitBehaviour();
     void setScrobbling();
+    void addFiles();
 };
 
 #endif // TRAYICON_H
