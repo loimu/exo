@@ -27,7 +27,7 @@ class PlayerInterface : public QObject
     Q_OBJECT
 
     static PlayerInterface* m_instance;
-    QString execute(QString, QString, QString secondOption = "");
+    QString execute(QString, QStringList);
     void sendOption(QString);
     void runServer();
     bool isServerRunning();

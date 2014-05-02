@@ -24,6 +24,8 @@
 #include "exo.h"
 #include "playerinterface.h"
 
+#define OSD_OPT "OnSongChange=\"/usr/bin/moc-osd.py\""
+
 PlayerInterface* PlayerInterface::m_instance = 0;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent),
@@ -39,26 +41,25 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent),
 }
 
 bool PlayerInterface::isServerRunning() {
-    if(execute("pidof", "mocp").length() > 1)
+    if(execute("pidof", QStringList() << "mocp").length() > 1)
         return true;
     else
         return false;
 }
 
-QString PlayerInterface::execute(QString program, QString option,
-                                 QString secondOption) {
+QString PlayerInterface::execute(QString program, QStringList options) {
     QProcess proc;
-    proc.start(program, QStringList() << option << secondOption);
+    proc.start(program, options);
     proc.waitForFinished(-1);
     return QString::fromUtf8(proc.readAllStandardOutput());
 }
 
 void PlayerInterface::sendOption(QString option) {
-    execute("mocp", option);
+    execute("mocp", QStringList() << option);
 }
 
 void PlayerInterface::runServer() {
-    sendOption("-S");
+    execute("mocp", QStringList() << "-SO" << OSD_OPT);
 }
 
 void PlayerInterface::play() {
@@ -104,12 +105,12 @@ void PlayerInterface::frwd() {
 }
 
 void PlayerInterface::appendFile(QString file) {
-    execute("mocp", "-a", file);
+    execute("mocp", QStringList() << "-a" << file);
 }
 
 void PlayerInterface::update() {
-    QStringList list = execute("mocp", "-i").split(QRegExp("[\r\n]"),
-                                                   QString::SkipEmptyParts);
+    QStringList list = execute("mocp", QStringList() << "-i")
+            .split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
     list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
     int listSize = list.size();
     static bool listened = true;
@@ -185,7 +186,8 @@ void PlayerInterface::update() {
 }
 
 void PlayerInterface::openWindow() {
-    execute("x-terminal-emulator", "-e", "mocp");
+    execute("x-terminal-emulator", QStringList() << "-e" << "mocp" << "-O"
+            << OSD_OPT);
 }
 
 QString PlayerInterface::artist() {
