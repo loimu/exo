@@ -26,9 +26,9 @@
 #include "exo.h"
 
 Exo::Exo(int &argc, char **argv, bool useGui, QString appName, QString orgName)
-    : QApplication(argc, argv, useGui), m_pSettings(0) {
-    m_pSettings = new QSettings(orgName, appName, this);
-    m_pPlayer = new PlayerInterface(this);
+    : QApplication(argc, argv, useGui), settingsObject(0) {
+    settingsObject = new QSettings(orgName, appName, this);
+    player = new PlayerInterface(this);
     init(useGui);
 }
 
@@ -37,13 +37,12 @@ Exo* Exo::app() {
 }
 
 QSettings* Exo::settings() {
-    return m_pSettings;
+    return settingsObject;
 }
 
 void Exo::init(bool useGui) {
-    QSettings* settings = m_pSettings;
-    if(!settings->value("scrobbler/disabled").toBool() &&
-            settings->value("scrobbler/sessionkey").toBool())
+    if(!settingsObject->value("scrobbler/disabled").toBool() &&
+            settingsObject->value("scrobbler/sessionkey").toBool())
         loadScrobbler();
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
         TrayIcon *trayIcon = new TrayIcon();
@@ -56,8 +55,7 @@ void Exo::init(bool useGui) {
 }
 
 void Exo::configureScrobbler() {
-    QSettings* settings = m_pSettings;
-    if(!settings->value("scrobbler/sessionkey").toBool()) {
+    if(!settingsObject->value("scrobbler/sessionkey").toBool()) {
         ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
         settingsDialog->show();
         connect(settingsDialog, SIGNAL(configured()),
@@ -71,24 +69,22 @@ void Exo::configureScrobbler() {
 }
 
 void Exo::loadScrobbler() {
-    if(!m_scrobbler) {
-        m_scrobbler = new Scrobbler(this);
-        connect(m_pPlayer, SIGNAL(trackChanged(QString, QString, int)),
-                m_scrobbler, SLOT(init(QString, QString, int)));
-        connect(m_pPlayer, SIGNAL(trackListened(QString, QString, QString, int)),
-                m_scrobbler, SLOT(submit(QString, QString, QString, int)));
+    if(!scrobbler) {
+        scrobbler = new Scrobbler(this);
+        connect(player, SIGNAL(trackChanged(QString, QString, int)),
+                scrobbler, SLOT(init(QString, QString, int)));
+        connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
+                scrobbler, SLOT(submit(QString, QString, QString, int)));
     }
 }
 
 void Exo::unloadScrobbler() {
-    QSettings* settings = m_pSettings;
-    settings->setValue("scrobbler/disabled", true);
-    if(m_scrobbler) {
-        m_scrobbler->deleteLater();
+    settingsObject->setValue("scrobbler/disabled", true);
+    if(scrobbler) {
+        scrobbler->deleteLater();
     }
 }
 
 void Exo::enableScrobbler() {
-    QSettings* settings = m_pSettings;
-    settings->setValue("scrobbler/disabled", false);
+    settingsObject->setValue("scrobbler/disabled", false);
 }

@@ -31,9 +31,9 @@ class Exo : public QApplication
 {
     Q_OBJECT
 
-    QPointer<Scrobbler> m_scrobbler;
-    PlayerInterface* m_pPlayer;
-    QSettings* m_pSettings;
+    QPointer<Scrobbler> scrobbler;
+    PlayerInterface* player;
+    QSettings* settingsObject;
     void init(bool);
 
 public:

@@ -12,25 +12,25 @@ LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent) {
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_QuitOnClose, false);
-    m_requestReply = 0;
-    m_http = new QNetworkAccessManager(this);
-    connect(m_http, SIGNAL(finished(QNetworkReply *)),
+    replyObject = 0;
+    httpObject = new QNetworkAccessManager(this);
+    connect(httpObject, SIGNAL(finished(QNetworkReply *)),
             SLOT(showText(QNetworkReply *)));
     on_updatePushButton_clicked();
 }
 
 void LyricsDialog::showText(QNetworkReply *reply) {
-    ui.stateLabel->setText(tr("Done"));
+    ui.stateLabel->setText("OK");
     if(reply->error() != QNetworkReply::NoError) {
         ui.stateLabel->setText(tr("Error"));
         ui.textBrowser->setText(reply->errorString());
-        m_requestReply = 0;
+        replyObject = 0;
         reply->deleteLater();
         return;
     }
     QString content = QString::fromUtf8(reply->readAll().constData());
-    if(m_requestReply == reply) {
-        m_requestReply = 0;
+    if(replyObject == reply) {
+        replyObject = 0;
         reply->deleteLater();
         QRegExp artistRgx("<artist>(.*)</artist>");
         artistRgx.setMinimal(true);
@@ -50,8 +50,8 @@ void LyricsDialog::showText(QNetworkReply *reply) {
             return;
         }
         else {
-            m_artist = artistRgx.cap(1);
-            m_title = songRgx.cap(1);
+            artistString = artistRgx.cap(1);
+            titleString = songRgx.cap(1);
         }
         QString urlString = urlRgx.cap(1).toLatin1();
         urlString.replace("http://lyrics.wikia.com/",
@@ -63,14 +63,14 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         request.setUrl(url);
         request.setRawHeader("Referer", referer.toLatin1());
         ui.stateLabel->setText(tr("Receiving"));
-        m_http->get(request);
+        httpObject->get(request);
         reply->deleteLater();
         return;
     }
     content.replace("&lt;", "<");
     QRegExp lyricsRgx("<lyrics>(.*)</lyrics>");
     lyricsRgx.indexIn(content);
-    QString text = QString("<h2>%1 - %2</h2>").arg(m_artist).arg(m_title);
+    QString text = QString("<h2>%1 - %2</h2>").arg(artistString).arg(titleString);
     QString lyrics = lyricsRgx.cap(1);
     lyrics = lyrics.trimmed();
     lyrics.replace("\n", "<br>");
@@ -125,5 +125,5 @@ void LyricsDialog::search() {
                         ui.artistLineEdit->text() + "&song=" +
                         ui.titleLineEdit->text() + "&fmt=xml"));
     request.setRawHeader("User-Agent", QString("Mozilla/5.0").toLatin1());
-    m_requestReply = m_http->get(request);
+    replyObject = httpObject->get(request);
 }

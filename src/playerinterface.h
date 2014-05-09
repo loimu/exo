@@ -26,13 +26,13 @@ class PlayerInterface : public QObject
 {
     Q_OBJECT
 
-    static PlayerInterface* m_instance;
+    static PlayerInterface* object;
     QString execute(QString, QStringList);
     void sendOption(QString);
     void runServer();
     bool isServerRunning();
-    QString m_artist;
-    QString m_title;
+    QString artistString;
+    QString titleString;
 
 public:
     PlayerInterface(QObject *parent = 0);

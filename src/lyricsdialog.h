@@ -18,9 +18,9 @@ class LyricsDialog : public QWidget
     Q_OBJECT
 
     Ui::LyricsDialog ui;
-    QNetworkAccessManager *m_http;
-    QNetworkReply *m_requestReply;
-    QString m_artist, m_title;
+    QNetworkAccessManager *httpObject;
+    QNetworkReply *replyObject;
+    QString artistString, titleString;
     void search();
     QString format(QString);
 

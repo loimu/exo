@@ -122,7 +122,7 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
     QSettings* settings = Exo::app()->settings();
     switch (reason) {
         case QSystemTrayIcon::Context:
-            if(m_about)
+            if(about)
                 aboutAction->setEnabled(false);
             else
                 aboutAction->setEnabled(true);
@@ -193,8 +193,8 @@ void TrayIcon::showLyricsWindow() {
 }
 
 void TrayIcon::showAboutDialog() {
-    m_about = new AboutDialog(this);
-    m_about->show();
+    about = new AboutDialog(this);
+    about->show();
 }
 
 void TrayIcon::setQuitBehaviour() {

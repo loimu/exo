@@ -26,13 +26,13 @@
 
 #define OSD_OPT "OnSongChange=\"/usr/bin/moc-osd.py\""
 
-PlayerInterface* PlayerInterface::m_instance = 0;
+PlayerInterface* PlayerInterface::object = 0;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent),
-    m_artist(QString()), m_title(QString()) {
-    if(m_instance)
+    artistString(QString()), titleString(QString()) {
+    if(object)
         qFatal("only one instance is allowed");
-    m_instance = this;
+    object = this;
     if(!isServerRunning())
         runServer();
     QTimer *timer = new QTimer(this);
@@ -130,30 +130,30 @@ void PlayerInterface::update() {
             path = list.at(1);
             nowPlaying = list.at(2);
             message = list.at(2);
-            m_title = list.at(4);
+            titleString = list.at(4);
             if(message.isEmpty())
                 message = path;
             // condition is true for radio streams
             if(listSize == streamListSize) {
                 totalSec = 8*60;
-                if(!m_title.isEmpty()) {
+                if(!titleString.isEmpty()) {
                     QRegExp artistRgx("^(.*)\\s-\\s");
                     artistRgx.setMinimal(true);
                     QRegExp titleRgx("\\s-\\s(.*)$");
-                    artistRgx.indexIn(m_title);
-                    titleRgx.indexIn(m_title);
-                    m_artist = artistRgx.cap(1);
-                    m_title = titleRgx.cap(1);
+                    artistRgx.indexIn(titleString);
+                    titleRgx.indexIn(titleString);
+                    artistString = artistRgx.cap(1);
+                    titleString = titleRgx.cap(1);
                 }
             }
             else {
-                m_artist = list.at(3);
+                artistString = list.at(3);
                 totalSec = list.at(8).toInt();
                 totalTime = list.at(6);
             }
             // signal for scrobbler
-            if(!m_title.isEmpty())
-                emit trackChanged(m_artist, m_title, totalSec);
+            if(!titleString.isEmpty())
+                emit trackChanged(artistString, titleString, totalSec);
         }
         else if(listSize > streamListSize) {
             if(listened && ((currentSec < totalSec/2 && totalSec < 8*60)||
@@ -165,13 +165,13 @@ void PlayerInterface::update() {
                 listened = true;
                 QString album = list.at(5);
                 // signal for scrobbler
-                emit trackListened(m_artist, m_title, album, totalSec);
+                emit trackListened(artistString, titleString, album, totalSec);
             }
         }
     }
     else {
-        m_artist = QString();
-        m_title = QString();
+        artistString = QString();
+        titleString = QString();
         path = QString();
         if(listSize == 0)
             message = tr("Player is not running, make a doubleclick.");
@@ -191,13 +191,13 @@ void PlayerInterface::openWindow() {
 }
 
 QString PlayerInterface::artist() {
-    return QString(m_artist);
+    return artistString;
 }
 
 QString PlayerInterface::title() {
-    return QString(m_title);
+    return titleString;
 }
 
 PlayerInterface* PlayerInterface::instance() {
-    return m_instance;
+    return object;
 }
