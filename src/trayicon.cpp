@@ -126,7 +126,7 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
                 aboutAction->setEnabled(false);
             else
                 aboutAction->setEnabled(true);
-            if(!settings->value("scrobbler/disabled").toBool())
+            if(settings->value("scrobbler/enabled").toBool())
                 setScrobblingAction->setChecked(true);
             if(settings->value("player/quit").toBool())
                 setQuitBehaviourAction->setChecked(true);

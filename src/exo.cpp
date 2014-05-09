@@ -41,8 +41,7 @@ QSettings* Exo::settings() {
 }
 
 void Exo::init(bool useGui) {
-    if(!settingsObject->value("scrobbler/disabled").toBool() &&
-            settingsObject->value("scrobbler/sessionkey").toBool())
+    if(settingsObject->value("scrobbler/enabled").toBool())
         loadScrobbler();
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
         TrayIcon *trayIcon = new TrayIcon();
@@ -59,13 +58,9 @@ void Exo::configureScrobbler() {
         ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
         settingsDialog->show();
         connect(settingsDialog, SIGNAL(configured()),
-                this, SLOT(loadScrobbler()));
-        connect(settingsDialog, SIGNAL(configured()),
                 this, SLOT(enableScrobbler()));
-    } else {
+    } else
         enableScrobbler();
-        loadScrobbler();
-    }
 }
 
 void Exo::loadScrobbler() {
@@ -79,12 +74,13 @@ void Exo::loadScrobbler() {
 }
 
 void Exo::unloadScrobbler() {
-    settingsObject->setValue("scrobbler/disabled", true);
+    settingsObject->setValue("scrobbler/enabled", false);
     if(scrobbler) {
         scrobbler->deleteLater();
     }
 }
 
 void Exo::enableScrobbler() {
-    settingsObject->setValue("scrobbler/disabled", false);
+    settingsObject->setValue("scrobbler/enabled", true);
+    loadScrobbler();
 }
