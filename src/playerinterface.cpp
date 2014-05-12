@@ -17,14 +17,10 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QProcess>
 #include <QTimer>
-#include <QSettings>
+#include <QProcess>
 
-#include "exo.h"
 #include "playerinterface.h"
-
-#define OSD_OPT "OnSongChange=\"/usr/bin/moc-osd.py\""
 
 PlayerInterface* PlayerInterface::object = 0;
 
@@ -33,18 +29,12 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent),
     if(object)
         qFatal("only one instance is allowed");
     object = this;
-    if(!isServerRunning())
-        runServer();
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(1000);
 }
 
-bool PlayerInterface::isServerRunning() {
-    if(execute("pidof", QStringList() << "mocp").length() > 1)
-        return true;
-    else
-        return false;
+void PlayerInterface::startTimer(int period) {
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(period);
 }
 
 QString PlayerInterface::execute(QString program, QStringList options) {
@@ -52,142 +42,6 @@ QString PlayerInterface::execute(QString program, QStringList options) {
     proc.start(program, options);
     proc.waitForFinished(-1);
     return QString::fromUtf8(proc.readAllStandardOutput());
-}
-
-void PlayerInterface::sendOption(QString option) {
-    execute("mocp", QStringList() << option);
-}
-
-void PlayerInterface::runServer() {
-    execute("mocp", QStringList() << "-SO" << OSD_OPT);
-}
-
-void PlayerInterface::play() {
-    sendOption("-p");
-}
-
-void PlayerInterface::pause() {
-    sendOption("-G");
-}
-
-void PlayerInterface::prev() {
-    sendOption("-r");
-}
-
-void PlayerInterface::next() {
-    sendOption("-f");
-}
-
-void PlayerInterface::stop() {
-    sendOption("-s");
-}
-
-void PlayerInterface::quit() {
-    QSettings* settings = Exo::app()->settings();
-    if(settings->value("player/quit").toBool())
-        sendOption("-x");
-}
-
-void PlayerInterface::volu() {
-    sendOption("-v+2");
-}
-
-void PlayerInterface::vold() {
-    sendOption("-v-2");
-}
-
-void PlayerInterface::rewd() {
-    sendOption("-k-10");
-}
-
-void PlayerInterface::frwd() {
-    sendOption("-k10");
-}
-
-void PlayerInterface::appendFile(QString file) {
-    execute("mocp", QStringList() << "-a" << file);
-}
-
-void PlayerInterface::update() {
-    QStringList list = execute("mocp", QStringList() << "-i")
-            .split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
-    list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
-    int listSize = list.size();
-    static bool listened = true;
-    static QString message = QString();
-    static QString totalTime = QString();
-    static QString path = QString();
-    static QString nowPlaying = QString();
-    static int totalSec = 0;
-    static const int streamListSize = 11;
-    QString currentTime = QString();
-    // the following condition is true if file or stream is playing
-    if(listSize >= streamListSize) {
-        int currentSec = list.at(10).toInt();
-        currentTime = list.at(9);
-        // condition is true if track have changed
-        if(path != list.at(1) || nowPlaying != list.at(2)) {
-            path = list.at(1);
-            nowPlaying = list.at(2);
-            message = list.at(2);
-            titleString = list.at(4);
-            if(message.isEmpty())
-                message = path;
-            // condition is true for radio streams
-            if(listSize == streamListSize) {
-                totalSec = 8*60;
-                if(!titleString.isEmpty()) {
-                    QRegExp artistRgx("^(.*)\\s-\\s");
-                    artistRgx.setMinimal(true);
-                    QRegExp titleRgx("\\s-\\s(.*)$");
-                    artistRgx.indexIn(titleString);
-                    titleRgx.indexIn(titleString);
-                    artistString = artistRgx.cap(1);
-                    titleString = titleRgx.cap(1);
-                }
-            }
-            else {
-                artistString = list.at(3);
-                totalSec = list.at(8).toInt();
-                totalTime = list.at(6);
-            }
-            // signal for scrobbler
-            if(!titleString.isEmpty())
-                emit trackChanged(artistString, titleString, totalSec);
-        }
-        else if(listSize > streamListSize) {
-            if(listened && ((currentSec < totalSec/2 && totalSec < 8*60)||
-                                   (currentSec < 4*60 && totalSec > 8*60))) {
-                listened = false;
-            }
-            else if(!listened && (currentSec > totalSec/2 ||
-                                    (currentSec > 4*60 && totalSec > 8*60))) {
-                listened = true;
-                QString album = list.at(5);
-                // signal for scrobbler
-                emit trackListened(artistString, titleString, album, totalSec);
-            }
-        }
-    }
-    else {
-        artistString = QString();
-        titleString = QString();
-        path = QString();
-        if(listSize == 0)
-            message = tr("Player is not running, make a doubleclick.");
-        else if (listSize == 1)
-            message = tr("Stopped");
-    }
-    QString mediaPath;
-    if(path.startsWith("/"))
-        mediaPath = path;
-    // signal for trayicon
-    emit updateStatus(message, currentTime, totalTime, mediaPath);
-}
-
-void PlayerInterface::openWindow() {
-    execute("x-terminal-emulator", QStringList() << "-e" << "mocp" << "-O"
-            << OSD_OPT);
 }
 
 QString PlayerInterface::artist() {

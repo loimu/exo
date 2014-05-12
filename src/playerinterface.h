@@ -27,10 +27,10 @@ class PlayerInterface : public QObject
     Q_OBJECT
 
     static PlayerInterface* object;
+
+protected:
+    void startTimer(int);
     QString execute(QString, QStringList);
-    void sendOption(QString);
-    void runServer();
-    bool isServerRunning();
     QString artistString;
     QString titleString;
 
@@ -46,21 +46,21 @@ signals:
     void updateStatus(QString, QString, QString, QString);
 
 public slots:
-    void play();
-    void pause();
-    void prev();
-    void next();
-    void stop();
-    void quit();
-    void volu();
-    void vold();
-    void rewd();
-    void frwd();
-    void openWindow();
-    void appendFile(QString);
+    virtual void play() {}
+    virtual void pause() {}
+    virtual void prev() {}
+    virtual void next() {}
+    virtual void stop() {}
+    virtual void quit() {}
+    virtual void volu() {}
+    virtual void vold() {}
+    virtual void rewd() {}
+    virtual void frwd() {}
+    virtual void openWindow() {}
+    virtual void appendFile(QString) {}
 
-private slots:
-    void update();
+protected slots:
+    virtual void update() {}
 };
 
 #endif // PLAYERINTERFACE_H

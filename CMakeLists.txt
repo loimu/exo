@@ -18,6 +18,7 @@ set(exo_SRCS src/exo.cpp src/main.cpp
              src/aboutdialog.cpp
              src/lyricsdialog.cpp
              src/playerinterface.cpp
+             src/mocplayerinterface.cpp
              src/scrobbler.cpp
              src/scrobblersettings.cpp
              src/trayicon.cpp)
@@ -25,6 +26,7 @@ set(exo_HDRS src/exo.h
              src/aboutdialog.h
              src/lyricsdialog.h
              src/playerinterface.h
+             src/mocplayerinterface.h
              src/scrobbler.h
              src/scrobblersettings.h
              src/trayicon.h)

@@ -23,12 +23,13 @@
 #include "scrobbler.h"
 #include "trayicon.h"
 #include "playerinterface.h"
+#include "mocplayerinterface.h"
 #include "exo.h"
 
 Exo::Exo(int &argc, char **argv, bool useGui, QString appName, QString orgName)
     : QApplication(argc, argv, useGui), settingsObject(0) {
     settingsObject = new QSettings(orgName, appName, this);
-    player = new PlayerInterface(this);
+    player = new MOCPlayerInterface(this);
     init(useGui);
 }
 
@@ -75,9 +76,8 @@ void Exo::loadScrobbler() {
 
 void Exo::unloadScrobbler() {
     settingsObject->setValue("scrobbler/enabled", false);
-    if(scrobbler) {
+    if(scrobbler)
         scrobbler->deleteLater();
-    }
 }
 
 void Exo::enableScrobbler() {
