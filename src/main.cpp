@@ -29,14 +29,13 @@ int main(int argc, char *argv[]) {
         if(arg == "-d" || arg == "--daemonize")
             useGui = false;
         else if(arg == "-p" || arg == "--proxy") {
-            QString host = argv[++i];
-            QString port = host;
-            host.replace(QRegExp("([\\w\\.]+):\\d+"), "\\1");
-            port.replace(QRegExp("[\\w\\.]+:(\\d+)"), "\\1");
+            QString address = argv[++i];
+            QRegExp addressRgx ("([\\w\\.]+):(\\d+)");
+            addressRgx.indexIn(address);
             QNetworkProxy proxy;
             proxy.setType(QNetworkProxy::HttpProxy);
-            proxy.setHostName(host);
-            proxy.setPort(port.toInt());
+            proxy.setHostName(addressRgx.cap(1));
+            proxy.setPort(addressRgx.cap(2).toInt());
             QNetworkProxy::setApplicationProxy(proxy);
         }
     }
