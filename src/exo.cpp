@@ -33,6 +33,11 @@ Exo::Exo(int &argc, char **argv, bool useGui, QString appName, QString orgName)
     init(useGui);
 }
 
+Exo::~Exo() {
+    if(settingsObject->value("player/quit").toBool())
+       player->quit();
+}
+
 Exo* Exo::app() {
     return (Exo*)qApp;
 }

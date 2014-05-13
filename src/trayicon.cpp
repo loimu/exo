@@ -76,11 +76,10 @@ void TrayIcon::createActions() {
     aboutAction = new QAction(tr("A&bout"), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
     quitAction = new QAction(tr("&Quit"), this);
-    connect(quitAction, SIGNAL(triggered()), player, SLOT(quit()));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     QIcon quitIcon(":/images/close.png");
     quitAction->setIcon(quitIcon);
-    setQuitBehaviourAction = new QAction(tr("Close moc on exit"), this);
+    setQuitBehaviourAction = new QAction(tr("Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
     connect(setQuitBehaviourAction, SIGNAL(triggered()),
             this, SLOT(setQuitBehaviour()));

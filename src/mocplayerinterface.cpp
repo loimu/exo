@@ -17,7 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QSettings>
 #include <QStringList>
 
 #include "exo.h"
@@ -69,9 +68,7 @@ void MOCPlayerInterface::stop() {
 }
 
 void MOCPlayerInterface::quit() {
-    QSettings* settings = Exo::app()->settings();
-    if(settings->value("player/quit").toBool())
-        sendOption("-x");
+    sendOption("-x");
 }
 
 void MOCPlayerInterface::volu() {
