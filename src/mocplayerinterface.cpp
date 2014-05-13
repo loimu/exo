@@ -19,7 +19,6 @@
 
 #include <QStringList>
 
-#include "exo.h"
 #include "playerinterface.h"
 #include "mocplayerinterface.h"
 
