@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-# Copyright (c) 2013 Blaze <blaze@jabster.pl>
+# Copyright (c) 2014 Blaze <blaze@jabster.pl>
 # Licensed under the GNU General Public License, version 3 or later.
 # See the file http://www.gnu.org/copyleft/gpl.txt.
 
@@ -17,11 +17,11 @@ def find_year(path):
 
 def cover_path(path):
     entries = os.listdir(path)
+    image = ''
     for entry in entries:
-        if re.match('([^\s]+(?=\.(jpg|jpeg|png))\.)', entry):
-            return path + '/' + entry
-        else:
-            return ''
+        if re.match('([^\s]+(?=\.(jpg|jpeg|png)))', entry):
+            image = path + '/' + entry
+    return image
 
 def main():
     output = lambda x : subprocess.getoutput(x)
