@@ -72,7 +72,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="stateLabel">
      <property name="text">
-      <string>No connection</string>
+      <string/>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
