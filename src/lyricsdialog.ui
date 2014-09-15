@@ -55,6 +55,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLineEdit" name="artistLineEdit">
+       <property name="toolTip">
+        <string>Edit and then press Enter</string>
+       </property>
        <property name="placeholderText">
         <string>Artist</string>
        </property>
@@ -62,6 +65,9 @@
      </item>
      <item>
       <widget class="QLineEdit" name="titleLineEdit">
+       <property name="toolTip">
+        <string>Edit and then press Enter</string>
+       </property>
        <property name="placeholderText">
         <string>Title</string>
        </property>

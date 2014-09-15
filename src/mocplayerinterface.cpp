@@ -32,10 +32,7 @@ MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :
 }
 
 bool MOCPlayerInterface::isServerRunning() {
-    if(execute("pidof", QStringList() << "mocp").length() > 1)
-        return true;
-    else
-        return false;
+    return execute("pidof", QStringList() << "mocp").length() > 1;
 }
 
 void MOCPlayerInterface::sendOption(QString option) {
