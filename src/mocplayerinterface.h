@@ -47,6 +47,7 @@ public slots:
 
 protected slots:
     void update();
+    void getInfo();
 
 };
 

@@ -37,7 +37,6 @@ class TrayIcon : public QWidget
 
     void createActions();
     void createTrayIcon();
-    QString coverPath(QString);
     bool eventFilter(QObject *, QEvent *);
     QPointer<AboutDialog> about;
     QMenu *trayIconMenu;

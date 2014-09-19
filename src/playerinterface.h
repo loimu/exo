@@ -22,6 +22,12 @@
 
 #include <QObject>
 
+struct Track
+{
+    QString state, artist, song, album, file, totalTime, currTime, title;
+    int totalSec, currSec;
+};
+
 class PlayerInterface : public QObject
 {
     Q_OBJECT
@@ -29,10 +35,11 @@ class PlayerInterface : public QObject
     static PlayerInterface* object;
 
 protected:
+    Track track;
     void startTimer(int);
     QString execute(QString, QStringList);
-    QString artistString;
-    QString titleString;
+    void scrobbler();
+    QString cover();
 
 public:
     PlayerInterface(QObject *parent = 0);
@@ -61,6 +68,7 @@ public slots:
 
 protected slots:
     virtual void update() {}
+    virtual void getInfo() {}
 };
 
 #endif // PLAYERINTERFACE_H

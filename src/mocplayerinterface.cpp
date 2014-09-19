@@ -24,8 +24,8 @@
 
 #define OSD_OPT "OnSongChange=\"/usr/bin/moc-osd.py\""
 
-MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :
-    PlayerInterface(parent) {
+MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :PlayerInterface(parent)
+{
     if(!isServerRunning())
         runServer();
     startTimer(1000);
@@ -87,81 +87,63 @@ void MOCPlayerInterface::appendFile(QString file) {
     execute("mocp", QStringList() << "-a" << file);
 }
 
-void MOCPlayerInterface::update() {
-    QStringList list = execute("mocp", QStringList() << "-i")
-            .split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
-    list.replaceInStrings(QRegExp("(\\w+:\\s)+(.*)"), "\\2");
-    int listSize = list.size();
-    static bool listened = true;
-    static QString message = QString();
-    static QString totalTime = QString();
-    static QString path = QString();
-    static QString nowPlaying = QString();
-    static int totalSec = 0;
-    static const int streamListSize = 11;
-    QString currentTime = QString();
-    // the following condition is true if file or stream is playing
-    if(listSize >= streamListSize) {
-        int currentSec = list.at(10).toInt();
-        currentTime = list.at(9);
-        // condition is true if track have changed
-        if(path != list.at(1) || nowPlaying != list.at(2)) {
-            path = list.at(1);
-            nowPlaying = list.at(2);
-            message = list.at(2);
-            titleString = list.at(4);
-            if(message.isEmpty())
-                message = path;
-            // condition is true for radio streams
-            if(listSize == streamListSize) {
-                totalSec = 8*60;
-                if(!titleString.isEmpty()) {
-                    QRegExp artistRgx("^(.*)\\s-\\s");
-                    artistRgx.setMinimal(true);
-                    QRegExp titleRgx("\\s-\\s(.*)$");
-                    artistRgx.indexIn(titleString);
-                    titleRgx.indexIn(titleString);
-                    artistString = artistRgx.cap(1);
-                    titleString = titleRgx.cap(1);
-                }
-            }
-            else {
-                artistString = list.at(3);
-                totalSec = list.at(8).toInt();
-                totalTime = list.at(6);
-            }
-            // signal for scrobbler
-            if(!titleString.isEmpty())
-                emit trackChanged(artistString, titleString, totalSec);
-        }
-        else if(listSize > streamListSize) {
-            if(listened && ((currentSec < totalSec/2 && totalSec < 8*60)||
-                                   (currentSec < 4*60 && totalSec > 8*60))) {
-                listened = false;
-            }
-            else if(!listened && (currentSec > totalSec/2 ||
-                                    (currentSec > 4*60 && totalSec > 8*60))) {
-                listened = true;
-                QString album = list.at(5);
-                // signal for scrobbler
-                emit trackListened(artistString, titleString, album, totalSec);
-            }
-        }
+void MOCPlayerInterface::getInfo() {
+    QString info = execute("mocp", QStringList() << "-Q" << "\"<st>%state</st>"
+                           "<ar>%artist</ar><sn>%song</sn><al>%album</al>"
+                           "<fi>%file</fi><tt>%tt</tt><ct>%ct</ct><ts>%ts</ts>"
+                           "<cs>%cs</cs><np>%title</np>\" 2> /dev/null");
+    if(info.size() < 1) {
+        track.state = "Offline";
+        return;
+    }
+    QRegExp infoRgx("<st>(.*)</st><ar>(.*)</ar><sn>(.*)</sn><al>(.*)</al>"
+                    "<fi>(.*)</fi><tt>(.*)</tt><ct>(.*)</ct><ts>(.*)</ts>"
+                    "<cs>(.*)</cs><np>(.*)</np>");
+    infoRgx.setMinimal(true);
+    infoRgx.indexIn(info);
+    track.state = infoRgx.cap(1);
+    if(track.state == "STOP")
+        return;
+    track.artist = infoRgx.cap(2);
+    track.song = infoRgx.cap(3);
+    track.album = infoRgx.cap(4);
+    track.file = infoRgx.cap(5);
+    track.totalTime = infoRgx.cap(6);
+    track.currTime = infoRgx.cap(7);
+    track.totalSec = infoRgx.cap(8).toInt();
+    track.currSec = infoRgx.cap(9).toInt();
+    track.title = infoRgx.cap(10);
+    if(!track.file.startsWith("http"))
+        return;
+    track.totalSec = 8*60;
+    if(!track.title.isEmpty()) {
+        QRegExp artistRgx("^(.*)\\s-\\s");
+        artistRgx.setMinimal(true);
+        artistRgx.indexIn(track.title);
+        track.artist = artistRgx.cap(1);
+        QRegExp titleRgx("\\s-\\s(.*)$");
+        titleRgx.indexIn(track.title);
+        track.song = titleRgx.cap(1);
     }
     else {
-        artistString = QString();
-        titleString = QString();
-        path = QString();
-        if(listSize == 0)
-            message = tr("Player is not running, make a doubleclick.");
-        else if (listSize == 1)
-            message = tr("Stopped");
+        track.title = track.file;
     }
-    QString mediaPath;
-    if(path.startsWith("/"))
-        mediaPath = path;
-    // signal for trayicon
-    emit updateStatus(message, currentTime, totalTime, mediaPath);
+}
+
+void MOCPlayerInterface::update() {
+    getInfo();
+    if(track.state == "Offline") {
+        emit updateStatus(tr("Player isn't running. "
+                             "Double-click to run it."), "", "", "-");
+        return;
+    }
+    if(track.state == "STOP") {
+        emit updateStatus(tr("Stopped"), "", "", "-");
+        return;
+    }
+    emit updateStatus(track.title, track.currTime, track.totalTime, cover());
+    if(track.state != "PAUSE")
+        scrobbler();
 }
 
 void MOCPlayerInterface::openWindow() {

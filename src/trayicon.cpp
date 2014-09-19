@@ -23,7 +23,6 @@
 #include <QSystemTrayIcon>
 #include <QWheelEvent>
 #include <QPointer>
-#include <QDir>
 #include <QSettings>
 #include <QFileDialog>
 
@@ -160,30 +159,17 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
 }
 
 void TrayIcon::updateToolTip(QString message, QString currentTime,
-                             QString totalTime, QString path) {
+                             QString totalTime, QString cover) {
     QString tooltip = QString("<table width=\"300\"><tr><td><b>%1</b>"
                               "</td></tr></table>").arg(message);
-    // NOTE: path variable should be empty if radio stream is playing
-    if(!path.isEmpty()) {
+    if(cover != "-") {
         tooltip.append(QString("<br />Current time: %1/%2<br />"
                                "<img src=\"%3\" width=\"300\" />")
                        .arg(currentTime)
                        .arg(totalTime)
-                       .arg(coverPath(path)));
+                       .arg(cover));
     }
     trayIcon->setToolTip(tooltip);
-}
-
-QString TrayIcon::coverPath(QString path) {
-    path.replace(QRegExp("(.*)/(.*)"), "\\1");
-    QDir dir(path);
-    QStringList filters;
-    filters << "*.png" << "*.jpg" << "*.jpeg";
-    dir.setNameFilters(filters);
-    if(dir.entryList().size() > 0)
-        return path + "/" + dir.entryList().at(0);
-    else
-        return ":/images/nocover.png";
 }
 
 void TrayIcon::showLyricsWindow() {
