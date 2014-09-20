@@ -68,7 +68,7 @@ void PlayerInterface::scrobbler() {
 
 QString PlayerInterface::cover() {
     if(track.file.startsWith("http"))
-        return "-";
+        return "";
     QString path = track.file;
     path.replace(QRegExp("(.*)/(.*)"), "\\1");
     QDir dir(path);

@@ -134,11 +134,11 @@ void MOCPlayerInterface::update() {
     getInfo();
     if(track.state == "Offline") {
         emit updateStatus(tr("Player isn't running. "
-                             "Double-click to run it."), "", "", "-");
+                             "Double-click to run it."), "", "", "");
         return;
     }
     if(track.state == "STOP") {
-        emit updateStatus(tr("Stopped"), "", "", "-");
+        emit updateStatus(tr("Stopped"), "", "", "");
         return;
     }
     emit updateStatus(track.title, track.currTime, track.totalTime, cover());

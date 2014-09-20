@@ -162,7 +162,7 @@ void TrayIcon::updateToolTip(QString message, QString currentTime,
                              QString totalTime, QString cover) {
     QString tooltip = QString("<table width=\"300\"><tr><td><b>%1</b>"
                               "</td></tr></table>").arg(message);
-    if(cover != "-") {
+    if(!cover.isEmpty()) {
         tooltip.append(QString("<br />Current time: %1/%2<br />"
                                "<img src=\"%3\" width=\"300\" />")
                        .arg(currentTime)
@@ -198,10 +198,9 @@ void TrayIcon::setScrobbling() {
 }
 
 void TrayIcon::addFiles() {
-    QStringList files = QFileDialog::getOpenFileNames(this,
-                                                     "Add files to playlist",
-                                                     "",
-                                                     "Media (*.ogg *.mp3 *.flac)");
+    QStringList files = QFileDialog::getOpenFileNames(this, "Add files to"
+                                                            " playlist", "",
+                                   "Media (*.pls *.m3u *.ogg *.mp3 *.flac)");
     QStringList::Iterator it = files.begin();
     while(it != files.end()) {
         PlayerInterface::instance()->appendFile(*it);
