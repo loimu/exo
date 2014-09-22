@@ -70,13 +70,13 @@ void Exo::configureScrobbler() {
 }
 
 void Exo::loadScrobbler() {
-    if(!scrobbler) {
-        scrobbler = new Scrobbler(this);
-        connect(player, SIGNAL(trackChanged(QString, QString, int)),
-                scrobbler, SLOT(init(QString, QString, int)));
-        connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
-                scrobbler, SLOT(submit(QString, QString, QString, int)));
-    }
+    if(scrobbler)
+        return;
+    scrobbler = new Scrobbler(this);
+    connect(player, SIGNAL(trackChanged(QString, QString, int)),
+            scrobbler, SLOT(init(QString, QString, int)));
+    connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
+            scrobbler, SLOT(submit(QString, QString, QString, int)));
 }
 
 void Exo::unloadScrobbler() {
