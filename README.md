@@ -5,12 +5,14 @@
  Allows you to control your MOC player via tray popup menu.
 
 ### Build and run ###
-* cmake .
-* make
-* ./exo
-
+```
+#!Bash
+cmake .
+cmake -DBUILD_WITH_QT4=OFF -DLASTFM_LIBRARIES=/path/to/liblastfm.so .  # for Qt5 version
+make
+./exo
+```
 NOTE: when building with Qt5 link against the Qt5 version of liblastfm
-* -DBUILD_WITH_QT4=OFF -DLASTFM_LIBRARIES=/path/to/liblastfm.so
 
 ### Additional features: ###
 * Scrobbling
