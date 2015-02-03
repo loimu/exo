@@ -27,3 +27,6 @@ NOTE: you should link against the Qt5 version of liblastfm or program will crash
 
 ### Screenshot ###
 ![exo-tray.png](https://bitbucket.org/repo/8Xb9ez/images/2886715694-exo-tray.png)
+
+### Installation ###
+For Ubuntu packages and instructions check the link above.
