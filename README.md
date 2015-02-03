@@ -15,7 +15,7 @@ make
 ### Building with Qt5 ###
 ```
 #!Bash
-cmake -DBUILD_WITH_QT4=OFF -DLASTFM_LIBRARIES=/path/to/liblastfm.so .  # path to Qt5 version of liblastfm
+cmake -DBUILD_WITH_QT4=OFF -DLASTFM_LIBRARIES=/path/to/liblastfm.so  # path to Qt5 version of liblastfm
 make
 ```
 NOTE: you should link against the Qt5 version of liblastfm or program will crash
