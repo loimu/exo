@@ -23,19 +23,20 @@ AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent) {
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
-    setAttribute(Qt::WA_QuitOnClose, false);
     addText();
 }
 
 void AboutDialog::addText() {
     QString text;
-    text.append(QString("<p><b>eXo</b> v%1 &copy; 2013-2014 Blaze<br />&lt;blaze@"
+    text.append(QString("<p><b>eXo</b> v%1 &copy; 2013-2015 Blaze<br />&lt;blaze@"
                         "open.by&gt;</p><p>Qt %2 (built with Qt %3)<br />"
                         "Licensed under GPL v3 or later.</p><p><b>Links:</b>"
                         "<br />News: <a href=\"http://exo.loimu.tk/\">"
                         "http://exo.loimu.tk/</a><br />Project: "
                         "<a href=\"https://bitbucket.org/blaze/exo\">"
-                        "https://bitbucket.org/blaze/exo</a></p>")
+                        "https://bitbucket.org/blaze/exo</a><br />Bugs: "
+                        "<a href=\"https://bitbucket.org/blaze/exo/issues\">"
+                        "https://bitbucket.org/blaze/exo/issues</a></p>")
                 .arg(qApp->applicationVersion())
                 .arg(qVersion())
                 .arg(QT_VERSION_STR));
