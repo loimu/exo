@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2015 Blaze <blaze@open.by>
 *
 *    This file is part of eXo.
 *
@@ -19,9 +19,6 @@
 
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
 
 #include <QWidget>
 

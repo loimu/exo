@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2015 Blaze <blaze@open.by>
 *
 *    This file is part of eXo.
 *
@@ -29,8 +29,8 @@ AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent) {
 
 void AboutDialog::addText() {
     QString text;
-    text.append(QString("<p><b>eXo</b> v%1 \251 2013-2014 Blaze<br />&lt;blaze@"
-                        "jabster.pl&gt;</p><p>Qt %2 (built with Qt %3)<br />"
+    text.append(QString("<p><b>eXo</b> v%1 &copy; 2013-2014 Blaze<br />&lt;blaze@"
+                        "open.by&gt;</p><p>Qt %2 (built with Qt %3)<br />"
                         "Licensed under GPL v3 or later.</p><p><b>Links:</b>"
                         "<br />News: <a href=\"http://exo.loimu.tk/\">"
                         "http://exo.loimu.tk/</a><br />Project: "

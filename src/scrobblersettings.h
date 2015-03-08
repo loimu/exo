@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2015 Blaze <blaze@open.by>
 *
 *    This file is part of eXo.
 *

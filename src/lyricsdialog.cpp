@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2015 Blaze <blaze@open.by>
 *
 *    This file is part of eXo.
 *
@@ -26,7 +26,7 @@
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 
-LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent) {
+LyricsDialog::LyricsDialog(QWidget *parent) : QDialog(parent) {
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);

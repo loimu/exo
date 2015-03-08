@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2015 Blaze <blaze@open.by>
 *
 *    This file is part of eXo.
 *
@@ -49,9 +49,9 @@ TrayIcon::TrayIcon() {
 void TrayIcon::createActions() {
     PlayerInterface* player = PlayerInterface::instance();
     filesAction = new QAction(tr("A&dd ..."), this);
-    connect(filesAction, SIGNAL(triggered()), this, SLOT(addFiles()));
+    connect(filesAction, SIGNAL(triggered()), SLOT(addFiles()));
     lyricsAction = new QAction(tr("&Lyrics"), this);
-    connect(lyricsAction, SIGNAL(triggered()), this, SLOT(showLyricsWindow()));
+    connect(lyricsAction, SIGNAL(triggered()), SLOT(showLyricsWindow()));
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, SIGNAL(triggered()), player, SLOT(play()));
     QIcon playIcon(":/images/play.png");
@@ -73,7 +73,7 @@ void TrayIcon::createActions() {
     QIcon stopIcon(":/images/stop.png");
     stopAction->setIcon(stopIcon);
     aboutAction = new QAction(tr("A&bout"), this);
-    connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutDialog()));
+    connect(aboutAction, SIGNAL(triggered()), SLOT(showAboutDialog()));
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     QIcon quitIcon(":/images/close.png");

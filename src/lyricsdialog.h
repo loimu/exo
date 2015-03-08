@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2014 Blaze <blaze@jabster.pl>
+*    Copyright (C) 2013-2015 Blaze <blaze@open.by>
 *
 *    This file is part of eXo.
 *
@@ -19,11 +19,8 @@
 
 #ifndef LYRICSDIALOG_H
 #define LYRICSDIALOG_H
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
 
-#include <QWidget>
+#include <QDialog>
 
 #include "ui_lyricsdialog.h"
 
@@ -32,7 +29,7 @@ class QLabel;
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class LyricsDialog : public QWidget
+class LyricsDialog : public QDialog
 {
     Q_OBJECT
 
