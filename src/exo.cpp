@@ -18,6 +18,7 @@
 * ======================================================================== */
 
 #include <QSettings>
+#include <QNetworkProxyFactory>
 
 #include "scrobblersettings.h"
 #include "scrobbler.h"
@@ -26,16 +27,33 @@
 #include "mocplayerinterface.h"
 #include "exo.h"
 
-Exo::Exo(int &argc, char **argv, bool useGui, QString appName, QString orgName)
-    : QApplication(argc, argv, useGui), settingsObject(0) {
-    settingsObject = new QSettings(orgName, appName, this);
-    player = new MOCPlayerInterface(this);
+Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
+{
+    QCoreApplication::setOrganizationName("exo");
+    QCoreApplication::setApplicationName("eXo");
+    QCoreApplication::setApplicationVersion("0.3");
+    QApplication::setQuitOnLastWindowClosed(false);
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
     init(useGui);
 }
 
 Exo::~Exo() {
     if(settingsObject->value("player/quit").toBool())
        player->quit();
+}
+
+void Exo::init(bool useGui) {
+    settingsObject = new QSettings(qApp->organizationName(),
+                                   qApp->applicationName(), this);
+    player = new MOCPlayerInterface(this);
+    if(settingsObject->value("scrobbler/enabled").toBool())
+        loadScrobbler();
+    if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
+        TrayIcon *trayIcon = new TrayIcon(this);
+        trayIcon->hide();
+        connect(trayIcon, SIGNAL(loadScrobbler()), SLOT(configureScrobbler()));
+        connect(trayIcon, SIGNAL(unloadScrobbler()), SLOT(unloadScrobbler()));
+    }
 }
 
 Exo* Exo::app() {
@@ -46,25 +64,11 @@ QSettings* Exo::settings() {
     return settingsObject;
 }
 
-void Exo::init(bool useGui) {
-    if(settingsObject->value("scrobbler/enabled").toBool())
-        loadScrobbler();
-    if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
-        TrayIcon *trayIcon = new TrayIcon();
-        trayIcon->hide();
-        connect(trayIcon, SIGNAL(loadScrobbler()),
-                this, SLOT(configureScrobbler()));
-        connect(trayIcon, SIGNAL(unloadScrobbler()),
-                this, SLOT(unloadScrobbler()));
-    }
-}
-
 void Exo::configureScrobbler() {
     if(!settingsObject->value("scrobbler/sessionkey").toBool()) {
         ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
         settingsDialog->show();
-        connect(settingsDialog, SIGNAL(configured()),
-                this, SLOT(enableScrobbler()));
+        connect(settingsDialog, SIGNAL(configured()), SLOT(enableScrobbler()));
     } else
         enableScrobbler();
 }

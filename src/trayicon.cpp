@@ -32,8 +32,13 @@
 #include "aboutdialog.h"
 #include "scrobbler.h"
 #include "trayicon.h"
+#include "trayiconadaptor.h"
 
-TrayIcon::TrayIcon() {
+TrayIcon::TrayIcon(QObject *parent) {
+    new TrayIconAdaptor(this);
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject("/TrayIcon", this);
+    dbus.registerService("tk.loimu.exo.TrayIcon");
     PlayerInterface* player = PlayerInterface::instance();
     createActions();
     createTrayIcon();

@@ -19,9 +19,6 @@
 
 #ifndef SCROBBLERSETTINGS_H
 #define SCROBBLERSETTINGS_H
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
 
 #include <QWidget>
 

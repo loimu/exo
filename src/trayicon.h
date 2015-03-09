@@ -31,6 +31,7 @@ class QSettings;
 class TrayIcon : public QWidget
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "tk.loimu.exo")
 
     void createActions();
     void createTrayIcon();
@@ -52,7 +53,7 @@ class TrayIcon : public QWidget
     QSystemTrayIcon *trayIcon;
 
 public:
-    explicit TrayIcon();
+    explicit TrayIcon(QObject *parent = 0);
 
 signals:
     void playerOpenWindow();
@@ -69,11 +70,13 @@ signals:
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip(QString, QString, QString, QString);
-    void showLyricsWindow();
     void showAboutDialog();
     void setQuitBehaviour();
     void setScrobbling();
     void addFiles();
+
+public slots:
+    void showLyricsWindow();
 };
 
 #endif // TRAYICON_H
