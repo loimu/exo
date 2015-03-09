@@ -22,6 +22,7 @@
 #include <QUrl>
 #include <QRegExp>
 #include <QTimer>
+#include <QKeyEvent>
 
 #include "playerinterface.h"
 #include "lyricsdialog.h"
@@ -136,4 +137,9 @@ void LyricsDialog::search() {
                         ui.titleLineEdit->text() + "&fmt=xml"));
     request.setRawHeader("User-Agent", QString("Mozilla/5.0").toLatin1());
     replyObject = httpObject->get(request);
+}
+
+void LyricsDialog::keyPressEvent(QKeyEvent *e) {
+    if(e->key() == Qt::Key_Escape)
+        this->close();
 }

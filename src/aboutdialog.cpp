@@ -17,6 +17,8 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include <QKeyEvent>
+
 #include "aboutdialog.h"
 
 AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent) {
@@ -41,4 +43,9 @@ void AboutDialog::addText() {
                 .arg(qVersion())
                 .arg(QT_VERSION_STR));
     ui.label->setText(text);
+}
+
+void AboutDialog::keyPressEvent(QKeyEvent *e) {
+    if(e->key() == Qt::Key_Escape)
+        this->close();
 }

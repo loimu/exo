@@ -30,6 +30,7 @@ class AboutDialog : public QWidget
 
     Ui::AboutDialog ui;
     void addText();
+    void keyPressEvent(QKeyEvent *e);
 
 public:
     AboutDialog(QWidget *parent = 0);
