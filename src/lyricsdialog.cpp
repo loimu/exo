@@ -26,7 +26,8 @@
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 
-LyricsDialog::LyricsDialog(QWidget *parent) : QDialog(parent) {
+LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent)
+{
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);

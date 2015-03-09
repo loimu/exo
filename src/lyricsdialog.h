@@ -29,7 +29,7 @@ class QLabel;
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class LyricsDialog : public QDialog
+class LyricsDialog : public QWidget
 {
     Q_OBJECT
 
