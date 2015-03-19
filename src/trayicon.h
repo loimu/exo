@@ -20,6 +20,8 @@
 #ifndef TRAYICON_H
 #define TRAYICON_H
 
+#include "config.h"
+
 #include <QWidget>
 #include <QPointer>
 #include <QSystemTrayIcon>
@@ -54,6 +56,7 @@ class TrayIcon : public QWidget
 
 public:
     explicit TrayIcon(QObject *parent = 0);
+    ~TrayIcon();
 
 signals:
     void playerOpenWindow();
@@ -72,7 +75,9 @@ private slots:
     void updateToolTip(QString, QString, QString, QString);
     void showAboutDialog();
     void setQuitBehaviour();
+#ifdef BUILD_LASTFM
     void setScrobbling();
+#endif // BUILD_LASTFM
     void addFiles();
 
 public slots:

@@ -8,6 +8,12 @@ if( NOT BUILD_WITH_QT4 )
     find_package(Qt5Core QUIET)
 endif()
 
+option(BUILD_DBUS "Enable DBus support" ON)
+option(BUILD_LASTFM "Enable Last.fm support" ON)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in
+               ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
 set(exo_SRCS src/exo.cpp src/main.cpp
              src/aboutdialog.cpp
              src/lyricsdialog.cpp
@@ -27,7 +33,10 @@ set(exo_HDRS src/exo.h
 set(exo_FRMS src/aboutdialog.ui src/lyricsdialog.ui src/scrobblersettings.ui)
 set(exo_RSRCS exo.qrc)
 
-find_library(LASTFM_LIBRARIES lastfm)
+if(BUILD_LASTFM)
+  find_library(LASTFM_LIBRARIES lastfm)
+endif()
+
 if(Qt5Core_DIR)
   find_package(Qt5Widgets)
   find_package(Qt5Network)

@@ -30,7 +30,6 @@
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 #include "aboutdialog.h"
-#include "scrobbler.h"
 #include "trayicon.h"
 #include "trayiconadaptor.h"
 
@@ -44,11 +43,16 @@ TrayIcon::TrayIcon(QObject *parent) {
     createTrayIcon();
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
-            this, SLOT(updateToolTip(QString, QString, QString, QString)));
+            SLOT(updateToolTip(QString, QString, QString, QString)));
     connect(this, SIGNAL(playerOpenWindow()), player, SLOT(openWindow()));
     connect(this, SIGNAL(playerTogglePause()), player, SLOT(pause()));
     connect(this, SIGNAL(playerVolumeDown()), player, SLOT(vold()));
     connect(this, SIGNAL(playerVolumeUp()), player, SLOT(volu()));
+}
+
+TrayIcon::~TrayIcon()
+{
+    QDBusConnection::sessionBus().unregisterService("tk.loimu.exo.TrayIcon");
 }
 
 void TrayIcon::createActions() {
@@ -85,12 +89,12 @@ void TrayIcon::createActions() {
     quitAction->setIcon(quitIcon);
     setQuitBehaviourAction = new QAction(tr("Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
-    connect(setQuitBehaviourAction, SIGNAL(triggered()),
-            this, SLOT(setQuitBehaviour()));
+    connect(setQuitBehaviourAction, SIGNAL(triggered()),SLOT(setQuitBehaviour()));
+#ifdef BUILD_LASTFM
     setScrobblingAction = new QAction(tr("Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
-    connect(setScrobblingAction, SIGNAL(triggered()),
-            this, SLOT(setScrobbling()));
+    connect(setScrobblingAction, SIGNAL(triggered()), SLOT(setScrobbling()));
+#endif // BUILD_LASTFM
 }
 
 void TrayIcon::createTrayIcon() {
@@ -108,7 +112,9 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(settingsMenu->menuAction());
     settingsMenu->addAction(setQuitBehaviourAction);
+#ifdef BUILD_LASTFM
     settingsMenu->addAction(setScrobblingAction);
+#endif // BUILD_LASTFM
     trayIconMenu->addAction(aboutAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
@@ -129,8 +135,10 @@ void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
                 aboutAction->setEnabled(false);
             else
                 aboutAction->setEnabled(true);
+#ifdef BUILD_LASTFM
             if(settings->value("scrobbler/enabled").toBool())
                 setScrobblingAction->setChecked(true);
+#endif // BUILD_LASTFM
             if(settings->value("player/quit").toBool())
                 setQuitBehaviourAction->setChecked(true);
             break;
@@ -195,12 +203,14 @@ void TrayIcon::setQuitBehaviour() {
         settings->setValue("player/quit", false);
 }
 
+#ifdef BUILD_LASTFM
 void TrayIcon::setScrobbling() {
     if(setScrobblingAction->isChecked())
         emit loadScrobbler();
     else
         emit unloadScrobbler();
 }
+#endif // BUILD_LASTFM
 
 void TrayIcon::addFiles() {
     QStringList files = QFileDialog::getOpenFileNames(this, "Add files to"

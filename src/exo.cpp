@@ -17,11 +17,16 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include "config.h"
+
 #include <QSettings>
 #include <QNetworkProxyFactory>
 
+#ifdef BUILD_LASTFM
 #include "scrobblersettings.h"
 #include "scrobbler.h"
+#endif // BUILD_LASTFM
+
 #include "trayicon.h"
 #include "playerinterface.h"
 #include "mocplayerinterface.h"
@@ -46,13 +51,17 @@ void Exo::init(bool useGui) {
     settingsObject = new QSettings(qApp->organizationName(),
                                    qApp->applicationName(), this);
     player = new MOCPlayerInterface(this);
+#ifdef BUILD_LASTFM
     if(settingsObject->value("scrobbler/enabled").toBool())
         loadScrobbler();
+#endif // BUILD_LASTFM
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
         TrayIcon *trayIcon = new TrayIcon(this);
         trayIcon->hide();
+#ifdef BUILD_LASTFM
         connect(trayIcon, SIGNAL(loadScrobbler()), SLOT(configureScrobbler()));
         connect(trayIcon, SIGNAL(unloadScrobbler()), SLOT(unloadScrobbler()));
+#endif // BUILD_LASTFM
     }
 }
 
@@ -63,6 +72,8 @@ Exo* Exo::app() {
 QSettings* Exo::settings() {
     return settingsObject;
 }
+
+#ifdef BUILD_LASTFM
 
 void Exo::configureScrobbler() {
     if(!settingsObject->value("scrobbler/sessionkey").toBool()) {
@@ -93,3 +104,5 @@ void Exo::enableScrobbler() {
     settingsObject->setValue("scrobbler/enabled", true);
     loadScrobbler();
 }
+
+#endif // BUILD_LASTFM
