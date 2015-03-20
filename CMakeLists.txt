@@ -1,39 +1,38 @@
 project(exo)
 cmake_minimum_required(VERSION 2.8.9)
 
-set(CMAKE_AUTOMOC ON)
-
-option(BUILD_WITH_QT4 "Build with Qt4 by default" ON)
-if( NOT BUILD_WITH_QT4 )
-    find_package(Qt5Core QUIET)
-endif()
-
-option(BUILD_DBUS "Enable DBus support" ON)
-option(BUILD_LASTFM "Enable Last.fm support" ON)
+option(BUILD_WITH_QT4   "Build with Qt4 by default"     ON)
+option(BUILD_DBUS       "Enable DBus support"           ON)
+option(BUILD_LASTFM     "Enable Last.fm support"        ON)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
+set(CMAKE_AUTOMOC ON)
 
 set(exo_SRCS src/exo.cpp src/main.cpp
              src/aboutdialog.cpp
              src/lyricsdialog.cpp
              src/playerinterface.cpp
              src/mocplayerinterface.cpp
-             src/scrobbler.cpp
-             src/scrobblersettings.cpp
              src/trayicon.cpp)
 set(exo_HDRS src/exo.h
              src/aboutdialog.h
              src/lyricsdialog.h
              src/playerinterface.h
              src/mocplayerinterface.h
-             src/scrobbler.h
-             src/scrobblersettings.h
              src/trayicon.h)
-set(exo_FRMS src/aboutdialog.ui src/lyricsdialog.ui src/scrobblersettings.ui)
+set(exo_FRMS src/aboutdialog.ui src/lyricsdialog.ui)
 set(exo_RSRCS exo.qrc)
 
+if(NOT BUILD_WITH_QT4)
+  find_package(Qt5Core QUIET)
+endif()
+
 if(BUILD_LASTFM)
+  list(APPEND exo_SRCS src/scrobbler.cpp src/scrobblersettings.cpp)
+  list(APPEND exo_HDRS src/scrobbler.h src/scrobblersettings.h)
+  list(APPEND exo_FRMS src/scrobblersettings.ui)
   find_library(LASTFM_LIBRARIES lastfm)
 endif()
 
