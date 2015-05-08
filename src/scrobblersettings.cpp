@@ -87,8 +87,8 @@ void ScrobblerSettings::authReplyFinished() {
     }
     reply->deleteLater();
     // Parse the reply
-    lastfm::XmlQuery lfm(EmptyXmlQuery());
-    if (ParseQuery(reply->readAll(), &lfm)) {
+    lastfm::XmlQuery lfm = lastfm::XmlQuery();
+    if (parseQuery(reply->readAll(), &lfm)) {
         lastfm::ws::Username = lfm["session"]["name"].text();
         lastfm::ws::SessionKey = lfm["session"]["key"].text();
         // Save the session key
@@ -101,11 +101,7 @@ void ScrobblerSettings::authReplyFinished() {
         ui->label->setText(tr("wrong data, try again"));
 }
 
-lastfm::XmlQuery ScrobblerSettings::EmptyXmlQuery() {
-    return lastfm::XmlQuery();
-}
-
-bool ScrobblerSettings::ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
+bool ScrobblerSettings::parseQuery(const QByteArray& data, lastfm::XmlQuery* query,
                                    bool* connectionProblems) {
     const bool dataParsed = query->parse(data);
     if(connectionProblems)

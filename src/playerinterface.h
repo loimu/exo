@@ -63,7 +63,7 @@ public slots:
     virtual void vold() = 0;
     virtual void rewd() = 0;
     virtual void frwd() = 0;
-    virtual void openWindow() = 0;
+    virtual void showPlayer() = 0;
     virtual void appendFile(QString) = 0;
 
 protected slots:

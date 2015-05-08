@@ -42,7 +42,7 @@ public slots:
     void vold();
     void rewd();
     void frwd();
-    void openWindow();
+    void showPlayer();
     void appendFile(QString);
 
 protected slots:

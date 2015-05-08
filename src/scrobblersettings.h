@@ -38,7 +38,7 @@ class ScrobblerSettings : public QWidget
 
     void auth(const QString& username, const QString& password);
     lastfm::XmlQuery EmptyXmlQuery();
-    bool ParseQuery(const QByteArray& data, lastfm::XmlQuery* query,
+    bool parseQuery(const QByteArray& data, lastfm::XmlQuery* query,
                     bool* connectionProblems = NULL);
     Ui::ScrobblerSettings *ui;
 

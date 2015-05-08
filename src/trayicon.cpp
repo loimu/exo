@@ -44,7 +44,7 @@ TrayIcon::TrayIcon(QObject *parent) {
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
-    connect(this, SIGNAL(playerOpenWindow()), player, SLOT(openWindow()));
+    connect(this, SIGNAL(playerOpenWindow()), player, SLOT(showPlayer()));
     connect(this, SIGNAL(playerTogglePause()), player, SLOT(pause()));
     connect(this, SIGNAL(playerVolumeDown()), player, SLOT(vold()));
     connect(this, SIGNAL(playerVolumeUp()), player, SLOT(volu()));
@@ -57,6 +57,8 @@ TrayIcon::~TrayIcon()
 
 void TrayIcon::createActions() {
     PlayerInterface* player = PlayerInterface::instance();
+    showAction = new QAction(tr("Player"), this);
+    connect(showAction, SIGNAL(triggered()), player, SLOT(showPlayer()));
     filesAction = new QAction(tr("A&dd ..."), this);
     connect(filesAction, SIGNAL(triggered()), SLOT(addFiles()));
     lyricsAction = new QAction(tr("&Lyrics"), this);
@@ -87,11 +89,11 @@ void TrayIcon::createActions() {
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     QIcon quitIcon(":/images/close.png");
     quitAction->setIcon(quitIcon);
-    setQuitBehaviourAction = new QAction(tr("Close player on exit"), this);
+    setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
     connect(setQuitBehaviourAction, SIGNAL(triggered()),SLOT(setQuitBehaviour()));
 #ifdef BUILD_LASTFM
-    setScrobblingAction = new QAction(tr("Enable scrobbling"), this);
+    setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
     connect(setScrobblingAction, SIGNAL(triggered()), SLOT(setScrobbling()));
 #endif // BUILD_LASTFM
@@ -100,7 +102,8 @@ void TrayIcon::createActions() {
 void TrayIcon::createTrayIcon() {
     trayIconMenu = new QMenu(this);
     settingsMenu = new QMenu(trayIconMenu);
-    settingsMenu->setTitle(tr("Settings"));
+    settingsMenu->setTitle(tr("Se&ttings"));
+    trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
     trayIconMenu->addSeparator();

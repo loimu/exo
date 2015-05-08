@@ -146,7 +146,7 @@ void MOCPlayerInterface::update() {
         scrobbler();
 }
 
-void MOCPlayerInterface::openWindow() {
+void MOCPlayerInterface::showPlayer() {
     execute("x-terminal-emulator", QStringList() << "-e" << "mocp" << "-O"
             << OSD_OPT);
 }

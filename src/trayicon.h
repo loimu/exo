@@ -41,6 +41,7 @@ class TrayIcon : public QWidget
     QPointer<AboutDialog> about;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
+    QAction *showAction;
     QAction *filesAction;
     QAction *lyricsAction;
     QAction *playAction;
@@ -75,10 +76,10 @@ private slots:
     void updateToolTip(QString, QString, QString, QString);
     void showAboutDialog();
     void setQuitBehaviour();
+    void addFiles();
 #ifdef BUILD_LASTFM
     void setScrobbling();
 #endif // BUILD_LASTFM
-    void addFiles();
 
 public slots:
     void showLyricsWindow();

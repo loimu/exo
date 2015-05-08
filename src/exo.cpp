@@ -51,10 +51,12 @@ void Exo::init(bool useGui) {
     settingsObject = new QSettings(qApp->organizationName(),
                                    qApp->applicationName(), this);
     player = new MOCPlayerInterface(this);
+
 #ifdef BUILD_LASTFM
     if(settingsObject->value("scrobbler/enabled").toBool())
         loadScrobbler();
 #endif // BUILD_LASTFM
+
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
         TrayIcon *trayIcon = new TrayIcon(this);
         trayIcon->hide();
@@ -74,7 +76,6 @@ QSettings* Exo::settings() {
 }
 
 #ifdef BUILD_LASTFM
-
 void Exo::configureScrobbler() {
     if(!settingsObject->value("scrobbler/sessionkey").toBool()) {
         ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
@@ -104,5 +105,4 @@ void Exo::enableScrobbler() {
     settingsObject->setValue("scrobbler/enabled", true);
     loadScrobbler();
 }
-
 #endif // BUILD_LASTFM
