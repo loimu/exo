@@ -147,6 +147,9 @@ void MOCPlayerInterface::update() {
 }
 
 void MOCPlayerInterface::showPlayer() {
-    execute("x-terminal-emulator", QStringList() << "-e" << "mocp" << "-O"
-            << OSD_OPT);
+    QString term = "x-terminal-emulator";
+    // falling back to xterm if there's no alternatives
+    if(!(execute("which", QStringList() << term).length() > 1))
+        term = "xterm";
+    execute(term, QStringList() << "-e" << "mocp" << "-O" << OSD_OPT);
 }
