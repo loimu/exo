@@ -7,7 +7,8 @@
 ### Build and run ###
 ```
 #!Bash
-cmake .
+mkdir build && cd build
+cmake ..
 make
 ./exo
 ```
@@ -15,8 +16,10 @@ make
 ### Building with Qt5 ###
 ```
 #!Bash
-cmake -DBUILD_WITH_QT4=OFF -DLASTFM_LIBRARIES=/path/to/liblastfm.so  # path to Qt5 version of liblastfm
+mkdir build && cd build
+cmake -DBUILD_WITH_QT4=OFF -DLASTFM_LIBRARIES=/path/to/liblastfm.so ..  # path to Qt5 version of liblastfm
 make
+./exo
 ```
 NOTE: you should link against the Qt5 version of liblastfm or program will crash
 
