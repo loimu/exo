@@ -176,14 +176,13 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
 
 void TrayIcon::updateToolTip(QString message, QString currentTime,
                              QString totalTime, QString cover) {
-    QString tooltip;
+    // it seems that tooltip with fixed size looks better
+    QString tooltip = "<table width=\"300\"><tr><td><b>" + message +
+            "</b></td></tr></table>";
     if(!cover.isEmpty())
-        tooltip = QString("<table width=\"300\"><tr><td><b>%1</b></td></tr>"
-                          "</table><br />Current time: %2/%3<br />"
-                          "<img src=\"%4\" width=\"300\" />")
-                .arg(message).arg(currentTime).arg(totalTime).arg(cover);
-    else
-        tooltip = "<b>" + message + "</b>";
+        tooltip.append(QString("<br />Current time: %1/%2<br />"
+                               "<img src=\"%3\" width=\"300\" />")
+                       .arg(currentTime).arg(totalTime).arg(cover));
     trayIcon->setToolTip(tooltip);
 }
 
