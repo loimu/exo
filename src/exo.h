@@ -48,12 +48,13 @@ public:
     static Exo* app();
     QSettings* settings();
 
-private slots:
 #ifdef BUILD_LASTFM
+private slots:
     void configureScrobbler();
     void loadScrobbler();
-    void unloadScrobbler();
-    void enableScrobbler();
+    void scrobblerToggle(bool);
+signals:
+    void scrobblerLoaded(bool);
 #endif // BUILD_LASTFM
 };
 

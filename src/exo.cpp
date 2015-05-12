@@ -53,17 +53,14 @@ void Exo::init(bool useGui) {
     player = new MOCPlayerInterface(this);
 
 #ifdef BUILD_LASTFM
-    if(settingsObject->value("scrobbler/enabled").toBool())
+    if(settingsObject->value("scrobbler/enabled").toBool() &&
+            settingsObject->value("scrobbler/sessionkey").toBool())
         loadScrobbler();
 #endif // BUILD_LASTFM
 
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
         TrayIcon *trayIcon = new TrayIcon(this);
         trayIcon->hide();
-#ifdef BUILD_LASTFM
-        connect(trayIcon, SIGNAL(loadScrobbler()), SLOT(configureScrobbler()));
-        connect(trayIcon, SIGNAL(unloadScrobbler()), SLOT(unloadScrobbler()));
-#endif // BUILD_LASTFM
     }
 }
 
@@ -80,9 +77,9 @@ void Exo::configureScrobbler() {
     if(!settingsObject->value("scrobbler/sessionkey").toBool()) {
         ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
         settingsDialog->show();
-        connect(settingsDialog, SIGNAL(configured()), SLOT(enableScrobbler()));
+        connect(settingsDialog, SIGNAL(configured()), SLOT(loadScrobbler()));
     } else
-        enableScrobbler();
+        loadScrobbler();
 }
 
 void Exo::loadScrobbler() {
@@ -93,16 +90,18 @@ void Exo::loadScrobbler() {
             scrobbler, SLOT(init(QString, QString, int)));
     connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
             scrobbler, SLOT(submit(QString, QString, QString, int)));
+    emit scrobblerLoaded(true);
 }
 
-void Exo::unloadScrobbler() {
-    settingsObject->setValue("scrobbler/enabled", false);
-    if(scrobbler)
+void Exo::scrobblerToggle(bool checked) {
+    settingsObject->setValue("scrobbler/enabled", checked);
+    emit scrobblerLoaded(false);
+    if(checked && !scrobbler)
+        configureScrobbler();
+    else if(scrobbler)
         scrobbler->deleteLater();
+    else
+        qFatal("Exo::scrobblerToggle - unexpected condition");
 }
 
-void Exo::enableScrobbler() {
-    settingsObject->setValue("scrobbler/enabled", true);
-    loadScrobbler();
-}
 #endif // BUILD_LASTFM

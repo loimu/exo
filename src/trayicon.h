@@ -23,7 +23,6 @@
 #include "config.h"
 
 #include <QWidget>
-#include <QPointer>
 #include <QSystemTrayIcon>
 
 class PlayerInterface;
@@ -38,7 +37,7 @@ class TrayIcon : public QWidget
     void createActions();
     void createTrayIcon();
     bool eventFilter(QObject *, QEvent *);
-    QPointer<AboutDialog> about;
+    AboutDialog *about;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
     QAction *showAction;
@@ -68,18 +67,13 @@ signals:
     void playerPrevious();
     void playerForward();
     void playerRewind();
-    void loadScrobbler();
-    void unloadScrobbler();
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip(QString, QString, QString, QString);
     void showAboutDialog();
-    void setQuitBehaviour();
+    void setQuitBehaviour(bool);
     void addFiles();
-#ifdef BUILD_LASTFM
-    void setScrobbling();
-#endif // BUILD_LASTFM
 
 public slots:
     void showLyricsWindow();

@@ -21,11 +21,17 @@
 
 #include "aboutdialog.h"
 
-AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent) {
+AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent)
+{
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
     addText();
+}
+
+AboutDialog::~AboutDialog()
+{
+    emit destroyed(true);
 }
 
 void AboutDialog::addText() {

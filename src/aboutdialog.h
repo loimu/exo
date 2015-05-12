@@ -34,6 +34,9 @@ class AboutDialog : public QWidget
 
 public:
     AboutDialog(QWidget *parent = 0);
+    ~AboutDialog();
+signals:
+    void destroyed(bool);
 };
 
 #endif // ABOUTDIALOG_H

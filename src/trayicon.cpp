@@ -91,11 +91,18 @@ void TrayIcon::createActions() {
     quitAction->setIcon(quitIcon);
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
-    connect(setQuitBehaviourAction, SIGNAL(triggered()),SLOT(setQuitBehaviour()));
+    QSettings* settings = Exo::app()->settings();
+    setQuitBehaviourAction->setChecked(settings->value("player/quit").toBool());
+    connect(setQuitBehaviourAction, SIGNAL(triggered(bool)),
+            SLOT(setQuitBehaviour(bool)));
 #ifdef BUILD_LASTFM
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
-    connect(setScrobblingAction, SIGNAL(triggered()), SLOT(setScrobbling()));
+    setScrobblingAction->setChecked(settings->value("scrobbler/enabled").toBool());
+    connect(setScrobblingAction, SIGNAL(triggered(bool)),
+            Exo::app(), SLOT(scrobblerToggle(bool)));
+    connect(Exo::app(), SIGNAL(scrobblerLoaded(bool)),
+            setScrobblingAction, SLOT(setChecked(bool)));
 #endif // BUILD_LASTFM
 }
 
@@ -132,40 +139,34 @@ void TrayIcon::createTrayIcon() {
 
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
     QSettings* settings = Exo::app()->settings();
-    switch (reason) {
-        case QSystemTrayIcon::Context:
-            if(about)
-                aboutAction->setEnabled(false);
-            else
-                aboutAction->setEnabled(true);
+    switch(reason) {
+    case QSystemTrayIcon::Context:
 #ifdef BUILD_LASTFM
-            if(settings->value("scrobbler/enabled").toBool())
-                setScrobblingAction->setChecked(true);
+        setScrobblingAction->setChecked(settings->value("scrobbler/enabled").toBool());
 #endif // BUILD_LASTFM
-            if(settings->value("player/quit").toBool())
-                setQuitBehaviourAction->setChecked(true);
-            break;
-        case QSystemTrayIcon::DoubleClick:
-            emit playerOpenWindow();
-            break;
-        case QSystemTrayIcon::Trigger:
-            break;
-        case QSystemTrayIcon::MiddleClick:
-            emit playerTogglePause();
-            break;
-        default:
-            break;
+        setQuitBehaviourAction->setChecked(settings->value("player/quit").toBool());
+        break;
+    case QSystemTrayIcon::DoubleClick:
+        emit playerOpenWindow();
+        break;
+    case QSystemTrayIcon::Trigger:
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        emit playerTogglePause();
+        break;
+    default:
+        break;
     }
 }
 
 bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
-    if (QObject::eventFilter(object, event))
+    if(QObject::eventFilter(object, event))
         return true;
-    if (object != trayIcon)
+    if(object != trayIcon)
         return false;
-    if (event->type() == QEvent::Wheel) {
+    if(event->type() == QEvent::Wheel) {
         QWheelEvent* e = static_cast<QWheelEvent*>(event);
-        if (e->delta() < 0)
+        if(e->delta() < 0)
             emit playerVolumeDown();
         else
             emit playerVolumeUp();
@@ -192,26 +193,16 @@ void TrayIcon::showLyricsWindow() {
 }
 
 void TrayIcon::showAboutDialog() {
+    aboutAction->setDisabled(true);
     about = new AboutDialog(this);
     about->show();
+    connect(about, SIGNAL(destroyed(bool)), aboutAction, SLOT(setEnabled(bool)));
 }
 
-void TrayIcon::setQuitBehaviour() {
+void TrayIcon::setQuitBehaviour(bool checked) {
     QSettings* settings = Exo::app()->settings();
-    if(setQuitBehaviourAction->isChecked())
-        settings->setValue("player/quit", true);
-    else
-        settings->setValue("player/quit", false);
+    settings->setValue("player/quit", checked);
 }
-
-#ifdef BUILD_LASTFM
-void TrayIcon::setScrobbling() {
-    if(setScrobblingAction->isChecked())
-        emit loadScrobbler();
-    else
-        emit unloadScrobbler();
-}
-#endif // BUILD_LASTFM
 
 void TrayIcon::addFiles() {
     QStringList files = QFileDialog::getOpenFileNames(this, "Add files to"
