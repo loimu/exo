@@ -17,48 +17,24 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef EXO_H
-#define EXO_H
+#ifndef EXOOBJECT_H
+#define EXOOBJECT_H
 
-#include "config.h"
+#include <QObject>
 
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
-
-#include <QApplication>
-#include <QPointer>
-
-class Scrobbler;
-class PlayerInterface;
-class QSettings;
-
-class Exo : public QApplication
+class ExoObject : public QObject
 {
     Q_OBJECT
-
-    QPointer<Scrobbler> scrobbler;
-    PlayerInterface* player;
-    QSettings* settingsObject;
-    void init(bool);
+    Q_CLASSINFO("D-Bus Interface", "tk.loimu.exo")
 
 public:
-    explicit Exo(int &argc, char **argv, bool);
-    ~Exo();
-    static Exo* app();
-    QSettings* settings();
+    ExoObject(QObject *parent = 0);
+    ~ExoObject();
 
-#ifdef BUILD_LASTFM
-private slots:
-    void configureScrobbler();
-    void loadScrobbler();
-    void scrobblerToggle(bool);
 signals:
-    void scrobblerLoaded(bool);
-#endif // BUILD_LASTFM
 
 public slots:
     void showLyricsWindow();
 };
 
-#endif // EXO_H
+#endif // EXOOBJECT_H

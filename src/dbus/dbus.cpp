@@ -17,48 +17,27 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef EXO_H
-#define EXO_H
+#include <QtDBus>
 
-#include "config.h"
+#include "dbus.h"
+#include "exoobject.h"
+//MPRISv2
+//#include "rootobject.h"
+//#include "playerobject.h"
 
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
-
-#include <QApplication>
-#include <QPointer>
-
-class Scrobbler;
-class PlayerInterface;
-class QSettings;
-
-class Exo : public QApplication
+DBus::DBus(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.registerObject("/Exo", new ExoObject(this), QDBusConnection::ExportAllContents);
+    //new RootObject(this);
+    //new PlayerObject(this);
+    //connection.registerObject("/org/mpris/MediaPlayer2", this);
+    connection.registerService("tk.loimu.exo");
+    //connection.registerService("org.mpris.MediaPlayer2.exo");
+}
 
-    QPointer<Scrobbler> scrobbler;
-    PlayerInterface* player;
-    QSettings* settingsObject;
-    void init(bool);
-
-public:
-    explicit Exo(int &argc, char **argv, bool);
-    ~Exo();
-    static Exo* app();
-    QSettings* settings();
-
-#ifdef BUILD_LASTFM
-private slots:
-    void configureScrobbler();
-    void loadScrobbler();
-    void scrobblerToggle(bool);
-signals:
-    void scrobblerLoaded(bool);
-#endif // BUILD_LASTFM
-
-public slots:
-    void showLyricsWindow();
-};
-
-#endif // EXO_H
+DBus::~DBus()
+{
+    QDBusConnection::sessionBus().unregisterService("tk.loimu.exo");
+    //QDBusConnection::sessionBus().unregisterService("org.mpris.MediaPlayer2.exo");
+}

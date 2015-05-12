@@ -21,6 +21,11 @@
 
 #include <QSettings>
 #include <QNetworkProxyFactory>
+#include <QPointer>
+
+#ifdef BUILD_DBUS
+#include "dbus/dbus.h"
+#endif // BUILD_DBUS
 
 #ifdef BUILD_LASTFM
 #include "scrobblersettings.h"
@@ -30,6 +35,7 @@
 #include "trayicon.h"
 #include "playerinterface.h"
 #include "mocplayerinterface.h"
+#include "lyricsdialog.h"
 #include "exo.h"
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
@@ -52,6 +58,10 @@ void Exo::init(bool useGui) {
                                    qApp->applicationName(), this);
     player = new MOCPlayerInterface(this);
 
+#ifdef BUILD_DBUS
+    new DBus(this);
+#endif // BUILD_DBUS
+
 #ifdef BUILD_LASTFM
     if(settingsObject->value("scrobbler/enabled").toBool() &&
             settingsObject->value("scrobbler/sessionkey").toBool())
@@ -70,6 +80,11 @@ Exo* Exo::app() {
 
 QSettings* Exo::settings() {
     return settingsObject;
+}
+
+void Exo::showLyricsWindow() {
+    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog();
+    lyricsDialog->show();
 }
 
 #ifdef BUILD_LASTFM
@@ -103,5 +118,4 @@ void Exo::scrobblerToggle(bool checked) {
     else
         qFatal("Exo::scrobblerToggle - unexpected condition");
 }
-
 #endif // BUILD_LASTFM

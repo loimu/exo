@@ -22,22 +22,15 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QWheelEvent>
-#include <QPointer>
 #include <QSettings>
 #include <QFileDialog>
 
 #include "exo.h"
 #include "playerinterface.h"
-#include "lyricsdialog.h"
 #include "aboutdialog.h"
 #include "trayicon.h"
-#include "trayiconadaptor.h"
 
 TrayIcon::TrayIcon(QObject *parent) {
-    new TrayIconAdaptor(this);
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject("/TrayIcon", this);
-    dbus.registerService("tk.loimu.exo.TrayIcon");
     PlayerInterface* player = PlayerInterface::instance();
     createActions();
     createTrayIcon();
@@ -52,7 +45,6 @@ TrayIcon::TrayIcon(QObject *parent) {
 
 TrayIcon::~TrayIcon()
 {
-    QDBusConnection::sessionBus().unregisterService("tk.loimu.exo.TrayIcon");
 }
 
 void TrayIcon::createActions() {
@@ -62,7 +54,8 @@ void TrayIcon::createActions() {
     filesAction = new QAction(tr("A&dd ..."), this);
     connect(filesAction, SIGNAL(triggered()), SLOT(addFiles()));
     lyricsAction = new QAction(tr("&Lyrics"), this);
-    connect(lyricsAction, SIGNAL(triggered()), SLOT(showLyricsWindow()));
+    connect(lyricsAction, SIGNAL(triggered()),
+            Exo::app(), SLOT(showLyricsWindow()));
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, SIGNAL(triggered()), player, SLOT(play()));
     QIcon playIcon(":/images/play.png");
@@ -185,11 +178,6 @@ void TrayIcon::updateToolTip(QString message, QString currentTime,
                                "<img src=\"%3\" width=\"300\" />")
                        .arg(currentTime).arg(totalTime).arg(cover));
     trayIcon->setToolTip(tooltip);
-}
-
-void TrayIcon::showLyricsWindow() {
-    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog(this);
-    lyricsDialog->show();
 }
 
 void TrayIcon::showAboutDialog() {

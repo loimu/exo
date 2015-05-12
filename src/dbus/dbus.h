@@ -17,48 +17,16 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef EXO_H
-#define EXO_H
+#ifndef DBUS_H
+#define DBUS_H
 
-#include "config.h"
-
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
-
-#include <QApplication>
-#include <QPointer>
-
-class Scrobbler;
-class PlayerInterface;
-class QSettings;
-
-class Exo : public QApplication
+class DBus : public QObject
 {
     Q_OBJECT
 
-    QPointer<Scrobbler> scrobbler;
-    PlayerInterface* player;
-    QSettings* settingsObject;
-    void init(bool);
-
 public:
-    explicit Exo(int &argc, char **argv, bool);
-    ~Exo();
-    static Exo* app();
-    QSettings* settings();
-
-#ifdef BUILD_LASTFM
-private slots:
-    void configureScrobbler();
-    void loadScrobbler();
-    void scrobblerToggle(bool);
-signals:
-    void scrobblerLoaded(bool);
-#endif // BUILD_LASTFM
-
-public slots:
-    void showLyricsWindow();
+    DBus(QObject *parent = 0);
+    ~DBus();
 };
 
-#endif // EXO_H
+#endif // DBUS_H
