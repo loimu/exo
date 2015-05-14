@@ -23,10 +23,13 @@ make
 ```
 NOTE: you should link against the Qt5 version of liblastfm or program will crash
 
-### Additional features: ###
-* Scrobbling
-* OSD
+### Features: ###
+* Scrobbling to last.fm (optional)
+* OSD (additional Python script)
 * Shows lyrics from web
+* no GUI mode
+* DBus interface (optional)
+* initial MPRISv2 interface (optional)
 
 ### Screenshot ###
 ![exo-tray.png](https://bitbucket.org/repo/8Xb9ez/images/2886715694-exo-tray.png)
