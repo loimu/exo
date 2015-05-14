@@ -89,6 +89,31 @@ QString PlayerInterface::title() {
     return track.song;
 }
 
+QString PlayerInterface::album() {
+    return track.album;
+}
+
+QString PlayerInterface::artwork() {
+    QString art = cover();
+    return (art == ":/images/nocover.png") ? "" : art;
+}
+
+QString PlayerInterface::url() {
+    return track.file;
+}
+
+QString PlayerInterface::state() {
+    return track.state;
+}
+
+quint64 PlayerInterface::length() {
+    return track.totalSec;
+}
+
+quint64 PlayerInterface::position() {
+    return track.currSec;
+}
+
 PlayerInterface* PlayerInterface::instance() {
     return object;
 }

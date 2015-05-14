@@ -17,52 +17,43 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef EXO_H
-#define EXO_H
+#include "../exo.h"
+#include "../playerinterface.h"
+#include "rootobject.h"
 
-#include "config.h"
-
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
-
-#include <QApplication>
-#include <QPointer>
-
-class Scrobbler;
-class PlayerInterface;
-class QSettings;
-
-class Exo : public QApplication
+RootObject::RootObject(QObject *parent) : QDBusAbstractAdaptor(parent)
 {
-    Q_OBJECT
 
-    QPointer<Scrobbler> scrobbler;
-    PlayerInterface* player;
-    QSettings* settingsObject;
-    void init(bool);
+}
 
-public:
-    explicit Exo(int &argc, char **argv, bool);
-    ~Exo();
-    static Exo* app();
-    QSettings* settings();
+RootObject::~RootObject()
+{
+}
 
-private slots:
-#ifdef BUILD_LASTFM
-    void configureScrobbler();
-    void loadScrobbler();
-    void scrobblerToggle(bool);
-#endif // BUILD_LASTFM
+bool RootObject::canQuit() const {
+    return true;
+}
 
-signals:
-    void lyricsWindow();
-#ifdef BUILD_LASTFM
-    void scrobblerLoaded(bool);
-#endif // BUILD_LASTFM
+bool RootObject::canRaise() const {
+    return true;
+}
 
-public slots:
-    void showLyricsWindow();
-};
+QString RootObject::desktopEntry() const {
+    return "exo";
+}
 
-#endif // EXO_H
+bool RootObject::hasTrackList() const {
+    return false;
+}
+
+QString RootObject::identity() const {
+    return PlayerInterface::instance()->id();
+}
+
+void RootObject::Quit() {
+    qApp->quit();
+}
+
+void RootObject::Raise() {
+    PlayerInterface::instance()->showPlayer();
+}

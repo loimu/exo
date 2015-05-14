@@ -22,22 +22,25 @@
 #include "dbus.h"
 #include "exoobject.h"
 //MPRISv2
-//#include "rootobject.h"
-//#include "playerobject.h"
+#include "rootobject.h"
+#include "playerobject.h"
 
 DBus::DBus(QObject *parent) : QObject(parent)
 {
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.registerObject("/Exo", new ExoObject(this), QDBusConnection::ExportAllContents);
-    //new RootObject(this);
-    //new PlayerObject(this);
-    //connection.registerObject("/org/mpris/MediaPlayer2", this);
-    connection.registerService("tk.loimu.exo");
-    //connection.registerService("org.mpris.MediaPlayer2.exo");
+    bool registered = connection.registerService("tk.loimu.exo");
+    if(!registered) {
+        qFatal("Exo: only one instance of application is allowed.");
+    }
+    new RootObject(this);
+    new PlayerObject(this);
+    connection.registerObject("/org/mpris/MediaPlayer2", this);
+    connection.registerService("org.mpris.MediaPlayer2.exo");
 }
 
 DBus::~DBus()
 {
     QDBusConnection::sessionBus().unregisterService("tk.loimu.exo");
-    //QDBusConnection::sessionBus().unregisterService("org.mpris.MediaPlayer2.exo");
+    QDBusConnection::sessionBus().unregisterService("org.mpris.MediaPlayer2.exo");
 }

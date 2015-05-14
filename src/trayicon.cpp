@@ -24,9 +24,11 @@
 #include <QWheelEvent>
 #include <QSettings>
 #include <QFileDialog>
+#include <QPointer>
 
 #include "exo.h"
 #include "playerinterface.h"
+#include "lyricsdialog.h"
 #include "aboutdialog.h"
 #include "trayicon.h"
 
@@ -41,6 +43,7 @@ TrayIcon::TrayIcon(QObject *parent) {
     connect(this, SIGNAL(playerTogglePause()), player, SLOT(pause()));
     connect(this, SIGNAL(playerVolumeDown()), player, SLOT(vold()));
     connect(this, SIGNAL(playerVolumeUp()), player, SLOT(volu()));
+    connect(Exo::app(), SIGNAL(lyricsWindow()), SLOT(showLyricsWindow()));
 }
 
 TrayIcon::~TrayIcon()
@@ -54,8 +57,7 @@ void TrayIcon::createActions() {
     filesAction = new QAction(tr("A&dd ..."), this);
     connect(filesAction, SIGNAL(triggered()), SLOT(addFiles()));
     lyricsAction = new QAction(tr("&Lyrics"), this);
-    connect(lyricsAction, SIGNAL(triggered()),
-            Exo::app(), SLOT(showLyricsWindow()));
+    connect(lyricsAction, SIGNAL(triggered()), SLOT(showLyricsWindow()));
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, SIGNAL(triggered()), player, SLOT(play()));
     QIcon playIcon(":/images/play.png");
@@ -131,14 +133,7 @@ void TrayIcon::createTrayIcon() {
 }
 
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
-    QSettings* settings = Exo::app()->settings();
     switch(reason) {
-    case QSystemTrayIcon::Context:
-#ifdef BUILD_LASTFM
-        setScrobblingAction->setChecked(settings->value("scrobbler/enabled").toBool());
-#endif // BUILD_LASTFM
-        setQuitBehaviourAction->setChecked(settings->value("player/quit").toBool());
-        break;
     case QSystemTrayIcon::DoubleClick:
         emit playerOpenWindow();
         break;
@@ -173,11 +168,17 @@ void TrayIcon::updateToolTip(QString message, QString currentTime,
     // it seems that tooltip with fixed size looks better
     QString tooltip = "<table width=\"300\"><tr><td><b>" + message +
             "</b></td></tr></table>";
-    if(!cover.isEmpty())
+    if(!cover.isEmpty()) {
         tooltip.append(QString("<br />Current time: %1/%2<br />"
-                               "<img src=\"%3\" width=\"300\" />")
+                               "<img src=\"%3\" width=\"300\" height=\"300\" />")
                        .arg(currentTime).arg(totalTime).arg(cover));
+    }
     trayIcon->setToolTip(tooltip);
+}
+
+void TrayIcon::showLyricsWindow() {
+    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog();
+    lyricsDialog->show();
 }
 
 void TrayIcon::showAboutDialog() {

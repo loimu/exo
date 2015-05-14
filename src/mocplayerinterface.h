@@ -32,6 +32,7 @@ public:
 signals:
 
 public slots:
+    QString id();
     void play();
     void pause();
     void prev();

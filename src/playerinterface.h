@@ -46,6 +46,12 @@ public:
     static PlayerInterface* instance();
     QString artist();
     QString title();
+    QString album();
+    QString artwork();
+    QString url();
+    QString state();
+    quint64 length();
+    quint64 position();
 
 signals:
     void trackListened(QString, QString, QString, int);
@@ -53,6 +59,7 @@ signals:
     void updateStatus(QString, QString, QString, QString);
 
 public slots:
+    virtual QString id() = 0;
     virtual void play() = 0;
     virtual void pause()= 0;
     virtual void prev() = 0;

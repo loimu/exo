@@ -27,9 +27,12 @@ ExoObject::ExoObject(QObject *parent) : QObject(parent)
 
 ExoObject::~ExoObject()
 {
-
 }
 
 void ExoObject::showLyricsWindow() {
     Exo::app()->showLyricsWindow();
+}
+
+void ExoObject::quitApplication() {
+    qApp->quit();
 }

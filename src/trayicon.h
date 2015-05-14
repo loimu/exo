@@ -73,6 +73,7 @@ private slots:
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();
+    void showLyricsWindow();
 };
 
 #endif // TRAYICON_H

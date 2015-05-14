@@ -31,6 +31,10 @@ MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :PlayerInterface(parent)
     startTimer(1000);
 }
 
+QString MOCPlayerInterface::id() {
+    return "MOC";
+}
+
 bool MOCPlayerInterface::isServerRunning() {
     return execute("pidof", QStringList() << "mocp").length() > 1;
 }
@@ -40,7 +44,11 @@ void MOCPlayerInterface::sendOption(QString option) {
 }
 
 void MOCPlayerInterface::runServer() {
+#ifdef OSD_OPT
     execute("mocp", QStringList() << "-SO" << OSD_OPT);
+#else //OSD_OPT
+    execute("mocp", QStringList() << "-S");
+#endif // OSD_OPT
 }
 
 void MOCPlayerInterface::play() {
@@ -151,5 +159,9 @@ void MOCPlayerInterface::showPlayer() {
     // falling back to xterm if there's no "alternatives"
     if(!(execute("which", QStringList() << term).length() > 1))
         term = "xterm";
+#ifdef OSD_OPT
     execute(term, QStringList() << "-e" << "mocp" << "-O" << OSD_OPT);
+#else // OSD_OPT
+    execute(term, QStringList() << "-e" << "mocp");
+#endif // OSD_OPT
 }

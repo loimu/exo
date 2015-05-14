@@ -21,7 +21,6 @@
 
 #include <QSettings>
 #include <QNetworkProxyFactory>
-#include <QPointer>
 
 #ifdef BUILD_DBUS
 #include "dbus/dbus.h"
@@ -35,7 +34,6 @@
 #include "trayicon.h"
 #include "playerinterface.h"
 #include "mocplayerinterface.h"
-#include "lyricsdialog.h"
 #include "exo.h"
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
@@ -75,7 +73,7 @@ void Exo::init(bool useGui) {
 }
 
 Exo* Exo::app() {
-    return (Exo*)qApp;
+    return static_cast<Exo*>qApp;
 }
 
 QSettings* Exo::settings() {
@@ -83,8 +81,7 @@ QSettings* Exo::settings() {
 }
 
 void Exo::showLyricsWindow() {
-    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog();
-    lyricsDialog->show();
+    emit lyricsWindow();
 }
 
 #ifdef BUILD_LASTFM
@@ -116,6 +113,6 @@ void Exo::scrobblerToggle(bool checked) {
     else if(scrobbler)
         scrobbler->deleteLater();
     else
-        qFatal("Exo::scrobblerToggle - unexpected condition");
+        qCritical("Exo::scrobblerToggle - unexpected condition");
 }
 #endif // BUILD_LASTFM

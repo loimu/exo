@@ -30,8 +30,10 @@ if(NOT BUILD_WITH_QT4)
 endif()
 
 if(BUILD_DBUS)
-  list(APPEND exo_SRCS src/dbus/dbus.cpp src/dbus/exoobject.cpp)
-  list(APPEND exo_HDRS src/dbus/dbus.h src/dbus/exoobject.h)
+  list(APPEND exo_SRCS src/dbus/dbus.cpp src/dbus/exoobject.cpp
+                       src/dbus/rootobject.cpp src/dbus/playerobject.cpp)
+  list(APPEND exo_HDRS src/dbus/dbus.h src/dbus/exoobject.h
+                       src/dbus/rootobject.h src/dbus/playerobject.h)
 endif()
 
 if(BUILD_LASTFM)
@@ -59,7 +61,7 @@ else()
   find_package(Qt4)
   set(qt_LIBS Qt4::QtCore Qt4::QtGui Qt4::QtNetwork)
   if(BUILD_DBUS)
-    list(APPEND qt_LIBS ${QT_QTDBUS_LIBRARY})
+    list(APPEND qt_LIBS Qt4::QtDBus)
   endif()
   include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
   qt4_wrap_ui(exo_FORMS_HEADERS ${exo_FRMS})

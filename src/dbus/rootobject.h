@@ -17,52 +17,38 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef EXO_H
-#define EXO_H
+#ifndef ROOTOBJECT_H
+#define ROOTOBJECT_H
 
-#include "config.h"
+#include <QObject>
 
-#if QT_VERSION >= 0x050000
-    #include <QtWidgets>
-#endif
+#include <QDBusAbstractAdaptor>
+#include <QObject>
 
-#include <QApplication>
-#include <QPointer>
-
-class Scrobbler;
-class PlayerInterface;
-class QSettings;
-
-class Exo : public QApplication
+class RootObject : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-
-    QPointer<Scrobbler> scrobbler;
-    PlayerInterface* player;
-    QSettings* settingsObject;
-    void init(bool);
+    Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2")
+    Q_PROPERTY(bool CanQuit READ canQuit)
+    Q_PROPERTY(bool CanRaise READ canRaise)
+    Q_PROPERTY(QString DesktopEntry READ desktopEntry)
+    Q_PROPERTY(bool HasTrackList READ hasTrackList)
+    Q_PROPERTY(QString Identity READ identity)
 
 public:
-    explicit Exo(int &argc, char **argv, bool);
-    ~Exo();
-    static Exo* app();
-    QSettings* settings();
-
-private slots:
-#ifdef BUILD_LASTFM
-    void configureScrobbler();
-    void loadScrobbler();
-    void scrobblerToggle(bool);
-#endif // BUILD_LASTFM
+    explicit RootObject(QObject *parent = 0);
+    virtual ~RootObject();
+    bool canQuit() const;
+    bool canRaise() const;
+    QString desktopEntry() const;
+    bool hasTrackList() const;
+    QString identity() const;
 
 signals:
-    void lyricsWindow();
-#ifdef BUILD_LASTFM
-    void scrobblerLoaded(bool);
-#endif // BUILD_LASTFM
 
 public slots:
-    void showLyricsWindow();
+    void Quit();
+    void Raise();
 };
 
-#endif // EXO_H
+#endif // ROOTOBJECT_H

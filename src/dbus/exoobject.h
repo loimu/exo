@@ -35,6 +35,7 @@ signals:
 
 public slots:
     void showLyricsWindow();
+    void quitApplication();
 };
 
 #endif // EXOOBJECT_H
