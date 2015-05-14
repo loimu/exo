@@ -24,10 +24,15 @@ make
 NOTE: you should link against the Qt5 version of liblastfm or program will crash
 
 ### Build options: ###
+
+```
+#!
 -DBUILD_WITH_QT4=OFF - build with Qt5 (set to Qt4 by default)
                        it's not working well with Status Notifier tray, will be fixed in Qt5.5 (I hope so);
 -DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
 -DBUILD_LASTFM=OFF   - disable scrobber module (enabled by default);
+```
+
 
 ### Features: ###
 * Scrobbling to last.fm (optional)
