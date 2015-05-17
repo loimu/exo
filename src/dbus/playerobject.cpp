@@ -28,7 +28,10 @@
 PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent)
 {
     player = PlayerInterface::instance();
-    connect(player, SIGNAL(trackChanged(QString,QString,int)), SLOT(emitPropertiesChanged()));
+    connect(player, SIGNAL(statusChanged(QString)),
+            SLOT(emitPropertiesChanged(QString)));
+    connect(player, SIGNAL(trackChanged(QString,QString,int)),
+            SLOT(trackChanged()));
 }
 
 PlayerObject::~PlayerObject()
@@ -67,9 +70,9 @@ QVariantMap PlayerObject::metadata() const {
 }
 
 QString PlayerObject::playbackStatus() const {
-    if(player->state() == "PLAY")
+    if(status == "PLAY")
         return "Playing";
-    else if(player->state() == "PAUSE")
+    else if(status == "PAUSE")
         return "Paused";
     return "Stopped";
 }
@@ -78,7 +81,12 @@ qlonglong PlayerObject::position() const {
     return player->position() * 1000000;
 }
 
-void PlayerObject::emitPropertiesChanged() {
+void PlayerObject::trackChanged() {
+    emitPropertiesChanged("PLAY");
+}
+
+void PlayerObject::emitPropertiesChanged(QString st) {
+    status = st;
     QList<QByteArray> changedProps;
 //    if(props["CanGoNext"] != canGoNext())
 //        changedProps << "CanGoNext";
@@ -132,10 +140,10 @@ void PlayerObject::Stop() {
 }
 
 void PlayerObject::syncProperties() {
-//    props["CanGoNext"] = canGoNext();
-//    props["CanGoPrevious"] = canGoPrevious();
-//    props["CanPause"] = canPause();
-//    props["CanPlay"] = canPlay();
+    props["CanGoNext"] = canGoNext();
+    props["CanGoPrevious"] = canGoPrevious();
+    props["CanPause"] = canPause();
+    props["CanPlay"] = canPlay();
     props["PlaybackStatus"] = playbackStatus();
     props["Metadata"] = metadata();
 }

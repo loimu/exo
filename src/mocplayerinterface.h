@@ -22,34 +22,33 @@
 
 class MOCPlayerInterface : public PlayerInterface
 {
-    void sendOption(QString);
-    void runServer();
     bool isServerRunning();
+    bool runServer();
 
 public:
     explicit MOCPlayerInterface(QObject *parent = 0);
+    ~MOCPlayerInterface();
 
 signals:
 
 public slots:
     QString id();
-    void play();
-    void pause();
-    void prev();
-    void next();
-    void stop();
-    void quit();
-    void volu();
-    void vold();
-    void rewd();
-    void frwd();
-    void showPlayer();
-    void appendFile(QString);
+    bool play();
+    bool pause();
+    bool prev();
+    bool next();
+    bool stop();
+    bool quit();
+    bool volu();
+    bool vold();
+    bool rewd();
+    bool frwd();
+    bool showPlayer();
+    bool appendFile(QString);
 
 protected slots:
-    void update();
     void getInfo();
-
+    void update();
 };
 
 #endif // MOCPLAYERINTERFACE_H

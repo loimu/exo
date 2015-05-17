@@ -31,72 +31,60 @@ MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :PlayerInterface(parent)
     startTimer(1000);
 }
 
+MOCPlayerInterface::~MOCPlayerInterface()
+{
+}
+
 QString MOCPlayerInterface::id() {
-    return "MOC";
+    return "music on console";
 }
 
 bool MOCPlayerInterface::isServerRunning() {
-    return execute("pidof", QStringList() << "mocp").length() > 1;
+    return getOutput("pidof", QStringList() << "mocp").length() > 1;
 }
 
-void MOCPlayerInterface::sendOption(QString option) {
-    execute("mocp", QStringList() << option);
-}
-
-void MOCPlayerInterface::runServer() {
+bool MOCPlayerInterface::runServer() {
 #ifdef OSD_OPT
-    execute("mocp", QStringList() << "-SO" << OSD_OPT);
+    return execute("mocp", QStringList() << "-SO" << OSD_OPT);
 #else //OSD_OPT
-    execute("mocp", QStringList() << "-S");
+    return execute("mocp", QStringList() << "-S");
 #endif // OSD_OPT
 }
 
-void MOCPlayerInterface::play() {
-    sendOption("-p");
+#define SEND_COMMAND(__method, __option)\
+    bool MOCPlayerInterface::__method() {\
+        return execute("mocp", QStringList() << __option);\
+    }
+
+SEND_COMMAND(play, "-p")
+SEND_COMMAND(pause,"-G")
+SEND_COMMAND(prev, "-r")
+SEND_COMMAND(next, "-f")
+SEND_COMMAND(stop, "-s")
+SEND_COMMAND(quit, "-x")
+SEND_COMMAND(volu, "-v+2")
+SEND_COMMAND(vold, "-v-2")
+SEND_COMMAND(rewd, "-k-10")
+SEND_COMMAND(frwd, "-k+10")
+
+bool MOCPlayerInterface::showPlayer() {
+    QString term = "x-terminal-emulator";
+    // falling back to xterm if there's no "alternatives"
+    if(!(getOutput("which", QStringList() << term).length() > 1))
+        term = "xterm";
+#ifdef OSD_OPT
+    return execute(term, QStringList() << "-e" << "mocp" << "-O" << OSD_OPT);
+#else // OSD_OPT
+    return execute(term, QStringList() << "-e" << "mocp");
+#endif // OSD_OPT
 }
 
-void MOCPlayerInterface::pause() {
-    sendOption("-G");
-}
-
-void MOCPlayerInterface::prev() {
-    sendOption("-r");
-}
-
-void MOCPlayerInterface::next() {
-    sendOption("-f");
-}
-
-void MOCPlayerInterface::stop() {
-    sendOption("-s");
-}
-
-void MOCPlayerInterface::quit() {
-    sendOption("-x");
-}
-
-void MOCPlayerInterface::volu() {
-    sendOption("-v+2");
-}
-
-void MOCPlayerInterface::vold() {
-    sendOption("-v-2");
-}
-
-void MOCPlayerInterface::rewd() {
-    sendOption("-k-10");
-}
-
-void MOCPlayerInterface::frwd() {
-    sendOption("-k10");
-}
-
-void MOCPlayerInterface::appendFile(QString file) {
-    execute("mocp", QStringList() << "-a" << file);
+bool MOCPlayerInterface::appendFile(QString file) {
+    return execute("mocp", QStringList() << "-a" << file);
 }
 
 void MOCPlayerInterface::getInfo() {
-    QString info = execute("mocp", QStringList() << "-Q" << "\"<st>%state</st>"
+    QString info = getOutput("mocp", QStringList() << "-Q" << "\"<st>%state</st>"
                            "<ar>%artist</ar><sn>%song</sn><al>%album</al>"
                            "<fi>%file</fi><tt>%tt</tt><ct>%ct</ct><ts>%ts</ts>"
                            "<cs>%cs</cs><np>%title</np>\" 2> /dev/null");
@@ -133,35 +121,23 @@ void MOCPlayerInterface::getInfo() {
         titleRgx.indexIn(track.title);
         track.song = titleRgx.cap(1);
     }
-    else {
+    else
         track.title = track.file;
-    }
 }
 
 void MOCPlayerInterface::update() {
     getInfo();
-    if(track.state == "Offline") {
-        emit updateStatus(tr("Player isn't running. "
-                             "Double-click to run it."), "", "", "");
-        return;
+    static QString status = QString();
+    if(status != track.state) {
+        status = track.state;
+        emit statusChanged(status);
+        if(status == "Offline")
+            emit updateStatus(tr("Player isn't running."), "", "", "");
+        if(status == "STOP")
+            emit updateStatus(tr("Stopped"), "", "", "");
     }
-    if(track.state == "STOP") {
-        emit updateStatus(tr("Stopped"), "", "", "");
-        return;
+    if(track.state == "PLAY") {
+        emit updateStatus(track.title, track.currTime, track.totalTime,cover());
+        scrobble();
     }
-    emit updateStatus(track.title, track.currTime, track.totalTime, cover());
-    if(track.state != "PAUSE")
-        scrobbler();
-}
-
-void MOCPlayerInterface::showPlayer() {
-    QString term = "x-terminal-emulator";
-    // falling back to xterm if there's no "alternatives"
-    if(!(execute("which", QStringList() << term).length() > 1))
-        term = "xterm";
-#ifdef OSD_OPT
-    execute(term, QStringList() << "-e" << "mocp" << "-O" << OSD_OPT);
-#else // OSD_OPT
-    execute(term, QStringList() << "-e" << "mocp");
-#endif // OSD_OPT
 }

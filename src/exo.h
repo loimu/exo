@@ -57,9 +57,7 @@ private slots:
 
 signals:
     void lyricsWindow();
-#ifdef BUILD_LASTFM
     void scrobblerLoaded(bool);
-#endif // BUILD_LASTFM
 
 public slots:
     void showLyricsWindow();

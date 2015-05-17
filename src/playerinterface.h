@@ -37,8 +37,9 @@ class PlayerInterface : public QObject
 protected:
     Track track;
     void startTimer(int);
-    QString execute(QString, QStringList);
-    void scrobbler();
+    QString getOutput(QString, QStringList);
+    bool execute(QString, QStringList);
+    void scrobble();
     QString cover();
 
 public:
@@ -49,7 +50,6 @@ public:
     QString album();
     QString artwork();
     QString url();
-    QString state();
     quint64 length();
     quint64 position();
 
@@ -57,21 +57,22 @@ signals:
     void trackListened(QString, QString, QString, int);
     void trackChanged(QString, QString, int);
     void updateStatus(QString, QString, QString, QString);
+    void statusChanged(QString);
 
 public slots:
     virtual QString id() = 0;
-    virtual void play() = 0;
-    virtual void pause()= 0;
-    virtual void prev() = 0;
-    virtual void next() = 0;
-    virtual void stop() = 0;
-    virtual void quit() = 0;
-    virtual void volu() = 0;
-    virtual void vold() = 0;
-    virtual void rewd() = 0;
-    virtual void frwd() = 0;
-    virtual void showPlayer() = 0;
-    virtual void appendFile(QString) = 0;
+    virtual bool play() = 0;
+    virtual bool pause()= 0;
+    virtual bool prev() = 0;
+    virtual bool next() = 0;
+    virtual bool stop() = 0;
+    virtual bool quit() = 0;
+    virtual bool volu() = 0;
+    virtual bool vold() = 0;
+    virtual bool rewd() = 0;
+    virtual bool frwd() = 0;
+    virtual bool showPlayer() = 0;
+    virtual bool appendFile(QString) = 0;
 
 protected slots:
     virtual void update() = 0;

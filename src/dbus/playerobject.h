@@ -40,6 +40,7 @@ class PlayerObject : public QDBusAbstractAdaptor
 
     PlayerInterface *player;
     QMap<QString, QVariant> props;
+    QString status;
     void syncProperties();
 
 public:
@@ -55,7 +56,8 @@ public:
     qlonglong position() const;
 
 private slots:
-    void emitPropertiesChanged();
+    void trackChanged();
+    void emitPropertiesChanged(QString);
 
 signals:
 

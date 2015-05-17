@@ -28,7 +28,7 @@ PlayerInterface* PlayerInterface::object = 0;
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 {
     if(object)
-        qFatal("only one instance is allowed");
+        qFatal("PlayerInterface: only one instance is allowed");
     object = this;
 }
 
@@ -38,14 +38,22 @@ void PlayerInterface::startTimer(int period) {
     timer->start(period);
 }
 
-QString PlayerInterface::execute(QString program, QStringList options) {
+QString PlayerInterface::getOutput(QString program, QStringList options) {
     QProcess proc;
     proc.start(program, options);
     proc.waitForFinished(-1);
     return QString::fromUtf8(proc.readAllStandardOutput());
 }
 
-void PlayerInterface::scrobbler() {
+bool PlayerInterface::execute(QString program, QStringList options) {
+    QProcess proc;
+    proc.start(program, options);
+    proc.waitForFinished(-1);
+    // returns true (success) if no output in standard error
+    return proc.readAllStandardError().length() < 1;
+}
+
+void PlayerInterface::scrobble() {
     static QString nowPlaying = QString();
     static bool listened = true;
     if(nowPlaying != track.title && !track.artist.isEmpty()) {
@@ -100,10 +108,6 @@ QString PlayerInterface::artwork() {
 
 QString PlayerInterface::url() {
     return track.file;
-}
-
-QString PlayerInterface::state() {
-    return track.state;
 }
 
 quint64 PlayerInterface::length() {
