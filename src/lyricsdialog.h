@@ -48,9 +48,9 @@ private slots:
     void showText(QNetworkReply *reply);
     void on_artistLineEdit_returnPressed();
     void on_titleLineEdit_returnPressed();
-    void on_updatePushButton_clicked();
-    void on_prevButton_clicked();
-    void on_nextButton_clicked();
+    void on_updatePushButton_released();
+    void on_prevButton_released();
+    void on_nextButton_released();
 };
 
 #endif // LYRICSDIALOG_H

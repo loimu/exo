@@ -64,14 +64,25 @@
      </widget>
     </item>
     <item>
-     <widget class="QDialogButtonBox" name="buttonBox">
-      <property name="standardButtons">
-       <set>QDialogButtonBox::Close</set>
-      </property>
-      <property name="centerButtons">
-       <bool>false</bool>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="aboutQt">
+        <property name="text">
+         <string>about&amp;Qt</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDialogButtonBox" name="buttonBox">
+        <property name="standardButtons">
+         <set>QDialogButtonBox::Close</set>
+        </property>
+        <property name="centerButtons">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

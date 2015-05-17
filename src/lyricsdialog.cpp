@@ -37,7 +37,7 @@ LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent)
     httpObject = new QNetworkAccessManager(this);
     connect(httpObject, SIGNAL(finished(QNetworkReply *)),
             SLOT(showText(QNetworkReply *)));
-    on_updatePushButton_clicked();
+    on_updatePushButton_released();
 }
 
 void LyricsDialog::showText(QNetworkReply *reply) {
@@ -102,7 +102,7 @@ void LyricsDialog::on_titleLineEdit_returnPressed() {
     search();
 }
 
-void LyricsDialog::on_updatePushButton_clicked() {
+void LyricsDialog::on_updatePushButton_released() {
     PlayerInterface* player = PlayerInterface::instance();
     ui.artistLineEdit->setText(format(player->artist()));
     ui.titleLineEdit->setText(format(player->title()));
@@ -110,16 +110,16 @@ void LyricsDialog::on_updatePushButton_clicked() {
         search();
 }
 
-void LyricsDialog::on_prevButton_clicked() {
+void LyricsDialog::on_prevButton_released() {
     PlayerInterface::instance()->prev();
     ui.textBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_clicked()));
+    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
 }
 
-void LyricsDialog::on_nextButton_clicked() {
+void LyricsDialog::on_nextButton_released() {
     PlayerInterface::instance()->next();
     ui.textBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_clicked()));
+    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
 }
 
 QString LyricsDialog::format(QString string) {

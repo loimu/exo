@@ -55,3 +55,7 @@ void AboutDialog::keyPressEvent(QKeyEvent *e) {
     if(e->key() == Qt::Key_Escape)
         this->close();
 }
+
+void AboutDialog::on_aboutQt_released() {
+    qApp->aboutQt();
+}

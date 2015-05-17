@@ -37,6 +37,9 @@ public:
     ~AboutDialog();
 signals:
     void destroyed(bool);
+
+private slots:
+    void on_aboutQt_released();
 };
 
 #endif // ABOUTDIALOG_H
