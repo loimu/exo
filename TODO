@@ -1,4 +1,5 @@
 * mpris2 interface
 * StatusNotifierItem support
-* made lastfm support and dbus interface optional
-* plugin interface
+* plugin interface?
+* remember last track option
+* DBus notifications

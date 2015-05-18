@@ -35,6 +35,7 @@ public slots:
     QString id();
     bool play();
     bool pause();
+    bool playPause();
     bool prev();
     bool next();
     bool stop();
@@ -43,8 +44,11 @@ public slots:
     bool vold();
     bool rewd();
     bool frwd();
+    bool jump(int);
+    bool volume(int);
     bool showPlayer();
-    bool appendFile(QString);
+    bool openUri(QStringList);
+    bool appendFile(QStringList);
 
 protected slots:
     void getInfo();

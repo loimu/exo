@@ -63,7 +63,7 @@ void TrayIcon::createActions() {
     QIcon playIcon(":/images/play.png");
     playAction->setIcon(playIcon);
     pauseAction = new QAction(tr("P&ause"), this);
-    connect(pauseAction, SIGNAL(triggered()), player, SLOT(pause()));
+    connect(pauseAction, SIGNAL(triggered()), player, SLOT(playPause()));
     QIcon pauseIcon(":/images/pause.png");
     pauseAction->setIcon(pauseIcon);
     prevAction = new QAction(tr("P&rev"), this);
@@ -197,9 +197,5 @@ void TrayIcon::addFiles() {
     QStringList files = QFileDialog::getOpenFileNames(this, "Add files to"
                                                             " playlist", "",
                                    "Media (*.pls *.m3u *.ogg *.mp3 *.flac)");
-    QStringList::Iterator it = files.begin();
-    while(it != files.end()) {
-        PlayerInterface::instance()->appendFile(*it);
-        ++it;
-    }
+    PlayerInterface::instance()->appendFile(files);
 }

@@ -63,6 +63,7 @@ public slots:
     virtual QString id() = 0;
     virtual bool play() = 0;
     virtual bool pause()= 0;
+    virtual bool playPause() = 0;
     virtual bool prev() = 0;
     virtual bool next() = 0;
     virtual bool stop() = 0;
@@ -71,8 +72,11 @@ public slots:
     virtual bool vold() = 0;
     virtual bool rewd() = 0;
     virtual bool frwd() = 0;
+    virtual bool jump(int) = 0;
+    virtual bool volume(int) = 0;
     virtual bool showPlayer() = 0;
-    virtual bool appendFile(QString) = 0;
+    virtual bool openUri(QStringList) = 0;
+    virtual bool appendFile(QStringList) = 0;
 
 protected slots:
     virtual void update() = 0;
