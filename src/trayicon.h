@@ -26,17 +26,13 @@
 #include <QSystemTrayIcon>
 
 class PlayerInterface;
-class AboutDialog;
 class QSettings;
 
 class TrayIcon : public QWidget
 {
     Q_OBJECT
 
-    void createActions();
-    void createTrayIcon();
-    bool eventFilter(QObject *, QEvent *);
-    AboutDialog *about;
+    PlayerInterface *player;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
     QAction *showAction;
@@ -52,20 +48,13 @@ class TrayIcon : public QWidget
     QAction *setQuitBehaviourAction;
     QAction *setScrobblingAction;
     QSystemTrayIcon *trayIcon;
+    void createActions();
+    void createTrayIcon();
+    bool eventFilter(QObject *, QEvent *);
 
 public:
     explicit TrayIcon(QObject *parent = 0);
     ~TrayIcon();
-
-signals:
-    void playerOpenWindow();
-    void playerTogglePause();
-    void playerVolumeUp();
-    void playerVolumeDown();
-    void playerNext();
-    void playerPrevious();
-    void playerForward();
-    void playerRewind();
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);

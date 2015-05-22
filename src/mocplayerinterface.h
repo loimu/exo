@@ -40,14 +40,12 @@ public slots:
     bool next();
     bool stop();
     bool quit();
-    bool volu();
-    bool vold();
-    bool rewd();
-    bool frwd();
-    bool jump(int);
-    bool volume(int);
+    bool jump(const int);
+    bool seek(const int);
+    bool volume(const int);
+    bool changeVolume(const int);
     bool showPlayer();
-    bool openUri(QStringList);
+    bool openUri(const QString);
     bool appendFile(QStringList);
 
 protected slots:

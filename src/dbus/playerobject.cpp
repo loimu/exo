@@ -22,7 +22,6 @@
 #include <QDBusMessage>
 #include <QDBusConnection>
 
-#include "../playerinterface.h"
 #include "playerobject.h"
 
 PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent)
@@ -32,6 +31,7 @@ PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent)
             SLOT(emitPropertiesChanged(QString)));
     connect(player, SIGNAL(trackChanged(QString,QString,int)),
             SLOT(trackChanged()));
+    track = PlayerInterface::instance()->trackObject();
 }
 
 PlayerObject::~PlayerObject()
@@ -58,14 +58,18 @@ bool PlayerObject::canPlay() const {
     return true;
 }
 
+bool PlayerObject::canSeek() const {
+    return !track->file.startsWith("http");
+}
+
 QVariantMap PlayerObject::metadata() const {
     QVariantMap map;
-    map["mpris:length"] = player->length() * 1000000;
-    map["mpris:artUrl"] = "file://" + player->artwork();
-    map["xesam:album"] = player->album();
-    map["xesam:artist"] = QStringList() << player->artist();
-    map["xesam:title"] = player->title();
-    map["xesam:url"] = "file://" + player->url();
+    map["mpris:length"] = track->totalSec * 1000000;
+    map["mpris:artUrl"] = player->artwork();
+    map["xesam:album"] = track->album;
+    map["xesam:artist"] = QStringList() << track->artist;
+    map["xesam:title"] = track->title;
+    map["xesam:url"] = (track->file.length()>1) ? "file://" + track->file : "";
     return map;
 }
 
@@ -78,7 +82,16 @@ QString PlayerObject::playbackStatus() const {
 }
 
 qlonglong PlayerObject::position() const {
-    return player->position() * 1000000;
+    return track->currSec * 1000000;
+}
+
+double PlayerObject::volume() const {
+    // dummy method - can't get the volume
+    return 0.5;
+}
+
+void PlayerObject::setVolume(double value) {
+    player->volume(value * 100);
 }
 
 void PlayerObject::trackChanged() {
@@ -96,6 +109,8 @@ void PlayerObject::emitPropertiesChanged(QString st) {
 //        changedProps << "CanPause";
 //    if(props["CanPlay"] != canPlay())
 //        changedProps << "CanPlay";
+    if(props["CanSeek"] != canSeek())
+        changedProps << "CanSeek";
     if(props["PlaybackStatus"] != playbackStatus())
         changedProps << "PlaybackStatus";
     if(props["Metadata"] != metadata())
@@ -128,7 +143,7 @@ void PlayerObject::Play() {
 }
 
 void PlayerObject::PlayPause() {
-    player->pause();
+    player->playPause();
 }
 
 void PlayerObject::Previous() {
@@ -139,11 +154,24 @@ void PlayerObject::Stop() {
     player->stop();
 }
 
+void PlayerObject::Seek(qlonglong Offset) {
+    player->seek(Offset/1000000);
+}
+
+void PlayerObject::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position) {
+    player->jump(Position/1000000);
+}
+
+void PlayerObject::OpenUri(const QString &Uri) {
+    player->openUri(Uri);
+}
+
 void PlayerObject::syncProperties() {
     props["CanGoNext"] = canGoNext();
     props["CanGoPrevious"] = canGoPrevious();
     props["CanPause"] = canPause();
     props["CanPlay"] = canPlay();
+    props["CanSeek"] = canSeek();
     props["PlaybackStatus"] = playbackStatus();
     props["Metadata"] = metadata();
 }

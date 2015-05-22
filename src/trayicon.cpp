@@ -33,16 +33,12 @@
 #include "trayicon.h"
 
 TrayIcon::TrayIcon(QObject *parent) {
-    PlayerInterface* player = PlayerInterface::instance();
+    player = PlayerInterface::instance();
     createActions();
     createTrayIcon();
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
-    connect(this, SIGNAL(playerOpenWindow()), player, SLOT(showPlayer()));
-    connect(this, SIGNAL(playerTogglePause()), player, SLOT(pause()));
-    connect(this, SIGNAL(playerVolumeDown()), player, SLOT(vold()));
-    connect(this, SIGNAL(playerVolumeUp()), player, SLOT(volu()));
     connect(Exo::app(), SIGNAL(lyricsWindow()), SLOT(showLyricsWindow()));
 }
 
@@ -51,7 +47,6 @@ TrayIcon::~TrayIcon()
 }
 
 void TrayIcon::createActions() {
-    PlayerInterface* player = PlayerInterface::instance();
     showAction = new QAction(tr("Player"), this);
     connect(showAction, SIGNAL(triggered()), player, SLOT(showPlayer()));
     filesAction = new QAction(tr("A&dd ..."), this);
@@ -135,12 +130,12 @@ void TrayIcon::createTrayIcon() {
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
     switch(reason) {
     case QSystemTrayIcon::DoubleClick:
-        emit playerOpenWindow();
+        player->showPlayer();
         break;
     case QSystemTrayIcon::Trigger:
         break;
     case QSystemTrayIcon::MiddleClick:
-        emit playerTogglePause();
+        player->playPause();
         break;
     default:
         break;
@@ -154,10 +149,7 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
         return false;
     if(event->type() == QEvent::Wheel) {
         QWheelEvent* e = static_cast<QWheelEvent*>(event);
-        if(e->delta() < 0)
-            emit playerVolumeDown();
-        else
-            emit playerVolumeUp();
+        player->changeVolume(e->delta()/100);
         return true;
     }
     return false;
@@ -183,7 +175,7 @@ void TrayIcon::showLyricsWindow() {
 
 void TrayIcon::showAboutDialog() {
     aboutAction->setDisabled(true);
-    about = new AboutDialog(this);
+    AboutDialog* about = new AboutDialog(this);
     about->show();
     connect(about, SIGNAL(destroyed(bool)), aboutAction, SLOT(setEnabled(bool)));
 }
@@ -197,5 +189,5 @@ void TrayIcon::addFiles() {
     QStringList files = QFileDialog::getOpenFileNames(this, "Add files to"
                                                             " playlist", "",
                                    "Media (*.pls *.m3u *.ogg *.mp3 *.flac)");
-    PlayerInterface::instance()->appendFile(files);
+    player->appendFile(files);
 }

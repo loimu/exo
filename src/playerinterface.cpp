@@ -89,35 +89,18 @@ QString PlayerInterface::cover() {
         return ":/images/nocover.png";
 }
 
-QString PlayerInterface::artist() {
-    return track.artist;
-}
-
-QString PlayerInterface::title() {
-    return track.song;
-}
-
-QString PlayerInterface::album() {
-    return track.album;
-}
-
+#ifdef BUILD_DBUS
 QString PlayerInterface::artwork() {
+    // compliance method for MPRIS
     QString art = cover();
-    return (art == ":/images/nocover.png") ? "" : art;
+    return (art == ":/images/nocover.png" || art == "") ? "" : "file://" + art;
 }
-
-QString PlayerInterface::url() {
-    return track.file;
-}
-
-quint64 PlayerInterface::length() {
-    return track.totalSec;
-}
-
-quint64 PlayerInterface::position() {
-    return track.currSec;
-}
+#endif // BUILD_DBUS
 
 PlayerInterface* PlayerInterface::instance() {
     return object;
+}
+
+const Track* PlayerInterface::trackObject() const {
+    return &track;
 }

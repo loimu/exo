@@ -21,9 +21,10 @@
 #define PLAYEROBJECT_H
 
 #include <QDBusAbstractAdaptor>
+#include <QDBusObjectPath>
 #include <QObject>
 
-class PlayerInterface;
+#include "../playerinterface.h"
 
 class PlayerObject : public QDBusAbstractAdaptor
 {
@@ -34,11 +35,14 @@ class PlayerObject : public QDBusAbstractAdaptor
     Q_PROPERTY(bool CanGoPrevious READ canGoPrevious)
     Q_PROPERTY(bool CanPause READ canPause)
     Q_PROPERTY(bool CanPlay READ canPlay)
+    Q_PROPERTY(bool CanSeek READ canSeek)
     Q_PROPERTY(QVariantMap Metadata READ metadata)
     Q_PROPERTY(QString PlaybackStatus READ playbackStatus)
     Q_PROPERTY(qlonglong Position READ position)
+    Q_PROPERTY(double Volume READ volume WRITE setVolume)
 
     PlayerInterface *player;
+    const Track *track;
     QMap<QString, QVariant> props;
     QString status;
     void syncProperties();
@@ -51,9 +55,12 @@ public:
     bool canGoPrevious() const;
     bool canPause() const;
     bool canPlay() const;
+    bool canSeek() const;
     QVariantMap metadata() const;
     QString playbackStatus() const;
     qlonglong position() const;
+    double volume() const;
+    void setVolume(double value);
 
 private slots:
     void trackChanged();
@@ -68,6 +75,9 @@ public slots:
     void PlayPause();
     void Previous();
     void Stop();
+    void Seek(qlonglong Offset);
+    void SetPosition(const QDBusObjectPath &TrackId, qlonglong Position);
+    void OpenUri(const QString &Uri);
 };
 
 #endif // PLAYEROBJECT_H

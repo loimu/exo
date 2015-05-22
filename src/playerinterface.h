@@ -20,6 +20,8 @@
 #ifndef PLAYERINTERFACE_H
 #define PLAYERINTERFACE_H
 
+#include "config.h"
+
 #include <QObject>
 
 struct Track
@@ -45,13 +47,10 @@ protected:
 public:
     PlayerInterface(QObject *parent = 0);
     static PlayerInterface* instance();
-    QString artist();
-    QString title();
-    QString album();
+    const Track* trackObject() const;
+#ifdef BUILD_DBUS
     QString artwork();
-    QString url();
-    quint64 length();
-    quint64 position();
+#endif // BUILD_DBUS
 
 signals:
     void trackListened(QString, QString, QString, int);
@@ -68,15 +67,13 @@ public slots:
     virtual bool next() = 0;
     virtual bool stop() = 0;
     virtual bool quit() = 0;
-    virtual bool volu() = 0;
-    virtual bool vold() = 0;
-    virtual bool rewd() = 0;
-    virtual bool frwd() = 0;
-    virtual bool jump(int) = 0;
-    virtual bool volume(int) = 0;
+    virtual bool jump(const int position) = 0;
+    virtual bool seek(const int seconds) = 0;
+    virtual bool volume(const int level) = 0;
+    virtual bool changeVolume(const int delta) = 0;
     virtual bool showPlayer() = 0;
-    virtual bool openUri(QStringList) = 0;
-    virtual bool appendFile(QStringList) = 0;
+    virtual bool openUri(const QString uri) = 0;
+    virtual bool appendFile(QStringList files) = 0;
 
 protected slots:
     virtual void update() = 0;

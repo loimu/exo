@@ -58,23 +58,21 @@ bool MOCPlayerInterface::runServer() {
 
 SEND_COMMAND(play, "-p")
 SEND_COMMAND(pause,"-P")
-SEND_COMMAND(playPause, "-G")
+SEND_COMMAND(playPause,"-G")
 SEND_COMMAND(prev, "-r")
 SEND_COMMAND(next, "-f")
 SEND_COMMAND(stop, "-s")
 SEND_COMMAND(quit, "-x")
-SEND_COMMAND(volu, "-v+2")
-SEND_COMMAND(vold, "-v-2")
-SEND_COMMAND(rewd, "-k-10")
-SEND_COMMAND(frwd, "-k+10")
 
-bool MOCPlayerInterface::jump(int second) {
-    return execute("mocp", QStringList() << QString("-j%1s").arg(second));
-}
+#define SEND_COMMAND_PARAM(__method, __option)\
+    bool MOCPlayerInterface::__method(int param) {\
+        return execute("mocp", QStringList() << QString(__option).arg(param));\
+    }
 
-bool MOCPlayerInterface::volume(int level) {
-    return execute("mocp", QStringList() << QString("-v%1").arg(level));
-}
+SEND_COMMAND_PARAM(jump, "-j%1s")
+SEND_COMMAND_PARAM(seek, "-k%s")
+SEND_COMMAND_PARAM(volume, "-v%1")
+SEND_COMMAND_PARAM(changeVolume, "-v+%1")
 
 bool MOCPlayerInterface::showPlayer() {
     QString term = "x-terminal-emulator";
@@ -88,8 +86,8 @@ bool MOCPlayerInterface::showPlayer() {
 #endif // OSD_OPT
 }
 
-bool MOCPlayerInterface::openUri(QStringList files) {
-    return execute("mocp", QStringList() << "-l" << files);
+bool MOCPlayerInterface::openUri(const QString file) {
+    return execute("mocp", QStringList() << "-l" << file);
 }
 
 bool MOCPlayerInterface::appendFile(QStringList files) {
