@@ -136,10 +136,17 @@ void MOCPlayerInterface::getInfo() {
 
 void MOCPlayerInterface::update() {
     getInfo();
+#ifdef BUILD_DBUS
+    static QString title = QString();
+    if(title != track.title) {
+        title = track.title;
+        emit newTrack();
+    }
+#endif // BUILD_DBUS
     static QString status = QString();
     if(status != track.state) {
         status = track.state;
-        emit statusChanged(status);
+        emit newStatus(status);
         if(status == "Offline")
             emit updateStatus(tr("Player isn't running."), "", "", "");
         if(status == "STOP")

@@ -53,10 +53,14 @@ public:
 #endif // BUILD_DBUS
 
 signals:
+    // two signals for scrobbler
     void trackListened(QString, QString, QString, int);
     void trackChanged(QString, QString, int);
+    // signal for trayicon
     void updateStatus(QString, QString, QString, QString);
-    void statusChanged(QString);
+    // two signals for MPRIS
+    void newStatus(QString);
+    void newTrack();
 
 public slots:
     virtual QString id() = 0;

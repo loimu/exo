@@ -27,11 +27,10 @@
 PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent)
 {
     player = PlayerInterface::instance();
-    connect(player, SIGNAL(statusChanged(QString)),
+    track = player->trackObject();
+    connect(player, SIGNAL(newStatus(QString)),
             SLOT(emitPropertiesChanged(QString)));
-    connect(player, SIGNAL(trackChanged(QString,QString,int)),
-            SLOT(trackChanged()));
-    track = PlayerInterface::instance()->trackObject();
+    connect(player, SIGNAL(newTrack()), SLOT(trackChanged()));
 }
 
 PlayerObject::~PlayerObject()
@@ -69,7 +68,8 @@ QVariantMap PlayerObject::metadata() const {
     map["xesam:album"] = track->album;
     map["xesam:artist"] = QStringList() << track->artist;
     map["xesam:title"] = track->title;
-    map["xesam:url"] = (track->file.length()>1) ? "file://" + track->file : "";
+    QString uri = track->file;
+    map["xesam:url"] = uri.startsWith("http") ? uri : "file://" + uri;
     return map;
 }
 
