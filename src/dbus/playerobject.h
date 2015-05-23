@@ -64,7 +64,7 @@ public:
 
 private slots:
     void trackChanged();
-    void emitPropertiesChanged(QString);
+    void emitPropsChanged(QString);
 
 signals:
 

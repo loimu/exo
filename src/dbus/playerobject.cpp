@@ -28,8 +28,7 @@ PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent)
 {
     player = PlayerInterface::instance();
     track = player->trackObject();
-    connect(player, SIGNAL(newStatus(QString)),
-            SLOT(emitPropertiesChanged(QString)));
+    connect(player, SIGNAL(newStatus(QString)),SLOT(emitPropsChanged(QString)));
     connect(player, SIGNAL(newTrack()), SLOT(trackChanged()));
 }
 
@@ -67,7 +66,7 @@ QVariantMap PlayerObject::metadata() const {
     map["mpris:artUrl"] = player->artwork();
     map["xesam:album"] = track->album;
     map["xesam:artist"] = QStringList() << track->artist;
-    map["xesam:title"] = track->title;
+    map["xesam:title"] = track->song.isEmpty() ? track->title : track->song;
     QString uri = track->file;
     map["xesam:url"] = uri.startsWith("http") ? uri : "file://" + uri;
     return map;
@@ -82,7 +81,8 @@ QString PlayerObject::playbackStatus() const {
 }
 
 qlonglong PlayerObject::position() const {
-    return track->currSec * 1000000;
+    if(!track->file.startsWith("http"))
+        return track->currSec * 1000000;
 }
 
 double PlayerObject::volume() const {
@@ -98,7 +98,7 @@ void PlayerObject::trackChanged() {
     emitPropertiesChanged("PLAY");
 }
 
-void PlayerObject::emitPropertiesChanged(QString st) {
+void PlayerObject::emitPropsChanged(QString st) {
     status = st;
     QList<QByteArray> changedProps;
 //    if(props["CanGoNext"] != canGoNext())

@@ -27,7 +27,7 @@
 struct Track
 {
     QString state, artist, song, album, file, totalTime, currTime, title;
-    int totalSec, currSec;
+    int number, totalSec, currSec;
 };
 
 class PlayerInterface : public QObject

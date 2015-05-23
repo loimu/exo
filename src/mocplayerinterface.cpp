@@ -70,7 +70,7 @@ SEND_COMMAND(quit, "-x")
     }
 
 SEND_COMMAND_PARAM(jump, "-j%1s")
-SEND_COMMAND_PARAM(seek, "-k%s")
+SEND_COMMAND_PARAM(seek, "-k%1s")
 SEND_COMMAND_PARAM(volume, "-v%1")
 SEND_COMMAND_PARAM(changeVolume, "-v+%1")
 
@@ -96,16 +96,16 @@ bool MOCPlayerInterface::appendFile(QStringList files) {
 
 void MOCPlayerInterface::getInfo() {
     QString info = getOutput("mocp", QStringList() << "-Q" << "\"<st>%state</st>"
-                           "<ar>%artist</ar><sn>%song</sn><al>%album</al>"
-                           "<fi>%file</fi><tt>%tt</tt><ct>%ct</ct><ts>%ts</ts>"
-                           "<cs>%cs</cs><np>%title</np>\" 2> /dev/null");
+                           "<ar>%a</ar><sn>%t</sn><al>%A</al><fi>%file</fi>"
+                           "<tt>%tt</tt><ct>%ct</ct><ts>%ts</ts><cs>%cs</cs>"
+                           "<np>%title</np><nm>%n</nm>\" 2> /dev/null");
     if(info.size() < 1) {
         track.state = "Offline";
         return;
     }
     QRegExp infoRgx("<st>(.*)</st><ar>(.*)</ar><sn>(.*)</sn><al>(.*)</al>"
                     "<fi>(.*)</fi><tt>(.*)</tt><ct>(.*)</ct><ts>(.*)</ts>"
-                    "<cs>(.*)</cs><np>(.*)</np>");
+                    "<cs>(.*)</cs><np>(.*)</np><nm>(.*)</nm>");
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
     track.state = infoRgx.cap(1);
@@ -120,6 +120,7 @@ void MOCPlayerInterface::getInfo() {
     track.totalSec = infoRgx.cap(8).toInt();
     track.currSec = infoRgx.cap(9).toInt();
     track.title = infoRgx.cap(10);
+    track.number = infoRgx.cap(11).toInt();
     if(!track.file.startsWith("http"))
         return;
     track.totalSec = 8*60;
