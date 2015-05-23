@@ -95,7 +95,7 @@ void PlayerObject::setVolume(double value) {
 }
 
 void PlayerObject::trackChanged() {
-    emitPropertiesChanged("PLAY");
+    emitPropsChanged("PLAY");
 }
 
 void PlayerObject::emitPropsChanged(QString st) {
