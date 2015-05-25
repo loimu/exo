@@ -98,7 +98,7 @@ void MOCPlayerInterface::getInfo() {
     QString info = getOutput("mocp", QStringList() << "-Q" << "\"<st>%state</st>"
                            "<ar>%a</ar><sn>%t</sn><al>%A</al><fi>%file</fi>"
                            "<tt>%tt</tt><ct>%ct</ct><ts>%ts</ts><cs>%cs</cs>"
-                           "<np>%title</np><nm>%n</nm>\" 2> /dev/null");
+                           "<np>%title</np><nm>%n</nm>\"");
     if(info.size() < 1) {
         track.state = "Offline";
         return;
@@ -132,29 +132,5 @@ void MOCPlayerInterface::getInfo() {
         QRegExp titleRgx("\\s-\\s(.*)$");
         titleRgx.indexIn(track.title);
         track.song = titleRgx.cap(1);
-    }
-}
-
-void MOCPlayerInterface::update() {
-    getInfo();
-#ifdef BUILD_DBUS
-    static QString title = QString();
-    if(title != track.title) {
-        title = track.title;
-        emit newTrack();
-    }
-#endif // BUILD_DBUS
-    static QString status = QString();
-    if(status != track.state) {
-        status = track.state;
-        emit newStatus(status);
-        if(status == "Offline")
-            emit updateStatus(tr("Player isn't running."), "", "", "");
-        if(status == "STOP")
-            emit updateStatus(tr("Stopped"), "", "", "");
-    }
-    if(track.state == "PLAY") {
-        emit updateStatus(track.title, track.currTime, track.totalTime,cover());
-        scrobble();
     }
 }

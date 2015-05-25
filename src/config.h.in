@@ -22,5 +22,6 @@
 
 #cmakedefine BUILD_DBUS
 #cmakedefine BUILD_LASTFM
+#cmakedefine USE_CMUS
 
 #endif // CONFIG_H_IN

@@ -33,7 +33,13 @@
 
 #include "trayicon.h"
 #include "playerinterface.h"
+
+#ifdef USE_CMUS
+#include "cmusinterface.h"
+#else // USE_CMUS
 #include "mocplayerinterface.h"
+#endif // USE_CMUS
+
 #include "exo.h"
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
@@ -54,7 +60,11 @@ Exo::~Exo() {
 void Exo::init(bool useGui) {
     settingsObject = new QSettings(qApp->organizationName(),
                                    qApp->applicationName(), this);
+#ifdef USE_CMUS
+    player = new CmusInterface(this);
+#else // USE_CMUS
     player = new MOCPlayerInterface(this);
+#endif // USE_CMUS
 
 #ifdef BUILD_DBUS
     new DBus(this);

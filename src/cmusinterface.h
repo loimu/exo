@@ -17,17 +17,20 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef MOCPLAYERINTERFACE_H
-#define MOCPLAYERINTERFACE_H
+#ifndef CMUSINTERFACE_H
+#define CMUSINTERFACE_H
 
-class MOCPlayerInterface : public PlayerInterface
+#include <QObject>
+
+class CmusInterface : public PlayerInterface
 {
-    bool isServerRunning();
-    bool runServer();
+    bool isPlayerRunning();
+    bool runPlayer();
+    QString find(QString, const QString);
 
 public:
-    explicit MOCPlayerInterface(QObject *parent = 0);
-    ~MOCPlayerInterface();
+    explicit CmusInterface(QObject *parent = 0);
+    ~CmusInterface();
 
 public slots:
     QString id();
@@ -50,4 +53,4 @@ protected slots:
     void getInfo();
 };
 
-#endif // MOCPLAYERINTERFACE_H
+#endif // CMUSINTERFACE_H

@@ -73,9 +73,9 @@ QVariantMap PlayerObject::metadata() const {
 }
 
 QString PlayerObject::playbackStatus() const {
-    if(status == "PLAY")
+    if(status.startsWith("play", Qt::CaseInsensitive))
         return "Playing";
-    else if(status == "PAUSE")
+    else if(status.startsWith("pause", Qt::CaseInsensitive))
         return "Paused";
     return "Stopped";
 }

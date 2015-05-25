@@ -35,14 +35,14 @@ class PlayerInterface : public QObject
     Q_OBJECT
 
     static PlayerInterface* object;
+    void scrobble();
+    QString cover();
 
 protected:
     Track track;
     void startTimer(int);
     QString getOutput(QString, QStringList);
     bool execute(QString, QStringList);
-    void scrobble();
-    QString cover();
 
 public:
     PlayerInterface(QObject *parent = 0);
@@ -72,7 +72,7 @@ public slots:
     virtual bool stop() = 0;
     virtual bool quit() = 0;
     virtual bool jump(const int position) = 0;
-    virtual bool seek(const int seconds) = 0;
+    virtual bool seek(const int offset) = 0;
     virtual bool volume(const int level) = 0;
     virtual bool changeVolume(const int delta) = 0;
     virtual bool showPlayer() = 0;
@@ -80,8 +80,10 @@ public slots:
     virtual bool appendFile(QStringList files) = 0;
 
 protected slots:
-    virtual void update() = 0;
     virtual void getInfo() = 0;
+
+private slots:
+    void update();
 };
 
 #endif // PLAYERINTERFACE_H
