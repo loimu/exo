@@ -96,8 +96,8 @@ void PlayerObject::setVolume(double value) {
 }
 
 void PlayerObject::trackChanged() {
-    emitPropsChanged("PLAY");
     trackID = QDBusObjectPath(QString("/org/exo/MediaPlayer2/Track/%1").arg(qrand()));
+    emitPropsChanged("PLAY");
 }
 
 void PlayerObject::emitPropsChanged(QString st) {
