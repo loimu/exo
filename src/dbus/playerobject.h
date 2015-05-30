@@ -45,6 +45,7 @@ class PlayerObject : public QDBusAbstractAdaptor
     const Track *track;
     QMap<QString, QVariant> props;
     QString status;
+    QDBusObjectPath trackID;
     void syncProperties();
 
 public:

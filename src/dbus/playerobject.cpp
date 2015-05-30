@@ -18,7 +18,6 @@
 * ======================================================================== */
 
 #include <QStringList>
-#include <QDebug>
 #include <QDBusMessage>
 #include <QDBusConnection>
 
@@ -28,6 +27,7 @@ PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent)
 {
     player = PlayerInterface::instance();
     track = player->trackObject();
+    trackID = QDBusObjectPath(QString("/org/exo/MediaPlayer2/Track/0"));
     connect(player, SIGNAL(newStatus(QString)),SLOT(emitPropsChanged(QString)));
     connect(player, SIGNAL(newTrack()), SLOT(trackChanged()));
 }
@@ -64,6 +64,7 @@ QVariantMap PlayerObject::metadata() const {
     QVariantMap map;
     map["mpris:length"] = track->totalSec * 1000000;
     map["mpris:artUrl"] = player->artwork();
+    map["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(trackID);
     map["xesam:album"] = track->album;
     map["xesam:artist"] = QStringList() << track->artist;
     map["xesam:title"] = track->song.isEmpty() ? track->title : track->song;
@@ -96,19 +97,12 @@ void PlayerObject::setVolume(double value) {
 
 void PlayerObject::trackChanged() {
     emitPropsChanged("PLAY");
+    trackID = QDBusObjectPath(QString("/org/exo/MediaPlayer2/Track/%1").arg(qrand()));
 }
 
 void PlayerObject::emitPropsChanged(QString st) {
     status = st;
     QList<QByteArray> changedProps;
-//    if(props["CanGoNext"] != canGoNext())
-//        changedProps << "CanGoNext";
-//    if(props["CanGoPrevious"] != canGoPrevious())
-//        changedProps << "CanGoPrevious";
-//    if(props["CanPause"] != canPause())
-//        changedProps << "CanPause";
-//    if(props["CanPlay"] != canPlay())
-//        changedProps << "CanPlay";
     if(props["CanSeek"] != canSeek())
         changedProps << "CanSeek";
     if(props["PlaybackStatus"] != playbackStatus())
@@ -159,6 +153,8 @@ void PlayerObject::Seek(qlonglong Offset) {
 }
 
 void PlayerObject::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position) {
+    if(trackID != TrackId)
+        return;
     player->jump(Position/1000000);
 }
 
