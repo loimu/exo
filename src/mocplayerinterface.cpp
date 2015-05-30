@@ -70,7 +70,7 @@ SEND_COMMAND(quit, "-x")
     }
 
 SEND_COMMAND_PARAM(jump, "-j%1s")
-SEND_COMMAND_PARAM(seek, "-k%1s")
+SEND_COMMAND_PARAM(seek, "-k%1")
 SEND_COMMAND_PARAM(volume, "-v%1")
 SEND_COMMAND_PARAM(changeVolume, "-v+%1")
 
