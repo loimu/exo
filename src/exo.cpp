@@ -46,7 +46,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 {
     QCoreApplication::setOrganizationName("exo");
     QCoreApplication::setApplicationName("eXo");
-    QCoreApplication::setApplicationVersion("0.3");
+    QCoreApplication::setApplicationVersion("0.4");
     QApplication::setQuitOnLastWindowClosed(false);
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     init(useGui);
