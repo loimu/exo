@@ -36,8 +36,6 @@ class QSettings;
 
 class Exo : public QApplication
 {
-    Q_OBJECT
-
 #ifdef BUILD_LASTFM
     QPointer<Scrobbler> scrobbler;
 #endif // BUILD_LASTFM
@@ -54,11 +52,6 @@ public:
 #ifdef BUILD_LASTFM
     void enableScrobbler(bool);
 #endif // BUILD_LASTFM
-
-signals:
-    void lyricsWindow();
-
-public slots:
     void showLyricsWindow();
 };
 

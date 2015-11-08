@@ -40,7 +40,6 @@ TrayIcon::TrayIcon(QObject *parent) {
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
-    connect(Exo::instance, SIGNAL(lyricsWindow()), SLOT(showLyricsWindow()));
 }
 
 TrayIcon::~TrayIcon()

@@ -62,11 +62,13 @@ private slots:
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();
-    void showLyricsWindow();
 #ifdef BUILD_LASTFM
     void checkScrobbler(bool);
     void enableScrobbler(bool);
 #endif // BUILD_LASTFM
+
+public slots:
+    void showLyricsWindow();
 };
 
 #endif // TRAYICON_H

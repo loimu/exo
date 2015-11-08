@@ -17,18 +17,11 @@ set(exo_SRCS src/exo.cpp src/main.cpp
              src/playerinterface.cpp
              src/mocplayerinterface.cpp
              src/trayicon.cpp)
-set(exo_HDRS src/exo.h
-             src/aboutdialog.h
-             src/lyricsdialog.h
-             src/playerinterface.h
-             src/mocplayerinterface.h
-             src/trayicon.h)
 set(exo_FRMS src/aboutdialog.ui src/lyricsdialog.ui)
 set(exo_RSRCS exo.qrc)
 
 if(USE_CMUS)
   list(APPEND exo_SRCS src/cmusinterface.cpp)
-  list(APPEND exo_HDRS src/cmusinterface.h)
 endif()
 
 if(NOT BUILD_WITH_QT4)
@@ -38,13 +31,10 @@ endif()
 if(BUILD_DBUS)
   list(APPEND exo_SRCS src/dbus/dbus.cpp src/dbus/exoobject.cpp
                        src/dbus/rootobject.cpp src/dbus/playerobject.cpp)
-  list(APPEND exo_HDRS src/dbus/dbus.h src/dbus/exoobject.h
-                       src/dbus/rootobject.h src/dbus/playerobject.h)
 endif()
 
 if(BUILD_LASTFM)
   list(APPEND exo_SRCS src/scrobbler.cpp src/scrobblersettings.cpp)
-  list(APPEND exo_HDRS src/scrobbler.h src/scrobblersettings.h)
   list(APPEND exo_FRMS src/scrobblersettings.ui)
   find_library(LASTFM_LIBRARIES lastfm)
 endif()
@@ -60,6 +50,7 @@ if(Qt5Core_DIR)
   include_directories(${Qt5Core_INCLUDE_DIRS}
                       ${Qt5Widgets_INCLUDE_DIRS}
                       ${Qt5Network_INCLUDE_DIRS}
+                      ${CMAKE_CURRENT_SOURCE_DIR}/dbus
                       ${CMAKE_CURRENT_BINARY_DIR})
   qt5_wrap_ui(exo_FORMS_HEADERS ${exo_FRMS})
   qt5_add_resources(exo_RESOURCES_RCC ${exo_RSRCS})
@@ -69,7 +60,9 @@ else()
   if(BUILD_DBUS)
     list(APPEND qt_LIBS Qt4::QtDBus)
   endif()
-  include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
+  include_directories(${QT_INCLUDES}
+                      ${CMAKE_CURRENT_SOURCE_DIR}/dbus
+                      ${CMAKE_CURRENT_BINARY_DIR})
   qt4_wrap_ui(exo_FORMS_HEADERS ${exo_FRMS})
   qt4_add_resources(exo_RESOURCES_RCC ${exo_RSRCS})
 endif()

@@ -72,7 +72,7 @@ Exo::~Exo() {
 }
 
 void Exo::showLyricsWindow() {
-    emit lyricsWindow();
+    trayIcon->showLyricsWindow();
 }
 
 #ifdef BUILD_LASTFM
