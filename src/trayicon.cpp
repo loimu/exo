@@ -30,6 +30,7 @@
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 #include "aboutdialog.h"
+#include "scrobblersettings.h"
 #include "trayicon.h"
 
 TrayIcon::TrayIcon(QObject *parent) {
@@ -39,7 +40,7 @@ TrayIcon::TrayIcon(QObject *parent) {
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
-    connect(Exo::app(), SIGNAL(lyricsWindow()), SLOT(showLyricsWindow()));
+    connect(Exo::instance, SIGNAL(lyricsWindow()), SLOT(showLyricsWindow()));
 }
 
 TrayIcon::~TrayIcon()
@@ -81,18 +82,15 @@ void TrayIcon::createActions() {
     quitAction->setIcon(quitIcon);
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
-    QSettings* settings = Exo::app()->settings();
-    setQuitBehaviourAction->setChecked(settings->value("player/quit").toBool());
+    setQuitBehaviourAction->setChecked(Exo::settings->value("player/quit").toBool());
     connect(setQuitBehaviourAction, SIGNAL(triggered(bool)),
             SLOT(setQuitBehaviour(bool)));
 #ifdef BUILD_LASTFM
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
-    setScrobblingAction->setChecked(settings->value("scrobbler/enabled").toBool());
+    setScrobblingAction->setChecked(Exo::settings->value("scrobbler/enabled").toBool());
     connect(setScrobblingAction, SIGNAL(triggered(bool)),
-            Exo::app(), SLOT(scrobblerToggle(bool)));
-    connect(Exo::app(), SIGNAL(scrobblerLoaded(bool)),
-            setScrobblingAction, SLOT(setChecked(bool)));
+            this, SLOT(checkScrobbler(bool)));
 #endif // BUILD_LASTFM
 }
 
@@ -181,8 +179,7 @@ void TrayIcon::showAboutDialog() {
 }
 
 void TrayIcon::setQuitBehaviour(bool checked) {
-    QSettings* settings = Exo::app()->settings();
-    settings->setValue("player/quit", checked);
+    Exo::settings->setValue("player/quit", checked);
 }
 
 void TrayIcon::addFiles() {
@@ -191,3 +188,19 @@ void TrayIcon::addFiles() {
                                    "Media (*.pls *.m3u *.ogg *.mp3 *.flac)");
     player->appendFile(files);
 }
+
+#ifdef BUILD_LASTFM
+void TrayIcon::checkScrobbler(bool checked) {
+    if(!Exo::settings->value("scrobbler/sessionkey").toBool() && checked) {
+        ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
+        settingsDialog->show();
+        connect(settingsDialog, SIGNAL(configured(bool)), SLOT(enableScrobbler(bool)));
+    } else
+        enableScrobbler(checked);
+}
+
+void TrayIcon::enableScrobbler(bool checked) {
+    Exo::instance->enableScrobbler(checked);
+    setScrobblingAction->setChecked(checked);
+}
+#endif // BUILD_LASTFM

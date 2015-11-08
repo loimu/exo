@@ -56,7 +56,7 @@ private slots:
     void authReplyFinished();
 
 signals:
-    void configured();
+    void configured(bool);
 };
 
 #endif // SCROBBLERSETTINGS_H

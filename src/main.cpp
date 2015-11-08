@@ -18,17 +18,25 @@
 * ======================================================================== */
 
 #include <QByteArray>
-
+#include <QNetworkProxyFactory>
+#include <QSettings>
 #include "exo.h"
 
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(exo);
-    bool useGui = true;
     for(int i=1; i<argc; i++) {
         QByteArray arg = argv[i];
         if(arg == "-d" || arg == "--daemonize")
-            useGui = false;
+            Exo::useGui = false;
+        if(arg == "-n" || arg == "--no-dbus")
+            Exo::useDBus = false;
     }
-    Exo app(argc, argv, useGui);
+    QCoreApplication::setOrganizationName("exo");
+    QCoreApplication::setApplicationName("eXo");
+    QCoreApplication::setApplicationVersion("0.5");
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
+    QSettings settings;
+    Exo::settings = &settings;
+    Exo app(argc, argv, Exo::useGui);
     return app.exec();
 }

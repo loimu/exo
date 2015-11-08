@@ -19,7 +19,6 @@
 
 #include <QStringList>
 
-#include "playerinterface.h"
 #include "mocplayerinterface.h"
 
 #define OSD_OPT "OnSongChange=\"/usr/bin/moc-osd.py\""

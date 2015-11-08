@@ -30,6 +30,7 @@
 #include <QPointer>
 
 class Scrobbler;
+class TrayIcon;
 class PlayerInterface;
 class QSettings;
 
@@ -37,27 +38,25 @@ class Exo : public QApplication
 {
     Q_OBJECT
 
+#ifdef BUILD_LASTFM
     QPointer<Scrobbler> scrobbler;
+#endif // BUILD_LASTFM
+    QPointer<TrayIcon> trayIcon;
     PlayerInterface* player;
-    QSettings* settingsObject;
-    void init(bool);
 
 public:
+    static bool useDBus;
+    static bool useGui;
+    static Exo* instance;
+    static QSettings* settings;
     explicit Exo(int &argc, char **argv, bool);
     ~Exo();
-    static Exo* app();
-    QSettings* settings();
-
-private slots:
 #ifdef BUILD_LASTFM
-    void configureScrobbler();
-    void loadScrobbler();
-    void scrobblerToggle(bool);
+    void enableScrobbler(bool);
 #endif // BUILD_LASTFM
 
 signals:
     void lyricsWindow();
-    void scrobblerLoaded(bool);
 
 public slots:
     void showLyricsWindow();

@@ -30,7 +30,7 @@ ExoObject::~ExoObject()
 }
 
 void ExoObject::showLyricsWindow() {
-    Exo::app()->showLyricsWindow();
+    Exo::instance->showLyricsWindow();
 }
 
 void ExoObject::quitApplication() {

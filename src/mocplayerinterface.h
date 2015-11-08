@@ -20,6 +20,8 @@
 #ifndef MOCPLAYERINTERFACE_H
 #define MOCPLAYERINTERFACE_H
 
+#include "playerinterface.h"
+
 class MOCPlayerInterface : public PlayerInterface
 {
     bool isServerRunning();

@@ -19,7 +19,6 @@
 
 #include <QStringList>
 
-#include "playerinterface.h"
 #include "cmusinterface.h"
 
 CmusInterface::CmusInterface(QObject *parent) : PlayerInterface(parent)

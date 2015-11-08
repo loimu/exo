@@ -18,76 +18,57 @@
 * ======================================================================== */
 
 #include "config.h"
-
 #include <QSettings>
-#include <QNetworkProxyFactory>
 
 #ifdef BUILD_DBUS
 #include "dbus/dbus.h"
 #endif // BUILD_DBUS
-
 #ifdef BUILD_LASTFM
-#include "scrobblersettings.h"
 #include "scrobbler.h"
 #endif // BUILD_LASTFM
-
-#include "trayicon.h"
-#include "playerinterface.h"
-
 #ifdef USE_CMUS
 #include "cmusinterface.h"
 #else // USE_CMUS
 #include "mocplayerinterface.h"
 #endif // USE_CMUS
 
+#include "trayicon.h"
+#include "playerinterface.h"
 #include "exo.h"
+
+bool Exo::useDBus = true;
+bool Exo::useGui = true;
+Exo* Exo::instance = 0;
+QSettings* Exo::settings = 0;
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 {
-    QCoreApplication::setOrganizationName("exo");
-    QCoreApplication::setApplicationName("eXo");
-    QCoreApplication::setApplicationVersion("0.4");
-    QApplication::setQuitOnLastWindowClosed(false);
-    QNetworkProxyFactory::setUseSystemConfiguration(true);
-    init(useGui);
-}
-
-Exo::~Exo() {
-    if(settingsObject->value("player/quit").toBool())
-       player->quit();
-}
-
-void Exo::init(bool useGui) {
-    settingsObject = new QSettings(qApp->organizationName(),
-                                   qApp->applicationName(), this);
+    instance = this;
+    setQuitOnLastWindowClosed(false);
 #ifdef USE_CMUS
     player = new CmusInterface(this);
 #else // USE_CMUS
     player = new MOCPlayerInterface(this);
 #endif // USE_CMUS
-
 #ifdef BUILD_DBUS
-    new DBus(this);
+    if(useDBus)
+        new DBus(this);
 #endif // BUILD_DBUS
-
 #ifdef BUILD_LASTFM
-    if(settingsObject->value("scrobbler/enabled").toBool() &&
-            settingsObject->value("scrobbler/sessionkey").toBool())
-        loadScrobbler();
+    enableScrobbler(settings->value("scrobbler/enabled").toBool() &&
+            settings->value("scrobbler/sessionkey").toBool());
 #endif // BUILD_LASTFM
-
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
-        TrayIcon *trayIcon = new TrayIcon(this);
+        trayIcon = new TrayIcon(this);
         trayIcon->hide();
     }
 }
 
-Exo* Exo::app() {
-    return static_cast<Exo*>qApp;
-}
-
-QSettings* Exo::settings() {
-    return settingsObject;
+Exo::~Exo() {
+    if(settings->value("player/quit").toBool())
+       player->quit();
+    if(trayIcon)
+        trayIcon->deleteLater();
 }
 
 void Exo::showLyricsWindow() {
@@ -95,34 +76,23 @@ void Exo::showLyricsWindow() {
 }
 
 #ifdef BUILD_LASTFM
-void Exo::configureScrobbler() {
-    if(!settingsObject->value("scrobbler/sessionkey").toBool()) {
-        ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
-        settingsDialog->show();
-        connect(settingsDialog, SIGNAL(configured()), SLOT(loadScrobbler()));
-    } else
-        loadScrobbler();
-}
-
-void Exo::loadScrobbler() {
-    if(scrobbler)
+void Exo::enableScrobbler(bool checked) {
+    if(scrobbler && checked) {
+        qWarning("scrobbler already loaded");
         return;
-    scrobbler = new Scrobbler(this);
-    connect(player, SIGNAL(trackChanged(QString, QString, int)),
-            scrobbler, SLOT(init(QString, QString, int)));
-    connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
-            scrobbler, SLOT(submit(QString, QString, QString, int)));
-    emit scrobblerLoaded(true);
-}
-
-void Exo::scrobblerToggle(bool checked) {
-    settingsObject->setValue("scrobbler/enabled", checked);
-    emit scrobblerLoaded(false);
-    if(checked && !scrobbler)
-        configureScrobbler();
-    else if(scrobbler)
+    }
+    if(!scrobbler && !checked) {
+        qWarning("scrobbler already unloaded");
+        return;
+    }
+    settings->setValue("scrobbler/enabled", checked);
+    if(checked) {
+        scrobbler = new Scrobbler(this);
+        connect(player, SIGNAL(trackChanged(QString, QString, int)),
+                scrobbler, SLOT(init(QString, QString, int)));
+        connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
+                scrobbler, SLOT(submit(QString, QString, QString, int)));
+    } else
         scrobbler->deleteLater();
-    else
-        qCritical("Exo::scrobblerToggle - unexpected condition");
 }
 #endif // BUILD_LASTFM

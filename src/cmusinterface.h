@@ -20,7 +20,7 @@
 #ifndef CMUSINTERFACE_H
 #define CMUSINTERFACE_H
 
-#include <QObject>
+#include "playerinterface.h"
 
 class CmusInterface : public PlayerInterface
 {

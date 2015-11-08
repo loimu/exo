@@ -92,10 +92,9 @@ void ScrobblerSettings::authReplyFinished() {
         lastfm::ws::Username = lfm["session"]["name"].text();
         lastfm::ws::SessionKey = lfm["session"]["key"].text();
         // Save the session key
-        QSettings* settings = Exo::app()->settings();
-        settings->setValue("scrobbler/login", lastfm::ws::Username);
-        settings->setValue("scrobbler/sessionkey", lastfm::ws::SessionKey);
-        emit configured();
+        Exo::settings->setValue("scrobbler/login", lastfm::ws::Username);
+        Exo::settings->setValue("scrobbler/sessionkey", lastfm::ws::SessionKey);
+        emit configured(true);
         this->close();
     } else
         ui->label->setText(tr("wrong data, try again"));
