@@ -31,7 +31,9 @@ DBus::DBus(QObject *parent) : QObject(parent)
     connection.registerObject("/Exo", new ExoObject(this), QDBusConnection::ExportAllContents);
     bool registered = connection.registerService("tk.loimu.exo");
     if(!registered) {
-        qFatal("Exo: only one instance of application is allowed.");
+        qFatal("Only one instance of application is allowed.\n"
+               "Or try to use the \"-n\" option to start the app with no DBus\n"
+               "if you're on terminal.");
     }
     new RootObject(this);
     new PlayerObject(this);

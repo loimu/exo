@@ -23,11 +23,11 @@
 
 #include "playerobject.h"
 
-PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent)
+PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent),
+    player(PlayerInterface::instance()),
+    track(PlayerInterface::instance()->trackObject()),
+    trackID("/org/exo/MediaPlayer2/Track/0")
 {
-    player = PlayerInterface::instance();
-    track = player->trackObject();
-    trackID = QDBusObjectPath(QString("/org/exo/MediaPlayer2/Track/0"));
     connect(player, SIGNAL(newStatus(QString)),SLOT(emitPropsChanged(QString)));
     connect(player, SIGNAL(newTrack()), SLOT(trackChanged()));
 }
