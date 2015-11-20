@@ -14,8 +14,10 @@ set(CMAKE_AUTOMOC ON)
 set(exo_SRCS src/exo.cpp src/main.cpp
              src/aboutdialog.cpp
              src/lyricsdialog.cpp
-             src/playerinterface.cpp
+             src/bookmark.cpp
+             src/bookmarkmanager.cpp
              src/mocplayerinterface.cpp
+             src/playerinterface.cpp
              src/trayicon.cpp)
 set(exo_FRMS src/aboutdialog.ui src/lyricsdialog.ui)
 set(exo_RSRCS exo.qrc)

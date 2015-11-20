@@ -27,6 +27,7 @@
 
 class PlayerInterface;
 class QSettings;
+class BookmarkManager;
 
 class TrayIcon : public QWidget
 {
@@ -35,9 +36,12 @@ class TrayIcon : public QWidget
     PlayerInterface *player;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
+    QMenu *bookmarksMenu;
     QAction *showAction;
     QAction *filesAction;
     QAction *lyricsAction;
+    QAction *bookmarkCurrentAction;
+    QAction *bookmarkManagerAction;
     QAction *playAction;
     QAction *pauseAction;
     QAction *prevAction;
@@ -48,13 +52,13 @@ class TrayIcon : public QWidget
     QAction *setQuitBehaviourAction;
     QAction *setScrobblingAction;
     QSystemTrayIcon *trayIcon;
+    BookmarkManager *bookmarkManager;
     void createActions();
     void createTrayIcon();
     bool eventFilter(QObject *, QEvent *);
 
 public:
     explicit TrayIcon(QObject *parent = 0);
-    ~TrayIcon();
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);

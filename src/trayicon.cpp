@@ -31,19 +31,17 @@
 #include "lyricsdialog.h"
 #include "aboutdialog.h"
 #include "scrobblersettings.h"
+#include "bookmarkmanager.h"
+#include "bookmark.h"
 #include "trayicon.h"
 
-TrayIcon::TrayIcon(QObject *parent) {
+TrayIcon::TrayIcon(QObject *parent) : bookmarkManager(new BookmarkManager) {
     player = PlayerInterface::instance();
     createActions();
     createTrayIcon();
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
-}
-
-TrayIcon::~TrayIcon()
-{
 }
 
 void TrayIcon::createActions() {
@@ -53,6 +51,10 @@ void TrayIcon::createActions() {
     connect(filesAction, SIGNAL(triggered()), SLOT(addFiles()));
     lyricsAction = new QAction(tr("&Lyrics"), this);
     connect(lyricsAction, SIGNAL(triggered()), SLOT(showLyricsWindow()));
+    bookmarkCurrentAction = new QAction(tr("Bookmark Current"), this);
+    connect(bookmarkCurrentAction, SIGNAL(triggered()), bookmarkManager, SLOT(addCurrent()));
+    bookmarkManagerAction = new QAction(tr("Bookmark Manager"), this);
+    connect(bookmarkManagerAction, SIGNAL(triggered()), bookmarkManager, SLOT(manager()));
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, SIGNAL(triggered()), player, SLOT(play()));
     QIcon playIcon(":/images/play.png");
@@ -89,17 +91,23 @@ void TrayIcon::createActions() {
     setScrobblingAction->setCheckable(true);
     setScrobblingAction->setChecked(Exo::settings->value("scrobbler/enabled").toBool());
     connect(setScrobblingAction, SIGNAL(triggered(bool)),
-            this, SLOT(checkScrobbler(bool)));
+            SLOT(checkScrobbler(bool)));
 #endif // BUILD_LASTFM
 }
 
 void TrayIcon::createTrayIcon() {
+    // creating menu and adding actions
     trayIconMenu = new QMenu(this);
-    settingsMenu = new QMenu(trayIconMenu);
-    settingsMenu->setTitle(tr("Se&ttings"));
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
+    // Bookmarks submenu
+    bookmarksMenu = new QMenu(trayIconMenu);
+    bookmarksMenu->setTitle(tr("Bookmarks"));
+    trayIconMenu->addAction(bookmarksMenu->menuAction());
+    bookmarksMenu->addAction(bookmarkCurrentAction);
+    bookmarksMenu->addAction(bookmarkManagerAction);
+    // end of Bookmarks submenu
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(playAction);
     trayIconMenu->addAction(pauseAction);
@@ -107,18 +115,24 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(nextAction);
     trayIconMenu->addAction(stopAction);
     trayIconMenu->addSeparator();
+    // Settings submenu
+    settingsMenu = new QMenu(trayIconMenu);
+    settingsMenu->setTitle(tr("Se&ttings"));
     trayIconMenu->addAction(settingsMenu->menuAction());
     settingsMenu->addAction(setQuitBehaviourAction);
 #ifdef BUILD_LASTFM
     settingsMenu->addAction(setScrobblingAction);
 #endif // BUILD_LASTFM
+    // end of Settings submenu
     trayIconMenu->addAction(aboutAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
+    // tray icon setup
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
     QIcon icon(":/images/32.png");
     trayIcon->setIcon(icon);
+    // event filter needed for corresponding method in this class
     trayIcon->installEventFilter(this);
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                       SLOT(clicked(QSystemTrayIcon::ActivationReason)));
