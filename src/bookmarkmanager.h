@@ -26,6 +26,7 @@
 
 class QDialog;
 class QListWidget;
+class QLineEdit;
 
 struct BookmarkEntry {
     QString name;
@@ -38,8 +39,10 @@ class BookmarkManager : public QObject
 
     QList<BookmarkEntry> list;
     QPointer<QDialog> bookmarkManager;
-    QPointer<QListWidget> listWidget;
-    void refresh();
+    QListWidget* listWidget;
+    QLineEdit* lineEdit;
+    void refreshList();
+    void refreshView();
 
 public:
     explicit BookmarkManager(QObject *parent = 0);

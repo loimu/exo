@@ -52,10 +52,6 @@ void TrayIcon::createActions() {
     connect(filesAction, SIGNAL(triggered()), SLOT(addFiles()));
     lyricsAction = new QAction(tr("&Lyrics"), this);
     connect(lyricsAction, SIGNAL(triggered()), SLOT(showLyricsWindow()));
-    bookmarkCurrentAction = new QAction(tr("Bookmark Current"), this);
-    connect(bookmarkCurrentAction, SIGNAL(triggered()), bookmarkManager, SLOT(addCurrent()));
-    bookmarkManagerAction = new QAction(tr("Bookmark Manager"), this);
-    connect(bookmarkManagerAction, SIGNAL(triggered()), bookmarkManager, SLOT(manager()));
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, SIGNAL(triggered()), player, SLOT(play()));
     QIcon playIcon(":/images/play.png");
@@ -82,6 +78,10 @@ void TrayIcon::createActions() {
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     QIcon quitIcon(":/images/close.png");
     quitAction->setIcon(quitIcon);
+    bookmarkCurrentAction = new QAction(tr("Bookmark Current"), this);
+    connect(bookmarkCurrentAction, SIGNAL(triggered()), bookmarkManager, SLOT(addCurrent()));
+    bookmarkManagerAction = new QAction(tr("Bookmark Manager"), this);
+    connect(bookmarkManagerAction, SIGNAL(triggered()), bookmarkManager, SLOT(manager()));
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
     setQuitBehaviourAction->setChecked(Exo::settings->value("player/quit").toBool());
@@ -102,12 +102,6 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
-    // Bookmarks submenu
-    bookmarksMenu = new QMenu(trayIconMenu);
-    bookmarksMenu->setTitle(tr("Bookmarks"));
-    trayIconMenu->addAction(bookmarksMenu->menuAction());
-    refreshBookmarks();
-    // end of Bookmarks submenu
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(playAction);
     trayIconMenu->addAction(pauseAction);
@@ -115,6 +109,12 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(nextAction);
     trayIconMenu->addAction(stopAction);
     trayIconMenu->addSeparator();
+    // Bookmarks submenu
+    bookmarksMenu = new QMenu(trayIconMenu);
+    bookmarksMenu->setTitle(tr("Links"));
+    trayIconMenu->addAction(bookmarksMenu->menuAction());
+    refreshBookmarks();
+    // end of Bookmarks submenu
     // Settings submenu
     settingsMenu = new QMenu(trayIconMenu);
     settingsMenu->setTitle(tr("Se&ttings"));

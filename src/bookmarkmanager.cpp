@@ -24,6 +24,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QLineEdit>
 
 #include "playerinterface.h"
 #include "bookmarkmanager.h"
@@ -33,6 +34,26 @@
 
 BookmarkManager::BookmarkManager(QObject *parent) : QObject(parent)
 {
+    refreshList();
+}
+
+BookmarkManager::~BookmarkManager()
+{
+    if(bookmarkManager)
+        bookmarkManager->deleteLater();
+}
+
+void BookmarkManager::refreshView() {
+    listWidget->clear();
+    foreach(BookmarkEntry entry, list) {
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setText(tr("Name: ") + entry.name + "\n" + tr("URI: ") + entry.uri);
+        listWidget->addItem(item);
+    }
+}
+
+void BookmarkManager::refreshList() {
+    list.clear();
     QSettings settings;
     QString string = settings.value("bookmarkmanager/bookmarks").toString();
     QStringList stringList = string.split(";");
@@ -46,21 +67,6 @@ BookmarkManager::BookmarkManager(QObject *parent) : QObject(parent)
                 list.append(entry);
             }
         }
-    }
-}
-
-BookmarkManager::~BookmarkManager()
-{
-    if(bookmarkManager)
-        bookmarkManager->deleteLater();
-}
-
-void BookmarkManager::refresh() {
-    listWidget->clear();
-    foreach(BookmarkEntry entry, list) {
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setText(tr("Name: ") + entry.name + "\n" + tr("URI: ") + entry.uri);
-        listWidget->addItem(item);
     }
 }
 
@@ -79,6 +85,7 @@ void BookmarkManager::addCurrent() {
 }
 
 void BookmarkManager::manager() {
+    refreshList();
     bookmarkManager = new QDialog();
     bookmarkManager->setWindowTitle(tr("Bookmark Manager"));
     bookmarkManager->setModal(false);
@@ -86,26 +93,39 @@ void BookmarkManager::manager() {
     QVBoxLayout *verticalLayout = new QVBoxLayout(bookmarkManager);
     listWidget = new QListWidget(bookmarkManager);
     verticalLayout->addWidget(listWidget);
-    refresh();
+    refreshView();
     QHBoxLayout *horizontalLayout = new QHBoxLayout();
+    lineEdit = new QLineEdit(bookmarkManager);
+    horizontalLayout->addWidget(lineEdit);
+    lineEdit->setVisible(false);
+    QPushButton *acceptButton = new QPushButton(bookmarkManager);
+    acceptButton->setText(tr("Accept"));
+    acceptButton->setVisible(false);
+    horizontalLayout->addWidget(acceptButton);
+    QHBoxLayout *horizontalLayout2 = new QHBoxLayout();
     QPushButton *deleteButton = new QPushButton(bookmarkManager);
     deleteButton->setText(tr("&Delete"));
-    horizontalLayout->addWidget(deleteButton);
-    connect(deleteButton, SIGNAL(released()), SLOT(deleteBookmark()));
+    horizontalLayout2->addWidget(deleteButton);
     QPushButton *renameButton = new QPushButton(bookmarkManager);
     renameButton->setText(tr("&Rename"));
-    horizontalLayout->addWidget(renameButton);
-    connect(renameButton, SIGNAL(released()), SLOT(renameBookmark()));
+    horizontalLayout2->addWidget(renameButton);
     QSpacerItem *horizontalSpacer = new QSpacerItem(40,20,QSizePolicy::Expanding,
                                                     QSizePolicy::Minimum);
-    horizontalLayout->addItem(horizontalSpacer);
+    horizontalLayout2->addItem(horizontalSpacer);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(bookmarkManager);
     buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    horizontalLayout->addWidget(buttonBox);
+    horizontalLayout2->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
-    connect(buttonBox, SIGNAL(rejected()), bookmarkManager, SLOT(close()));
+    verticalLayout->addLayout(horizontalLayout2);
+    connect(acceptButton, SIGNAL(released()), SLOT(renameBookmark()));
+    connect(acceptButton, SIGNAL(released()), lineEdit, SLOT(hide()));
+    connect(acceptButton, SIGNAL(released()), acceptButton, SLOT(hide()));
+    connect(deleteButton, SIGNAL(released()), SLOT(deleteBookmark()));
+    connect(renameButton, SIGNAL(released()), acceptButton, SLOT(show()));
+    connect(renameButton, SIGNAL(released()), lineEdit, SLOT(show()));
     connect(buttonBox, SIGNAL(accepted()), SLOT(save()));
     connect(buttonBox, SIGNAL(accepted()), bookmarkManager, SLOT(close()));
+    connect(buttonBox, SIGNAL(rejected()), bookmarkManager, SLOT(close()));
     bookmarkManager->show();
 }
 
@@ -125,9 +145,11 @@ void BookmarkManager::save() {
 
 void BookmarkManager::deleteBookmark() {
     list.removeAt(listWidget->currentRow());
-    refresh();
+    refreshView();
 }
 
 void BookmarkManager::renameBookmark() {
-    refresh();
+    list[listWidget->currentRow()].name = lineEdit->text();
+    refreshView();
+    lineEdit->clear();
 }
