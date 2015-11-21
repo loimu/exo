@@ -20,9 +20,9 @@
 #include "playerinterface.h"
 #include "bookmark.h"
 
-Bookmark::Bookmark(QObject *parent) : QAction(parent)
+Bookmark::Bookmark(const QString &text, QObject *parent) : QAction(text, parent)
 {
-    connect(this, SIGNAL(triggered(bool)), SLOT(open()));
+    connect(this, SIGNAL(triggered(bool)), this, SLOT(open()));
 }
 
 void Bookmark::open() {

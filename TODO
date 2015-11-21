@@ -1,5 +1,4 @@
-* mpris2 interface
-* StatusNotifierItem support
-* plugin interface?
-* remember last track option
-* DBus notifications
+Before the 1.0 release
+* plugin system
+* localization
+* DBus notifications?

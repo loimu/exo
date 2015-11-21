@@ -22,10 +22,12 @@
 
 #include <QAction>
 
-class Bookmark : QAction
+class Bookmark : public QAction
 {
+    Q_OBJECT
+
 public:
-    Bookmark(QObject *parent = 0);
+    Bookmark(const QString &text, QObject *parent = 0);
     QString uri;
 
 private slots:

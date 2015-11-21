@@ -42,6 +42,7 @@ TrayIcon::TrayIcon(QObject *parent) : bookmarkManager(new BookmarkManager) {
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
+    connect(bookmarkManager, SIGNAL(refreshBookmarks()), SLOT(refreshBookmarks()));
 }
 
 void TrayIcon::createActions() {
@@ -105,8 +106,7 @@ void TrayIcon::createTrayIcon() {
     bookmarksMenu = new QMenu(trayIconMenu);
     bookmarksMenu->setTitle(tr("Bookmarks"));
     trayIconMenu->addAction(bookmarksMenu->menuAction());
-    bookmarksMenu->addAction(bookmarkCurrentAction);
-    bookmarksMenu->addAction(bookmarkManagerAction);
+    refreshBookmarks();
     // end of Bookmarks submenu
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(playAction);
@@ -200,6 +200,21 @@ void TrayIcon::addFiles() {
                                                             " playlist", "",
                                    "Media (*.pls *.m3u *.ogg *.mp3 *.flac)");
     player->appendFile(files);
+}
+
+void TrayIcon::refreshBookmarks()
+{
+    bookmarksMenu->clear();
+    bookmarksMenu->addAction(bookmarkCurrentAction);
+    bookmarksMenu->addAction(bookmarkManagerAction);
+    if(bookmarkManager->bookmarks().length() < 1)
+        return;
+    bookmarksMenu->addSeparator();
+    foreach(BookmarkEntry entry, bookmarkManager->bookmarks()) {
+        Bookmark *bookmark = new Bookmark(entry.name, this);
+        bookmark->uri = entry.uri;
+        bookmarksMenu->addAction(bookmark);
+    }
 }
 
 #ifdef BUILD_LASTFM

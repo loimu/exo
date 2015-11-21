@@ -34,36 +34,44 @@
 BookmarkManager::BookmarkManager(QObject *parent) : QObject(parent)
 {
     QSettings settings;
-    for(int i=0; i<MAX_SIZE; i++) {
-        BookmarkEntry entry;
-        entry.name = settings.value(QString("bookmarks/name%1").arg(i)).toString();
-        entry.uri = settings.value(QString("bookmarks/link%1").arg(i)).toString();
-        if(!entry.uri.isEmpty())
-            list.append(entry);
+    QString string = settings.value("bookmarkmanager/bookmarks").toString();
+    QStringList stringList = string.split(";");
+    if(stringList.size() > 0) {
+        foreach (QString str, stringList) {
+            QStringList bookmark = str.split("|");
+            if(bookmark.size() == 2) {
+                BookmarkEntry entry;
+                entry.name = bookmark.at(0);
+                entry.uri = bookmark.at(1);
+                list.append(entry);
+            }
+        }
     }
 }
 
-void BookmarkManager::save() {
-    QSettings settings;
-    int count = 0;
+BookmarkManager::~BookmarkManager()
+{
+    if(bookmarkManager)
+        bookmarkManager->deleteLater();
+}
+
+void BookmarkManager::refresh() {
+    listWidget->clear();
     foreach(BookmarkEntry entry, list) {
-        settings.setValue(QString("bookmarks/name%1").arg(count), entry.name);
-        settings.setValue(QString("bookmarks/link%1").arg(count), entry.uri);
-        count++;
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setText(tr("Name: ") + entry.name + "\n" + tr("URI: ") + entry.uri);
+        listWidget->addItem(item);
     }
 }
 
-QStringList BookmarkManager::bookmarks() {
-    QStringList res;
-    foreach(BookmarkEntry entry, list)
-        res.append(entry.name);
-    return res;
+QList<BookmarkEntry> BookmarkManager::bookmarks() {
+    return list;
 }
 
 void BookmarkManager::addCurrent() {
     BookmarkEntry entry;
-    entry.name = PlayerInterface::instance()->trackObject()->title;
-    entry.uri = PlayerInterface::instance()->trackObject()->file;
+    entry.uri  = PlayerInterface::instance()->trackObject()->file;
+    entry.name = entry.uri;
     if(entry.uri.isEmpty() || list.size() >= MAX_SIZE)
         return;
     list.append(entry);
@@ -71,25 +79,55 @@ void BookmarkManager::addCurrent() {
 }
 
 void BookmarkManager::manager() {
-    QDialog *bookmarkManager = new QDialog();
+    bookmarkManager = new QDialog();
     bookmarkManager->setWindowTitle(tr("Bookmark Manager"));
     bookmarkManager->setModal(false);
     bookmarkManager->resize(500,250);
     QVBoxLayout *verticalLayout = new QVBoxLayout(bookmarkManager);
-    QListWidget *listWidget = new QListWidget(bookmarkManager);
+    listWidget = new QListWidget(bookmarkManager);
     verticalLayout->addWidget(listWidget);
+    refresh();
     QHBoxLayout *horizontalLayout = new QHBoxLayout();
     QPushButton *deleteButton = new QPushButton(bookmarkManager);
     deleteButton->setText(tr("&Delete"));
     horizontalLayout->addWidget(deleteButton);
+    connect(deleteButton, SIGNAL(released()), SLOT(deleteBookmark()));
+    QPushButton *renameButton = new QPushButton(bookmarkManager);
+    renameButton->setText(tr("&Rename"));
+    horizontalLayout->addWidget(renameButton);
+    connect(renameButton, SIGNAL(released()), SLOT(renameBookmark()));
     QSpacerItem *horizontalSpacer = new QSpacerItem(40,20,QSizePolicy::Expanding,
                                                     QSizePolicy::Minimum);
     horizontalLayout->addItem(horizontalSpacer);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(bookmarkManager);
-    buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     horizontalLayout->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
     connect(buttonBox, SIGNAL(rejected()), bookmarkManager, SLOT(close()));
+    connect(buttonBox, SIGNAL(accepted()), SLOT(save()));
+    connect(buttonBox, SIGNAL(accepted()), bookmarkManager, SLOT(close()));
     bookmarkManager->show();
-    save();
+}
+
+void BookmarkManager::save() {
+    QSettings settings;
+    QString string = QString();
+    int count = 0;
+    foreach(BookmarkEntry entry, list) {
+        if(count)
+            string.append(";");
+        string.append(entry.name + "|" + entry.uri);
+        count++;
+    }
+    settings.setValue("bookmarkmanager/bookmarks", string);
+    emit refreshBookmarks();
+}
+
+void BookmarkManager::deleteBookmark() {
+    list.removeAt(listWidget->currentRow());
+    refresh();
+}
+
+void BookmarkManager::renameBookmark() {
+    refresh();
 }

@@ -22,6 +22,10 @@
 
 #include <QObject>
 #include <QList>
+#include <QPointer>
+
+class QDialog;
+class QListWidget;
 
 struct BookmarkEntry {
     QString name;
@@ -33,15 +37,26 @@ class BookmarkManager : public QObject
     Q_OBJECT
 
     QList<BookmarkEntry> list;
-    void save();
+    QPointer<QDialog> bookmarkManager;
+    QPointer<QListWidget> listWidget;
+    void refresh();
 
 public:
     explicit BookmarkManager(QObject *parent = 0);
-    QStringList bookmarks();
+    ~BookmarkManager();
+    QList<BookmarkEntry> bookmarks();
 
 public slots:
     void addCurrent();
     void manager();
+
+signals:
+    void refreshBookmarks();
+
+private slots:
+    void save();
+    void deleteBookmark();
+    void renameBookmark();
 };
 
 #endif // BOOKMARKMANAGER_H

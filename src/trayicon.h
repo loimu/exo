@@ -66,6 +66,7 @@ private slots:
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();
+    void refreshBookmarks();
 #ifdef BUILD_LASTFM
     void checkScrobbler(bool);
     void enableScrobbler(bool);
