@@ -69,8 +69,6 @@ Exo::~Exo() {
        player->quit();
     if(trayIcon)
         trayIcon->deleteLater();
-    if(scrobbler)
-        scrobbler->deleteLater();
 }
 
 void Exo::showLyricsWindow() {
