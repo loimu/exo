@@ -30,11 +30,8 @@ DBus::DBus(QObject *parent) : QObject(parent)
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.registerObject("/Exo", new ExoObject(this), QDBusConnection::ExportAllContents);
     bool registered = connection.registerService("tk.loimu.exo");
-    if(!registered) {
-        qFatal("Only one instance of application is allowed.\n"
-               "Or try to use the \"-n\" option to start the app with no DBus\n"
-               "if you're on terminal.");
-    }
+    if(!registered)
+        qFatal("Only one instance of application is allowed.\n");
     new RootObject(this);
     new PlayerObject(this);
     connection.registerObject("/org/mpris/MediaPlayer2", this);

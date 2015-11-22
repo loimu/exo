@@ -28,9 +28,9 @@ int main(int argc, char *argv[]) {
         QByteArray arg = argv[i];
         if(arg == "-d" || arg == "--daemonize")
             Exo::useGui = false;
-        if(arg == "-n" || arg == "--no-dbus")
-            Exo::useDBus = false;
     }
+    if(QString(getenv("TERM")).startsWith("linux"))
+        Exo::useDBus = false;
     QCoreApplication::setOrganizationName("exo");
     QCoreApplication::setApplicationName("eXo");
     QCoreApplication::setApplicationVersion("0.5");
