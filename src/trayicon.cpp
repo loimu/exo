@@ -35,8 +35,10 @@
 #include "bookmark.h"
 #include "trayicon.h"
 
-TrayIcon::TrayIcon(QObject *parent) : bookmarkManager(new BookmarkManager) {
-    player = PlayerInterface::instance();
+TrayIcon::TrayIcon(QObject *parent) :
+    bookmarkManager(new BookmarkManager(this)),
+    player(PlayerInterface::instance())
+{
     createActions();
     createTrayIcon();
     trayIcon->show();

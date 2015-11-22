@@ -98,6 +98,7 @@ void BookmarkManager::manager() {
     lineEdit = new QLineEdit(bookmarkManager);
     horizontalLayout->addWidget(lineEdit);
     lineEdit->setVisible(false);
+    lineEdit->setText(list[0].name);
     QPushButton *acceptButton = new QPushButton(bookmarkManager);
     acceptButton->setText(tr("Accept"));
     acceptButton->setVisible(false);
@@ -117,6 +118,7 @@ void BookmarkManager::manager() {
     horizontalLayout2->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
     verticalLayout->addLayout(horizontalLayout2);
+    connect(listWidget, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(updateLineEdit()));
     connect(acceptButton, SIGNAL(released()), SLOT(renameBookmark()));
     connect(acceptButton, SIGNAL(released()), lineEdit, SLOT(hide()));
     connect(acceptButton, SIGNAL(released()), acceptButton, SLOT(hide()));
@@ -152,4 +154,8 @@ void BookmarkManager::renameBookmark() {
     list[listWidget->currentRow()].name = lineEdit->text();
     refreshView();
     lineEdit->clear();
+}
+
+void BookmarkManager::updateLineEdit() {
+    lineEdit->setText(list[listWidget->currentRow()].name);
 }

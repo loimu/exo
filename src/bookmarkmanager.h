@@ -60,6 +60,7 @@ private slots:
     void save();
     void deleteBookmark();
     void renameBookmark();
+    void updateLineEdit();
 };
 
 #endif // BOOKMARKMANAGER_H
