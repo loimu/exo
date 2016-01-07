@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-# Copyright (c) 2014 Blaze <blaze@jabster.pl>
+# Copyright (c) 2016 Blaze <blaze@vivaldi.net>
 # Licensed under the GNU General Public License, version 3 or later.
 # See the file http://www.gnu.org/copyleft/gpl.txt.
 

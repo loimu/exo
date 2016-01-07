@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2015 Blaze <blaze@open.by>
+*    Copyright (C) 2013-2016 Blaze <blaze@vivaldi.net>
 *
 *    This file is part of eXo.
 *
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
         Exo::useDBus = false;
     QCoreApplication::setOrganizationName("exo");
     QCoreApplication::setApplicationName("eXo");
-    QCoreApplication::setApplicationVersion("0.5");
+    QCoreApplication::setApplicationVersion("0.6");
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     QSettings settings;
     Exo::settings = &settings;
