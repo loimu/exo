@@ -98,7 +98,8 @@ void BookmarkManager::manager() {
     lineEdit = new QLineEdit(bookmarkManager);
     horizontalLayout->addWidget(lineEdit);
     lineEdit->setVisible(false);
-    lineEdit->setText(list[0].name);
+    if(list.size() > 0)
+        lineEdit->setText(list[0].name);
     QPushButton *acceptButton = new QPushButton(bookmarkManager);
     acceptButton->setText(tr("Accept"));
     acceptButton->setVisible(false);
