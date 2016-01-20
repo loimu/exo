@@ -38,7 +38,7 @@ class BookmarkManager : public QObject
     Q_OBJECT
 
     QList<BookmarkEntry> list;
-    QPointer<QDialog> bookmarkManager;
+    QPointer<QWidget> bookmarkManager;
     QListWidget* listWidget;
     QLineEdit* lineEdit;
     void refreshList();

@@ -86,9 +86,8 @@ void BookmarkManager::addCurrent() {
 
 void BookmarkManager::manager() {
     refreshList();
-    bookmarkManager = new QDialog();
+    bookmarkManager = new QWidget();
     bookmarkManager->setWindowTitle(tr("Bookmark Manager"));
-    bookmarkManager->setModal(false);
     bookmarkManager->resize(500,250);
     QVBoxLayout *verticalLayout = new QVBoxLayout(bookmarkManager);
     listWidget = new QListWidget(bookmarkManager);
@@ -115,7 +114,7 @@ void BookmarkManager::manager() {
                                                     QSizePolicy::Minimum);
     horizontalLayout2->addItem(horizontalSpacer);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(bookmarkManager);
-    buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Close);
     horizontalLayout2->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
     verticalLayout->addLayout(horizontalLayout2);
@@ -124,8 +123,10 @@ void BookmarkManager::manager() {
     connect(acceptButton, SIGNAL(released()), lineEdit, SLOT(hide()));
     connect(acceptButton, SIGNAL(released()), acceptButton, SLOT(hide()));
     connect(deleteButton, SIGNAL(released()), SLOT(deleteBookmark()));
-    connect(renameButton, SIGNAL(released()), acceptButton, SLOT(show()));
-    connect(renameButton, SIGNAL(released()), lineEdit, SLOT(show()));
+    if(list.size() > 0) {
+        connect(renameButton, SIGNAL(released()), acceptButton, SLOT(show()));
+        connect(renameButton, SIGNAL(released()), lineEdit, SLOT(show()));
+    }
     connect(buttonBox, SIGNAL(accepted()), SLOT(save()));
     connect(buttonBox, SIGNAL(accepted()), bookmarkManager, SLOT(close()));
     connect(buttonBox, SIGNAL(rejected()), bookmarkManager, SLOT(close()));
