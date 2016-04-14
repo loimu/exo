@@ -31,8 +31,8 @@
 #include "lyricsdialog.h"
 #include "aboutdialog.h"
 #include "scrobblersettings.h"
-#include "bookmarkmanager.h"
-#include "bookmark.h"
+#include "bookmarks/bookmarkmanager.h"
+#include "bookmarks/bookmark.h"
 #include "trayicon.h"
 
 TrayIcon::TrayIcon(QObject *parent) :

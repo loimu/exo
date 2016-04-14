@@ -26,7 +26,7 @@
 #include <QDialogButtonBox>
 #include <QLineEdit>
 
-#include "playerinterface.h"
+#include "../playerinterface.h"
 #include "bookmarkmanager.h"
 #include "bookmarkdialog.h"
 

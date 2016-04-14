@@ -14,9 +14,9 @@ set(CMAKE_AUTOMOC ON)
 set(exo_SRCS src/exo.cpp src/main.cpp
              src/aboutdialog.cpp
              src/lyricsdialog.cpp
-             src/bookmark.cpp
-             src/bookmarkdialog.cpp
-             src/bookmarkmanager.cpp
+             src/bookmarks/bookmark.cpp
+             src/bookmarks/bookmarkdialog.cpp
+             src/bookmarks/bookmarkmanager.cpp
              src/mocplayerinterface.cpp
              src/playerinterface.cpp
              src/trayicon.cpp)
