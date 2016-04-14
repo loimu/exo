@@ -21,7 +21,7 @@ set(exo_SRCS src/exo.cpp src/main.cpp
              src/playerinterface.cpp
              src/trayicon.cpp)
 set(exo_FRMS src/aboutdialog.ui src/lyricsdialog.ui)
-set(exo_RSRCS exo.qrc)
+set(exo_RSRCS src/exo.qrc)
 
 if(USE_CMUS)
   list(APPEND exo_SRCS src/cmusinterface.cpp)
