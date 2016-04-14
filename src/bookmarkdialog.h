@@ -17,40 +17,38 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef BOOKMARKMANAGER_H
-#define BOOKMARKMANAGER_H
 
-#include <QObject>
+#ifndef BOOKMARKDIALOG_H
+#define BOOKMARKDIALOG_H
+
+#include <QWidget>
 #include <QList>
-#include <QPointer>
 
-class BookmarkDialog;
+class QLineEdit;
+class QListWidget;
+class BookmarkEntry;
 
-struct BookmarkEntry {
-    QString name;
-    QString uri;
-};
-
-class BookmarkManager : public QObject
+class BookmarkDialog : public QWidget
 {
     Q_OBJECT
 
-    QList<BookmarkEntry> list;
-    QPointer<BookmarkDialog> bookmarkManager;
-    void refreshList();
+    QLineEdit* lineEdit;
+    QListWidget* listWidget;
+    QList<BookmarkEntry>* list_;
+    void refreshView();
+    void keyPressEvent(QKeyEvent *e);
 
 public:
-    explicit BookmarkManager(QObject *parent = 0);
-    ~BookmarkManager();
-    QList<BookmarkEntry>* bookmarks();
-
-public slots:
-    void addCurrent();
-    void manager();
-    void save();
+    explicit BookmarkDialog(QWidget *parent = 0, QList<BookmarkEntry> *list = 0);
 
 signals:
-    void refreshBookmarks();
+    void save();
+
+private slots:
+    void deleteBookmark();
+    void renameBookmark();
+    void updateLineEdit();
+    void accepted();
 };
 
-#endif // BOOKMARKMANAGER_H
+#endif // BOOKMARKDIALOG_H

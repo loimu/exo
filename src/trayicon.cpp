@@ -208,11 +208,11 @@ void TrayIcon::refreshBookmarks()
 {
     bookmarksMenu->clear();
     bookmarksMenu->addAction(bookmarkCurrentAction);
-    bookmarksMenu->addAction(bookmarkManagerAction);
-    if(bookmarkManager->bookmarks().length() < 1)
+    if(bookmarkManager->bookmarks()->length() < 1)
         return;
+    bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
-    foreach(BookmarkEntry entry, bookmarkManager->bookmarks()) {
+    foreach(BookmarkEntry entry, *bookmarkManager->bookmarks()) {
         Bookmark *bookmark = new Bookmark(entry.name, this);
         bookmark->uri = entry.uri;
         bookmarksMenu->addAction(bookmark);

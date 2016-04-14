@@ -28,6 +28,7 @@
 
 #include "playerinterface.h"
 #include "bookmarkmanager.h"
+#include "bookmarkdialog.h"
 
 // maximal amount of bookmarks
 #define MAX_SIZE 10
@@ -41,15 +42,6 @@ BookmarkManager::~BookmarkManager()
 {
     if(bookmarkManager)
         bookmarkManager->deleteLater();
-}
-
-void BookmarkManager::refreshView() {
-    listWidget->clear();
-    foreach(BookmarkEntry entry, list) {
-        QListWidgetItem *item = new QListWidgetItem();
-        item->setText(tr("Name: ") + entry.name + "\n" + tr("URI: ") + entry.uri);
-        listWidget->addItem(item);
-    }
 }
 
 void BookmarkManager::refreshList() {
@@ -70,8 +62,8 @@ void BookmarkManager::refreshList() {
     }
 }
 
-QList<BookmarkEntry> BookmarkManager::bookmarks() {
-    return list;
+QList<BookmarkEntry>* BookmarkManager::bookmarks() {
+    return &list;
 }
 
 void BookmarkManager::addCurrent() {
@@ -86,50 +78,8 @@ void BookmarkManager::addCurrent() {
 
 void BookmarkManager::manager() {
     refreshList();
-    bookmarkManager = new QWidget();
-    bookmarkManager->setWindowTitle(tr("Bookmark Manager"));
-    bookmarkManager->resize(500,250);
-    QVBoxLayout *verticalLayout = new QVBoxLayout(bookmarkManager);
-    listWidget = new QListWidget(bookmarkManager);
-    verticalLayout->addWidget(listWidget);
-    refreshView();
-    QHBoxLayout *horizontalLayout = new QHBoxLayout();
-    lineEdit = new QLineEdit(bookmarkManager);
-    horizontalLayout->addWidget(lineEdit);
-    lineEdit->setVisible(false);
-    if(list.size() > 0)
-        lineEdit->setText(list[0].name);
-    QPushButton *acceptButton = new QPushButton(bookmarkManager);
-    acceptButton->setText(tr("Accept"));
-    acceptButton->setVisible(false);
-    horizontalLayout->addWidget(acceptButton);
-    QHBoxLayout *horizontalLayout2 = new QHBoxLayout();
-    QPushButton *deleteButton = new QPushButton(bookmarkManager);
-    deleteButton->setText(tr("&Delete"));
-    horizontalLayout2->addWidget(deleteButton);
-    QPushButton *renameButton = new QPushButton(bookmarkManager);
-    renameButton->setText(tr("&Rename"));
-    horizontalLayout2->addWidget(renameButton);
-    QSpacerItem *horizontalSpacer = new QSpacerItem(40,20,QSizePolicy::Expanding,
-                                                    QSizePolicy::Minimum);
-    horizontalLayout2->addItem(horizontalSpacer);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(bookmarkManager);
-    buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Close);
-    horizontalLayout2->addWidget(buttonBox);
-    verticalLayout->addLayout(horizontalLayout);
-    verticalLayout->addLayout(horizontalLayout2);
-    connect(listWidget, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(updateLineEdit()));
-    connect(acceptButton, SIGNAL(released()), SLOT(renameBookmark()));
-    connect(acceptButton, SIGNAL(released()), lineEdit, SLOT(hide()));
-    connect(acceptButton, SIGNAL(released()), acceptButton, SLOT(hide()));
-    connect(deleteButton, SIGNAL(released()), SLOT(deleteBookmark()));
-    if(list.size() > 0) {
-        connect(renameButton, SIGNAL(released()), acceptButton, SLOT(show()));
-        connect(renameButton, SIGNAL(released()), lineEdit, SLOT(show()));
-    }
-    connect(buttonBox, SIGNAL(accepted()), SLOT(save()));
-    connect(buttonBox, SIGNAL(accepted()), bookmarkManager, SLOT(close()));
-    connect(buttonBox, SIGNAL(rejected()), bookmarkManager, SLOT(close()));
+    bookmarkManager = new BookmarkDialog(static_cast<QWidget*>(this->parent()), &list);
+    connect(bookmarkManager, SIGNAL(save()), SLOT(save()));
     bookmarkManager->show();
 }
 
@@ -145,19 +95,4 @@ void BookmarkManager::save() {
     }
     settings.setValue("bookmarkmanager/bookmarks", string);
     emit refreshBookmarks();
-}
-
-void BookmarkManager::deleteBookmark() {
-    list.removeAt(listWidget->currentRow());
-    refreshView();
-}
-
-void BookmarkManager::renameBookmark() {
-    list[listWidget->currentRow()].name = lineEdit->text();
-    refreshView();
-    lineEdit->clear();
-}
-
-void BookmarkManager::updateLineEdit() {
-    lineEdit->setText(list[listWidget->currentRow()].name);
 }
