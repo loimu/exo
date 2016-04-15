@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=eXo
+Comment=exoskeleton (GUI) for moc player
+Exec=/usr/bin/exo
+Icon=exo
+Terminal=false
+Type=Application
+Categories=Qt;Audio;AudioVideo;
+StartupNotify=true
