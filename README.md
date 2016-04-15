@@ -17,7 +17,7 @@ make
 ```
 #!Bash
 mkdir build && cd build
-cmake -DBUILD_WITH_QT4=OFF -DLASTFM_LIBRARIES=/path/to/liblastfm.so ..  # path to Qt5 version of liblastfm
+cmake -DBUILD_WITH_QT4=OFF ..
 make
 ./exo
 ```

@@ -19,9 +19,15 @@
 
 #include <QSettings>
 
-#include <lastfm/ws.h>
-#include <lastfm/misc.h>
-#include <lastfm/XmlQuery.h>
+#if QT_VERSION >= 0x050000
+    #include <lastfm5/ws.h>
+    #include <lastfm5/misc.h>
+    #include <lastfm5/XmlQuery.h>
+#else
+    #include <lastfm/ws.h>
+    #include <lastfm/misc.h>
+    #include <lastfm/XmlQuery.h>
+#endif // QT_VERSION
 
 #include "exo.h"
 #include "scrobbler.h"
