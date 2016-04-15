@@ -21,7 +21,7 @@
 
 #include "mocplayerinterface.h"
 
-#define OSD_OPT "OnSongChange=\"/usr/bin/moc-osd.py\""
+#define OSD_OPT "OnSongChange=\"/usr/share/exo/moc-osd.py\""
 
 MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :PlayerInterface(parent)
 {

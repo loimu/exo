@@ -7,3 +7,4 @@ option(BUILD_LASTFM     "Enable Last.fm support"        ON)
 option(USE_CMUS         "Use Cmus instead of MOC"      OFF)
 
 ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(tools)
