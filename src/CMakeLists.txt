@@ -12,7 +12,8 @@ set(exo_SRCS exo.cpp main.cpp
              bookmarks/bookmarkmanager.cpp
              mocplayerinterface.cpp
              playerinterface.cpp
-             trayicon.cpp)
+             trayicon.cpp
+             editor.cpp)
 set(exo_FRMS aboutdialog.ui lyricsdialog.ui)
 set(exo_RSRCS exo.qrc)
 

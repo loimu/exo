@@ -33,6 +33,7 @@
 #include "scrobblersettings.h"
 #include "bookmarks/bookmarkmanager.h"
 #include "bookmarks/bookmark.h"
+#include "editor.h"
 #include "trayicon.h"
 
 TrayIcon::TrayIcon(QObject *parent) :
@@ -93,8 +94,7 @@ void TrayIcon::createActions() {
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
     setScrobblingAction->setChecked(Exo::settings->value("scrobbler/enabled").toBool());
-    connect(setScrobblingAction, SIGNAL(triggered(bool)),
-            SLOT(checkScrobbler(bool)));
+    connect(setScrobblingAction, SIGNAL(triggered(bool)), SLOT(checkScrobbler(bool)));
 #endif // BUILD_LASTFM
 }
 
@@ -104,6 +104,21 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
+    // detect tag editors
+    QProcess proc;
+    proc.start("which", QStringList() << "picard" << "kid3" << "easytag" << "cowbell");
+    proc.waitForFinished(-1);
+    QStringList editors = QString::fromUtf8(proc.readAllStandardOutput())
+            .split("\n", QString::SkipEmptyParts);
+    if(editors.length() > 0) {
+        QMenu* tagEditorsMenu = new QMenu(this);
+        tagEditorsMenu->setTitle(tr("Edit with"));
+        trayIconMenu->addAction(tagEditorsMenu->menuAction());
+        foreach(QString entry, editors) {
+            Editor* newEditor = new Editor(entry, this);
+            tagEditorsMenu->addAction(newEditor);
+        }
+    }
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(playAction);
     trayIconMenu->addAction(pauseAction);
