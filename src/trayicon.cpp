@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QFileDialog>
 #include <QPointer>
+#include <QProcess>
 
 #include "exo.h"
 #include "playerinterface.h"
