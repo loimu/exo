@@ -24,6 +24,9 @@
 
 Editor::Editor(const QString &text, QObject *parent) : QAction(text, parent)
 {
+    editorPath = text;
+    QString app = text.split("/").last();
+    this->setText(app.left(1).toUpper() + app.mid(1));
     connect(this, SIGNAL(triggered(bool)), this, SLOT(open()));
 }
 
@@ -31,7 +34,7 @@ void Editor::open() {
     QString file = PlayerInterface::instance()->trackObject()->file;
     if(file.startsWith("/")) {
         QProcess proc;
-        proc.start(this->text(), QStringList() << file);
+        proc.start(editorPath, QStringList() << file);
         proc.waitForFinished(-1);
     }
 }

@@ -107,7 +107,7 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(lyricsAction);
     // detect tag editors
     QProcess proc;
-    proc.start("which", QStringList() << "picard" << "kid3" << "easytag" << "cowbell");
+    proc.start("which", QStringList() << "picard" << "kid3" << "easytag" << "puddletag");
     proc.waitForFinished(-1);
     QStringList editors = QString::fromUtf8(proc.readAllStandardOutput())
             .split("\n", QString::SkipEmptyParts);

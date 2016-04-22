@@ -25,6 +25,7 @@
 class Editor : public QAction
 {
     Q_OBJECT
+    QString editorPath;
 
 public:
     Editor(const QString &text, QObject *parent = 0);
