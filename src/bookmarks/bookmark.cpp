@@ -17,7 +17,7 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "../playerinterface.h"
+#include "playerinterface.h"
 #include "bookmark.h"
 
 Bookmark::Bookmark(const QString &text, QObject *parent) : QAction(text, parent)

@@ -4,16 +4,19 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
 
 set(CMAKE_AUTOMOC ON)
 
-set(exo_SRCS exo.cpp main.cpp
-             aboutdialog.cpp
-             lyricsdialog.cpp
-             bookmarks/bookmark.cpp
-             bookmarks/bookmarkdialog.cpp
-             bookmarks/bookmarkmanager.cpp
-             mocplayerinterface.cpp
-             playerinterface.cpp
-             trayicon.cpp
-             editor.cpp)
+set(exo_SRCS
+  main.cpp
+  exo.cpp
+  aboutdialog.cpp
+  lyricsdialog.cpp
+  bookmarks/bookmark.cpp
+  bookmarks/bookmarkdialog.cpp
+  bookmarks/bookmarkmanager.cpp
+  mocplayerinterface.cpp
+  playerinterface.cpp
+  trayicon.cpp
+  editor.cpp
+)
 set(exo_FRMS aboutdialog.ui lyricsdialog.ui)
 set(exo_RSRCS exo.qrc)
 
@@ -59,7 +62,7 @@ else()
   qt5_add_resources(exo_RESOURCES_RCC ${exo_RSRCS})
 endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC}
                    ${exo_FORMS_HEADERS} ${exo_RESOURCES_RCC})
 target_link_libraries(exo ${qt_LIBS} ${LASTFM_LIBRARIES})

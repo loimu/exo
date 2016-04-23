@@ -24,7 +24,7 @@
 #include <QDBusObjectPath>
 #include <QObject>
 
-#include "../playerinterface.h"
+#include "playerinterface.h"
 
 class PlayerObject : public QDBusAbstractAdaptor
 {

@@ -17,8 +17,8 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "../exo.h"
-#include "../playerinterface.h"
+#include "exo.h"
+#include "playerinterface.h"
 #include "rootobject.h"
 
 RootObject::RootObject(QObject *parent) : QDBusAbstractAdaptor(parent)
