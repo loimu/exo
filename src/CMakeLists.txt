@@ -18,7 +18,7 @@ set(exo_SRCS
   gui/trayicon.cpp
 )
 set(exo_FRMS gui/aboutdialog.ui gui/lyricsdialog.ui)
-set(exo_RSRCS exo.qrc)
+set(exo_RSRCS ../images/exo.qrc)
 
 if(USE_CMUS)
   list(APPEND exo_SRCS core/cmusinterface.cpp)
