@@ -17,7 +17,7 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "exo.h"
+#include "core/exo.h"
 #include "exoobject.h"
 
 ExoObject::ExoObject(QObject *parent) : QObject(parent)

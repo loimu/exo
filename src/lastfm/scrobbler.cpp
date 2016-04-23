@@ -29,7 +29,7 @@
     #include <lastfm/Track.h>
 #endif // QT_VERSION
 
-#include "exo.h"
+#include "core/exo.h"
 #include "scrobbler.h"
 
 const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";

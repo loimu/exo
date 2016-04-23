@@ -29,8 +29,8 @@
     #include <lastfm/XmlQuery.h>
 #endif // QT_VERSION
 
-#include "exo.h"
-#include "scrobbler.h"
+#include "core/exo.h"
+#include "lastfm/scrobbler.h"
 #include "scrobblersettings.h"
 #include "ui_scrobblersettings.h"
 

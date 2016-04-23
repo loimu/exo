@@ -19,7 +19,7 @@
 
 #include <QProcess>
 
-#include "playerinterface.h"
+#include "core/playerinterface.h"
 #include "editor.h"
 
 Editor::Editor(const QString &text, QObject *parent) : QAction(text, parent)

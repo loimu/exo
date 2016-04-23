@@ -24,7 +24,7 @@
 #include "dbus/dbus.h"
 #endif // BUILD_DBUS
 #ifdef BUILD_LASTFM
-#include "scrobbler.h"
+#include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
 #ifdef USE_CMUS
 #include "cmusinterface.h"
@@ -32,7 +32,7 @@
 #include "mocplayerinterface.h"
 #endif // USE_CMUS
 
-#include "trayicon.h"
+#include "gui/trayicon.h"
 #include "playerinterface.h"
 #include "exo.h"
 

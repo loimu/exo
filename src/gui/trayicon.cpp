@@ -27,8 +27,8 @@
 #include <QPointer>
 #include <QProcess>
 
-#include "exo.h"
-#include "playerinterface.h"
+#include "core/exo.h"
+#include "core/playerinterface.h"
 #include "lyricsdialog.h"
 #include "aboutdialog.h"
 #include "scrobblersettings.h"

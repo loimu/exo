@@ -6,22 +6,22 @@ set(CMAKE_AUTOMOC ON)
 
 set(exo_SRCS
   main.cpp
-  exo.cpp
-  aboutdialog.cpp
-  lyricsdialog.cpp
   bookmarks/bookmark.cpp
   bookmarks/bookmarkdialog.cpp
   bookmarks/bookmarkmanager.cpp
-  mocplayerinterface.cpp
-  playerinterface.cpp
-  trayicon.cpp
-  editor.cpp
+  core/exo.cpp
+  core/mocplayerinterface.cpp
+  core/playerinterface.cpp
+  gui/aboutdialog.cpp
+  gui/editor.cpp
+  gui/lyricsdialog.cpp
+  gui/trayicon.cpp
 )
-set(exo_FRMS aboutdialog.ui lyricsdialog.ui)
+set(exo_FRMS gui/aboutdialog.ui gui/lyricsdialog.ui)
 set(exo_RSRCS exo.qrc)
 
 if(USE_CMUS)
-  list(APPEND exo_SRCS cmusinterface.cpp)
+  list(APPEND exo_SRCS core/cmusinterface.cpp)
 endif()
 
 if(BUILD_DBUS)
@@ -30,8 +30,8 @@ if(BUILD_DBUS)
 endif()
 
 if(BUILD_LASTFM)
-  list(APPEND exo_SRCS scrobbler.cpp scrobblersettings.cpp)
-  list(APPEND exo_FRMS scrobblersettings.ui)
+  list(APPEND exo_SRCS lastfm/scrobbler.cpp gui/scrobblersettings.cpp)
+  list(APPEND exo_FRMS gui/scrobblersettings.ui)
     if(BUILD_WITH_QT4)
       find_library(LASTFM_LIBRARIES lastfm)
     else()

@@ -20,7 +20,7 @@
 #include <QByteArray>
 #include <QNetworkProxyFactory>
 #include <QSettings>
-#include "exo.h"
+#include "core/exo.h"
 
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(exo);

@@ -24,7 +24,7 @@
 #include <QTimer>
 #include <QKeyEvent>
 
-#include "playerinterface.h"
+#include "core/playerinterface.h"
 #include "lyricsdialog.h"
 
 LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent)
