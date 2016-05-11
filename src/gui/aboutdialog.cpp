@@ -44,9 +44,9 @@ void AboutDialog::addText() {
                         "News: <a href=\"http://loimu.tk/exo/\">"
                         "http://loimu.tk/exo/</a><br />"
                         "Patreon: <a href=\"https://patreon.com/blazy\">"
-                        "https://patreon.com/blazy</a><br />"
+                        "https://patreon.com/blazy</a></p>"
                         "Project: <a href=\"https://bitbucket.org/blaze/exo\">"
-                        "https://bitbucket.org/blaze/exo</a></p>"
+                        "https://bitbucket.org/blaze/exo</a><br />"
                         )
                 .arg(qApp->applicationVersion())
                 .arg(qVersion())
