@@ -17,38 +17,36 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef SCROBBLERSETTINGS_H
-#define SCROBBLERSETTINGS_H
+#ifndef SCROBBLERAUTH_H
+#define SCROBBLERAUTH_H
 
-#include <QWidget>
+#include <QObject>
 
 class QSettings;
-class ScrobblerAuth;
 
-namespace Ui {
-class ScrobblerSettings;
+namespace lastfm {
+class XmlQuery;
 }
 
-class ScrobblerSettings : public QWidget
+class ScrobblerAuth : public QObject
 {
     Q_OBJECT
 
-    Ui::ScrobblerSettings *ui;
-    ScrobblerAuth* scrobblerAuth;
-
+    lastfm::XmlQuery EmptyXmlQuery();
+    bool parseQuery(const QByteArray& data, lastfm::XmlQuery* query,
+                    bool* connectionProblems = NULL);
 public:
-    explicit ScrobblerSettings(QObject *parent = 0);
-    ~ScrobblerSettings();
-
-private slots:
-    void on_buttonBox_accepted();
-    void on_usernameLineEdit_textChanged();
-    void on_passwordLineEdit_textChanged();
-    void authFail(const QString& errmsg);
-    void authSuccess();
+    explicit ScrobblerAuth(QObject *parent = 0);
 
 signals:
-    void configured(bool);
+    void configured();
+    void failed(const QString& errmsg);
+
+private slots:
+    void authReplyFinished();
+
+public slots:
+    void auth(const QString& username, const QString& password);
 };
 
-#endif // SCROBBLERSETTINGS_H
+#endif // SCROBBLERAUTH_H

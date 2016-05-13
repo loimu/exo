@@ -17,38 +17,27 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef SCROBBLERSETTINGS_H
-#define SCROBBLERSETTINGS_H
+#ifndef CONSOLEAUTH_H
+#define CONSOLEAUTH_H
 
-#include <QWidget>
+#include <QObject>
 
-class QSettings;
 class ScrobblerAuth;
 
-namespace Ui {
-class ScrobblerSettings;
-}
 
-class ScrobblerSettings : public QWidget
+class ConsoleAuth : public QObject
 {
     Q_OBJECT
 
-    Ui::ScrobblerSettings *ui;
     ScrobblerAuth* scrobblerAuth;
+    void auth();
 
 public:
-    explicit ScrobblerSettings(QObject *parent = 0);
-    ~ScrobblerSettings();
+    explicit ConsoleAuth(QObject *parent = 0);
 
 private slots:
-    void on_buttonBox_accepted();
-    void on_usernameLineEdit_textChanged();
-    void on_passwordLineEdit_textChanged();
     void authFail(const QString& errmsg);
     void authSuccess();
-
-signals:
-    void configured(bool);
 };
 
-#endif // SCROBBLERSETTINGS_H
+#endif // CONSOLEAUTH_H
