@@ -33,7 +33,7 @@ LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent)
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_QuitOnClose, false);
-    replyObject = 0;
+    replyObject = nullptr;
     httpObject = new QNetworkAccessManager(this);
     connect(httpObject, SIGNAL(finished(QNetworkReply *)),
             SLOT(showText(QNetworkReply *)));
@@ -45,13 +45,13 @@ void LyricsDialog::showText(QNetworkReply *reply) {
     if(reply->error() != QNetworkReply::NoError) {
         ui.stateLabel->setText(tr("Network error"));
         ui.textBrowser->setText(reply->errorString());
-        replyObject = 0;
+        replyObject = nullptr;
         reply->deleteLater();
         return;
     }
     QString content = QString::fromUtf8(reply->readAll().constData());
     if(replyObject == reply) {
-        replyObject = 0;
+        replyObject = nullptr;
         reply->deleteLater();
         QRegExp songRgx("<artist>(.*)</artist>.*<song>(.*)</song>.*"
                         "<lyrics>(.*)</lyrics>.*<url>(.*)</url>");
