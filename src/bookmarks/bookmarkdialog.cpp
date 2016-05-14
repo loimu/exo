@@ -74,7 +74,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
 
 void BookmarkDialog::refreshView() {
     listWidget->clear();
-    foreach(BookmarkEntry entry, *list_) {
+    for(BookmarkEntry entry : *list_) {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name + "\n" + tr("URI: ") + entry.uri);
         listWidget->addItem(item);

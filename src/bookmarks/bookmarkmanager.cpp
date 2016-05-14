@@ -50,7 +50,7 @@ void BookmarkManager::refreshList() {
     QString string = settings.value("bookmarkmanager/bookmarks").toString();
     QStringList stringList = string.split(";");
     if(stringList.size() > 0) {
-        foreach (QString str, stringList) {
+        for(QString str : stringList) {
             QStringList bookmark = str.split("|");
             if(bookmark.size() == 2) {
                 BookmarkEntry entry;
@@ -87,7 +87,7 @@ void BookmarkManager::save() {
     QSettings settings;
     QString string = QString();
     int count = 0;
-    foreach(BookmarkEntry entry, list) {
+    for(BookmarkEntry entry : list) {
         if(count)
             string.append(";");
         string.append(entry.name + "|" + entry.uri);

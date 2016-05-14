@@ -115,7 +115,7 @@ void TrayIcon::createTrayIcon() {
         QMenu* tagEditorsMenu = new QMenu(this);
         tagEditorsMenu->setTitle(tr("Edit with"));
         trayIconMenu->addAction(tagEditorsMenu->menuAction());
-        foreach(QString entry, editors) {
+        for(QString entry : editors) {
             Editor* newEditor = new Editor(entry, this);
             tagEditorsMenu->addAction(newEditor);
         }
@@ -228,7 +228,7 @@ void TrayIcon::refreshBookmarks()
         return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
-    foreach(BookmarkEntry entry, *bookmarkManager->bookmarks()) {
+    for(BookmarkEntry entry : *bookmarkManager->bookmarks()) {
         Bookmark *bookmark = new Bookmark(entry.name, this);
         bookmark->uri = entry.uri;
         bookmarksMenu->addAction(bookmark);
