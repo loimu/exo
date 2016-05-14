@@ -28,7 +28,7 @@ class Editor : public QAction
     QString editorPath;
 
 public:
-    Editor(const QString &text, QObject *parent = 0);
+    Editor(const QString &text, QObject *parent = nullptr);
 
 private slots:
     void open();

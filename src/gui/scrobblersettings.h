@@ -37,7 +37,7 @@ class ScrobblerSettings : public QWidget
     ScrobblerAuth* scrobblerAuth;
 
 public:
-    explicit ScrobblerSettings(QObject *parent = 0);
+    explicit ScrobblerSettings(QObject *parent = nullptr);
     ~ScrobblerSettings();
 
 private slots:

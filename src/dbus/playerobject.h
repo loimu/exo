@@ -49,7 +49,7 @@ class PlayerObject : public QDBusAbstractAdaptor
     void syncProperties();
 
 public:
-    PlayerObject(QObject *parent = 0);
+    PlayerObject(QObject *parent = nullptr);
     virtual ~PlayerObject();
     bool canControl() const;
     bool canGoNext() const;

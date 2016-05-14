@@ -58,7 +58,7 @@ class TrayIcon : public QWidget
     bool eventFilter(QObject *, QEvent *);
 
 public:
-    explicit TrayIcon(QObject *parent = 0);
+    explicit TrayIcon(QObject *parent = nullptr);
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);

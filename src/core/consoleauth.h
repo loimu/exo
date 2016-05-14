@@ -33,7 +33,7 @@ class ConsoleAuth : public QObject
     void auth();
 
 public:
-    explicit ConsoleAuth(QObject *parent = 0);
+    explicit ConsoleAuth(QObject *parent = nullptr);
 
 private slots:
     void authFail(const QString& errmsg);

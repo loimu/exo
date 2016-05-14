@@ -33,7 +33,7 @@ class AboutDialog : public QWidget
     void keyPressEvent(QKeyEvent *e);
 
 public:
-    AboutDialog(QWidget *parent = 0);
+    AboutDialog(QWidget *parent = nullptr);
     ~AboutDialog();
 signals:
     void destroyed(bool);

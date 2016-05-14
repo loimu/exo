@@ -28,7 +28,7 @@ class MOCPlayerInterface : public PlayerInterface
     bool runServer();
 
 public:
-    explicit MOCPlayerInterface(QObject *parent = 0);
+    explicit MOCPlayerInterface(QObject *parent = nullptr);
     ~MOCPlayerInterface();
 
 public slots:

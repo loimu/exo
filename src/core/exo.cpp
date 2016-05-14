@@ -38,8 +38,8 @@
 
 bool Exo::useDBus = true;
 bool Exo::useGui = true;
-Exo* Exo::instance = 0;
-QSettings* Exo::settings = 0;
+Exo* Exo::instance = nullptr;
+QSettings* Exo::settings = nullptr;
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 {

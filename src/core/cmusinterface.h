@@ -29,7 +29,7 @@ class CmusInterface : public PlayerInterface
     QString find(QString, const QString);
 
 public:
-    explicit CmusInterface(QObject *parent = 0);
+    explicit CmusInterface(QObject *parent = nullptr);
     ~CmusInterface();
 
 public slots:

@@ -40,7 +40,7 @@ class BookmarkManager : public QObject
     void refreshList();
 
 public:
-    explicit BookmarkManager(QObject *parent = 0);
+    explicit BookmarkManager(QObject *parent = nullptr);
     ~BookmarkManager();
     QList<BookmarkEntry>* bookmarks();
 

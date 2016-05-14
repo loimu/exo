@@ -33,7 +33,7 @@ class Scrobbler : public QObject
     lastfm::Audioscrobbler* as;
 
 public:
-    Scrobbler(QObject *parent = 0);
+    Scrobbler(QObject *parent = nullptr);
     ~Scrobbler();
     static const char* apiKey;
     static const char* secret;

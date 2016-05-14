@@ -68,5 +68,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC}
                    ${exo_FORMS_HEADERS} ${exo_RESOURCES_RCC})
 target_link_libraries(exo ${qt_LIBS} ${LASTFM_LIBRARIES})
+target_compile_features(exo PRIVATE cxx_nullptr)
 
 install(TARGETS exo RUNTIME DESTINATION bin)

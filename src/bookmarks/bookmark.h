@@ -27,7 +27,7 @@ class Bookmark : public QAction
     Q_OBJECT
 
 public:
-    Bookmark(const QString &text, QObject *parent = 0);
+    Bookmark(const QString &text, QObject *parent = nullptr);
     QString uri;
 
 private slots:

@@ -23,7 +23,7 @@
 
 #include "playerinterface.h"
 
-PlayerInterface* PlayerInterface::object = 0;
+PlayerInterface* PlayerInterface::object = nullptr;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 {

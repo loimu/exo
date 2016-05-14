@@ -39,7 +39,8 @@ class BookmarkDialog : public QWidget
     void keyPressEvent(QKeyEvent *e);
 
 public:
-    explicit BookmarkDialog(QWidget *parent = 0, QList<BookmarkEntry> *list = 0);
+    explicit BookmarkDialog(QWidget *parent = nullptr,
+                            QList<BookmarkEntry> *list = nullptr);
 
 signals:
     void save();
