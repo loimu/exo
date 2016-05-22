@@ -19,7 +19,6 @@
 
 #include <QByteArray>
 #include <QNetworkProxyFactory>
-#include <QSettings>
 #include "core/exo.h"
 
 int main(int argc, char *argv[]) {
@@ -35,8 +34,6 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("eXo");
     QCoreApplication::setApplicationVersion("0.6");
     QNetworkProxyFactory::setUseSystemConfiguration(true);
-    QSettings settings;
-    Exo::settings = &settings;
     Exo app(argc, argv, Exo::useGui);
     return app.exec();
 }

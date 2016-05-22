@@ -43,6 +43,7 @@ QSettings* Exo::settings = nullptr;
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 {
+    settings = new QSettings();
     instance = this;
     setQuitOnLastWindowClosed(false);
 #ifdef USE_CMUS
