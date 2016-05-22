@@ -19,7 +19,7 @@
 
 #include <QSettings>
 
-#if QT_VERSION >= 0x050000
+#ifdef Q_QT5
     #include <lastfm5/ws.h>
     #include <lastfm5/Audioscrobbler.h>
     #include <lastfm5/Track.h>
@@ -27,7 +27,7 @@
     #include <lastfm/ws.h>
     #include <lastfm/Audioscrobbler.h>
     #include <lastfm/Track.h>
-#endif // QT_VERSION
+#endif // Q_QT5
 
 #include "core/exo.h"
 #include "scrobbler.h"
