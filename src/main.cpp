@@ -28,8 +28,6 @@ int main(int argc, char *argv[]) {
         if(arg == "-d" || arg == "--daemonize")
             Exo::useGui = false;
     }
-    if(QString(getenv("TERM")).startsWith("linux"))
-        Exo::useDBus = false;
     QCoreApplication::setOrganizationName("exo");
     QCoreApplication::setApplicationName("eXo");
     QCoreApplication::setApplicationVersion("0.6");

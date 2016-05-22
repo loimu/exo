@@ -37,7 +37,6 @@
 #include "playerinterface.h"
 #include "exo.h"
 
-bool Exo::useDBus = true;
 bool Exo::useGui = true;
 Exo* Exo::instance = nullptr;
 QSettings* Exo::settings = nullptr;
@@ -55,7 +54,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
-    if(useDBus)
+    if(!QString(getenv("TERM")).startsWith("linux"))
         new DBus(this);
 #endif // BUILD_DBUS
 

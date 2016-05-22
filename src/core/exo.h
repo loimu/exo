@@ -39,7 +39,6 @@ class Exo : public QApplication
     PlayerInterface* player;
 
 public:
-    static bool useDBus;
     static bool useGui;
     static Exo* instance;
     static QSettings* settings;
