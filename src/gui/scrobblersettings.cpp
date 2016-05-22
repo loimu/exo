@@ -17,19 +17,18 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QSettings>
-
 #include "core/exo.h"
 #include "lastfm/scrobblerauth.h"
 #include "scrobblersettings.h"
 #include "ui_scrobblersettings.h"
 
-ScrobblerSettings::ScrobblerSettings(QObject *parent) : ui(new Ui::ScrobblerSettings) {
+ScrobblerSettings::ScrobblerSettings(QWidget *parent) : QWidget(parent),
+    ui(new Ui::ScrobblerSettings)
+{
     ui->setupUi(this);
     scrobblerAuth = new ScrobblerAuth(this);
     connect(scrobblerAuth, SIGNAL(failed(QString)), SLOT(authFail(QString)));
     connect(scrobblerAuth, SIGNAL(configured()), SLOT(authSuccess()));
-    connect(ui->buttonBox, SIGNAL(rejected()), SLOT(close()));
     connect(ui->usernameLineEdit, SIGNAL(returnPressed()),
             SLOT(on_buttonBox_accepted()));
     connect(ui->passwordLineEdit, SIGNAL(returnPressed()),
@@ -45,6 +44,11 @@ void ScrobblerSettings::on_buttonBox_accepted() {
                         ui->passwordLineEdit->text());
 }
 
+void ScrobblerSettings::on_buttonBox_rejected() {
+    emit configured(false);
+    this->close();
+}
+
 void ScrobblerSettings::on_usernameLineEdit_textChanged() {
     ui->label->setText("");
 }
@@ -58,6 +62,5 @@ void ScrobblerSettings::authFail(const QString& errmsg) {
 }
 
 void ScrobblerSettings::authSuccess() {
-    emit configured(true);
     this->close();
 }

@@ -68,7 +68,6 @@ private slots:
     void addFiles();
     void refreshBookmarks();
 #ifdef BUILD_LASTFM
-    void checkScrobbler(bool);
     void enableScrobbler(bool);
 #endif // BUILD_LASTFM
 

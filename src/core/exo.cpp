@@ -24,6 +24,7 @@
 #include "dbus/dbus.h"
 #endif // BUILD_DBUS
 #ifdef BUILD_LASTFM
+#include "core/consoleauth.h"
 #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
 #ifdef USE_CMUS
@@ -46,19 +47,25 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
     settings = new QSettings();
     instance = this;
     setQuitOnLastWindowClosed(false);
+
 #ifdef USE_CMUS
     player = new CmusInterface(this);
 #else // USE_CMUS
     player = new MOCPlayerInterface(this);
 #endif // USE_CMUS
+
 #ifdef BUILD_DBUS
     if(useDBus)
         new DBus(this);
 #endif // BUILD_DBUS
+
 #ifdef BUILD_LASTFM
-    enableScrobbler(settings->value("scrobbler/enabled").toBool() &&
-            settings->value("scrobbler/sessionkey").toBool());
+    if(settings->value("scrobbler/enabled").toBool())
+        loadScrobbler(true);
+    if(!useGui && !settings->value("scrobbler/sessionkey").toBool())
+        new ConsoleAuth();
 #endif // BUILD_LASTFM
+
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
         trayIcon = new TrayIcon(this);
         trayIcon->hide();
@@ -77,23 +84,14 @@ void Exo::showLyricsWindow() {
 }
 
 #ifdef BUILD_LASTFM
-void Exo::enableScrobbler(bool checked) {
-    if(scrobbler && checked) {
-        qWarning("scrobbler already loaded");
-        return;
-    }
-    if(!scrobbler && !checked) {
-        qWarning("scrobbler already unloaded");
-        return;
-    }
-    settings->setValue("scrobbler/enabled", checked);
-    if(checked) {
+void Exo::loadScrobbler(bool checked) {
+    if(!scrobbler && checked) {
         scrobbler = new Scrobbler(this);
         connect(player, SIGNAL(trackChanged(QString, QString, int)),
                 scrobbler, SLOT(init(QString, QString, int)));
         connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
                 scrobbler, SLOT(submit(QString, QString, QString, int)));
-    } else
+    } else if(scrobbler && !checked)
         scrobbler->deleteLater();
 }
 #endif // BUILD_LASTFM

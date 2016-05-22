@@ -37,11 +37,12 @@ class ScrobblerSettings : public QWidget
     ScrobblerAuth* scrobblerAuth;
 
 public:
-    explicit ScrobblerSettings(QObject *parent = nullptr);
+    explicit ScrobblerSettings(QWidget *parent = nullptr);
     ~ScrobblerSettings();
 
 private slots:
     void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
     void on_usernameLineEdit_textChanged();
     void on_passwordLineEdit_textChanged();
     void authFail(const QString& errmsg);

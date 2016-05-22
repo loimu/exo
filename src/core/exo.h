@@ -46,7 +46,7 @@ public:
     explicit Exo(int &argc, char **argv, bool);
     ~Exo();
 #ifdef BUILD_LASTFM
-    void enableScrobbler(bool);
+    void loadScrobbler(bool);
 #endif // BUILD_LASTFM
     void showLyricsWindow();
 };

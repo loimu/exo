@@ -91,11 +91,12 @@ void TrayIcon::createActions() {
     setQuitBehaviourAction->setChecked(Exo::settings->value("player/quit").toBool());
     connect(setQuitBehaviourAction, SIGNAL(triggered(bool)),
             SLOT(setQuitBehaviour(bool)));
+
 #ifdef BUILD_LASTFM
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
     setScrobblingAction->setChecked(Exo::settings->value("scrobbler/enabled").toBool());
-    connect(setScrobblingAction, SIGNAL(triggered(bool)), SLOT(checkScrobbler(bool)));
+    connect(setScrobblingAction, SIGNAL(triggered(bool)), SLOT(enableScrobbler(bool)));
 #endif // BUILD_LASTFM
 }
 
@@ -138,9 +139,11 @@ void TrayIcon::createTrayIcon() {
     settingsMenu->setTitle(tr("Se&ttings"));
     trayIconMenu->addAction(settingsMenu->menuAction());
     settingsMenu->addAction(setQuitBehaviourAction);
+
 #ifdef BUILD_LASTFM
     settingsMenu->addAction(setScrobblingAction);
 #endif // BUILD_LASTFM
+
     // end of Settings submenu
     trayIconMenu->addAction(aboutAction);
     trayIconMenu->addSeparator();
@@ -220,8 +223,7 @@ void TrayIcon::addFiles() {
     player->appendFile(files);
 }
 
-void TrayIcon::refreshBookmarks()
-{
+void TrayIcon::refreshBookmarks() {
     bookmarksMenu->clear();
     bookmarksMenu->addAction(bookmarkCurrentAction);
     if(bookmarkManager->bookmarks()->length() < 1)
@@ -236,17 +238,16 @@ void TrayIcon::refreshBookmarks()
 }
 
 #ifdef BUILD_LASTFM
-void TrayIcon::checkScrobbler(bool checked) {
-    if(!Exo::settings->value("scrobbler/sessionkey").toBool() && checked) {
-        ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
-        settingsDialog->show();
-        connect(settingsDialog, SIGNAL(configured(bool)), SLOT(enableScrobbler(bool)));
-    } else
-        enableScrobbler(checked);
-}
-
 void TrayIcon::enableScrobbler(bool checked) {
-    Exo::instance->enableScrobbler(checked);
-    setScrobblingAction->setChecked(checked);
+    if(Exo::settings->value("scrobbler/sessionkey").toBool()) {
+        Exo::settings->setValue("scrobbler/enabled", checked);
+        Exo::instance->loadScrobbler(checked);
+    } else
+        if(checked) {
+            ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
+            settingsDialog->show();
+            connect(settingsDialog, SIGNAL(configured(bool)),
+                    setScrobblingAction, SLOT(setChecked(bool)));
+        }
 }
 #endif // BUILD_LASTFM
