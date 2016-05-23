@@ -27,14 +27,14 @@
 #include "core/playerinterface.h"
 #include "lyricsdialog.h"
 
-LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent)
+LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent),
+    replyObject(nullptr),
+    httpObject(new QNetworkAccessManager(this))
 {
     ui.setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_QuitOnClose, false);
-    replyObject = nullptr;
-    httpObject = new QNetworkAccessManager(this);
     connect(httpObject, SIGNAL(finished(QNetworkReply *)),
             SLOT(showText(QNetworkReply *)));
     on_updatePushButton_released();
