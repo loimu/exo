@@ -121,7 +121,7 @@ QString PlayerInterface::artwork() {
 }
 #endif // BUILD_DBUS
 
-PlayerInterface* PlayerInterface::instance() {
+PlayerInterface* PlayerInterface::self() {
     return object;
 }
 

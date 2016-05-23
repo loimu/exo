@@ -24,8 +24,8 @@
 #include "playerobject.h"
 
 PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent),
-    player(PlayerInterface::instance()),
-    track(PlayerInterface::instance()->trackObject()),
+    player(PlayerInterface::self()),
+    track(PlayerInterface::self()->trackObject()),
     trackID("/org/exo/MediaPlayer2/Track/0")
 {
     connect(player, SIGNAL(newStatus(QString)),SLOT(emitPropsChanged(QString)));

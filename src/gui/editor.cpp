@@ -31,7 +31,7 @@ Editor::Editor(const QString &text, QObject *parent) : QAction(text, parent)
 }
 
 void Editor::open() {
-    QString file = PlayerInterface::instance()->trackObject()->file;
+    QString file = PlayerInterface::self()->trackObject()->file;
     if(file.startsWith("/")) {
         QProcess proc;
         proc.start(editorPath, QStringList() << file);

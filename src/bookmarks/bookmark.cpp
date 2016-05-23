@@ -26,5 +26,5 @@ Bookmark::Bookmark(const QString &text, QObject *parent) : QAction(text, parent)
 }
 
 void Bookmark::open() {
-    PlayerInterface::instance()->openUri(uri);
+    PlayerInterface::self()->openUri(uri);
 }

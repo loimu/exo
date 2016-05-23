@@ -39,7 +39,7 @@
 
 TrayIcon::TrayIcon(QObject *parent) :
     bookmarkManager(new BookmarkManager(this)),
-    player(PlayerInterface::instance())
+    player(PlayerInterface::self())
 {
     createActions();
     createTrayIcon();

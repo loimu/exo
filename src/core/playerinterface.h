@@ -45,8 +45,8 @@ protected:
     bool execute(QString, QStringList);
 
 public:
+    static PlayerInterface* self();
     PlayerInterface(QObject *parent = nullptr);
-    static PlayerInterface* instance();
     const Track* trackObject() const;
 #ifdef BUILD_DBUS
     QString artwork();

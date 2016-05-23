@@ -68,7 +68,7 @@ QList<BookmarkEntry>* BookmarkManager::bookmarks() {
 
 void BookmarkManager::addCurrent() {
     BookmarkEntry entry;
-    entry.uri  = PlayerInterface::instance()->trackObject()->file;
+    entry.uri  = PlayerInterface::self()->trackObject()->file;
     entry.name = entry.uri;
     if(entry.uri.isEmpty() || list.size() >= MAX_SIZE)
         return;

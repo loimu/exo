@@ -103,7 +103,7 @@ void LyricsDialog::on_titleLineEdit_returnPressed() {
 }
 
 void LyricsDialog::on_updatePushButton_released() {
-    PlayerInterface* player = PlayerInterface::instance();
+    PlayerInterface* player = PlayerInterface::self();
     ui.artistLineEdit->setText(format(player->trackObject()->artist));
     ui.titleLineEdit->setText(format(player->trackObject()->song));
     if(!ui.artistLineEdit->text().isEmpty())
@@ -111,13 +111,13 @@ void LyricsDialog::on_updatePushButton_released() {
 }
 
 void LyricsDialog::on_prevButton_released() {
-    PlayerInterface::instance()->prev();
+    PlayerInterface::self()->prev();
     ui.textBrowser->setHtml(tr("Please wait a second"));
     QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
 }
 
 void LyricsDialog::on_nextButton_released() {
-    PlayerInterface::instance()->next();
+    PlayerInterface::self()->next();
     ui.textBrowser->setHtml(tr("Please wait a second"));
     QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
 }
