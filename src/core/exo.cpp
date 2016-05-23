@@ -59,7 +59,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
     if(settings.value("scrobbler/enabled").toBool())
         loadScrobbler(true);
     if(!useGui && !settings.value("scrobbler/sessionkey").toBool())
-        new ConsoleAuth();
+        new ConsoleAuth(this);
 #endif // BUILD_LASTFM
 
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
