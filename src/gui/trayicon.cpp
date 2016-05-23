@@ -46,7 +46,6 @@ TrayIcon::TrayIcon(QObject *parent) :
     object = this;
     createActions();
     createTrayIcon();
-    trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
     connect(bookmarkManager, SIGNAL(refreshBookmarks()), SLOT(refreshBookmarks()));
@@ -165,6 +164,7 @@ void TrayIcon::createTrayIcon() {
     trayIcon->installEventFilter(this);
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                       SLOT(clicked(QSystemTrayIcon::ActivationReason)));
+    trayIcon->show();
 }
 
 void TrayIcon::clicked(QSystemTrayIcon::ActivationReason reason) {
