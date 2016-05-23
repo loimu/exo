@@ -32,7 +32,6 @@
 #else // USE_CMUS
 #include "mocplayerinterface.h"
 #endif // USE_CMUS
-
 #include "gui/trayicon.h"
 #include "playerinterface.h"
 #include "exo.h"

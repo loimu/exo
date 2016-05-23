@@ -94,17 +94,15 @@ bool MOCPlayerInterface::appendFile(QStringList files) {
 }
 
 void MOCPlayerInterface::getInfo() {
-    QString info = getOutput("mocp", QStringList() << "-Q" << "\"<st>%state</st>"
-                           "<ar>%a</ar><sn>%t</sn><al>%A</al><fi>%file</fi>"
-                           "<tt>%tt</tt><ct>%ct</ct><ts>%ts</ts><cs>%cs</cs>"
-                           "<np>%title</np><nm>%n</nm>\"");
+    QString info = getOutput("mocp", QStringList() << "-Q" << "\"{s}%state{a}%a"
+        "{t}%t{A}%A{f}%file{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\"");
     if(info.size() < 1) {
         track.state = "Offline";
         return;
     }
-    QRegExp infoRgx("<st>(.*)</st><ar>(.*)</ar><sn>(.*)</sn><al>(.*)</al>"
-                    "<fi>(.*)</fi><tt>(.*)</tt><ct>(.*)</ct><ts>(.*)</ts>"
-                    "<cs>(.*)</cs><np>(.*)</np><nm>(.*)</nm>");
+    QRegExp infoRgx("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)\\{f\\}(.*)"
+                    "\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)\\{ts\\}(.*)"
+                    "\\{cs\\}(.*)\\{T\\}(.*)\\{end\\}");
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
     track.state = infoRgx.cap(1);
@@ -114,12 +112,12 @@ void MOCPlayerInterface::getInfo() {
     track.song = infoRgx.cap(3);
     track.album = infoRgx.cap(4);
     track.file = infoRgx.cap(5);
-    track.totalTime = infoRgx.cap(6);
-    track.currTime = infoRgx.cap(7);
-    track.totalSec = infoRgx.cap(8).toInt();
-    track.currSec = infoRgx.cap(9).toInt();
-    track.title = infoRgx.cap(10);
-    track.number = infoRgx.cap(11).toInt();
+    track.number = infoRgx.cap(6).toInt();
+    track.totalTime = infoRgx.cap(7);
+    track.currTime = infoRgx.cap(8);
+    track.totalSec = infoRgx.cap(9).toInt();
+    track.currSec = infoRgx.cap(10).toInt();
+    track.title = infoRgx.cap(11);
     if(!track.file.startsWith("http"))
         return;
     track.totalSec = 8*60;
