@@ -23,15 +23,16 @@
 
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(exo);
+    bool useGui = true;
     for(int i=1; i<argc; i++) {
         QByteArray arg = argv[i];
         if(arg == "-d" || arg == "--daemonize")
-            Exo::useGui = false;
+            useGui = false;
     }
     QCoreApplication::setOrganizationName("exo");
     QCoreApplication::setApplicationName("eXo");
     QCoreApplication::setApplicationVersion("0.6");
     QNetworkProxyFactory::setUseSystemConfiguration(true);
-    Exo app(argc, argv, Exo::useGui);
+    Exo app(argc, argv, useGui);
     return app.exec();
 }

@@ -35,11 +35,10 @@ class Exo : public QApplication
 #ifdef BUILD_LASTFM
     QPointer<Scrobbler> scrobbler;
 #endif // BUILD_LASTFM
-    QPointer<TrayIcon> trayIcon;
+    TrayIcon* trayIcon;
     PlayerInterface* player;
 
 public:
-    static bool useGui;
     static Exo* instance;
     static QSettings* settings;
     explicit Exo(int &argc, char **argv, bool);

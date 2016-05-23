@@ -30,17 +30,17 @@
 #ifdef USE_CMUS
 #include "cmusinterface.h"
 #else // USE_CMUS
-#include "mocplayerinterface.h"
+#include "core/mocplayerinterface.h"
 #endif // USE_CMUS
 #include "gui/trayicon.h"
-#include "playerinterface.h"
+#include "core/playerinterface.h"
 #include "exo.h"
 
-bool Exo::useGui = true;
 Exo* Exo::instance = nullptr;
 QSettings* Exo::settings = nullptr;
 
-Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
+Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui),
+    trayIcon(nullptr)
 {
     settings = new QSettings();
     instance = this;
