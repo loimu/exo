@@ -70,7 +70,7 @@ void ScrobblerAuth::authReplyFinished() {
         Exo::settings->setValue("scrobbler/login", lastfm::ws::Username);
         Exo::settings->setValue("scrobbler/sessionkey", lastfm::ws::SessionKey);
         Exo::settings->setValue("scrobbler/enabled", true);
-        Exo::instance->loadScrobbler(true);
+        Exo::self()->loadScrobbler(true);
         emit configured();
     } else
         emit failed(tr("wrong data, try again"));

@@ -241,7 +241,7 @@ void TrayIcon::refreshBookmarks() {
 void TrayIcon::enableScrobbler(bool checked) {
     if(Exo::settings->value("scrobbler/sessionkey").toBool()) {
         Exo::settings->setValue("scrobbler/enabled", checked);
-        Exo::instance->loadScrobbler(checked);
+        Exo::self()->loadScrobbler(checked);
     } else
         if(checked) {
             ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);

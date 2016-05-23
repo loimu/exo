@@ -32,17 +32,18 @@ class QSettings;
 
 class Exo : public QApplication
 {
+    static Exo* object;
+    PlayerInterface* player;
+    TrayIcon* trayIcon;
 #ifdef BUILD_LASTFM
     QPointer<Scrobbler> scrobbler;
 #endif // BUILD_LASTFM
-    TrayIcon* trayIcon;
-    PlayerInterface* player;
 
 public:
-    static Exo* instance;
     static QSettings* settings;
     explicit Exo(int &argc, char **argv, bool);
     ~Exo();
+    static Exo* self();
 #ifdef BUILD_LASTFM
     void loadScrobbler(bool);
 #endif // BUILD_LASTFM

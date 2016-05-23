@@ -36,14 +36,14 @@
 #include "core/playerinterface.h"
 #include "exo.h"
 
-Exo* Exo::instance = nullptr;
+Exo* Exo::object = nullptr;
 QSettings* Exo::settings = nullptr;
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui),
     trayIcon(nullptr)
 {
     settings = new QSettings();
-    instance = this;
+    object = this;
     setQuitOnLastWindowClosed(false);
 
 #ifdef USE_CMUS
@@ -75,6 +75,10 @@ Exo::~Exo() {
        player->quit();
     if(trayIcon)
         trayIcon->deleteLater();
+}
+
+Exo* Exo::self() {
+    return object;
 }
 
 void Exo::showLyricsWindow() {
