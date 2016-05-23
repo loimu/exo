@@ -44,9 +44,9 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
     setQuitOnLastWindowClosed(false);
 
 #ifdef USE_CMUS
-    player = new CmusInterface(this);
+    new CmusInterface(this);
 #else // USE_CMUS
-    player = new MOCPlayerInterface(this);
+    new MOCPlayerInterface(this);
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
@@ -71,7 +71,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 Exo::~Exo() {
     QSettings settings;
     if(settings.value("player/quit").toBool())
-       player->quit();
+       PlayerInterface::self()->quit();
     if(TrayIcon::self())
         TrayIcon::self()->deleteLater();
 }
@@ -84,6 +84,7 @@ Exo* Exo::self() {
 void Exo::loadScrobbler(bool checked) {
     if(!scrobbler && checked) {
         scrobbler = new Scrobbler(this);
+        PlayerInterface* player = PlayerInterface::self();
         connect(player, SIGNAL(trackChanged(QString, QString, int)),
                 scrobbler, SLOT(init(QString, QString, int)));
         connect(player, SIGNAL(trackListened(QString, QString, QString, int)),

@@ -26,12 +26,10 @@
 #include <QPointer>
 
 class Scrobbler;
-class PlayerInterface;
 
 class Exo : public QApplication
 {
     static Exo* object;
-    PlayerInterface* player;
 #ifdef BUILD_LASTFM
     QPointer<Scrobbler> scrobbler;
 #endif // BUILD_LASTFM
