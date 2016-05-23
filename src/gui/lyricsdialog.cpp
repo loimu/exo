@@ -87,7 +87,7 @@ void LyricsDialog::showText(QNetworkReply *reply) {
     lyrics = lyrics.trimmed();
     lyrics.replace("\n", "<br>");
     if(lyrics.isEmpty())
-        text += "<b>" + tr("There's no lyrics for some reason.") + "</b>";
+        text += "<b>" + tr("There're no lyrics for some reason.") + "</b>";
     else
         text += lyrics;
     ui.textBrowser->setHtml(text);
