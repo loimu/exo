@@ -33,6 +33,7 @@ class TrayIcon : public QWidget
 {
     Q_OBJECT
 
+    static TrayIcon* object;
     PlayerInterface *player;
     QMenu *trayIconMenu;
     QMenu *settingsMenu;
@@ -59,6 +60,7 @@ class TrayIcon : public QWidget
 
 public:
     explicit TrayIcon(QObject *parent = nullptr);
+    static TrayIcon* self();
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);

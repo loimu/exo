@@ -37,16 +37,23 @@
 #include "editor.h"
 #include "trayicon.h"
 
+TrayIcon* TrayIcon::object = nullptr;
+
 TrayIcon::TrayIcon(QObject *parent) :
     bookmarkManager(new BookmarkManager(this)),
     player(PlayerInterface::self())
 {
+    object = this;
     createActions();
     createTrayIcon();
     trayIcon->show();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
     connect(bookmarkManager, SIGNAL(refreshBookmarks()), SLOT(refreshBookmarks()));
+}
+
+TrayIcon* TrayIcon::self() {
+    return object;
 }
 
 void TrayIcon::createActions() {
