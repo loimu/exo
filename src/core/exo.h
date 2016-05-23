@@ -26,9 +26,7 @@
 #include <QPointer>
 
 class Scrobbler;
-class TrayIcon;
 class PlayerInterface;
-class QSettings;
 
 class Exo : public QApplication
 {
@@ -39,7 +37,6 @@ class Exo : public QApplication
 #endif // BUILD_LASTFM
 
 public:
-    static QSettings* settings;
     explicit Exo(int &argc, char **argv, bool);
     ~Exo();
     static Exo* self();

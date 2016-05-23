@@ -95,14 +95,15 @@ void TrayIcon::createActions() {
     connect(bookmarkManagerAction, SIGNAL(triggered()), bookmarkManager, SLOT(manager()));
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
-    setQuitBehaviourAction->setChecked(Exo::settings->value("player/quit").toBool());
+    QSettings settings;
+    setQuitBehaviourAction->setChecked(settings.value("player/quit").toBool());
     connect(setQuitBehaviourAction, SIGNAL(triggered(bool)),
             SLOT(setQuitBehaviour(bool)));
 
 #ifdef BUILD_LASTFM
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
-    setScrobblingAction->setChecked(Exo::settings->value("scrobbler/enabled").toBool());
+    setScrobblingAction->setChecked(settings.value("scrobbler/enabled").toBool());
     connect(setScrobblingAction, SIGNAL(triggered(bool)), SLOT(enableScrobbler(bool)));
 #endif // BUILD_LASTFM
 }
@@ -220,7 +221,8 @@ void TrayIcon::showAboutDialog() {
 }
 
 void TrayIcon::setQuitBehaviour(bool checked) {
-    Exo::settings->setValue("player/quit", checked);
+    QSettings settings;
+    settings.setValue("player/quit", checked);
 }
 
 void TrayIcon::addFiles() {
@@ -246,8 +248,9 @@ void TrayIcon::refreshBookmarks() {
 
 #ifdef BUILD_LASTFM
 void TrayIcon::enableScrobbler(bool checked) {
-    if(Exo::settings->value("scrobbler/sessionkey").toBool()) {
-        Exo::settings->setValue("scrobbler/enabled", checked);
+    QSettings settings;
+    if(settings.value("scrobbler/sessionkey").toBool()) {
+        settings.setValue("scrobbler/enabled", checked);
         Exo::self()->loadScrobbler(checked);
     } else
         if(checked) {

@@ -37,12 +37,10 @@
 #include "exo.h"
 
 Exo* Exo::object = nullptr;
-QSettings* Exo::settings = nullptr;
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 {
     object = this;
-    settings = new QSettings(this);
     setQuitOnLastWindowClosed(false);
 
 #ifdef USE_CMUS
@@ -57,9 +55,10 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 #endif // BUILD_DBUS
 
 #ifdef BUILD_LASTFM
-    if(settings->value("scrobbler/enabled").toBool())
+    QSettings settings;
+    if(settings.value("scrobbler/enabled").toBool())
         loadScrobbler(true);
-    if(!useGui && !settings->value("scrobbler/sessionkey").toBool())
+    if(!useGui && !settings.value("scrobbler/sessionkey").toBool())
         new ConsoleAuth();
 #endif // BUILD_LASTFM
 
@@ -70,7 +69,8 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 }
 
 Exo::~Exo() {
-    if(settings->value("player/quit").toBool())
+    QSettings settings;
+    if(settings.value("player/quit").toBool())
        player->quit();
     if(TrayIcon::self())
         TrayIcon::self()->deleteLater();
