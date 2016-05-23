@@ -39,11 +39,10 @@
 Exo* Exo::object = nullptr;
 QSettings* Exo::settings = nullptr;
 
-Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui),
-    trayIcon(nullptr)
+Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 {
-    settings = new QSettings();
     object = this;
+    settings = new QSettings(this);
     setQuitOnLastWindowClosed(false);
 
 #ifdef USE_CMUS
@@ -65,7 +64,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 #endif // BUILD_LASTFM
 
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
-        trayIcon = new TrayIcon(this);
+        TrayIcon* trayIcon = new TrayIcon(this);
         trayIcon->hide();
     }
 }
@@ -73,8 +72,8 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 Exo::~Exo() {
     if(settings->value("player/quit").toBool())
        player->quit();
-    if(trayIcon)
-        trayIcon->deleteLater();
+    if(TrayIcon::self())
+        TrayIcon::self()->deleteLater();
 }
 
 Exo* Exo::self() {

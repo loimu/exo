@@ -34,7 +34,6 @@ class Exo : public QApplication
 {
     static Exo* object;
     PlayerInterface* player;
-    TrayIcon* trayIcon;
 #ifdef BUILD_LASTFM
     QPointer<Scrobbler> scrobbler;
 #endif // BUILD_LASTFM
