@@ -81,10 +81,6 @@ Exo* Exo::self() {
     return object;
 }
 
-void Exo::showLyricsWindow() {
-    trayIcon->showLyricsWindow();
-}
-
 #ifdef BUILD_LASTFM
 void Exo::loadScrobbler(bool checked) {
     if(!scrobbler && checked) {

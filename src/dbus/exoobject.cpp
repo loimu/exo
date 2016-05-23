@@ -17,7 +17,9 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "core/exo.h"
+#include <QCoreApplication>
+
+#include "gui/trayicon.h"
 #include "exoobject.h"
 
 ExoObject::ExoObject(QObject *parent) : QObject(parent)
@@ -25,12 +27,8 @@ ExoObject::ExoObject(QObject *parent) : QObject(parent)
 
 }
 
-ExoObject::~ExoObject()
-{
-}
-
 void ExoObject::showLyricsWindow() {
-    Exo::self()->showLyricsWindow();
+    TrayIcon::self()->showLyricsWindow();
 }
 
 void ExoObject::quitApplication() {

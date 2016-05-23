@@ -29,7 +29,6 @@ class ExoObject : public QObject
 
 public:
     ExoObject(QObject *parent = nullptr);
-    ~ExoObject();
 
 signals:
 

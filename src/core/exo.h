@@ -47,7 +47,6 @@ public:
 #ifdef BUILD_LASTFM
     void loadScrobbler(bool);
 #endif // BUILD_LASTFM
-    void showLyricsWindow();
 };
 
 #endif // EXO_H
