@@ -26,10 +26,6 @@ RootObject::RootObject(QObject *parent) : QDBusAbstractAdaptor(parent)
 
 }
 
-RootObject::~RootObject()
-{
-}
-
 bool RootObject::canQuit() const {
     return true;
 }

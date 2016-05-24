@@ -50,7 +50,6 @@ class PlayerObject : public QDBusAbstractAdaptor
 
 public:
     PlayerObject(QObject *parent = nullptr);
-    virtual ~PlayerObject();
     bool canControl() const;
     bool canGoNext() const;
     bool canGoPrevious() const;

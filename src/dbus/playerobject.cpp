@@ -32,10 +32,6 @@ PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent),
     connect(player, SIGNAL(newTrack()), SLOT(trackChanged()));
 }
 
-PlayerObject::~PlayerObject()
-{
-}
-
 bool PlayerObject::canControl() const {
     return true;
 }

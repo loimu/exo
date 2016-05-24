@@ -37,7 +37,6 @@ class RootObject : public QDBusAbstractAdaptor
 
 public:
     explicit RootObject(QObject *parent = nullptr);
-    virtual ~RootObject();
     bool canQuit() const;
     bool canRaise() const;
     QString desktopEntry() const;
