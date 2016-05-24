@@ -29,12 +29,12 @@
 
 #include "core/exo.h"
 #include "core/playerinterface.h"
-#include "lyricsdialog.h"
-#include "aboutdialog.h"
-#include "scrobblersettings.h"
+#include "gui/lyricsdialog.h"
+#include "gui/aboutdialog.h"
+#include "gui/scrobblersettings.h"
 #include "bookmarks/bookmarkmanager.h"
 #include "bookmarks/bookmark.h"
-#include "editor.h"
+#include "gui/editor.h"
 #include "trayicon.h"
 
 TrayIcon* TrayIcon::object = nullptr;

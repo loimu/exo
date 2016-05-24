@@ -30,7 +30,7 @@
 #endif // Q_QT5
 
 #include "core/exo.h"
-#include "scrobbler.h"
+#include "lastfm/scrobbler.h"
 #include "scrobblerauth.h"
 
 ScrobblerAuth::ScrobblerAuth(QObject *parent) : QObject(parent)
