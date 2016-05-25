@@ -30,10 +30,6 @@ MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :PlayerInterface(parent)
     startTimer(1000);
 }
 
-MOCPlayerInterface::~MOCPlayerInterface()
-{
-}
-
 QString MOCPlayerInterface::id() {
     return "music on console";
 }

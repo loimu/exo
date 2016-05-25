@@ -29,7 +29,6 @@ class MOCPlayerInterface : public PlayerInterface
 
 public:
     explicit MOCPlayerInterface(QObject *parent = nullptr);
-    ~MOCPlayerInterface();
 
 public slots:
     QString id();

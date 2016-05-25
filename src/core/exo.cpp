@@ -33,7 +33,6 @@
 #include "core/mocplayerinterface.h"
 #endif // USE_CMUS
 #include "gui/trayicon.h"
-#include "core/playerinterface.h"
 #include "exo.h"
 
 Exo* Exo::object = nullptr;

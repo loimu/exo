@@ -28,10 +28,6 @@ CmusInterface::CmusInterface(QObject *parent) : PlayerInterface(parent)
     startTimer(1000);
 }
 
-CmusInterface::~CmusInterface()
-{
-}
-
 QString CmusInterface::id() {
     return "Cmus";
 }
