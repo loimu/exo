@@ -22,13 +22,15 @@
 
 #include <QWidget>
 
-#include "ui_aboutdialog.h"
+namespace Ui {
+class AboutDialog;
+}
 
 class AboutDialog : public QWidget
 {
     Q_OBJECT
 
-    Ui::AboutDialog ui;
+    Ui::AboutDialog* ui;
     void addText();
     void keyPressEvent(QKeyEvent *e);
 

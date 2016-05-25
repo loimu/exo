@@ -22,7 +22,6 @@
 
 #include <QWidget>
 
-class QSettings;
 class ScrobblerAuth;
 
 namespace Ui {

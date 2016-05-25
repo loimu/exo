@@ -20,10 +20,12 @@
 #include <QKeyEvent>
 
 #include "aboutdialog.h"
+#include "ui_aboutdialog.h"
 
-AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent)
+AboutDialog::AboutDialog(QWidget *parent) : QWidget(parent),
+    ui(new Ui::AboutDialog)
 {
-    ui.setupUi(this);
+    ui->setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
     addText();
@@ -51,7 +53,8 @@ void AboutDialog::addText() {
                 .arg(qApp->applicationVersion())
                 .arg(qVersion())
                 .arg(QT_VERSION_STR));
-    ui.label->setText(text);
+    ui->label->setText(text);
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 void AboutDialog::keyPressEvent(QKeyEvent *e) {
