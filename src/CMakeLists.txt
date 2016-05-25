@@ -13,7 +13,7 @@ set(exo_SRCS
   core/mocplayerinterface.cpp
   core/playerinterface.cpp
   gui/aboutdialog.cpp
-  gui/editor.cpp
+  gui/tageditor.cpp
   gui/lyricsdialog.cpp
   gui/trayicon.cpp
 )

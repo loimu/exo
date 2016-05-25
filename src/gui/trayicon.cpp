@@ -34,7 +34,7 @@
 #include "gui/scrobblersettings.h"
 #include "bookmarks/bookmarkmanager.h"
 #include "bookmarks/bookmark.h"
-#include "gui/editor.h"
+#include "gui/tageditor.h"
 #include "trayicon.h"
 
 TrayIcon* TrayIcon::object = nullptr;
@@ -124,7 +124,7 @@ void TrayIcon::createTrayIcon() {
         tagEditorsMenu->setTitle(tr("Edit with"));
         trayIconMenu->addAction(tagEditorsMenu->menuAction());
         for(QString entry : editors) {
-            Editor* newEditor = new Editor(entry, this);
+            TagEditor* newEditor = new TagEditor(entry, this);
             tagEditorsMenu->addAction(newEditor);
         }
     }

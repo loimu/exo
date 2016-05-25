@@ -17,21 +17,24 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef EDITOR_H
-#define EDITOR_H
+#include <QProcess>
 
-#include <QAction>
+#include "core/playerinterface.h"
+#include "tageditor.h"
 
-class Editor : public QAction
+TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
 {
-    Q_OBJECT
-    QString editorPath;
+    editorPath = text;
+    QString app = text.split("/").last();
+    this->setText(app.left(1).toUpper() + app.mid(1));
+    connect(this, SIGNAL(triggered(bool)), this, SLOT(open()));
+}
 
-public:
-    Editor(const QString &text, QObject *parent = nullptr);
-
-private slots:
-    void open();
-};
-
-#endif // EDITOR_H
+void TagEditor::open() {
+    QString file = PlayerInterface::self()->trackObject()->file;
+    if(file.startsWith("/")) {
+        QProcess proc;
+        proc.start(editorPath, QStringList() << file);
+        proc.waitForFinished(-1);
+    }
+}
