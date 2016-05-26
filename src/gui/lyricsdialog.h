@@ -29,11 +29,15 @@ class QLabel;
 class QNetworkAccessManager;
 class QNetworkReply;
 
+namespace Ui {
+class LyricsDialog;
+}
+
 class LyricsDialog : public QWidget
 {
     Q_OBJECT
 
-    Ui::LyricsDialog ui;
+    Ui::LyricsDialog* ui;
     QNetworkAccessManager *httpObject;
     QNetworkReply *replyObject;
     QString artistString, titleString;

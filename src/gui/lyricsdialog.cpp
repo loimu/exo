@@ -28,10 +28,11 @@
 #include "lyricsdialog.h"
 
 LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent),
+    ui(new Ui::LyricsDialog),
     replyObject(nullptr),
     httpObject(new QNetworkAccessManager(this))
 {
-    ui.setupUi(this);
+    ui->setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_QuitOnClose, false);
@@ -41,10 +42,10 @@ LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent),
 }
 
 void LyricsDialog::showText(QNetworkReply *reply) {
-    ui.stateLabel->setText("OK");
+    ui->stateLabel->setText("OK");
     if(reply->error() != QNetworkReply::NoError) {
-        ui.stateLabel->setText(tr("Network error"));
-        ui.textBrowser->setText(reply->errorString());
+        ui->stateLabel->setText(tr("Network error"));
+        ui->textBrowser->setText(reply->errorString());
         replyObject = nullptr;
         reply->deleteLater();
         return;
@@ -57,11 +58,11 @@ void LyricsDialog::showText(QNetworkReply *reply) {
                         "<lyrics>(.*)</lyrics>.*<url>(.*)</url>");
         songRgx.setMinimal(true);
         if(songRgx.indexIn(content) < 0) {
-            ui.textBrowser->setHtml("<b>" + tr("Error") + "</b>");
+            ui->textBrowser->setHtml("<b>" + tr("Error") + "</b>");
             return;
         }
         else if(songRgx.cap(3) == "Not found") {
-            ui.textBrowser->setHtml("<b>" + tr("Not found") + "</b>");
+            ui->textBrowser->setHtml("<b>" + tr("Not found") + "</b>");
             return;
         }
         else {
@@ -75,7 +76,7 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         QNetworkRequest request;
         request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
         request.setRawHeader("Referer", songRgx.cap(4).toLatin1());
-        ui.stateLabel->setText(tr("Downloading"));
+        ui->stateLabel->setText(tr("Downloading"));
         httpObject->get(request);
         reply->deleteLater();
         return;
@@ -90,7 +91,7 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         text += "<b>" + tr("There're no lyrics for some reason.") + "</b>";
     else
         text += lyrics;
-    ui.textBrowser->setHtml(text);
+    ui->textBrowser->setHtml(text);
     reply->deleteLater();
 }
 
@@ -104,21 +105,21 @@ void LyricsDialog::on_titleLineEdit_returnPressed() {
 
 void LyricsDialog::on_updatePushButton_released() {
     PlayerInterface* player = PlayerInterface::self();
-    ui.artistLineEdit->setText(format(player->trackObject()->artist));
-    ui.titleLineEdit->setText(format(player->trackObject()->song));
-    if(!ui.artistLineEdit->text().isEmpty())
+    ui->artistLineEdit->setText(format(player->trackObject()->artist));
+    ui->titleLineEdit->setText(format(player->trackObject()->song));
+    if(!ui->artistLineEdit->text().isEmpty())
         search();
 }
 
 void LyricsDialog::on_prevButton_released() {
     PlayerInterface::self()->prev();
-    ui.textBrowser->setHtml(tr("Please wait a second"));
+    ui->textBrowser->setHtml(tr("Please wait a second"));
     QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
 }
 
 void LyricsDialog::on_nextButton_released() {
     PlayerInterface::self()->next();
-    ui.textBrowser->setHtml(tr("Please wait a second"));
+    ui->textBrowser->setHtml(tr("Please wait a second"));
     QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
 }
 
@@ -128,13 +129,13 @@ QString LyricsDialog::format(QString string) {
 }
 
 void LyricsDialog::search() {
-    ui.stateLabel->setText(tr("Searching"));
-    setWindowTitle(QString(tr("%1 - %2")).arg(ui.artistLineEdit->text())
-                   .arg(ui.titleLineEdit->text()));
+    ui->stateLabel->setText(tr("Searching"));
+    setWindowTitle(QString(tr("%1 - %2")).arg(ui->artistLineEdit->text())
+                   .arg(ui->titleLineEdit->text()));
     QNetworkRequest request;
     request.setUrl(QUrl("http://lyrics.wikia.com/api.php?action=lyrics&artist="+
-                        ui.artistLineEdit->text() + "&song=" +
-                        ui.titleLineEdit->text() + "&fmt=xml"));
+                        ui->artistLineEdit->text() + "&song=" +
+                        ui->titleLineEdit->text() + "&fmt=xml"));
     request.setRawHeader("User-Agent", QString("Mozilla/5.0").toLatin1());
     replyObject = httpObject->get(request);
 }
