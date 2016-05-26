@@ -73,6 +73,7 @@ void BookmarkManager::addCurrent() {
 void BookmarkManager::manager() {
     if(bookmarkManager)
         return;
+    refreshList();
     bookmarkManager = new BookmarkDialog(static_cast<QWidget*>(this->parent()), &list);
     connect(bookmarkManager, SIGNAL(save()), SLOT(save()));
     bookmarkManager->show();

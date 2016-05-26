@@ -74,6 +74,8 @@ void BookmarkDialog::deleteBookmark() {
 
 void BookmarkDialog::renameBookmark(QString name) {
     int cur = listWidget->currentRow();
+    if(cur < 0)
+        return;
     (*list_)[cur].name = name.replace(";", "").replace("|", "");
     listWidget->currentItem()->setText(tr("Name: ") + name + "\n"
                                        + tr("URI: ") + list_->at(cur).uri);
