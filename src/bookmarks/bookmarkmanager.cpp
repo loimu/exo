@@ -38,12 +38,6 @@ BookmarkManager::BookmarkManager(QObject *parent) : QObject(parent)
     refreshList();
 }
 
-BookmarkManager::~BookmarkManager()
-{
-    if(bookmarkManager)
-        bookmarkManager->deleteLater();
-}
-
 void BookmarkManager::refreshList() {
     list.clear();
     QSettings settings;
@@ -77,7 +71,8 @@ void BookmarkManager::addCurrent() {
 }
 
 void BookmarkManager::manager() {
-    refreshList();
+    if(bookmarkManager)
+        return;
     bookmarkManager = new BookmarkDialog(static_cast<QWidget*>(this->parent()), &list);
     connect(bookmarkManager, SIGNAL(save()), SLOT(save()));
     bookmarkManager->show();

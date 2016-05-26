@@ -41,7 +41,6 @@ class BookmarkManager : public QObject
 
 public:
     explicit BookmarkManager(QObject *parent = nullptr);
-    ~BookmarkManager();
     QList<BookmarkEntry>* bookmarks();
 
 public slots:

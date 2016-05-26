@@ -37,39 +37,24 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     verticalLayout->addWidget(listWidget);
-    refreshView();
     QHBoxLayout *horizontalLayout = new QHBoxLayout();
-    lineEdit = new QLineEdit(this);
-    horizontalLayout->addWidget(lineEdit);
-    lineEdit->setVisible(false);
-    QPushButton *acceptButton = new QPushButton(this);
-    acceptButton->setText(tr("Accept"));
-    acceptButton->setVisible(false);
-    horizontalLayout->addWidget(acceptButton);
-    QHBoxLayout *horizontalLayout2 = new QHBoxLayout();
     QPushButton *deleteButton = new QPushButton(this);
     deleteButton->setText(tr("&Delete"));
-    horizontalLayout2->addWidget(deleteButton);
-    QPushButton *renameButton = new QPushButton(this);
-    renameButton->setText(tr("&Rename"));
-    horizontalLayout2->addWidget(renameButton);
-    QSpacerItem *horizontalSpacer = new QSpacerItem(40,20,QSizePolicy::Expanding,
-                                                    QSizePolicy::Minimum);
-    horizontalLayout2->addItem(horizontalSpacer);
+    deleteButton->setToolTip(tr("Delete selected item"));
+    horizontalLayout->addWidget(deleteButton);
+    lineEdit = new QLineEdit(this);
+    lineEdit->setToolTip(tr("Rename selected item"));
+    horizontalLayout->addWidget(lineEdit);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    horizontalLayout2->addWidget(buttonBox);
+    horizontalLayout->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
-    verticalLayout->addLayout(horizontalLayout2);
-    connect(listWidget, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(updateLineEdit()));
-    connect(acceptButton, SIGNAL(released()), SLOT(renameBookmark()));
-    connect(acceptButton, SIGNAL(released()), lineEdit, SLOT(hide()));
-    connect(acceptButton, SIGNAL(released()), acceptButton, SLOT(hide()));
+    connect(listWidget, SIGNAL(currentRowChanged(int)), SLOT(updateLineEdit(int)));
     connect(deleteButton, SIGNAL(released()), SLOT(deleteBookmark()));
-    connect(renameButton, SIGNAL(released()), acceptButton, SLOT(show()));
-    connect(renameButton, SIGNAL(released()), lineEdit, SLOT(show()));
+    connect(lineEdit, SIGNAL(textEdited(QString)), SLOT(renameBookmark(QString)));
     connect(buttonBox, SIGNAL(accepted()), SLOT(accepted()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+    refreshView();
 }
 
 void BookmarkDialog::refreshView() {
@@ -82,18 +67,21 @@ void BookmarkDialog::refreshView() {
 }
 
 void BookmarkDialog::deleteBookmark() {
+    lineEdit->clear();
     list_->removeAt(listWidget->currentRow());
     refreshView();
 }
 
-void BookmarkDialog::renameBookmark() {
-    (*list_)[listWidget->currentRow()].name = lineEdit->text();
-    refreshView();
-    lineEdit->clear();
+void BookmarkDialog::renameBookmark(QString name) {
+    int cur = listWidget->currentRow();
+    (*list_)[cur].name = name.replace(";", "").replace("|", "");
+    listWidget->currentItem()->setText(tr("Name: ") + name + "\n"
+                                       + tr("URI: ") + list_->at(cur).uri);
 }
 
-void BookmarkDialog::updateLineEdit() {
-    lineEdit->setText((*list_)[listWidget->currentRow()].name);
+void BookmarkDialog::updateLineEdit(int cur) {
+    if(cur > -1)
+        lineEdit->setText((*list_)[cur].name);
 }
 
 void BookmarkDialog::accepted() {

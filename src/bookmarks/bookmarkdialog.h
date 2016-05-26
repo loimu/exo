@@ -47,8 +47,8 @@ signals:
 
 private slots:
     void deleteBookmark();
-    void renameBookmark();
-    void updateLineEdit();
+    void renameBookmark(QString);
+    void updateLineEdit(int cur);
     void accepted();
 };
 
