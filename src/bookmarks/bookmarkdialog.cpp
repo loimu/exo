@@ -28,7 +28,9 @@
 #include "bookmarkdialog.h"
 
 BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QWidget(parent),
-    list_(list)
+    list_(list),
+    // use local copy of the list
+    list(*list)
 {
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
@@ -60,7 +62,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
 void BookmarkDialog::refreshView() {
     lineEdit->clear();
     listWidget->clear();
-    for(BookmarkEntry entry : *list_) {
+    for(BookmarkEntry entry : list) {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name + "\n" + tr("URI: ") + entry.uri);
         listWidget->addItem(item);
@@ -68,25 +70,27 @@ void BookmarkDialog::refreshView() {
 }
 
 void BookmarkDialog::deleteBookmark() {
-    list_->removeAt(listWidget->currentRow());
+    list.removeAt(listWidget->currentRow());
     refreshView();
 }
 
 void BookmarkDialog::renameBookmark(QString name) {
     int cur = listWidget->currentRow();
-    if(cur < 0)
-        return;
-    (*list_)[cur].name = name.replace(";", "").replace("|", "");
-    listWidget->currentItem()->setText(tr("Name: ") + name + "\n"
-                                       + tr("URI: ") + list_->at(cur).uri);
+    // always check if index is valid before usage
+    if(cur > -1) {
+        list[cur].name = name.replace(";", "").replace("|", "");
+        listWidget->currentItem()->setText(tr("Name: ") + name + "\n"
+                                           + tr("URI: ") + list.at(cur).uri);
+    }
 }
 
 void BookmarkDialog::updateLineEdit(int cur) {
     if(cur > -1)
-        lineEdit->setText((*list_)[cur].name);
+        lineEdit->setText(list.at(cur).name);
 }
 
 void BookmarkDialog::accepted() {
+    *list_ = list;
     emit save();
     this->close();
 }

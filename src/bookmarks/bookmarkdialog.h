@@ -35,12 +35,13 @@ class BookmarkDialog : public QWidget
     QLineEdit* lineEdit;
     QListWidget* listWidget;
     QList<BookmarkEntry>* list_;
+    QList<BookmarkEntry> list;
     void keyPressEvent(QKeyEvent *e);
+    void refreshView();
 
 public:
     explicit BookmarkDialog(QWidget *parent = nullptr,
                             QList<BookmarkEntry> *list = nullptr);
-    void refreshView();
 
 signals:
     void save();
