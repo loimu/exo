@@ -19,26 +19,26 @@
 
 #include <QStringList>
 
-#include "mocplayerinterface.h"
+#include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=\"/usr/share/exo/moc-osd.py\""
 
-MOCPlayerInterface::MOCPlayerInterface(QObject *parent) :PlayerInterface(parent)
+MocInterface::MocInterface(QObject *parent) :PlayerInterface(parent)
 {
     if(!isServerRunning())
         runServer();
     startTimer(1000);
 }
 
-QString MOCPlayerInterface::id() {
+QString MocInterface::id() {
     return "music on console";
 }
 
-bool MOCPlayerInterface::isServerRunning() {
+bool MocInterface::isServerRunning() {
     return getOutput("pidof", QStringList() << "mocp").length() > 1;
 }
 
-bool MOCPlayerInterface::runServer() {
+bool MocInterface::runServer() {
 #ifdef OSD_OPT
     return execute("mocp", QStringList() << "-SO" << OSD_OPT);
 #else //OSD_OPT
@@ -47,7 +47,7 @@ bool MOCPlayerInterface::runServer() {
 }
 
 #define SEND_COMMAND(__method, __option)\
-    bool MOCPlayerInterface::__method() {\
+    bool MocInterface::__method() {\
         return execute("mocp", QStringList() << __option);\
     }
 
@@ -60,7 +60,7 @@ SEND_COMMAND(stop, "-s")
 SEND_COMMAND(quit, "-x")
 
 #define SEND_COMMAND_PARAM(__method, __option)\
-    bool MOCPlayerInterface::__method(int param) {\
+    bool MocInterface::__method(int param) {\
         return execute("mocp", QStringList() << QString(__option).arg(param));\
     }
 
@@ -69,7 +69,7 @@ SEND_COMMAND_PARAM(seek, "-k%1")
 SEND_COMMAND_PARAM(volume, "-v%1")
 SEND_COMMAND_PARAM(changeVolume, "-v+%1")
 
-bool MOCPlayerInterface::showPlayer() {
+bool MocInterface::showPlayer() {
     QString term = "x-terminal-emulator";
     // falling back to xterm if there's no "alternatives"
     if(getOutput("which", QStringList() << term).length() < 1)
@@ -81,15 +81,15 @@ bool MOCPlayerInterface::showPlayer() {
 #endif // OSD_OPT
 }
 
-bool MOCPlayerInterface::openUri(const QString file) {
+bool MocInterface::openUri(const QString file) {
     return execute("mocp", QStringList() << "-l" << file);
 }
 
-bool MOCPlayerInterface::appendFile(QStringList files) {
+bool MocInterface::appendFile(QStringList files) {
     return execute("mocp", QStringList() << "-a" << files);
 }
 
-void MOCPlayerInterface::getInfo() {
+void MocInterface::getInfo() {
     QString info = getOutput("mocp", QStringList() << "-Q" << "\"{s}%state{a}%a"
         "{t}%t{A}%A{f}%file{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\"");
     if(info.size() < 1) {

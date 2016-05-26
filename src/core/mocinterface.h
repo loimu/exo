@@ -17,18 +17,18 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#ifndef MOCPLAYERINTERFACE_H
-#define MOCPLAYERINTERFACE_H
+#ifndef MOCINTERFACE_H
+#define MOCINTERFACE_H
 
 #include "playerinterface.h"
 
-class MOCPlayerInterface : public PlayerInterface
+class MocInterface : public PlayerInterface
 {
     bool isServerRunning();
     bool runServer();
 
 public:
-    explicit MOCPlayerInterface(QObject *parent = nullptr);
+    explicit MocInterface(QObject *parent = nullptr);
 
 public slots:
     QString id();
@@ -51,4 +51,4 @@ protected slots:
     void getInfo();
 };
 
-#endif // MOCPLAYERINTERFACE_H
+#endif // MOCINTERFACE_H

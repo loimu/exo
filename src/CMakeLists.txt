@@ -10,7 +10,7 @@ set(exo_SRCS
   bookmarks/bookmarkdialog.cpp
   bookmarks/bookmarkmanager.cpp
   core/exo.cpp
-  core/mocplayerinterface.cpp
+  core/mocinterface.cpp
   core/playerinterface.cpp
   gui/aboutdialog.cpp
   gui/tageditor.cpp
