@@ -36,7 +36,7 @@ class BookmarkManager : public QObject
     Q_OBJECT
 
     QList<BookmarkEntry> list;
-    QPointer<BookmarkDialog> bookmarkManager;
+    QPointer<BookmarkDialog> bookmarkDialog;
     void refreshList();
 
 public:

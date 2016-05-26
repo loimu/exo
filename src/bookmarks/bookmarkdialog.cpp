@@ -33,7 +33,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowTitle(tr("Bookmark Manager"));
-    this->resize(500,250);
+    this->resize(500, 550);
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     verticalLayout->addWidget(listWidget);
@@ -58,6 +58,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
 }
 
 void BookmarkDialog::refreshView() {
+    lineEdit->clear();
     listWidget->clear();
     for(BookmarkEntry entry : *list_) {
         QListWidgetItem *item = new QListWidgetItem();
@@ -67,7 +68,6 @@ void BookmarkDialog::refreshView() {
 }
 
 void BookmarkDialog::deleteBookmark() {
-    lineEdit->clear();
     list_->removeAt(listWidget->currentRow());
     refreshView();
 }

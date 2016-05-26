@@ -67,16 +67,18 @@ void BookmarkManager::addCurrent() {
     if(entry.uri.isEmpty() || list.size() >= MAX_SIZE)
         return;
     list.append(entry);
+    if(bookmarkDialog)
+        bookmarkDialog->refreshView();
     save();
 }
 
 void BookmarkManager::manager() {
-    if(bookmarkManager)
+    if(bookmarkDialog)
         return;
     refreshList();
-    bookmarkManager = new BookmarkDialog(static_cast<QWidget*>(this->parent()), &list);
-    connect(bookmarkManager, SIGNAL(save()), SLOT(save()));
-    bookmarkManager->show();
+    bookmarkDialog = new BookmarkDialog(static_cast<QWidget*>(this->parent()), &list);
+    connect(bookmarkDialog, SIGNAL(save()), SLOT(save()));
+    bookmarkDialog->show();
 }
 
 void BookmarkManager::save() {
