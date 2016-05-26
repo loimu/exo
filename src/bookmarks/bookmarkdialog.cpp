@@ -70,8 +70,11 @@ void BookmarkDialog::refreshView() {
 }
 
 void BookmarkDialog::deleteBookmark() {
-    list.removeAt(listWidget->currentRow());
-    refreshView();
+    int cur = listWidget->currentRow();
+    if(cur > -1) {
+        list.removeAt(cur);
+        refreshView();
+    }
 }
 
 void BookmarkDialog::renameBookmark(QString name) {
