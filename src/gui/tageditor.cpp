@@ -27,6 +27,7 @@ TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, paren
     editorPath = text;
     QString app = text.split("/").last();
     this->setText(app.left(1).toUpper() + app.mid(1));
+    this->setIcon(QIcon::fromTheme(app));
     connect(this, SIGNAL(triggered(bool)), this, SLOT(open()));
 }
 

@@ -90,8 +90,10 @@ void TrayIcon::createActions() {
     quitAction->setIcon(quitIcon);
     bookmarkCurrentAction = new QAction(tr("Bookmark Current"), this);
     connect(bookmarkCurrentAction, SIGNAL(triggered()), bookmarkManager, SLOT(addCurrent()));
+    bookmarkCurrentAction->setIcon(QIcon::fromTheme(QLatin1String("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark Manager"), this);
     connect(bookmarkManagerAction, SIGNAL(triggered()), bookmarkManager, SLOT(manager()));
+    bookmarkManagerAction->setIcon(QIcon::fromTheme(QLatin1String("bookmarks-organize")));
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
     QSettings settings;
