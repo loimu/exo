@@ -38,6 +38,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
     this->resize(500, 550);
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
+    listWidget->setIconSize(QSize(32, 32));
     verticalLayout->addWidget(listWidget);
     QHBoxLayout *horizontalLayout = new QHBoxLayout();
     QPushButton *deleteButton = new QPushButton(this);
