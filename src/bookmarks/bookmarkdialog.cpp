@@ -43,6 +43,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
     QPushButton *deleteButton = new QPushButton(this);
     deleteButton->setText(tr("&Delete"));
     deleteButton->setToolTip(tr("Delete selected item"));
+    deleteButton->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
     horizontalLayout->addWidget(deleteButton);
     lineEdit = new QLineEdit(this);
     lineEdit->setToolTip(tr("Rename selected item"));
@@ -66,6 +67,7 @@ void BookmarkDialog::refreshView() {
     for(BookmarkEntry entry : list) {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name + "\n" + entry.uri);
+        item->setIcon(QIcon::fromTheme(QLatin1String("audio-x-generic")));
         listWidget->addItem(item);
     }
 }
