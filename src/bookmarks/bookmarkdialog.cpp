@@ -46,6 +46,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QW
     horizontalLayout->addWidget(deleteButton);
     lineEdit = new QLineEdit(this);
     lineEdit->setToolTip(tr("Rename selected item"));
+    lineEdit->setPlaceholderText("Rename");
     horizontalLayout->addWidget(lineEdit);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
@@ -64,7 +65,7 @@ void BookmarkDialog::refreshView() {
     listWidget->clear();
     for(BookmarkEntry entry : list) {
         QListWidgetItem *item = new QListWidgetItem();
-        item->setText(tr("Name: ") + entry.name + "\n" + tr("URI: ") + entry.uri);
+        item->setText(tr("Name: ") + entry.name + "\n" + entry.uri);
         listWidget->addItem(item);
     }
 }
@@ -83,7 +84,7 @@ void BookmarkDialog::renameBookmark(QString name) {
     if(cur > -1) {
         list[cur].name = name.replace(";", "").replace("|", "");
         listWidget->currentItem()->setText(tr("Name: ") + name + "\n"
-                                           + tr("URI: ") + list.at(cur).uri);
+                                           + list.at(cur).uri);
     }
 }
 
@@ -101,4 +102,6 @@ void BookmarkDialog::accepted() {
 void BookmarkDialog::keyPressEvent(QKeyEvent *e) {
     if(e->key() == Qt::Key_Escape)
         this->close();
+    if(e->key() == Qt::Key_Delete)
+        this->deleteBookmark();
 }
