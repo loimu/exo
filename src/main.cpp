@@ -28,6 +28,10 @@ int main(int argc, char *argv[]) {
         QByteArray arg = argv[i];
         if(arg == "-d" || arg == "--daemonize")
             useGui = false;
+        if(arg == "-f" || arg == "--force-reauth") {
+            useGui = false;
+            Exo::forceReauth();
+        }
     }
     QCoreApplication::setOrganizationName("exo");
     QCoreApplication::setApplicationName("eXo");

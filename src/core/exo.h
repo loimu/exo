@@ -30,6 +30,7 @@ class Scrobbler;
 class Exo : public QApplication
 {
     static Exo* object;
+    static bool reauth;
 #ifdef BUILD_LASTFM
     QPointer<Scrobbler> scrobbler;
 #endif // BUILD_LASTFM
@@ -38,6 +39,7 @@ public:
     explicit Exo(int &argc, char **argv, bool);
     ~Exo();
     static Exo* self();
+    static void forceReauth();
 #ifdef BUILD_LASTFM
     void loadScrobbler(bool);
 #endif // BUILD_LASTFM

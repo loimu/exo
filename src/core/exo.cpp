@@ -36,6 +36,7 @@
 #include "exo.h"
 
 Exo* Exo::object = nullptr;
+bool Exo::reauth = false;
 
 Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 {
@@ -57,7 +58,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
     QSettings settings;
     if(settings.value("scrobbler/enabled").toBool())
         loadScrobbler(true);
-    if(!useGui && !settings.value("scrobbler/sessionkey").toBool())
+    if(!useGui && (reauth || !settings.value("scrobbler/sessionkey").toBool()))
         new ConsoleAuth(this);
 #endif // BUILD_LASTFM
 
@@ -77,6 +78,10 @@ Exo::~Exo() {
 
 Exo* Exo::self() {
     return object;
+}
+
+void Exo::forceReauth() {
+    reauth = true;
 }
 
 #ifdef BUILD_LASTFM
