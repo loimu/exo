@@ -37,7 +37,6 @@ class ScrobblerSettings : public QWidget
 
 public:
     explicit ScrobblerSettings(QWidget *parent = nullptr);
-    ~ScrobblerSettings();
 
 private slots:
     void on_buttonBox_accepted();

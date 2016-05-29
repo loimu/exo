@@ -18,17 +18,10 @@
 * ======================================================================== */
 
 #include <QSettings>
-#include <QStringList>
-#include <QDialog>
-#include <QListWidget>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QDialogButtonBox>
-#include <QLineEdit>
 
 #include "core/playerinterface.h"
-#include "bookmarkmanager.h"
 #include "bookmarkdialog.h"
+#include "bookmarkmanager.h"
 
 // maximal amount of bookmarks
 #define MAX_SIZE 10

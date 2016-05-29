@@ -35,7 +35,6 @@ LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent),
     ui->setupUi(this);
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
-    setAttribute(Qt::WA_QuitOnClose, false);
     connect(httpObject, SIGNAL(finished(QNetworkReply *)),
             SLOT(showText(QNetworkReply *)));
     on_updatePushButton_released();

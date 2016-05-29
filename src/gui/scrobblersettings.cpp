@@ -26,6 +26,8 @@ ScrobblerSettings::ScrobblerSettings(QWidget *parent) : QWidget(parent),
     ui(new Ui::ScrobblerSettings)
 {
     ui->setupUi(this);
+    setWindowFlags(Qt::Dialog);
+    setAttribute(Qt::WA_DeleteOnClose);
     scrobblerAuth = new ScrobblerAuth(this);
     connect(scrobblerAuth, SIGNAL(failed(QString)), SLOT(authFail(QString)));
     connect(scrobblerAuth, SIGNAL(configured()), SLOT(authSuccess()));
@@ -33,10 +35,6 @@ ScrobblerSettings::ScrobblerSettings(QWidget *parent) : QWidget(parent),
             SLOT(on_buttonBox_accepted()));
     connect(ui->passwordLineEdit, SIGNAL(returnPressed()),
             SLOT(on_buttonBox_accepted()));
-}
-
-ScrobblerSettings::~ScrobblerSettings() {
-    delete ui;
 }
 
 void ScrobblerSettings::on_buttonBox_accepted() {
