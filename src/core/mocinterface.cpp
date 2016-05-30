@@ -89,21 +89,23 @@ bool MocInterface::appendFile(QStringList files) {
     return execute("mocp", QStringList() << "-a" << files);
 }
 
-void MocInterface::getInfo() {
+State MocInterface::getInfo() {
     QString info = getOutput("mocp", QStringList() << "-Q" << "\"{s}%state{a}%a"
         "{t}%t{A}%A{f}%file{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\"");
-    if(info.size() < 1) {
-        track.state = "Offline";
-        return;
-    }
+    if(info.size() < 1)
+        return Offline;
     QRegExp infoRgx("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)\\{f\\}(.*)"
                     "\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)\\{ts\\}(.*)"
                     "\\{cs\\}(.*)\\{T\\}(.*)\\{end\\}");
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
-    track.state = infoRgx.cap(1);
-    if(track.state == "STOP")
-        return;
+    if(infoRgx.cap(1) == QLatin1String("STOP"))
+        return Stop;
+    State state = Offline;
+    if(infoRgx.cap(1) == QLatin1String("PLAY"))
+        state = Play;
+    else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
+        state = Pause;
     track.artist = infoRgx.cap(2);
     track.song = infoRgx.cap(3);
     track.album = infoRgx.cap(4);
@@ -115,7 +117,7 @@ void MocInterface::getInfo() {
     track.currSec = infoRgx.cap(10).toInt();
     track.title = infoRgx.cap(11);
     if(!track.file.startsWith("http"))
-        return;
+        return state;
     track.totalSec = 8*60;
     if(!track.title.isEmpty()) {
         QRegExp artistRgx("^(.*)\\s-\\s");
@@ -126,4 +128,5 @@ void MocInterface::getInfo() {
         titleRgx.indexIn(track.title);
         track.song = titleRgx.cap(1);
     }
+    return state;
 }

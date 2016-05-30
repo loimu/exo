@@ -90,7 +90,7 @@ QString PlayerInterface::cover() {
 }
 
 void PlayerInterface::update() {
-    getInfo();
+    State currentStatus = getInfo();
 #ifdef BUILD_DBUS
     static QString title = QString();
     if(title != track.title) {
@@ -98,16 +98,18 @@ void PlayerInterface::update() {
         emit newTrack();
     }
 #endif // BUILD_DBUS
-    static QString status = QString();
-    if(status != track.state) {
-        status = track.state;
+    static State status = Offline;
+    if(status != currentStatus) {
+        status = currentStatus;
         emit newStatus(status);
-        if(status == "Offline")
+        if(status == Offline)
             emit updateStatus(tr("Player isn't running."), "", "", "");
-        if(status.startsWith("stop", Qt::CaseInsensitive))
+        if(status == Stop)
             emit updateStatus(tr("Stopped"), "", "", "");
+        if(status == Pause)
+            emit updateStatus(track.title, track.currTime, track.totalTime,cover());
     }
-    if(track.state.startsWith("play", Qt::CaseInsensitive)) {
+    if(status == Play) {
         emit updateStatus(track.title, track.currTime, track.totalTime,cover());
         scrobble();
     }

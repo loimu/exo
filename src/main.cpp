@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     }
     QCoreApplication::setOrganizationName("exo");
     QCoreApplication::setApplicationName("eXo");
-    QCoreApplication::setApplicationVersion("0.6.1");
+    QCoreApplication::setApplicationVersion("0.7");
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     Exo app(argc, argv, useGui);
     return app.exec();

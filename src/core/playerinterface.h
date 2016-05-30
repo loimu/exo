@@ -24,9 +24,13 @@
 
 #include <QObject>
 
+enum State {
+    Offline, Stop, Pause, Play
+};
+
 struct Track
 {
-    QString state, artist, song, album, file, totalTime, currTime, title;
+    QString artist, song, album, file, totalTime, currTime, title;
     int number, totalSec, currSec;
 };
 
@@ -59,7 +63,7 @@ signals:
     // signal for trayicon
     void updateStatus(QString, QString, QString, QString);
     // two signals for MPRIS
-    void newStatus(QString);
+    void newStatus(State);
     void newTrack();
 
 public slots:
@@ -80,7 +84,7 @@ public slots:
     virtual bool appendFile(QStringList files) = 0;
 
 protected slots:
-    virtual void getInfo() = 0;
+    virtual State getInfo() = 0;
 
 private slots:
     void update();

@@ -28,7 +28,7 @@ PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent),
     track(PlayerInterface::self()->trackObject()),
     trackID("/org/exo/MediaPlayer2/Track/0")
 {
-    connect(player, SIGNAL(newStatus(QString)),SLOT(emitPropsChanged(QString)));
+    connect(player, SIGNAL(newStatus(State)),SLOT(emitPropsChanged(State)));
     connect(player, SIGNAL(newTrack()), SLOT(trackChanged()));
 }
 
@@ -70,9 +70,9 @@ QVariantMap PlayerObject::metadata() const {
 }
 
 QString PlayerObject::playbackStatus() const {
-    if(status.startsWith("play", Qt::CaseInsensitive))
+    if(status == State::Play)
         return "Playing";
-    else if(status.startsWith("pause", Qt::CaseInsensitive))
+    else if(status == State::Pause)
         return "Paused";
     return "Stopped";
 }
@@ -93,10 +93,10 @@ void PlayerObject::setVolume(double value) {
 
 void PlayerObject::trackChanged() {
     trackID = QDBusObjectPath(QString("/org/exo/MediaPlayer2/Track/%1").arg(qrand()));
-    emitPropsChanged("PLAY");
+    emitPropsChanged(State::Play);
 }
 
-void PlayerObject::emitPropsChanged(QString st) {
+void PlayerObject::emitPropsChanged(State st) {
     status = st;
     QList<QByteArray> changedProps;
     if(props["CanSeek"] != canSeek())

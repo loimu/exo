@@ -48,7 +48,7 @@ public slots:
     bool appendFile(QStringList);
 
 protected slots:
-    void getInfo();
+    State getInfo();
 };
 
 #endif // MOCINTERFACE_H
