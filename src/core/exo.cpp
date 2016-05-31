@@ -28,7 +28,7 @@
 #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
 #ifdef USE_CMUS
-#include "cmusinterface.h"
+#include "core/cmusinterface.h"
 #else // USE_CMUS
 #include "core/mocinterface.h"
 #endif // USE_CMUS

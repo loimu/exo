@@ -18,6 +18,7 @@
 * ======================================================================== */
 
 #include <QStringList>
+#include <QTime>
 
 #include "cmusinterface.h"
 
@@ -38,7 +39,7 @@ bool CmusInterface::isPlayerRunning() {
 
 bool CmusInterface::runPlayer() {
     QString term = "x-terminal-emulator";
-    // falling back to xterm if there's no "alternatives"
+    // falling back to xterm if there're no alternatives
     if(getOutput("which", QStringList() << term).length() < 1)
         term = "xterm";
     return execute(term, QStringList() << "-e" << "cmus");
@@ -65,17 +66,19 @@ bool CmusInterface::jump(int pos) {
 }
 
 bool CmusInterface::seek(int offset) {
-    QString o = (offset > 0) ? "+" + offset : QString::number(offset);
+    QString o = (offset > 0) ? QLatin1String("+") + QString::number(offset) : QString::number(offset);
     return execute("cmus-remote", QStringList() << "-k" << o);
 }
 
 bool CmusInterface::volume(int lev) {
-    return execute("cmus-remote", QStringList() << "-k" <<QString::number(lev));
+    return execute("cmus-remote", QStringList() << "-v" << QString::number(lev)
+                   + QLatin1String("%"));
 }
 
 bool CmusInterface::changeVolume(int delta) {
-    QString d = (delta > 0) ? "+" + delta : QString::number(delta);
-    return execute("cmus-remote", QStringList() << "-k" << d);
+    QString d = ((delta > 0) ? QLatin1String("+") + QString::number(delta) : QString::number(delta))
+            + QLatin1String("%");
+    return execute("cmus-remote", QStringList() << "-v" << d);
 }
 
 bool CmusInterface::showPlayer() {
@@ -97,35 +100,41 @@ QString CmusInterface::find(QString string, const QString regEx) {
     return findRgx.cap(1);
 }
 
-void CmusInterface::getInfo() {
+State CmusInterface::getInfo() {
     QString info = getOutput("cmus-remote", QStringList() << "-Q");
-    if(info.size() < 1) {
-        track.state = "Offline";
-        return;
-    }
-    track.state = find(info, "status\\s(.*)\\n");
-    if(track.state == "stopped")
-        return;
+    if(info.size() < 1)
+        return Offline;
+    QString string = find(info, "status\\s(.*)\\n");
+    if(string == "stopped")
+        return Stop;
+    State state = Offline;
+    if(string == "playing")
+        state = Play;
+    if(string == "paused")
+        state = Pause;
     track.artist = find(info, "tag\\sartist\\s(.*)\\n");
     track.song = find(info, "tag\\stitle\\s(.*)\\n");
     track.album = find(info, "tag\\salbum\\s(.*)\\n");
     track.file = find(info, "file\\s(.*)\\n");
-    track.totalTime = find(info, "duration\\s(.*)\\n");
-    track.currTime = find(info, "position\\s(.*)\\n");
-    track.totalSec = track.totalTime.toInt();
-    track.currSec = track.currTime.toInt();
-    track.title = track.song;
+    track.totalSec = find(info, "duration\\s(.*)\\n").toInt();
+    track.currSec = find(info, "position\\s(.*)\\n").toInt();
+    track.totalTime = QTime().addSecs(track.totalSec).toString("mm:ss");
+    track.currTime = QTime().addSecs(track.currSec).toString("mm:ss");
     track.number = find(info, "tag\\stracknumber\\s(.*)\\n").toInt();
+    track.title = track.artist.isEmpty() ? track.song : track.artist + " - " + track.song;
     if(!track.file.startsWith("http"))
-        return;
+        return state;
+    QString song = find(info, "stream\\s(.*)\\n");
+    track.title += QLatin1String("<br />") + song;
     track.totalSec = 8*60;
-    if(!track.title.isEmpty()) {
+    if(!song.isEmpty()) {
         QRegExp artistRgx("^(.*)\\s-\\s");
         artistRgx.setMinimal(true);
-        artistRgx.indexIn(track.title);
+        artistRgx.indexIn(song);
         track.artist = artistRgx.cap(1);
         QRegExp titleRgx("\\s-\\s(.*)$");
-        titleRgx.indexIn(track.title);
+        titleRgx.indexIn(song);
         track.song = titleRgx.cap(1);
     }
+    return state;
 }

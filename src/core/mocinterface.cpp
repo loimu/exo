@@ -71,7 +71,7 @@ SEND_COMMAND_PARAM(changeVolume, "-v+%1")
 
 bool MocInterface::showPlayer() {
     QString term = "x-terminal-emulator";
-    // falling back to xterm if there's no "alternatives"
+    // falling back to xterm if there're no alternatives
     if(getOutput("which", QStringList() << term).length() < 1)
         term = "xterm";
 #ifdef OSD_OPT

@@ -49,7 +49,7 @@ public slots:
     bool appendFile(QStringList);
 
 protected slots:
-    void getInfo();
+    State getInfo();
 };
 
 #endif // CMUSINTERFACE_H
