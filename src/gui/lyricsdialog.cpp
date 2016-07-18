@@ -29,8 +29,8 @@
 
 LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent),
     ui(new Ui::LyricsDialog),
-    replyObject(nullptr),
-    httpObject(new QNetworkAccessManager(this))
+    httpObject(new QNetworkAccessManager(this)),
+    replyObject(nullptr)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Dialog);

@@ -40,8 +40,8 @@
 TrayIcon* TrayIcon::object = nullptr;
 
 TrayIcon::TrayIcon(QObject *parent) :
-    bookmarkManager(new BookmarkManager(this)),
-    player(PlayerInterface::self())
+    player(PlayerInterface::self()),
+    bookmarkManager(new BookmarkManager(this))
 {
     object = this;
     createActions();

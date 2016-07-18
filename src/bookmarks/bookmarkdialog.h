@@ -26,7 +26,7 @@
 
 class QLineEdit;
 class QListWidget;
-class BookmarkEntry;
+struct BookmarkEntry;
 
 class BookmarkDialog : public QWidget
 {
