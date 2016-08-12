@@ -29,8 +29,7 @@
 
 BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QWidget(parent),
     list_(list),
-    // use local copy of the list
-    list(*list)
+    list(*list) // use local copy of the list
 {
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);

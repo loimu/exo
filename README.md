@@ -10,7 +10,7 @@
 mkdir build && cd build
 cmake ..
 make
-./exo
+./src/exo
 ```
 
 ### Building with Qt5 ###
@@ -19,7 +19,7 @@ make
 mkdir build && cd build
 cmake -DBUILD_WITH_QT4=OFF ..
 make
-./exo
+./src/exo
 ```
 NOTE: you should link against the Qt5 version of liblastfm or program will crash
 
