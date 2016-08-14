@@ -50,7 +50,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
-    if(!QString(getenv("TERM")).startsWith("linux"))
+    if(!QString(getenv("DISPLAY")).isEmpty())
         new DBus(this);
 #endif // BUILD_DBUS
 
