@@ -53,32 +53,33 @@ bool PlayerObject::canPlay() const {
 }
 
 bool PlayerObject::canSeek() const {
-    return !track->file.startsWith("http");
+    return !track->file.startsWith(QLatin1String("http"));
 }
 
 QVariantMap PlayerObject::metadata() const {
     QVariantMap map;
-    map["mpris:length"] = track->totalSec * 1000000;
-    map["mpris:artUrl"] = player->artwork();
-    map["mpris:trackid"] = QVariant::fromValue<QDBusObjectPath>(trackID);
-    map["xesam:album"] = track->album;
-    map["xesam:artist"] = QStringList() << track->artist;
-    map["xesam:title"] = track->song.isEmpty() ? track->title : track->song;
+    map[QLatin1String("mpris:length")] = track->totalSec * 1000000;
+    map[QLatin1String("mpris:artUrl")] = player->artwork();
+    map[QLatin1String("mpris:trackid")] = QVariant::fromValue<QDBusObjectPath>(trackID);
+    map[QLatin1String("xesam:album")] = track->album;
+    map[QLatin1String("xesam:artist")] = QStringList() << track->artist;
+    map[QLatin1String("xesam:title")] = track->song.isEmpty() ? track->title : track->song;
     QString uri = track->file;
-    map["xesam:url"] = uri.startsWith("http") ? uri : "file://" + uri;
+    map[QLatin1String("xesam:url")] = uri.startsWith(
+                QLatin1String("http")) ? uri : QLatin1String("file://") + uri;
     return map;
 }
 
 QString PlayerObject::playbackStatus() const {
     if(status == State::Play)
-        return "Playing";
+        return QLatin1String("Playing");
     else if(status == State::Pause)
-        return "Paused";
-    return "Stopped";
+        return QLatin1String("Paused");
+    return QLatin1String("Stopped");
 }
 
 qlonglong PlayerObject::position() const {
-    if(!track->file.startsWith("http"))
+    if(!track->file.startsWith(QLatin1String("http")))
         return track->currSec * 1000000;
 }
 
@@ -92,28 +93,30 @@ void PlayerObject::setVolume(double value) {
 }
 
 void PlayerObject::trackChanged() {
-    trackID = QDBusObjectPath(QString("/org/exo/MediaPlayer2/Track/%1").arg(qrand()));
+    trackID = QDBusObjectPath(
+                QString(QLatin1String("/org/exo/MediaPlayer2/Track/%1")).arg(qrand()));
     emitPropsChanged(State::Play);
 }
 
 void PlayerObject::emitPropsChanged(State st) {
     status = st;
     QList<QByteArray> changedProps;
-    if(props["CanSeek"] != canSeek())
-        changedProps << "CanSeek";
-    if(props["PlaybackStatus"] != playbackStatus())
-        changedProps << "PlaybackStatus";
-    if(props["Metadata"] != metadata())
-        changedProps << "Metadata";
+    if(props[QLatin1String("CanSeek")] != canSeek())
+        changedProps << QByteArray("CanSeek");
+    if(props[QLatin1String("PlaybackStatus")] != playbackStatus())
+        changedProps << QByteArray("PlaybackStatus");
+    if(props[QLatin1String("Metadata")] != metadata())
+        changedProps << QByteArray("Metadata");
     if(changedProps.isEmpty())
         return;
     syncProperties();
     QVariantMap map;
     for(QByteArray name : changedProps)
         map.insert(name, props.value(name));
-    QDBusMessage msg = QDBusMessage::createSignal("/org/mpris/MediaPlayer2",
-                                                  "org.freedesktop.DBus.Properties",
-                                                  "PropertiesChanged");
+    QDBusMessage msg = QDBusMessage::createSignal(
+                QLatin1String("/org/mpris/MediaPlayer2"),
+                QLatin1String("org.freedesktop.DBus.Properties"),
+                QLatin1String("PropertiesChanged"));
     msg << "org.mpris.MediaPlayer2.Player";
     msg << map;
     msg << QStringList();
@@ -159,11 +162,11 @@ void PlayerObject::OpenUri(const QString &Uri) {
 }
 
 void PlayerObject::syncProperties() {
-    props["CanGoNext"] = canGoNext();
-    props["CanGoPrevious"] = canGoPrevious();
-    props["CanPause"] = canPause();
-    props["CanPlay"] = canPlay();
-    props["CanSeek"] = canSeek();
-    props["PlaybackStatus"] = playbackStatus();
-    props["Metadata"] = metadata();
+    props[QLatin1String("CanGoNext")] = canGoNext();
+    props[QLatin1String("CanGoPrevious")] = canGoPrevious();
+    props[QLatin1String("CanPause")] = canPause();
+    props[QLatin1String("CanPlay")] = canPlay();
+    props[QLatin1String("CanSeek")] = canSeek();
+    props[QLatin1String("PlaybackStatus")] = playbackStatus();
+    props[QLatin1String("Metadata")] = metadata();
 }

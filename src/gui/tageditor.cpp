@@ -25,7 +25,7 @@
 TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
 {
     editorPath = text;
-    QString app = text.split("/").last();
+    QString app = text.split(QLatin1String("/")).last();
     this->setText(app.left(1).toUpper() + app.mid(1));
     this->setIcon(QIcon::fromTheme(app));
     connect(this, SIGNAL(triggered(bool)), this, SLOT(open()));
@@ -33,7 +33,7 @@ TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, paren
 
 void TagEditor::open() {
     QString file = PlayerInterface::self()->trackObject()->file;
-    if(file.startsWith("/")) {
+    if(file.startsWith(QLatin1String("/"))) {
         QProcess proc;
         proc.start(editorPath, QStringList() << file);
         proc.waitForFinished(-1);

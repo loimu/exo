@@ -50,15 +50,16 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
-    if(!QString(getenv("DISPLAY")).isEmpty())
+    if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
         new DBus(this);
 #endif // BUILD_DBUS
 
 #ifdef BUILD_LASTFM
     QSettings settings;
-    if(settings.value("scrobbler/enabled").toBool())
+    if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
         loadScrobbler(true);
-    if(!useGui && (reauth || !settings.value("scrobbler/sessionkey").toBool()))
+    if(!useGui && (reauth|| !settings.value(
+                       QLatin1String("scrobbler/sessionkey")).toBool()))
         new ConsoleAuth(this);
 #endif // BUILD_LASTFM
 
@@ -70,7 +71,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 
 Exo::~Exo() {
     QSettings settings;
-    if(settings.value("player/quit").toBool())
+    if(settings.value(QLatin1String("player/quit")).toBool())
        PlayerInterface::self()->quit();
     if(TrayIcon::self())
         TrayIcon::self()->deleteLater();

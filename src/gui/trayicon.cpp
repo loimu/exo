@@ -83,23 +83,30 @@ void TrayIcon::createActions() {
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     quitAction->setIcon(QIcon(QLatin1String(":/images/close.png")));
     bookmarkCurrentAction = new QAction(tr("Bookmark Current"), this);
-    connect(bookmarkCurrentAction, SIGNAL(triggered()), bookmarkManager, SLOT(addCurrent()));
-    bookmarkCurrentAction->setIcon(QIcon::fromTheme(QLatin1String("bookmark-new-list")));
+    connect(bookmarkCurrentAction, SIGNAL(triggered()),
+            bookmarkManager, SLOT(addCurrent()));
+    bookmarkCurrentAction->setIcon(
+                QIcon::fromTheme(QLatin1String("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark Manager"), this);
-    connect(bookmarkManagerAction, SIGNAL(triggered()), bookmarkManager, SLOT(manager()));
-    bookmarkManagerAction->setIcon(QIcon::fromTheme(QLatin1String("bookmarks-organize")));
+    connect(bookmarkManagerAction, SIGNAL(triggered()),
+            bookmarkManager, SLOT(manager()));
+    bookmarkManagerAction->setIcon(
+                QIcon::fromTheme(QLatin1String("bookmarks-organize")));
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
     QSettings settings;
-    setQuitBehaviourAction->setChecked(settings.value("player/quit").toBool());
+    setQuitBehaviourAction->setChecked(
+                settings.value(QLatin1String("player/quit")).toBool());
     connect(setQuitBehaviourAction, SIGNAL(triggered(bool)),
             SLOT(setQuitBehaviour(bool)));
 
 #ifdef BUILD_LASTFM
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
-    setScrobblingAction->setChecked(settings.value("scrobbler/enabled").toBool());
-    connect(setScrobblingAction, SIGNAL(triggered(bool)), SLOT(enableScrobbler(bool)));
+    setScrobblingAction->setChecked(
+                settings.value(QLatin1String("scrobbler/enabled")).toBool());
+    connect(setScrobblingAction, SIGNAL(triggered(bool)),
+            SLOT(enableScrobbler(bool)));
 #endif // BUILD_LASTFM
 }
 
@@ -111,10 +118,14 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(lyricsAction);
     // detect tag editors
     QProcess proc;
-    proc.start("which", QStringList() << "picard" << "kid3" << "easytag" << "puddletag");
+    proc.start(QLatin1String("which"), QStringList()
+               << QLatin1String("picard")
+               << QLatin1String("kid3")
+               << QLatin1String("easytag")
+               << QLatin1String("puddletag"));
     proc.waitForFinished(-1);
     QStringList editors = QString::fromUtf8(proc.readAllStandardOutput())
-            .split("\n", QString::SkipEmptyParts);
+            .split(QLatin1String("\n"), QString::SkipEmptyParts);
     if(editors.length() > 0) {
         QMenu* tagEditorsMenu = new QMenu(this);
         tagEditorsMenu->setTitle(tr("Edit with"));
@@ -154,7 +165,7 @@ void TrayIcon::createTrayIcon() {
     // tray icon setup
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
-    QIcon icon(":/images/32.png");
+    QIcon icon(QLatin1String(":/images/32.png"));
     trayIcon->setIcon(icon);
     // event filter needed for corresponding method in this class
     trayIcon->installEventFilter(this);
@@ -194,11 +205,11 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
 void TrayIcon::updateToolTip(QString message, QString currentTime,
                              QString totalTime, QString cover) {
     // it seems that tooltip with fixed size looks better
-    QString tooltip = "<table width=\"300\"><tr><td><b>" + message +
-            "</b></td></tr></table>";
+    QString tooltip = QLatin1String("<table width=\"300\"><tr><td><b>") +message
+            + QLatin1String("</b></td></tr></table>");
     if(!cover.isEmpty()) {
-        tooltip.append(QString("<br />Current time: %1/%2<br />"
-                               "<img src=\"%3\" width=\"300\" height=\"300\" />")
+        tooltip.append(QString(QLatin1String("<br />Current time: %1/%2<br />"
+                               "<img src=\"%3\" width=\"300\" height=\"300\" />"))
                        .arg(currentTime).arg(totalTime).arg(cover));
     }
     trayIcon->setToolTip(tooltip);
@@ -218,13 +229,15 @@ void TrayIcon::showAboutDialog() {
 
 void TrayIcon::setQuitBehaviour(bool checked) {
     QSettings settings;
-    settings.setValue("player/quit", checked);
+    settings.setValue(QLatin1String("player/quit"), checked);
 }
 
 void TrayIcon::addFiles() {
-    QStringList files = QFileDialog::getOpenFileNames(this, "Add files to"
-                                                            " playlist", "",
-                                   "Media (*.pls *.m3u *.ogg *.mp3 *.flac)");
+    QStringList files = QFileDialog::getOpenFileNames(
+                this,
+                QLatin1String("Add files to playlist"),
+                QString(),
+                QLatin1String("Media (*.pls *.m3u *.ogg *.mp3 *.flac)"));
     player->appendFile(files);
 }
 
@@ -245,8 +258,8 @@ void TrayIcon::refreshBookmarks() {
 #ifdef BUILD_LASTFM
 void TrayIcon::enableScrobbler(bool checked) {
     QSettings settings;
-    if(settings.value("scrobbler/sessionkey").toBool()) {
-        settings.setValue("scrobbler/enabled", checked);
+    if(settings.value(QLatin1String("scrobbler/sessionkey")).toBool()) {
+        settings.setValue(QLatin1String("scrobbler/enabled"), checked);
         Exo::self()->loadScrobbler(checked);
     } else
         if(checked) {

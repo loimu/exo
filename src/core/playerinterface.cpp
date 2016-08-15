@@ -61,7 +61,7 @@ void PlayerInterface::scrobble() {
         emit trackChanged(track.artist, track.song, track.totalSec);
         return;
     }
-    if(track.file.startsWith("http"))
+    if(track.file.startsWith(QLatin1String("http")))
         return;
     if(listened && ((track.currSec < track.totalSec/2 && track.totalSec < 8*60)
                     || (track.currSec < 4*60 && track.totalSec > 8*60))) {
@@ -75,18 +75,20 @@ void PlayerInterface::scrobble() {
 }
 
 QString PlayerInterface::cover() {
-    if(track.file.startsWith("http"))
+    if(track.file.startsWith(QLatin1String("http")))
         return "";
     QString path = track.file;
-    path.replace(QRegExp("(.*)/(.*)"), "\\1");
+    path.replace(QRegExp(QLatin1String("(.*)/(.*)")), QLatin1String("\\1"));
     QDir dir(path);
     QStringList filters;
-    filters << "*.png" << "*.jpg" << "*.jpeg";
+    filters << QLatin1String("*.png")
+            << QLatin1String("*.jpg")
+            << QLatin1String("*.jpeg");
     dir.setNameFilters(filters);
     if(dir.entryList().size() > 0)
-        return path + "/" + dir.entryList().at(0);
+        return path + QLatin1String("/") + dir.entryList().at(0);
     else
-        return ":/images/nocover.png";
+        return QLatin1String(":/images/nocover.png");
 }
 
 void PlayerInterface::update() {
@@ -103,9 +105,10 @@ void PlayerInterface::update() {
         status = currentStatus;
         emit newStatus(status);
         if(status == Offline)
-            emit updateStatus(tr("Player isn't running."), "", "", "");
+            emit updateStatus(tr("Player isn't running."), QString(), QString(),
+                              QString());
         if(status == Stop)
-            emit updateStatus(tr("Stopped"), "", "", "");
+            emit updateStatus(tr("Stopped"), QString(), QString(), QString());
         if(status == Pause)
             emit updateStatus(track.title, track.currTime, track.totalTime,cover());
     }
@@ -119,7 +122,8 @@ void PlayerInterface::update() {
 QString PlayerInterface::artwork() {
     // compliance method for MPRIS
     QString art = cover();
-    return (art == ":/images/nocover.png" || art == "") ? "" : "file://" + art;
+    return (art == QLatin1String(":/images/nocover.png")
+            || art.isEmpty()) ? QString() : QLatin1String("file://") + art;
 }
 #endif // BUILD_DBUS
 

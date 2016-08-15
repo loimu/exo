@@ -24,6 +24,7 @@
 
 class CmusInterface : public PlayerInterface
 {
+    QString cli;
     bool isPlayerRunning();
     bool runPlayer();
     QString find(QString, const QString);

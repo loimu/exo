@@ -28,18 +28,21 @@
 DBus::DBus(QObject *parent) : QObject(parent)
 {
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject("/Exo", new ExoObject(this), QDBusConnection::ExportAllContents);
-    bool registered = connection.registerService("tk.loimu.exo");
+    connection.registerObject(QLatin1String("/Exo"), new ExoObject(this),
+                              QDBusConnection::ExportAllContents);
+    bool registered = connection.registerService(QLatin1String("tk.loimu.exo"));
     if(!registered)
         qFatal("Only one instance of application is allowed.\n");
     new RootObject(this);
     new PlayerObject(this);
-    connection.registerObject("/org/mpris/MediaPlayer2", this);
-    connection.registerService("org.mpris.MediaPlayer2.exo");
+    connection.registerObject(QLatin1String("/org/mpris/MediaPlayer2"), this);
+    connection.registerService(QLatin1String("org.mpris.MediaPlayer2.exo"));
 }
 
 DBus::~DBus()
 {
-    QDBusConnection::sessionBus().unregisterService("tk.loimu.exo");
-    QDBusConnection::sessionBus().unregisterService("org.mpris.MediaPlayer2.exo");
+    QDBusConnection::sessionBus().unregisterService(
+                QLatin1String("tk.loimu.exo"));
+    QDBusConnection::sessionBus().unregisterService(
+                QLatin1String("org.mpris.MediaPlayer2.exo"));
 }

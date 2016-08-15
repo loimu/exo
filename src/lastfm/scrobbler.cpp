@@ -36,11 +36,13 @@ const char* Scrobbler::secret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
 
 Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
     QSettings settings;
-    lastfm::ws::Username = settings.value("scrobbler/login").toString();
-    lastfm::ws::SessionKey = settings.value("scrobbler/sessionkey").toString();
+    lastfm::ws::Username = settings.value(
+                QLatin1String("scrobbler/login")).toString();
+    lastfm::ws::SessionKey = settings.value(
+                QLatin1String("scrobbler/sessionkey")).toString();
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
-    as = new lastfm::Audioscrobbler("eXo");
+    as = new lastfm::Audioscrobbler(QLatin1String("eXo"));
 }
 
 Scrobbler::~Scrobbler() {

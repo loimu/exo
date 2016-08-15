@@ -26,16 +26,17 @@ int main(int argc, char *argv[]) {
     bool useGui = true;
     for(int i=1; i<argc; i++) {
         QByteArray arg = argv[i];
-        if(arg == "-d" || arg == "--daemonize")
+        if(arg == QByteArray("-d") || arg == QByteArray("--daemonize")) {
             useGui = false;
-        if(arg == "-f" || arg == "--force-reauth") {
+        }
+        if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
             useGui = false;
             Exo::forceReauth();
         }
     }
-    QCoreApplication::setOrganizationName("exo");
-    QCoreApplication::setApplicationName("eXo");
-    QCoreApplication::setApplicationVersion("0.7");
+    QCoreApplication::setOrganizationName(QLatin1String("exo"));
+    QCoreApplication::setApplicationName(QLatin1String("eXo"));
+    QCoreApplication::setApplicationVersion(QLatin1String("0.7"));
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     Exo app(argc, argv, useGui);
     return app.exec();

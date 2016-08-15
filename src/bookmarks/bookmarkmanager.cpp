@@ -34,11 +34,12 @@ BookmarkManager::BookmarkManager(QObject *parent) : QObject(parent)
 void BookmarkManager::refreshList() {
     list.clear();
     QSettings settings;
-    QString string = settings.value("bookmarkmanager/bookmarks").toString();
-    QStringList stringList = string.split(";");
+    QString string = settings.value(
+                QLatin1String("bookmarkmanager/bookmarks")).toString();
+    QStringList stringList = string.split(QLatin1String(";"));
     if(stringList.size() > 0) {
         for(QString str : stringList) {
-            QStringList bookmark = str.split("|");
+            QStringList bookmark = str.split(QLatin1String("|"));
             if(bookmark.size() == 2) {
                 BookmarkEntry entry;
                 entry.name = bookmark.at(0);
@@ -80,10 +81,10 @@ void BookmarkManager::save() {
     int count = 0;
     for(BookmarkEntry entry : list) {
         if(count)
-            string.append(";");
-        string.append(entry.name + "|" + entry.uri);
+            string.append(QLatin1String(";"));
+        string.append(entry.name + QLatin1String("|") + entry.uri);
         count++;
     }
-    settings.setValue("bookmarkmanager/bookmarks", string);
+    settings.setValue(QLatin1String("bookmarkmanager/bookmarks"), string);
     emit refreshBookmarks();
 }

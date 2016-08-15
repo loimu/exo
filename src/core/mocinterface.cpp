@@ -31,72 +31,84 @@ MocInterface::MocInterface(QObject *parent) :PlayerInterface(parent)
 }
 
 QString MocInterface::id() {
-    return "music on console";
+    return QLatin1String("music on console");
 }
 
 bool MocInterface::isServerRunning() {
-    return getOutput("pidof", QStringList() << "mocp").length() > 1;
+    return getOutput(QLatin1String("pidof"), QStringList()
+                     << QLatin1String("mocp")).length() > 1;
 }
 
 bool MocInterface::runServer() {
 #ifdef OSD_OPT
-    return execute("mocp", QStringList() << "-SO" << OSD_OPT);
+    return execute(QLatin1String("mocp"), QStringList() << QLatin1String("-SO")
+                   << QLatin1String(OSD_OPT));
 #else //OSD_OPT
-    return execute("mocp", QStringList() << "-S");
+    return execute(QLatin1String("mocp"), QStringList() << QLatin1String("-S"));
 #endif // OSD_OPT
 }
 
 #define SEND_COMMAND(__method, __option)\
     bool MocInterface::__method() {\
-        return execute("mocp", QStringList() << __option);\
+        return execute(QLatin1String("mocp"), QStringList() << __option);\
     }
 
-SEND_COMMAND(play, "-p")
-SEND_COMMAND(pause,"-P")
-SEND_COMMAND(playPause,"-G")
-SEND_COMMAND(prev, "-r")
-SEND_COMMAND(next, "-f")
-SEND_COMMAND(stop, "-s")
-SEND_COMMAND(quit, "-x")
+SEND_COMMAND(play, QLatin1String("-p"))
+SEND_COMMAND(pause,QLatin1String("-P"))
+SEND_COMMAND(playPause, QLatin1String("-G"))
+SEND_COMMAND(prev, QLatin1String("-r"))
+SEND_COMMAND(next, QLatin1String("-f"))
+SEND_COMMAND(stop, QLatin1String("-s"))
+SEND_COMMAND(quit, QLatin1String("-x"))
 
 #define SEND_COMMAND_PARAM(__method, __option)\
     bool MocInterface::__method(int param) {\
-        return execute("mocp", QStringList() << QString(__option).arg(param));\
+        return execute(QLatin1String("mocp"), QStringList() << QString(__option).arg(param));\
     }
 
-SEND_COMMAND_PARAM(jump, "-j%1s")
-SEND_COMMAND_PARAM(seek, "-k%1")
-SEND_COMMAND_PARAM(volume, "-v%1")
-SEND_COMMAND_PARAM(changeVolume, "-v+%1")
+SEND_COMMAND_PARAM(jump, QLatin1String("-j%1s"))
+SEND_COMMAND_PARAM(seek, QLatin1String("-k%1"))
+SEND_COMMAND_PARAM(volume, QLatin1String("-v%1"))
+SEND_COMMAND_PARAM(changeVolume, QLatin1String("-v+%1"))
 
 bool MocInterface::showPlayer() {
-    QString term = "x-terminal-emulator";
+    QString term = QLatin1String("x-terminal-emulator");
     // falling back to xterm if there're no alternatives
-    if(getOutput("which", QStringList() << term).length() < 1)
-        term = "xterm";
+    if(getOutput(QLatin1String("which"), QStringList() << term).length() < 1)
+        term = QLatin1String("xterm");
 #ifdef OSD_OPT
-    return execute(term, QStringList() << "-e" << "mocp" << "-O" << OSD_OPT);
+    return execute(term, QStringList() << QLatin1String("-e")
+                   << QLatin1String("mocp")
+                   << QLatin1String("-O")
+                   << QLatin1String(OSD_OPT));
 #else // OSD_OPT
-    return execute(term, QStringList() << "-e" << "mocp");
+    return execute(term, QStringList() << QLatin1String("-e")
+                   << QLatin1String("mocp"));
 #endif // OSD_OPT
 }
 
 bool MocInterface::openUri(const QString file) {
-    return execute("mocp", QStringList() << "-l" << file);
+    return execute(QLatin1String("mocp"), QStringList()
+                   << QLatin1String("-l")
+                   << file);
 }
 
 bool MocInterface::appendFile(QStringList files) {
-    return execute("mocp", QStringList() << "-a" << files);
+    return execute(QLatin1String("mocp"), QStringList()
+                   << QLatin1String("-a")
+                   << files);
 }
 
 State MocInterface::getInfo() {
-    QString info = getOutput("mocp", QStringList() << "-Q" << "\"{s}%state{a}%a"
-        "{t}%t{A}%A{f}%file{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\"");
+    QString info = getOutput(QLatin1String("mocp"), QStringList()
+                             << QLatin1String("-Q")
+                             << QLatin1String("\"{s}%state{a}%a{t}%t{A}%A{f}%file"
+                            "{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\""));
     if(info.size() < 1)
         return Offline;
-    QRegExp infoRgx("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)\\{f\\}(.*)"
-                    "\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)\\{ts\\}(.*)"
-                    "\\{cs\\}(.*)\\{T\\}(.*)\\{end\\}");
+    QRegExp infoRgx(QLatin1String("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                    "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)\\{ts\\}(.*)"
+                    "\\{cs\\}(.*)\\{T\\}(.*)\\{end\\}"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
     if(infoRgx.cap(1) == QLatin1String("STOP"))
@@ -116,15 +128,15 @@ State MocInterface::getInfo() {
     track.totalSec = infoRgx.cap(9).toInt();
     track.currSec = infoRgx.cap(10).toInt();
     track.title = infoRgx.cap(11);
-    if(!track.file.startsWith("http"))
+    if(!track.file.startsWith(QLatin1String("http")))
         return state;
     track.totalSec = 8*60;
     if(!track.title.isEmpty()) {
-        QRegExp artistRgx("^(.*)\\s-\\s");
+        QRegExp artistRgx(QLatin1String("^(.*)\\s-\\s"));
         artistRgx.setMinimal(true);
         artistRgx.indexIn(track.title);
         track.artist = artistRgx.cap(1);
-        QRegExp titleRgx("\\s-\\s(.*)$");
+        QRegExp titleRgx(QLatin1String("\\s-\\s(.*)$"));
         titleRgx.indexIn(track.title);
         track.song = titleRgx.cap(1);
     }
