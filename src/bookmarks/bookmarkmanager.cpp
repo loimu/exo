@@ -23,9 +23,6 @@
 #include "bookmarkdialog.h"
 #include "bookmarkmanager.h"
 
-// maximal amount of bookmarks
-#define MAX_SIZE 10
-
 BookmarkManager::BookmarkManager(QObject *parent) : QObject(parent)
 {
     refreshList();
@@ -60,7 +57,7 @@ void BookmarkManager::addCurrent() {
     BookmarkEntry entry;
     entry.uri  = PlayerInterface::self()->trackObject()->file;
     entry.name = entry.uri;
-    if(entry.uri.isEmpty() || list.size() >= MAX_SIZE)
+    if(entry.uri.isEmpty())
         return;
     list.append(entry);
     save();
