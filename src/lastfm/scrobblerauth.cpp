@@ -17,17 +17,19 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include "config.h"
+
 #include <QSettings>
 
-#ifdef Q_QT5
-    #include <lastfm5/ws.h>
-    #include <lastfm5/misc.h>
-    #include <lastfm5/XmlQuery.h>
-#else
+#ifdef BUILD_WITH_QT4
     #include <lastfm/ws.h>
     #include <lastfm/misc.h>
     #include <lastfm/XmlQuery.h>
-#endif // Q_QT5
+#else
+    #include <lastfm5/ws.h>
+    #include <lastfm5/misc.h>
+    #include <lastfm5/XmlQuery.h>
+#endif // BUILD_WITH_QT4
 
 #include "core/exo.h"
 #include "lastfm/scrobbler.h"

@@ -23,5 +23,6 @@
 #cmakedefine BUILD_DBUS
 #cmakedefine BUILD_LASTFM
 #cmakedefine USE_CMUS
+#cmakedefine BUILD_WITH_QT4
 
 #endif // CONFIG_H_IN
