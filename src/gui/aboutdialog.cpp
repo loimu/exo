@@ -43,12 +43,12 @@ void AboutDialog::addText() {
                         "<p>Qt %2 (built with Qt %3)<br />"
                         "Licensed under GPL v3 or later.</p>"
                         "<p><b>Links:</b><br />"
-                        "News: <a href=\"http://loimu.tk/exo/\">"
-                        "http://loimu.tk/exo/</a><br />"
+                        "Project: <a href=\"https://bitbucket.org/blaze/exo\">"
+                        "https://bitbucket.org/blaze/exo</a><br />"
                         "Patreon: <a href=\"https://patreon.com/blazy\">"
                         "https://patreon.com/blazy</a><br />"
-                        "Project: <a href=\"https://bitbucket.org/blaze/exo\">"
-                        "https://bitbucket.org/blaze/exo</a></p>"
+                        "News: <a href=\"https://weblog-loimu.rhcloud.com/exo/\">"
+                        "weblog-loimu.rhcloud.com/exo/</a></p>"
                         )
                 .arg(qApp->applicationVersion())
                 .arg(qVersion())
