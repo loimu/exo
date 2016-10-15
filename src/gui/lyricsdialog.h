@@ -46,7 +46,7 @@ class LyricsDialog : public QWidget
     void keyPressEvent(QKeyEvent *e);
 
 public:
-    LyricsDialog(QWidget *parent = nullptr);
+    explicit LyricsDialog(QWidget *parent = nullptr);
 
 private slots:
     void showText(QNetworkReply *reply);

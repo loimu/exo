@@ -50,7 +50,7 @@ protected:
 
 public:
     static PlayerInterface* self();
-    PlayerInterface(QObject *parent = nullptr);
+    explicit PlayerInterface(QObject *parent = nullptr);
     const Track* trackObject() const;
 #ifdef BUILD_DBUS
     QString artwork();

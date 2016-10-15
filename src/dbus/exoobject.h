@@ -28,7 +28,7 @@ class ExoObject : public QObject
     Q_CLASSINFO("D-Bus Interface", "tk.loimu.exo")
 
 public:
-    ExoObject(QObject *parent = nullptr);
+    explicit ExoObject(QObject *parent = nullptr);
 
 signals:
 
