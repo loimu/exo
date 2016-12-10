@@ -22,12 +22,11 @@
 #include "scrobblersettings.h"
 #include "ui_scrobblersettings.h"
 
-ScrobblerSettings::ScrobblerSettings(QWidget *parent) : QWidget(parent),
+ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),
+    success(false),
     ui(new Ui::ScrobblerSettings)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::Dialog);
-    setAttribute(Qt::WA_DeleteOnClose);
     scrobblerAuth = new ScrobblerAuth(this);
     connect(scrobblerAuth, SIGNAL(failed(QString)), SLOT(authFail(QString)));
     connect(scrobblerAuth, SIGNAL(configured()), SLOT(authSuccess()));
@@ -35,16 +34,16 @@ ScrobblerSettings::ScrobblerSettings(QWidget *parent) : QWidget(parent),
             SLOT(on_buttonBox_accepted()));
     connect(ui->passwordLineEdit, SIGNAL(returnPressed()),
             SLOT(on_buttonBox_accepted()));
+    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+}
+
+ScrobblerSettings::~ScrobblerSettings() {
+    emit configured(success);
 }
 
 void ScrobblerSettings::on_buttonBox_accepted() {
     scrobblerAuth->auth(ui->usernameLineEdit->text(),
                         ui->passwordLineEdit->text());
-}
-
-void ScrobblerSettings::on_buttonBox_rejected() {
-    emit configured(false);
-    this->close();
 }
 
 void ScrobblerSettings::on_usernameLineEdit_textChanged() {
@@ -60,5 +59,6 @@ void ScrobblerSettings::authFail(const QString& errmsg) {
 }
 
 void ScrobblerSettings::authSuccess() {
+    success = true;
     this->close();
 }

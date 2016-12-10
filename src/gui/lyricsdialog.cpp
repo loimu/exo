@@ -25,6 +25,7 @@
 
 #include "core/playerinterface.h"
 #include "lyricsdialog.h"
+#include "ui_lyricsdialog.h"
 
 LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
     ui(new Ui::LyricsDialog),

@@ -20,7 +20,7 @@
 #ifndef SCROBBLERSETTINGS_H
 #define SCROBBLERSETTINGS_H
 
-#include <QWidget>
+#include "basedialog.h"
 
 class ScrobblerAuth;
 
@@ -28,19 +28,20 @@ namespace Ui {
 class ScrobblerSettings;
 }
 
-class ScrobblerSettings : public QWidget
+class ScrobblerSettings : public BaseDialog
 {
     Q_OBJECT
 
     Ui::ScrobblerSettings *ui;
     ScrobblerAuth* scrobblerAuth;
+    bool success;
 
 public:
     explicit ScrobblerSettings(QWidget *parent = nullptr);
+    ~ScrobblerSettings();
 
 private slots:
     void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
     void on_usernameLineEdit_textChanged();
     void on_passwordLineEdit_textChanged();
     void authFail(const QString& errmsg);

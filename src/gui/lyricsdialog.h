@@ -21,7 +21,6 @@
 #define LYRICSDIALOG_H
 
 #include "basedialog.h"
-#include "ui_lyricsdialog.h"
 
 class QAction;
 class QLabel;
