@@ -13,8 +13,9 @@ set(exo_SRCS
   core/mocinterface.cpp
   core/playerinterface.cpp
   gui/aboutdialog.cpp
-  gui/tageditor.cpp
+  gui/basedialog.cpp
   gui/lyricsdialog.cpp
+  gui/tageditor.cpp
   gui/trayicon.cpp
 )
 set(exo_FRMS gui/aboutdialog.ui gui/lyricsdialog.ui)
