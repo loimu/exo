@@ -27,12 +27,11 @@
 #include "bookmarkmanager.h"
 #include "bookmarkdialog.h"
 
-BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) : QWidget(parent),
+BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) :
+    BaseDialog(parent),
     list_(list),
     list(*list) // use local copy of the list
 {
-    setWindowFlags(Qt::Dialog);
-    setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowTitle(tr("Bookmark Manager"));
     this->resize(500, 550);
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);

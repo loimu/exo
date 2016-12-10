@@ -21,14 +21,15 @@
 #ifndef BOOKMARKDIALOG_H
 #define BOOKMARKDIALOG_H
 
-#include <QWidget>
 #include <QList>
+
+#include "gui/basedialog.h"
 
 class QLineEdit;
 class QListWidget;
 struct BookmarkEntry;
 
-class BookmarkDialog : public QWidget
+class BookmarkDialog : public BaseDialog
 {
     Q_OBJECT
 
