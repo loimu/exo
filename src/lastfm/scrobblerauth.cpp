@@ -22,13 +22,13 @@
 #include <QSettings>
 
 #ifdef BUILD_WITH_QT4
-    #include <lastfm/ws.h>
-    #include <lastfm/misc.h>
-    #include <lastfm/XmlQuery.h>
+  #include <lastfm/ws.h>
+  #include <lastfm/misc.h>
+  #include <lastfm/XmlQuery.h>
 #else
-    #include <lastfm5/ws.h>
-    #include <lastfm5/misc.h>
-    #include <lastfm5/XmlQuery.h>
+  #include <lastfm5/ws.h>
+  #include <lastfm5/misc.h>
+  #include <lastfm5/XmlQuery.h>
 #endif // BUILD_WITH_QT4
 
 #include "core/exo.h"

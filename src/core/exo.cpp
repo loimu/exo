@@ -21,17 +21,19 @@
 #include <QSettings>
 
 #ifdef BUILD_DBUS
-#include "dbus/dbus.h"
+  #include "dbus/dbus.h"
 #endif // BUILD_DBUS
+
 #ifdef BUILD_LASTFM
-#include "core/consoleauth.h"
-#include "lastfm/scrobbler.h"
+  #include "core/consoleauth.h"
+  #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
+
 #ifdef USE_CMUS
-#include "core/cmusinterface.h"
-#else // USE_CMUS
-#include "core/mocinterface.h"
+  #include "core/cmusinterface.h"
 #endif // USE_CMUS
+
+#include "core/mocinterface.h"
 #include "gui/trayicon.h"
 #include "exo.h"
 
