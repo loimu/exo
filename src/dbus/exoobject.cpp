@@ -28,7 +28,8 @@ ExoObject::ExoObject(QObject *parent) : QObject(parent)
 }
 
 void ExoObject::showLyricsWindow() {
-    TrayIcon::self()->showLyricsWindow();
+    if(TrayIcon::self())
+        TrayIcon::self()->showLyricsWindow();
 }
 
 void ExoObject::quitApplication() {
