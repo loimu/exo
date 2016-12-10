@@ -47,11 +47,11 @@ void ScrobblerSettings::on_buttonBox_accepted() {
 }
 
 void ScrobblerSettings::on_usernameLineEdit_textChanged() {
-    ui->label->setText("");
+    ui->label->clear();
 }
 
 void ScrobblerSettings::on_passwordLineEdit_textChanged() {
-    ui->label->setText("");
+    ui->label->clear();
 }
 
 void ScrobblerSettings::authFail(const QString& errmsg) {
