@@ -22,19 +22,16 @@
 #include <QUrl>
 #include <QRegExp>
 #include <QTimer>
-#include <QKeyEvent>
 
 #include "core/playerinterface.h"
 #include "lyricsdialog.h"
 
-LyricsDialog::LyricsDialog(QWidget *parent) : QWidget(parent),
+LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
     ui(new Ui::LyricsDialog),
     httpObject(new QNetworkAccessManager(this)),
     replyObject(nullptr)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::Dialog);
-    setAttribute(Qt::WA_DeleteOnClose);
     connect(httpObject, SIGNAL(finished(QNetworkReply *)),
             SLOT(showText(QNetworkReply *)));
     on_updatePushButton_released();
@@ -137,9 +134,4 @@ void LyricsDialog::search() {
                         ui->titleLineEdit->text() + "&fmt=xml"));
     request.setRawHeader("User-Agent", QString("Mozilla/5.0").toLatin1());
     replyObject = httpObject->get(request);
-}
-
-void LyricsDialog::keyPressEvent(QKeyEvent *e) {
-    if(e->key() == Qt::Key_Escape)
-        this->close();
 }

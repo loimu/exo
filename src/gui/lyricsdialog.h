@@ -20,8 +20,7 @@
 #ifndef LYRICSDIALOG_H
 #define LYRICSDIALOG_H
 
-#include <QWidget>
-
+#include "basedialog.h"
 #include "ui_lyricsdialog.h"
 
 class QAction;
@@ -33,7 +32,7 @@ namespace Ui {
 class LyricsDialog;
 }
 
-class LyricsDialog : public QWidget
+class LyricsDialog : public BaseDialog
 {
     Q_OBJECT
 
@@ -43,7 +42,6 @@ class LyricsDialog : public QWidget
     QString artistString, titleString;
     void search();
     QString format(QString);
-    void keyPressEvent(QKeyEvent *e);
 
 public:
     explicit LyricsDialog(QWidget *parent = nullptr);
