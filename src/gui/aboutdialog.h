@@ -31,7 +31,6 @@ class AboutDialog : public BaseDialog
     Q_OBJECT
 
     Ui::AboutDialog* ui;
-    void addText();
 
 public:
     explicit AboutDialog(QWidget *parent = nullptr);

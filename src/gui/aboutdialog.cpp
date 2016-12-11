@@ -24,15 +24,6 @@ AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent),
     ui(new Ui::AboutDialog)
 {
     ui->setupUi(this);
-    addText();
-}
-
-AboutDialog::~AboutDialog()
-{
-    emit destroyed(true);
-}
-
-void AboutDialog::addText() {
     QString text;
     text.append(QString("<p><b>eXo</b> v%1 &copy; 2013-2016 Blaze<br />"
                         "&lt;blaze@vivaldi.net&gt;</p>"
@@ -51,6 +42,11 @@ void AboutDialog::addText() {
                 .arg(QT_VERSION_STR));
     ui->label->setText(text);
     layout()->setSizeConstraint(QLayout::SetFixedSize);
+}
+
+AboutDialog::~AboutDialog()
+{
+    emit destroyed(true);
 }
 
 void AboutDialog::on_aboutQt_released() {
