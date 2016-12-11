@@ -72,10 +72,18 @@ SEND_COMMAND_PARAM(volume, QLatin1String("-v%1"))
 SEND_COMMAND_PARAM(changeVolume, QLatin1String("-v+%1"))
 
 bool MocInterface::showPlayer() {
-    QString term = QLatin1String("x-terminal-emulator");
-    // falling back to xterm if there're no alternatives
-    if(getOutput(QLatin1String("which"), QStringList() << term).length() < 1)
-        term = QLatin1String("xterm");
+    QString term = QLatin1String("xterm"); // xterm is a fallback app
+    QStringList apps = getOutput(
+                QLatin1String("which"),
+                QStringList{
+                    QLatin1String("x-terminal-emulator"),
+                    QLatin1String("gnome-terminal"),
+                    QLatin1String("konsole"),
+                    QLatin1String("xfce4-terminal"),
+                    QLatin1String("lxterminal")
+                } ).split("\n");
+    if(apps.length() > 0)
+        term = apps.at(0);
 #ifdef OSD_OPT
     return execute(term, QStringList() << QLatin1String("-e")
                    << QLatin1String("mocp")
