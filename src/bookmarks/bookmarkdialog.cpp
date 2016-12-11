@@ -101,8 +101,7 @@ void BookmarkDialog::accepted() {
 }
 
 void BookmarkDialog::keyPressEvent(QKeyEvent *e) {
-    if(e->key() == Qt::Key_Escape)
-        this->close();
+    BaseDialog::keyPressEvent(e);
     if(e->key() == Qt::Key_Delete)
         this->deleteBookmark();
 }

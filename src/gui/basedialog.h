@@ -24,8 +24,8 @@
 
 class BaseDialog : public QWidget
 {
+protected:
     void keyPressEvent(QKeyEvent *e);
-
 public:
     explicit BaseDialog(QWidget *parent = nullptr);
 
