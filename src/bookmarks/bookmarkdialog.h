@@ -39,6 +39,8 @@ class BookmarkDialog : public BaseDialog
     QList<BookmarkEntry> list;
     void keyPressEvent(QKeyEvent *e);
     void refreshView();
+    void moveUp();
+    void moveDown();
 
 public:
     explicit BookmarkDialog(QWidget *parent = nullptr,

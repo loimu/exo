@@ -37,6 +37,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent, QList<BookmarkEntry> *list) :
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     listWidget->setIconSize(QSize(32, 32));
+    listWidget->setToolTip(tr("Use Ctrl+K/J keys to move items up and down"));
     verticalLayout->addWidget(listWidget);
     QHBoxLayout *horizontalLayout = new QHBoxLayout();
     QPushButton *deleteButton = new QPushButton(this);
@@ -71,6 +72,26 @@ void BookmarkDialog::refreshView() {
     }
 }
 
+void BookmarkDialog::moveUp() {
+    int cur = listWidget->currentRow();
+    /* Always check if index is valid before usage.
+     * QListWidget doesn't care about your selection. */
+    if(cur-1 > -1) {
+        list.swap(cur, cur-1);
+        refreshView();
+        listWidget->setCurrentRow(cur-1);
+    }
+}
+
+void BookmarkDialog::moveDown() {
+    int cur = listWidget->currentRow();
+    if(cur > -1 && cur+1 < list.size()) {
+        list.swap(cur, cur+1);
+        refreshView();
+        listWidget->setCurrentRow(cur+1);
+    }
+}
+
 void BookmarkDialog::deleteBookmark() {
     int cur = listWidget->currentRow();
     if(cur > -1) {
@@ -81,7 +102,6 @@ void BookmarkDialog::deleteBookmark() {
 
 void BookmarkDialog::renameBookmark(QString name) {
     int cur = listWidget->currentRow();
-    // always check if index is valid before usage
     if(cur > -1) {
         list[cur].name = name.replace(";", "").replace("|", "");
         listWidget->currentItem()->setText(tr("Name: ") + name + "\n"
@@ -97,11 +117,21 @@ void BookmarkDialog::updateLineEdit(int cur) {
 void BookmarkDialog::accepted() {
     *list_ = list;
     emit save();
-    this->close();
+    close();
 }
 
 void BookmarkDialog::keyPressEvent(QKeyEvent *e) {
     BaseDialog::keyPressEvent(e);
-    if(e->key() == Qt::Key_Delete)
-        this->deleteBookmark();
+    switch(e->key())
+    {
+    case Qt::Key_Delete:
+        deleteBookmark();
+        break;
+    case Qt::Key_K:
+        moveUp();
+        break;
+    case Qt::Key_J:
+        moveDown();
+        break;
+    }
 }
