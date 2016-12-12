@@ -34,7 +34,7 @@ void BookmarkManager::refreshList() {
     QString string = settings.value(
                 QLatin1String("bookmarkmanager/bookmarks")).toString();
     QStringList stringList = string.split(QLatin1String(";"));
-    if(stringList.size() > 0) {
+    if(!stringList.isEmpty()) {
         for(QString str : stringList) {
             QStringList bookmark = str.split(QLatin1String("|"));
             if(bookmark.size() == 2) {

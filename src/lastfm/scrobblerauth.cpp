@@ -42,7 +42,7 @@ ScrobblerAuth::ScrobblerAuth(QObject *parent) : QObject(parent)
 }
 
 void ScrobblerAuth::auth(const QString& username, const QString& password) {
-    if(username.size() < 1 || password.size() < 1) {
+    if(username.isEmpty() || password.isEmpty()) {
         emit failed(tr("enter username and password"));
         return;
     }

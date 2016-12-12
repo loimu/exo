@@ -126,7 +126,7 @@ void TrayIcon::createTrayIcon() {
     proc.waitForFinished(-1);
     QStringList editors = QString::fromUtf8(proc.readAllStandardOutput())
             .split(QLatin1String("\n"), QString::SkipEmptyParts);
-    if(editors.length() > 0) {
+    if(!editors.isEmpty()) {
         QMenu* tagEditorsMenu = new QMenu(this);
         tagEditorsMenu->setTitle(tr("Edit with"));
         trayIconMenu->addAction(tagEditorsMenu->menuAction());
