@@ -17,7 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QDebug>
 #include <QStringList>
 
 #include "mocinterface.h"
