@@ -17,6 +17,7 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include <QDebug>
 #include <QStringList>
 
 #include "mocinterface.h"
@@ -35,8 +36,8 @@ QString MocInterface::id() {
 }
 
 bool MocInterface::isServerRunning() {
-    return getOutput(QLatin1String("pidof"), QStringList()
-                     << QLatin1String("mocp")).length() > 1;
+    return !getOutput(QLatin1String("pidof"), QStringList()
+                     << QLatin1String("mocp")).isEmpty();
 }
 
 bool MocInterface::runServer() {
@@ -81,8 +82,8 @@ bool MocInterface::showPlayer() {
                     QLatin1String("konsole"),
                     QLatin1String("xfce4-terminal"),
                     QLatin1String("lxterminal")
-                } ).split("\n");
-    if(apps.length() > 0)
+                } ).split("\n", QString::SkipEmptyParts);
+    if(!apps.isEmpty())
         term = apps.at(0);
 #ifdef OSD_OPT
     return execute(term, QStringList() << QLatin1String("-e")
@@ -112,7 +113,7 @@ State MocInterface::getInfo() {
                              << QLatin1String("-Q")
                              << QLatin1String("\"{s}%state{a}%a{t}%t{A}%A{f}%file"
                             "{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\""));
-    if(info.size() < 1)
+    if(info.isEmpty())
         return Offline;
     QRegExp infoRgx(QLatin1String("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
                     "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)\\{ts\\}(.*)"

@@ -35,15 +35,23 @@ QString CmusInterface::id() {
 }
 
 bool CmusInterface::isPlayerRunning() {
-    return getOutput(QLatin1String("pidof"), QStringList()
-                     << QLatin1String("cmus")).length() > 1;
+    return !getOutput(QLatin1String("pidof"), QStringList()
+                     << QLatin1String("cmus")).isEmpty();
 }
 
 bool CmusInterface::runPlayer() {
-    QString term = QLatin1String("x-terminal-emulator");
-    // falling back to xterm if there're no alternatives
-    if(getOutput(QLatin1String("which"), QStringList() << term).length() < 1)
-        term = QLatin1String("xterm");
+    QString term = QLatin1String("xterm"); // xterm is a fallback app
+    QStringList apps = getOutput(
+                QLatin1String("which"),
+                QStringList{
+                    QLatin1String("x-terminal-emulator"),
+                    QLatin1String("gnome-terminal"),
+                    QLatin1String("konsole"),
+                    QLatin1String("xfce4-terminal"),
+                    QLatin1String("lxterminal")
+                } ).split("\n", QString::SkipEmptyParts);
+    if(!apps.isEmpty())
+        term = apps.at(0);
     return execute(term, QStringList() << QLatin1String("-e")
                    << QLatin1String("cmus"));
 }
@@ -109,7 +117,7 @@ QString CmusInterface::find(QString string, const QString regEx) {
 
 State CmusInterface::getInfo() {
     QString info = getOutput(cli, QStringList() << QLatin1String("-Q"));
-    if(info.size() < 1)
+    if(info.isEmpty())
         return Offline;
     QString string = find(info, QLatin1String("status\\s(.*)\\n"));
     if(string == QLatin1String("stopped"))

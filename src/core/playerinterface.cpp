@@ -50,7 +50,7 @@ bool PlayerInterface::execute(QString program, QStringList options) {
     proc.start(program, options);
     proc.waitForFinished(-1);
     // returns true (success) if no output in standard error
-    return proc.readAllStandardError().length() < 1;
+    return proc.readAllStandardError().isEmpty();
 }
 
 void PlayerInterface::scrobble() {
@@ -85,7 +85,7 @@ QString PlayerInterface::cover() {
             << QLatin1String("*.jpg")
             << QLatin1String("*.jpeg");
     dir.setNameFilters(filters);
-    if(dir.entryList().size() > 0)
+    if(!dir.entryList().isEmpty())
         return path + QLatin1String("/") + dir.entryList().at(0);
     else
         return QLatin1String(":/images/nocover.png");
