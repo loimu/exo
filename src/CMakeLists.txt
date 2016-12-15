@@ -12,6 +12,7 @@ set(exo_SRCS
   core/exo.cpp
   core/mocinterface.cpp
   core/playerinterface.cpp
+  core/singleinstance.cpp
   gui/aboutdialog.cpp
   gui/basedialog.cpp
   gui/lyricsdialog.cpp

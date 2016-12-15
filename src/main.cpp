@@ -19,6 +19,9 @@
 
 #include <QByteArray>
 #include <QNetworkProxyFactory>
+#include <QMessageBox>
+
+#include "core/singleinstance.h"
 #include "core/exo.h"
 
 int main(int argc, char *argv[]) {
@@ -37,6 +40,11 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
     QCoreApplication::setApplicationName(QLatin1String("eXo"));
     QCoreApplication::setApplicationVersion(QLatin1String("0.7"));
+    SingleInstance inst;
+    if(!inst.isUnique()) {
+        qWarning("Only one instance is allowed");
+        return 1;
+    }
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     Exo app(argc, argv, useGui);
     return app.exec();
