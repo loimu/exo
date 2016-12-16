@@ -17,7 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <sys/errno.h>
 #include <sys/file.h>
 
 #include <QCoreApplication>

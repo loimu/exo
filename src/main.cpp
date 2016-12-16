@@ -19,7 +19,6 @@
 
 #include <QByteArray>
 #include <QNetworkProxyFactory>
-#include <QMessageBox>
 
 #include "core/singleinstance.h"
 #include "core/exo.h"
