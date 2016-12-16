@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationVersion(QLatin1String("0.7"));
     SingleInstance inst;
     if(!inst.isUnique()) {
-        qWarning("Only one instance is allowed");
+        qInfo("Only one instance is allowed");
         return 1;
     }
     QNetworkProxyFactory::setUseSystemConfiguration(true);

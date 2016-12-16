@@ -30,13 +30,13 @@ DBus::DBus(QObject *parent) : QObject(parent)
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.registerObject(QLatin1String("/Exo"), new ExoObject(this),
                               QDBusConnection::ExportAllContents);
-    bool registered = connection.registerService(QLatin1String("tk.loimu.exo"));
-    if(!registered)
-        qFatal("Only one instance of application is allowed.\n");
+    if(!connection.registerService(QLatin1String("tk.loimu.exo")))
+        qFatal("DBus: service registration failed");
     new RootObject(this);
     new PlayerObject(this);
     connection.registerObject(QLatin1String("/org/mpris/MediaPlayer2"), this);
-    connection.registerService(QLatin1String("org.mpris.MediaPlayer2.exo"));
+    if(!connection.registerService(QLatin1String("org.mpris.MediaPlayer2.exo")))
+        qFatal("DBus: MPRISv2 service registration failed");
 }
 
 DBus::~DBus()
