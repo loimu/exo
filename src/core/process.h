@@ -27,9 +27,11 @@ class QStringList;
 class Process
 {
 public:
-    static QString getOutput(const QString& process, QStringList& parameters);
-    static bool execute(const QString& process, QStringList& parameters);
-    static QStringList detect(QStringList& apps);
+    static QString getOutput(const QString& process,
+                             const QStringList& parameters);
+    static bool execute(const QString& process,
+                        const QStringList& parameters);
+    static QStringList detect(const QStringList& apps);
 };
 
 #endif // PROCESS_H

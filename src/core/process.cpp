@@ -21,14 +21,14 @@
 
 #include "process.h"
 
-QString Process::getOutput(const QString& program, QStringList& options) {
+QString Process::getOutput(const QString& program, const QStringList& options) {
     QProcess proc;
     proc.start(program, options);
     proc.waitForFinished(-1);
     return QString::fromUtf8(proc.readAllStandardOutput());
 }
 
-bool Process::execute(const QString& program, QStringList& options) {
+bool Process::execute(const QString& program, const QStringList& options) {
     QProcess proc;
     proc.start(program, options);
     proc.waitForFinished(-1);
@@ -36,7 +36,7 @@ bool Process::execute(const QString& program, QStringList& options) {
     return proc.readAllStandardError().isEmpty();
 }
 
-QStringList Process::detect(QStringList& apps) {
+QStringList Process::detect(const QStringList& apps) {
     QProcess proc;
     proc.start(QLatin1String("which"), apps);
     proc.waitForFinished(-1);
