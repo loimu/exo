@@ -25,10 +25,10 @@
 #include <QSettings>
 #include <QFileDialog>
 #include <QPointer>
-#include <QProcess>
 
 #include "core/exo.h"
 #include "core/playerinterface.h"
+#include "core/process.h"
 #include "gui/lyricsdialog.h"
 #include "gui/aboutdialog.h"
 #include "gui/scrobblersettings.h"
@@ -116,16 +116,12 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
-    // detect tag editors
-    QProcess proc;
-    proc.start(QLatin1String("which"), QStringList()
-               << QLatin1String("picard")
-               << QLatin1String("kid3")
-               << QLatin1String("easytag")
-               << QLatin1String("puddletag"));
-    proc.waitForFinished(-1);
-    QStringList editors = QString::fromUtf8(proc.readAllStandardOutput())
-            .split(QLatin1String("\n"), QString::SkipEmptyParts);
+    QStringList editors = Process::detect(
+                QStringList()
+                << QLatin1String("picard")
+                << QLatin1String("kid3")
+                << QLatin1String("easytag")
+                << QLatin1String("puddletag")); // detects tag editors
     if(!editors.isEmpty()) {
         QMenu* tagEditorsMenu = new QMenu(this);
         tagEditorsMenu->setTitle(tr("Edit with"));
