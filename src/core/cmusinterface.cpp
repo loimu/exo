@@ -20,6 +20,7 @@
 #include <QStringList>
 #include <QTime>
 
+#include "core/process.h"
 #include "cmusinterface.h"
 
 CmusInterface::CmusInterface(QObject *parent) : PlayerInterface(parent),
@@ -35,30 +36,28 @@ QString CmusInterface::id() {
 }
 
 bool CmusInterface::isPlayerRunning() {
-    return !getOutput(QLatin1String("pidof"), QStringList()
-                     << QLatin1String("cmus")).isEmpty();
+    return !Process::getOutput(QLatin1String("pidof"),
+                               QStringList{QLatin1String("cmus")}).isEmpty();
 }
 
 bool CmusInterface::runPlayer() {
     QString term = QLatin1String("xterm"); // xterm is a fallback app
-    QStringList apps = getOutput(
-                QLatin1String("which"),
+    QStringList apps = Process::detect(
                 QStringList{
                     QLatin1String("x-terminal-emulator"),
                     QLatin1String("gnome-terminal"),
                     QLatin1String("konsole"),
                     QLatin1String("xfce4-terminal"),
-                    QLatin1String("lxterminal")
-                } ).split("\n", QString::SkipEmptyParts);
+                    QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    return execute(term, QStringList() << QLatin1String("-e")
-                   << QLatin1String("cmus"));
+    return execute(term, QStringList{QLatin1String("-e"),
+                                     QLatin1String("cmus")});
 }
 
 #define SEND_COMMAND(__method, __option)\
     bool CmusInterface::__method() {\
-        return execute(cli, QStringList() << __option);\
+    return Process::execute(cli, QStringList{__option});\
     }
 
 SEND_COMMAND(play, QLatin1String("-p"))
@@ -69,31 +68,30 @@ SEND_COMMAND(next, QLatin1String("-n"))
 SEND_COMMAND(stop, QLatin1String("-s"))
 
 bool CmusInterface::quit() {
-    return execute(cli, QStringList() << QLatin1String("-C")
-                   << QLatin1String("quit"));
+    return Process::execute(cli, QStringList{QLatin1String("-C"),
+                                             QLatin1String("quit")});
 }
 
 bool CmusInterface::jump(int pos) {
-    return execute(cli, QStringList() << QLatin1String("-k")
-                   << QString::number(pos));
+    return Process::execute(cli, QStringList() << QLatin1String("-k")
+                            << QString::number(pos));
 }
 
 bool CmusInterface::seek(int offset) {
-    QString o = (offset > 0) ? QLatin1String("+") +
-                               QString::number(offset) : QString::number(offset);
-    return execute(cli, QStringList() << QLatin1String("-k") << o);
+    QString o = (offset > 0) ? QLatin1String("+") + QString::number(offset)
+                             : QString::number(offset);
+    return Process::execute(cli, QStringList() << QLatin1String("-k") << o);
 }
 
 bool CmusInterface::volume(int lev) {
-    return execute(cli, QStringList() << QLatin1String("-v")
+    return Process::execute(cli, QStringList() << QLatin1String("-v")
                    << QString::number(lev) + QLatin1String("%"));
 }
 
 bool CmusInterface::changeVolume(int delta) {
-    QString d = ((delta > 0) ? QLatin1String("+")
-                               + QString::number(delta) : QString::number(delta))
-            + QLatin1String("%");
-    return execute(cli, QStringList() << QLatin1String("-v") << d);
+    QString d = ((delta > 0) ? QLatin1String("+") + QString::number(delta)
+                             : QString::number(delta)) + QLatin1String("%");
+    return Process::execute(cli, QStringList() << QLatin1String("-v") << d);
 }
 
 bool CmusInterface::showPlayer() {
@@ -101,11 +99,11 @@ bool CmusInterface::showPlayer() {
 }
 
 bool CmusInterface::openUri(const QString file) {
-    return execute(cli, QStringList() << QLatin1String("-q") << file);
+    return Process::execute(cli, QStringList() << QLatin1String("-q") << file);
 }
 
 bool CmusInterface::appendFile(QStringList files) {
-    return execute(cli, QStringList() << QLatin1String("-q") << files);
+    return Process::execute(cli, QStringList() << QLatin1String("-q") << files);
 }
 
 QString CmusInterface::find(QString string, const QString regEx) {
@@ -116,7 +114,7 @@ QString CmusInterface::find(QString string, const QString regEx) {
 }
 
 State CmusInterface::getInfo() {
-    QString info = getOutput(cli, QStringList() << QLatin1String("-Q"));
+    QString info = Process::getOutput(cli, QStringList{QLatin1String("-Q")});
     if(info.isEmpty())
         return Offline;
     QString string = find(info, QLatin1String("status\\s(.*)\\n"));
