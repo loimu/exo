@@ -18,7 +18,6 @@
 * ======================================================================== */
 
 #include <QTimer>
-#include <QProcess>
 #include <QDir>
 
 #include "playerinterface.h"
@@ -36,21 +35,6 @@ void PlayerInterface::startTimer(int period) {
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(period);
-}
-
-QString PlayerInterface::getOutput(QString program, QStringList options) {
-    QProcess proc;
-    proc.start(program, options);
-    proc.waitForFinished(-1);
-    return QString::fromUtf8(proc.readAllStandardOutput());
-}
-
-bool PlayerInterface::execute(QString program, QStringList options) {
-    QProcess proc;
-    proc.start(program, options);
-    proc.waitForFinished(-1);
-    // returns true (success) if no output in standard error
-    return proc.readAllStandardError().isEmpty();
 }
 
 void PlayerInterface::scrobble() {

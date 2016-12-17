@@ -67,8 +67,8 @@ SEND_COMMAND(quit, QLatin1String("-x"))
 
 #define SEND_COMMAND_PARAM(__method, __option)\
     bool MocInterface::__method(int param) {\
-    return execute(QLatin1String("mocp"),\
-    QStringList{QString(__option).arg(param)});\
+    return Process::execute(QLatin1String("mocp"),\
+    QStringList() << QString(__option).arg(param));\
     }
 
 SEND_COMMAND_PARAM(jump, QLatin1String("-j%1s"))

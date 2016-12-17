@@ -45,8 +45,6 @@ class PlayerInterface : public QObject
 protected:
     Track track;
     void startTimer(int);
-    QString getOutput(QString, QStringList);
-    bool execute(QString, QStringList);
 
 public:
     static PlayerInterface* self();

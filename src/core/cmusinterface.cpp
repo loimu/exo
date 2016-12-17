@@ -51,8 +51,8 @@ bool CmusInterface::runPlayer() {
                     QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    return execute(term, QStringList{QLatin1String("-e"),
-                                     QLatin1String("cmus")});
+    return Process::execute(term, QStringList{QLatin1String("-e"),
+                                              QLatin1String("cmus")});
 }
 
 #define SEND_COMMAND(__method, __option)\
@@ -85,7 +85,7 @@ bool CmusInterface::seek(int offset) {
 
 bool CmusInterface::volume(int lev) {
     return Process::execute(cli, QStringList() << QLatin1String("-v")
-                   << QString::number(lev) + QLatin1String("%"));
+                            << QString::number(lev) + QLatin1String("%"));
 }
 
 bool CmusInterface::changeVolume(int delta) {
