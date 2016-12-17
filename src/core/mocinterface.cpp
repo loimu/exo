@@ -19,6 +19,7 @@
 
 #include <QStringList>
 
+#include "core/process.h"
 #include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=\"/usr/share/exo/moc-osd.py\""
@@ -35,22 +36,25 @@ QString MocInterface::id() {
 }
 
 bool MocInterface::isServerRunning() {
-    return !getOutput(QLatin1String("pidof"), QStringList()
-                     << QLatin1String("mocp")).isEmpty();
+    return !Process::getOutput(
+                QLatin1String("pidof"),
+                QStringList{QLatin1String("mocp")}).isEmpty();
 }
 
 bool MocInterface::runServer() {
 #ifdef OSD_OPT
-    return execute(QLatin1String("mocp"), QStringList() << QLatin1String("-SO")
-                   << QLatin1String(OSD_OPT));
+    return Process::execute(
+                QLatin1String("mocp"),
+                QStringList{QLatin1String("-SO"), QLatin1String(OSD_OPT)});
 #else //OSD_OPT
-    return execute(QLatin1String("mocp"), QStringList() << QLatin1String("-S"));
+    return Process::execute(
+                QLatin1String("mocp"), QStringList{QLatin1String("-S")});
 #endif // OSD_OPT
 }
 
 #define SEND_COMMAND(__method, __option)\
     bool MocInterface::__method() {\
-        return execute(QLatin1String("mocp"), QStringList() << __option);\
+    return Process::execute(QLatin1String("mocp"), QStringList{__option});\
     }
 
 SEND_COMMAND(play, QLatin1String("-p"))
@@ -63,7 +67,8 @@ SEND_COMMAND(quit, QLatin1String("-x"))
 
 #define SEND_COMMAND_PARAM(__method, __option)\
     bool MocInterface::__method(int param) {\
-        return execute(QLatin1String("mocp"), QStringList() << QString(__option).arg(param));\
+    return execute(QLatin1String("mocp"),\
+    QStringList{QString(__option).arg(param)});\
     }
 
 SEND_COMMAND_PARAM(jump, QLatin1String("-j%1s"))
@@ -73,50 +78,51 @@ SEND_COMMAND_PARAM(changeVolume, QLatin1String("-v+%1"))
 
 bool MocInterface::showPlayer() {
     QString term = QLatin1String("xterm"); // xterm is a fallback app
-    QStringList apps = getOutput(
-                QLatin1String("which"),
+    QStringList apps = Process::detect(
                 QStringList{
                     QLatin1String("x-terminal-emulator"),
                     QLatin1String("gnome-terminal"),
                     QLatin1String("konsole"),
                     QLatin1String("xfce4-terminal"),
-                    QLatin1String("lxterminal")
-                } ).split("\n", QString::SkipEmptyParts);
+                    QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
 #ifdef OSD_OPT
-    return execute(term, QStringList() << QLatin1String("-e")
-                   << QLatin1String("mocp")
-                   << QLatin1String("-O")
-                   << QLatin1String(OSD_OPT));
+    return Process::execute(
+                term, QStringList{
+                    QLatin1String("-e"),
+                    QLatin1String("mocp"),
+                    QLatin1String("-O"),
+                    QLatin1String(OSD_OPT)});
 #else // OSD_OPT
-    return execute(term, QStringList() << QLatin1String("-e")
-                   << QLatin1String("mocp"));
+    return Process::execute(
+                term, QStringList{QLatin1String("-e"), QLatin1String("mocp")});
 #endif // OSD_OPT
 }
 
 bool MocInterface::openUri(const QString file) {
-    return execute(QLatin1String("mocp"), QStringList()
-                   << QLatin1String("-l")
-                   << file);
+    return Process::execute(QLatin1String("mocp"),
+                            QStringList() << QLatin1String("-l") << file);
 }
 
 bool MocInterface::appendFile(QStringList files) {
-    return execute(QLatin1String("mocp"), QStringList()
-                   << QLatin1String("-a")
-                   << files);
+    return Process::execute(QLatin1String("mocp"),
+                            QStringList() << QLatin1String("-a") << files);
 }
 
 State MocInterface::getInfo() {
-    QString info = getOutput(QLatin1String("mocp"), QStringList()
-                             << QLatin1String("-Q")
-                             << QLatin1String("\"{s}%state{a}%a{t}%t{A}%A{f}%file"
-                            "{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\""));
+    QString info = Process::getOutput(
+                QLatin1String("mocp"),
+                QStringList{
+                    QLatin1String("-Q"),
+                    QLatin1String("\"{s}%state{a}%a{t}%t{A}%A{f}%file"
+                    "{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\"")});
     if(info.isEmpty())
         return Offline;
-    QRegExp infoRgx(QLatin1String("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                    "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)\\{ts\\}(.*)"
-                    "\\{cs\\}(.*)\\{T\\}(.*)\\{end\\}"));
+    QRegExp infoRgx(
+                QLatin1String("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                              "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)"
+                              "\\{ts\\}(.*)\\{cs\\}(.*)\\{T\\}(.*)\\{end\\}"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
     if(infoRgx.cap(1) == QLatin1String("STOP"))
