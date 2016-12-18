@@ -47,9 +47,9 @@ protected:
     void startTimer(int);
 
 public:
-    static PlayerInterface* self();
     explicit PlayerInterface(QObject *parent = nullptr);
-    const Track* trackObject() const;
+    static PlayerInterface* self() { return object; }
+    const Track* trackObject() const { return &track; }
 #ifdef BUILD_DBUS
     QString artwork();
 #endif // BUILD_DBUS

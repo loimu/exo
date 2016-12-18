@@ -60,7 +60,7 @@ void PlayerInterface::scrobble() {
 
 QString PlayerInterface::cover() {
     if(track.file.startsWith(QLatin1String("http")))
-        return "";
+        return QString();
     QString path = track.file;
     path.replace(QRegExp(QLatin1String("(.*)/(.*)")), QLatin1String("\\1"));
     QDir dir(path);
@@ -88,32 +88,25 @@ void PlayerInterface::update() {
         status = currentStatus;
         emit newStatus(status);
         if(status == Offline)
-            emit updateStatus(tr("Player isn't running."), QString(), QString(),
-                              QString());
+            emit updateStatus(tr("Player isn't running."),
+                              QString(), QString(), QString());
         if(status == Stop)
             emit updateStatus(tr("Stopped"), QString(), QString(), QString());
         if(status == Pause)
-            emit updateStatus(track.title, track.currTime, track.totalTime,cover());
+            emit updateStatus(
+                    track.title, track.currTime, track.totalTime, cover());
     }
     if(status == Play) {
-        emit updateStatus(track.title, track.currTime, track.totalTime,cover());
+        emit updateStatus(
+                    track.title, track.currTime, track.totalTime, cover());
         scrobble();
     }
 }
 
 #ifdef BUILD_DBUS
 QString PlayerInterface::artwork() {
-    // compliance method for MPRIS
     QString art = cover();
     return (art == QLatin1String(":/images/nocover.png")
             || art.isEmpty()) ? QString() : QLatin1String("file://") + art;
-}
+} // compliance method for MPRIS
 #endif // BUILD_DBUS
-
-PlayerInterface* PlayerInterface::self() {
-    return object;
-}
-
-const Track* PlayerInterface::trackObject() const {
-    return &track;
-}
