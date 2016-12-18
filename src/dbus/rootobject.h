@@ -43,8 +43,6 @@ public:
     bool hasTrackList() const;
     QString identity() const;
 
-signals:
-
 public slots:
     void Quit();
     void Raise();

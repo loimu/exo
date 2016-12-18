@@ -30,8 +30,6 @@ class ExoObject : public QObject
 public:
     explicit ExoObject(QObject *parent = nullptr);
 
-signals:
-
 public slots:
     void showLyricsWindow();
     void quitApplication();
