@@ -98,15 +98,15 @@ bool CmusInterface::showPlayer() {
     return runPlayer();
 }
 
-bool CmusInterface::openUri(const QString file) {
+bool CmusInterface::openUri(const QString& file) {
     return Process::execute(cli, QStringList() << QLatin1String("-q") << file);
 }
 
-bool CmusInterface::appendFile(QStringList files) {
+bool CmusInterface::appendFile(const QStringList& files) {
     return Process::execute(cli, QStringList() << QLatin1String("-q") << files);
 }
 
-QString CmusInterface::find(QString string, const QString regEx) {
+QString CmusInterface::find(const QString& string, const QString& regEx) {
     QRegExp findRgx(regEx);
     findRgx.setMinimal(true);
     findRgx.indexIn(string);

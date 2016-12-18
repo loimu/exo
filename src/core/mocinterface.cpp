@@ -24,7 +24,7 @@
 
 #define OSD_OPT "OnSongChange=\"/usr/share/exo/moc-osd.py\""
 
-MocInterface::MocInterface(QObject *parent) :PlayerInterface(parent)
+MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent)
 {
     if(!isServerRunning())
         runServer();
@@ -100,12 +100,12 @@ bool MocInterface::showPlayer() {
 #endif // OSD_OPT
 }
 
-bool MocInterface::openUri(const QString file) {
+bool MocInterface::openUri(const QString& file) {
     return Process::execute(QLatin1String("mocp"),
                             QStringList() << QLatin1String("-l") << file);
 }
 
-bool MocInterface::appendFile(QStringList files) {
+bool MocInterface::appendFile(const QStringList& files) {
     return Process::execute(QLatin1String("mocp"),
                             QStringList() << QLatin1String("-a") << files);
 }
