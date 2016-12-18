@@ -17,9 +17,8 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QProcess>
-
 #include "core/playerinterface.h"
+#include "core/process.h"
 #include "tageditor.h"
 
 TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
@@ -33,9 +32,6 @@ TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, paren
 
 void TagEditor::open() {
     QString file = PlayerInterface::self()->trackObject()->file;
-    if(file.startsWith(QLatin1String("/"))) {
-        QProcess proc;
-        proc.start(editorPath, QStringList() << file);
-        proc.waitForFinished(-1);
-    }
+    if(file.startsWith(QLatin1String("/")))
+        Process::execute(editorPath, QStringList() << file);
 }
