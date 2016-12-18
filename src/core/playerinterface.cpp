@@ -64,11 +64,10 @@ QString PlayerInterface::cover() {
     QString path = track.file;
     path.replace(QRegExp(QLatin1String("(.*)/(.*)")), QLatin1String("\\1"));
     QDir dir(path);
-    QStringList filters;
-    filters << QLatin1String("*.png")
-            << QLatin1String("*.jpg")
-            << QLatin1String("*.jpeg");
-    dir.setNameFilters(filters);
+    dir.setNameFilters(QStringList{
+                           QLatin1String("*.png"),
+                           QLatin1String("*.jpg"),
+                           QLatin1String("*.jpeg")});
     if(!dir.entryList().isEmpty())
         return path + QLatin1String("/") + dir.entryList().at(0);
     else
