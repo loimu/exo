@@ -242,7 +242,7 @@ void TrayIcon::addFiles() {
 void TrayIcon::refreshBookmarks() {
     bookmarksMenu->clear();
     bookmarksMenu->addAction(bookmarkCurrentAction);
-    if(bookmarkManager->bookmarks()->length() < 1)
+    if(bookmarkManager->bookmarks()->isEmpty())
         return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
