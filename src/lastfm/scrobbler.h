@@ -39,8 +39,9 @@ public:
     static const char* secret;
 
 private slots:
-    void init(QString, QString, int);
-    void submit(QString, QString, QString, int);
+    void init(const QString& artist, const QString& title, int totalSec);
+    void submit(const QString& artist, const QString& title,
+                const QString& album, int totalSec);
 };
 
 #endif // SCROBBLER_H
