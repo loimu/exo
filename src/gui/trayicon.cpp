@@ -51,10 +51,6 @@ TrayIcon::TrayIcon(QObject *parent) :
     connect(bookmarkManager, SIGNAL(refreshBookmarks()), SLOT(refreshBookmarks()));
 }
 
-TrayIcon* TrayIcon::self() {
-    return object;
-}
-
 void TrayIcon::createActions() {
     showAction = new QAction(tr("Player"), this);
     connect(showAction, SIGNAL(triggered()), player, SLOT(showPlayer()));

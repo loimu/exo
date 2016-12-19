@@ -38,8 +38,8 @@ class Exo : public QApplication
 public:
     explicit Exo(int &argc, char **argv, bool);
     ~Exo();
-    static Exo* self();
-    static void forceReauth();
+    static Exo* self() { return object; }
+    static void forceReauth() { reauth = true; }
 #ifdef BUILD_LASTFM
     void loadScrobbler(bool);
 #endif // BUILD_LASTFM

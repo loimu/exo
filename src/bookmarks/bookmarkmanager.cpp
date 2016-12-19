@@ -20,6 +20,7 @@
 #include <QSettings>
 
 #include "core/playerinterface.h"
+#include "gui/trayicon.h"
 #include "bookmarkdialog.h"
 #include "bookmarkmanager.h"
 
@@ -67,7 +68,7 @@ void BookmarkManager::manager() {
     if(bookmarkDialog)
         return;
     refreshList();
-    bookmarkDialog = new BookmarkDialog(static_cast<QWidget*>(this->parent()), &list);
+    bookmarkDialog = new BookmarkDialog(&list, TrayIcon::self());
     connect(bookmarkDialog, SIGNAL(save()), SLOT(save()));
     bookmarkDialog->show();
 }

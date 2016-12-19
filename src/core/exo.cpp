@@ -79,14 +79,6 @@ Exo::~Exo() {
         TrayIcon::self()->deleteLater();
 }
 
-Exo* Exo::self() {
-    return object;
-}
-
-void Exo::forceReauth() {
-    reauth = true;
-}
-
 #ifdef BUILD_LASTFM
 void Exo::loadScrobbler(bool checked) {
     if(!scrobbler && checked) {

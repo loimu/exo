@@ -60,7 +60,7 @@ class TrayIcon : public QWidget
 
 public:
     explicit TrayIcon(QObject *parent = nullptr);
-    static TrayIcon* self();
+    static TrayIcon* self() { return object; }
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);

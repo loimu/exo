@@ -43,8 +43,8 @@ class BookmarkDialog : public BaseDialog
     void moveDown();
 
 public:
-    explicit BookmarkDialog(QWidget *parent = nullptr,
-                            QList<BookmarkEntry> *list = nullptr);
+    explicit BookmarkDialog(QList<BookmarkEntry> *list,
+                            QWidget *parent = nullptr);
 
 signals:
     void save();
