@@ -28,7 +28,8 @@ int main(int argc, char *argv[]) {
     bool useGui = true;
     for(int i=1; i<argc; i++) {
         QByteArray arg = argv[i];
-        if(arg == QByteArray("-d") || arg == QByteArray("--daemonize")) {
+        if(arg == QByteArray("-d") || arg == QByteArray("-b")
+                || arg == QByteArray("--background")) {
             useGui = false;
         }
         if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
@@ -41,7 +42,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationVersion(QLatin1String("0.7"));
     SingleInstance inst;
     if(!inst.isUnique()) {
-        qWarning("Only one instance is allowed");
+        qWarning("Application is already running");
         return 1;
     }
     QNetworkProxyFactory::setUseSystemConfiguration(true);
