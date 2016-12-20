@@ -78,12 +78,12 @@ void TrayIcon::createActions() {
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     quitAction->setIcon(QIcon(QLatin1String(":/images/close.png")));
-    bookmarkCurrentAction = new QAction(tr("Bookmark Current"), this);
+    bookmarkCurrentAction = new QAction(tr("Bookmark &Current"), this);
     connect(bookmarkCurrentAction, SIGNAL(triggered()),
             bookmarkManager, SLOT(addCurrent()));
     bookmarkCurrentAction->setIcon(
                 QIcon::fromTheme(QLatin1String("bookmark-new-list")));
-    bookmarkManagerAction = new QAction(tr("Bookmark Manager"), this);
+    bookmarkManagerAction = new QAction(tr("Bookmark &Manager"), this);
     connect(bookmarkManagerAction, SIGNAL(triggered()),
             bookmarkManager, SLOT(manager()));
     bookmarkManagerAction->setIcon(
@@ -108,7 +108,7 @@ void TrayIcon::createActions() {
 
 void TrayIcon::createTrayIcon() {
     // creating menu and adding actions
-    trayIconMenu = new QMenu(this);
+    QMenu* trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
@@ -119,8 +119,8 @@ void TrayIcon::createTrayIcon() {
                     QLatin1String("easytag"),
                     QLatin1String("puddletag")}); // detects tag editors
     if(!editors.isEmpty()) {
-        QMenu* tagEditorsMenu = new QMenu(this);
-        tagEditorsMenu->setTitle(tr("Edit with"));
+        QMenu* tagEditorsMenu = new QMenu(trayIconMenu);
+        tagEditorsMenu->setTitle(tr("&Edit with"));
         trayIconMenu->addAction(tagEditorsMenu->menuAction());
         for(QString entry : editors) {
             TagEditor* newEditor = new TagEditor(entry, this);
@@ -136,12 +136,12 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addSeparator();
     // Bookmarks submenu
     bookmarksMenu = new QMenu(trayIconMenu);
-    bookmarksMenu->setTitle(tr("Links"));
+    bookmarksMenu->setTitle(tr("Lin&ks"));
     trayIconMenu->addAction(bookmarksMenu->menuAction());
     refreshBookmarks();
     // end of Bookmarks submenu
     // Settings submenu
-    settingsMenu = new QMenu(trayIconMenu);
+    QMenu* settingsMenu = new QMenu(trayIconMenu);
     settingsMenu->setTitle(tr("Se&ttings"));
     trayIconMenu->addAction(settingsMenu->menuAction());
     settingsMenu->addAction(setQuitBehaviourAction);

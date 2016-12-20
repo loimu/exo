@@ -35,8 +35,6 @@ class TrayIcon : public QWidget
 
     static TrayIcon* object;
     PlayerInterface *player;
-    QMenu *trayIconMenu;
-    QMenu *settingsMenu;
     QMenu *bookmarksMenu;
     QAction *showAction;
     QAction *filesAction;
