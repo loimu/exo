@@ -20,9 +20,11 @@
 #ifndef CONFIG_H_IN
 #define CONFIG_H_IN
 
+#cmakedefine BUILD_WITH_QT4
 #cmakedefine BUILD_DBUS
 #cmakedefine BUILD_LASTFM
 #cmakedefine USE_CMUS
-#cmakedefine BUILD_WITH_QT4
+
+#define CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
 
 #endif // CONFIG_H_IN

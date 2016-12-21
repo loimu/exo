@@ -17,12 +17,14 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include "config.h"
+
 #include <QStringList>
 
 #include "core/process.h"
 #include "mocinterface.h"
 
-#define OSD_OPT "OnSongChange=\"/usr/share/exo/moc-osd.py\""
+#define OSD_OPT "OnSongChange=\"" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py\""
 
 MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent)
 {
@@ -42,14 +44,9 @@ bool MocInterface::isServerRunning() {
 }
 
 bool MocInterface::runServer() {
-#ifdef OSD_OPT
     return Process::execute(
                 QLatin1String("mocp"),
                 QStringList{QLatin1String("-SO"), QLatin1String(OSD_OPT)});
-#else //OSD_OPT
-    return Process::execute(
-                QLatin1String("mocp"), QStringList{QLatin1String("-S")});
-#endif // OSD_OPT
 }
 
 #define SEND_COMMAND(__method, __option)\
@@ -87,17 +84,12 @@ bool MocInterface::showPlayer() {
                     QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-#ifdef OSD_OPT
     return Process::execute(
                 term, QStringList{
                     QLatin1String("-e"),
                     QLatin1String("mocp"),
                     QLatin1String("-O"),
                     QLatin1String(OSD_OPT)});
-#else // OSD_OPT
-    return Process::execute(
-                term, QStringList{QLatin1String("-e"), QLatin1String("mocp")});
-#endif // OSD_OPT
 }
 
 bool MocInterface::openUri(const QString& file) {
