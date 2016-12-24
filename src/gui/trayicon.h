@@ -57,7 +57,7 @@ class TrayIcon : public QWidget
     bool eventFilter(QObject *, QEvent *);
 
 public:
-    explicit TrayIcon(QObject *parent = nullptr);
+    explicit TrayIcon(QWidget *parent = nullptr);
     static TrayIcon* self() { return object; }
 
 private slots:

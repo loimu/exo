@@ -39,7 +39,7 @@
 
 TrayIcon* TrayIcon::object = nullptr;
 
-TrayIcon::TrayIcon(QObject *parent) :
+TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
     player(PlayerInterface::self()),
     bookmarkManager(new BookmarkManager(this))
 {

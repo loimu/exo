@@ -66,7 +66,7 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 #endif // BUILD_LASTFM
 
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
-        TrayIcon* trayIcon = new TrayIcon(this);
+        TrayIcon* trayIcon = new TrayIcon();
         trayIcon->hide();
     }
 }
