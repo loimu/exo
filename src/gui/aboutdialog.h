@@ -22,24 +22,16 @@
 
 #include "basedialog.h"
 
-namespace Ui {
-class AboutDialog;
-}
-
 class AboutDialog : public BaseDialog
 {
     Q_OBJECT
 
-    Ui::AboutDialog* ui;
-
 public:
     explicit AboutDialog(QWidget *parent = nullptr);
-    ~AboutDialog();
+    ~AboutDialog() { emit destroyed(true); }
+
 signals:
     void destroyed(bool);
-
-private slots:
-    void on_aboutQt_released();
 };
 
 #endif // ABOUTDIALOG_H

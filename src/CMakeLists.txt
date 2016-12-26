@@ -20,7 +20,7 @@ set(exo_SRCS
   gui/tageditor.cpp
   gui/trayicon.cpp
 )
-set(exo_FRMS gui/aboutdialog.ui gui/lyricsdialog.ui)
+set(exo_FRMS gui/lyricsdialog.ui)
 set(exo_RSRCS ../images/exo.qrc)
 
 if(USE_CMUS)
