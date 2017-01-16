@@ -30,13 +30,15 @@ class Scrobbler : public QObject
 {
     Q_OBJECT
 
+    static Scrobbler* object;
     lastfm::Audioscrobbler* as;
 
 public:
-    explicit Scrobbler(QObject *parent = nullptr);
-    ~Scrobbler();
     static const char* apiKey;
     static const char* secret;
+    explicit Scrobbler(QObject *parent = nullptr);
+    ~Scrobbler();
+    static Scrobbler* self() { return object; }
 
 private slots:
     void init(const QString& artist, const QString& title, int totalSec);
