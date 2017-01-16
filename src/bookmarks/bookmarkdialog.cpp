@@ -27,7 +27,7 @@
 #include "bookmarkmanager.h"
 #include "bookmarkdialog.h"
 
-BookmarkDialog::BookmarkDialog(QList<BookmarkEntry> *list, QWidget *parent) :
+BookmarkDialog::BookmarkDialog(QVector<BookmarkEntry>* list, QWidget *parent) :
     BaseDialog(parent),
     list_(list),
     list(*list) // use local copy of the list
@@ -77,7 +77,7 @@ void BookmarkDialog::moveUp() {
     /* Always check if index is valid before usage.
      * QListWidget doesn't care about your selection. */
     if(cur-1 > -1) {
-        list.swap(cur, cur-1);
+        qSwap(list[cur], list[cur-1]);
         refreshView();
         listWidget->setCurrentRow(cur-1);
     }
@@ -86,7 +86,7 @@ void BookmarkDialog::moveUp() {
 void BookmarkDialog::moveDown() {
     int cur = listWidget->currentRow();
     if(cur > -1 && cur+1 < list.size()) {
-        list.swap(cur, cur+1);
+        qSwap(list[cur], list[cur+1]);
         refreshView();
         listWidget->setCurrentRow(cur+1);
     }
@@ -95,7 +95,7 @@ void BookmarkDialog::moveDown() {
 void BookmarkDialog::deleteBookmark() {
     int cur = listWidget->currentRow();
     if(cur > -1) {
-        list.removeAt(cur);
+        list.remove(cur);
         refreshView();
     }
 }

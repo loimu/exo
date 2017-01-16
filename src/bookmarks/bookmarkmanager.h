@@ -21,7 +21,7 @@
 #define BOOKMARKMANAGER_H
 
 #include <QObject>
-#include <QList>
+#include <QVector>
 #include <QPointer>
 
 class BookmarkDialog;
@@ -35,13 +35,13 @@ class BookmarkManager : public QObject
 {
     Q_OBJECT
 
-    QList<BookmarkEntry> list;
+    QVector<BookmarkEntry> list;
     QPointer<BookmarkDialog> bookmarkDialog;
     void refreshList();
 
 public:
     explicit BookmarkManager(QObject *parent = nullptr);
-    QList<BookmarkEntry>* bookmarks();
+    QVector<BookmarkEntry>* bookmarks();
 
 public slots:
     void addCurrent();

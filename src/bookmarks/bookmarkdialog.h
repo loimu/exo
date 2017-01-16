@@ -21,7 +21,7 @@
 #ifndef BOOKMARKDIALOG_H
 #define BOOKMARKDIALOG_H
 
-#include <QList>
+#include <QVector>
 
 #include "gui/basedialog.h"
 
@@ -35,15 +35,15 @@ class BookmarkDialog : public BaseDialog
 
     QLineEdit* lineEdit;
     QListWidget* listWidget;
-    QList<BookmarkEntry>* list_;
-    QList<BookmarkEntry> list;
+    QVector<BookmarkEntry>* list_;
+    QVector<BookmarkEntry> list;
     void keyPressEvent(QKeyEvent *e);
     void refreshView();
     void moveUp();
     void moveDown();
 
 public:
-    explicit BookmarkDialog(QList<BookmarkEntry> *list,
+    explicit BookmarkDialog(QVector<BookmarkEntry> *list,
                             QWidget *parent = nullptr);
 
 signals:

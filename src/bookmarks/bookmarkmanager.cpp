@@ -48,7 +48,7 @@ void BookmarkManager::refreshList() {
     }
 }
 
-QList<BookmarkEntry>* BookmarkManager::bookmarks() {
+QVector<BookmarkEntry>* BookmarkManager::bookmarks() {
     return &list;
 }
 
