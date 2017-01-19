@@ -29,22 +29,23 @@ class QLineEdit;
 class QListWidget;
 struct BookmarkEntry;
 
+typedef QVector<BookmarkEntry> BookmarkList;
+
 class BookmarkDialog : public BaseDialog
 {
     Q_OBJECT
 
     QLineEdit* lineEdit;
     QListWidget* listWidget;
-    QVector<BookmarkEntry>* list_;
-    QVector<BookmarkEntry> list;
+    BookmarkList* list_;
+    BookmarkList list;
     void keyPressEvent(QKeyEvent *e);
     void refreshView();
     void moveUp();
     void moveDown();
 
 public:
-    explicit BookmarkDialog(QVector<BookmarkEntry> *list,
-                            QWidget *parent = nullptr);
+    explicit BookmarkDialog(BookmarkList *list, QWidget *parent = nullptr);
 
 signals:
     void save();

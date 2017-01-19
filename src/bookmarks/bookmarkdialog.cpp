@@ -27,7 +27,7 @@
 #include "bookmarkmanager.h"
 #include "bookmarkdialog.h"
 
-BookmarkDialog::BookmarkDialog(QVector<BookmarkEntry>* list, QWidget *parent) :
+BookmarkDialog::BookmarkDialog(BookmarkList* list, QWidget *parent) :
     BaseDialog(parent),
     list_(list),
     list(*list) // use local copy of the list
