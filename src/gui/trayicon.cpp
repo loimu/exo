@@ -33,7 +33,7 @@
 #include "gui/aboutdialog.h"
 #include "gui/scrobblersettings.h"
 #include "bookmarks/bookmark.h"
-#include "bookmarks/bookmarkdialog.h"
+#include "bookmarks/bookmarkmanager.h"
 #include "gui/tageditor.h"
 #include "trayicon.h"
 
@@ -134,7 +134,7 @@ void TrayIcon::createTrayIcon() {
     bookmarksMenu = new QMenu(trayIconMenu);
     bookmarksMenu->setTitle(tr("Lin&ks"));
     trayIconMenu->addAction(bookmarksMenu->menuAction());
-    refreshBookmarks(BookmarkDialog::getList());
+    refreshBookmarks(BookmarkManager::getList());
     // end of Bookmarks submenu
     // Settings submenu
     QMenu* settingsMenu = new QMenu(trayIconMenu);
@@ -232,12 +232,12 @@ void TrayIcon::addFiles() {
 }
 
 void TrayIcon::addCurrent() {
-    BookmarkList bl = BookmarkDialog::addCurrent();
+    BookmarkList bl = BookmarkManager::addCurrent();
     refreshBookmarks(bl);
 }
 
 void TrayIcon::showManager() {
-    BookmarkDialog* bd = new BookmarkDialog(this);
+    BookmarkManager* bd = new BookmarkManager(this);
     bd->show();
 }
 

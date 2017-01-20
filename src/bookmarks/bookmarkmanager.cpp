@@ -27,11 +27,11 @@
 
 #include "core/playerinterface.h"
 #include "gui/trayicon.h"
-#include "bookmarkdialog.h"
+#include "bookmarkmanager.h"
 
-BookmarkDialog::BookmarkDialog(QWidget *parent) : BaseDialog(parent)
+BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
 {
-    list = BookmarkDialog::getList();
+    list = BookmarkManager::getList();
     this->setWindowTitle(tr("Bookmark Manager"));
     this->resize(500, 550);
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
@@ -61,7 +61,7 @@ BookmarkDialog::BookmarkDialog(QWidget *parent) : BaseDialog(parent)
     refreshView();
 }
 
-BookmarkList BookmarkDialog::getList() {
+BookmarkList BookmarkManager::getList() {
     QSettings settings;
     QString string = settings.value(
                 QLatin1String("bookmarkmanager/bookmarks")).toString();
@@ -81,20 +81,20 @@ BookmarkList BookmarkDialog::getList() {
     return list;
 }
 
-BookmarkList BookmarkDialog::addCurrent() {
+BookmarkList BookmarkManager::addCurrent() {
     BookmarkList list;
     BookmarkEntry entry;
     entry.uri  = PlayerInterface::self()->trackObject()->file;
     entry.name = entry.uri;
     if(!entry.uri.isEmpty()) {
-        list = BookmarkDialog::getList();
+        list = BookmarkManager::getList();
         list.append(entry);
-        BookmarkDialog::saveList(list);
+        BookmarkManager::saveList(list);
     }
     return list;
 }
 
-void BookmarkDialog::saveList(const BookmarkList& list) {
+void BookmarkManager::saveList(const BookmarkList& list) {
     QSettings settings;
     QString string = QString();
     int count = 0;
@@ -107,7 +107,7 @@ void BookmarkDialog::saveList(const BookmarkList& list) {
     settings.setValue(QLatin1String("bookmarkmanager/bookmarks"), string);
 }
 
-void BookmarkDialog::refreshView() {
+void BookmarkManager::refreshView() {
     lineEdit->clear();
     listWidget->clear();
     for(BookmarkEntry entry : list) {
@@ -118,7 +118,7 @@ void BookmarkDialog::refreshView() {
     }
 }
 
-void BookmarkDialog::moveUp() {
+void BookmarkManager::moveUp() {
     int cur = listWidget->currentRow();
     /* Always check if index is valid before usage.
      * QListWidget doesn't care about your selection. */
@@ -129,7 +129,7 @@ void BookmarkDialog::moveUp() {
     }
 }
 
-void BookmarkDialog::moveDown() {
+void BookmarkManager::moveDown() {
     int cur = listWidget->currentRow();
     if(cur > -1 && cur+1 < list.size()) {
         qSwap(list[cur], list[cur+1]);
@@ -138,7 +138,7 @@ void BookmarkDialog::moveDown() {
     }
 }
 
-void BookmarkDialog::deleteBookmark() {
+void BookmarkManager::deleteBookmark() {
     int cur = listWidget->currentRow();
     if(cur > -1) {
         list.remove(cur);
@@ -146,7 +146,7 @@ void BookmarkDialog::deleteBookmark() {
     }
 }
 
-void BookmarkDialog::renameBookmark(QString name) {
+void BookmarkManager::renameBookmark(QString name) {
     int cur = listWidget->currentRow();
     if(cur > -1) {
         list[cur].name = name.replace(";", "").replace("|", "");
@@ -155,18 +155,18 @@ void BookmarkDialog::renameBookmark(QString name) {
     }
 }
 
-void BookmarkDialog::updateLineEdit(int cur) {
+void BookmarkManager::updateLineEdit(int cur) {
     if(cur > -1)
         lineEdit->setText(list.at(cur).name);
 }
 
-void BookmarkDialog::accepted() {
-    BookmarkDialog::saveList(list);
+void BookmarkManager::accepted() {
+    BookmarkManager::saveList(list);
     TrayIcon::self()->refreshBookmarks(list);
     close();
 }
 
-void BookmarkDialog::keyPressEvent(QKeyEvent *e) {
+void BookmarkManager::keyPressEvent(QKeyEvent *e) {
     BaseDialog::keyPressEvent(e);
     switch(e->key())
     {

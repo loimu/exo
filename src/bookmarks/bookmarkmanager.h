@@ -18,8 +18,8 @@
 * ======================================================================== */
 
 
-#ifndef BOOKMARKDIALOG_H
-#define BOOKMARKDIALOG_H
+#ifndef BOOKMARKMANAGER_H
+#define BOOKMARKMANAGER_H
 
 #include <QVector>
 
@@ -35,7 +35,7 @@ struct BookmarkEntry {
 
 typedef QVector<BookmarkEntry> BookmarkList;
 
-class BookmarkDialog : public BaseDialog
+class BookmarkManager : public BaseDialog
 {
     Q_OBJECT
 
@@ -51,7 +51,7 @@ class BookmarkDialog : public BaseDialog
 public:
     static BookmarkList getList();
     static BookmarkList addCurrent();
-    explicit BookmarkDialog(QWidget *parent = nullptr);
+    explicit BookmarkManager(QWidget *parent = nullptr);
 
 signals:
     void save();
@@ -63,4 +63,4 @@ private slots:
     void accepted();
 };
 
-#endif // BOOKMARKDIALOG_H
+#endif // BOOKMARKMANAGER_H
