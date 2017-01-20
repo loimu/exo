@@ -26,14 +26,12 @@
 #include <QSettings>
 
 #include "core/playerinterface.h"
-#include "bookmarkmanager.h"
+#include "gui/trayicon.h"
 #include "bookmarkdialog.h"
 
-BookmarkDialog::BookmarkDialog(BookmarkList* list, QWidget *parent) :
-    BaseDialog(parent),
-    list_(list),
-    list(*list) // use local copy of the list
+BookmarkDialog::BookmarkDialog(QWidget *parent) : BaseDialog(parent)
 {
+    list = BookmarkDialog::getList();
     this->setWindowTitle(tr("Bookmark Manager"));
     this->resize(500, 550);
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
@@ -163,8 +161,8 @@ void BookmarkDialog::updateLineEdit(int cur) {
 }
 
 void BookmarkDialog::accepted() {
-    *list_ = list;
-    emit save();
+    BookmarkDialog::saveList(list);
+    TrayIcon::self()->refreshBookmarks(list);
     close();
 }
 

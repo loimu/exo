@@ -24,10 +24,11 @@
 
 #include <QWidget>
 #include <QSystemTrayIcon>
+#include <QVector>
 
 class PlayerInterface;
 class QSettings;
-class BookmarkManager;
+class BookmarkEntry;
 
 class TrayIcon : public QWidget
 {
@@ -51,7 +52,6 @@ class TrayIcon : public QWidget
     QAction *setQuitBehaviourAction;
     QAction *setScrobblingAction;
     QSystemTrayIcon *trayIcon;
-    BookmarkManager *bookmarkManager;
     void createActions();
     void createTrayIcon();
     bool eventFilter(QObject *, QEvent *);
@@ -59,6 +59,7 @@ class TrayIcon : public QWidget
 public:
     explicit TrayIcon(QWidget *parent = nullptr);
     static TrayIcon* self() { return object; }
+    void refreshBookmarks(const QVector<BookmarkEntry>& list);
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
@@ -67,7 +68,8 @@ private slots:
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();
-    void refreshBookmarks();
+    void addCurrent();
+    void showManager();
 #ifdef BUILD_LASTFM
     void enableScrobbler(bool);
 #endif // BUILD_LASTFM

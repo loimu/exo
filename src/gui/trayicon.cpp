@@ -32,23 +32,21 @@
 #include "gui/lyricsdialog.h"
 #include "gui/aboutdialog.h"
 #include "gui/scrobblersettings.h"
-#include "bookmarks/bookmarkmanager.h"
 #include "bookmarks/bookmark.h"
+#include "bookmarks/bookmarkdialog.h"
 #include "gui/tageditor.h"
 #include "trayicon.h"
 
 TrayIcon* TrayIcon::object = nullptr;
 
 TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
-    player(PlayerInterface::self()),
-    bookmarkManager(new BookmarkManager(this))
+    player(PlayerInterface::self())
 {
     object = this;
     createActions();
     createTrayIcon();
     connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
             SLOT(updateToolTip(QString, QString, QString, QString)));
-    connect(bookmarkManager, SIGNAL(refreshBookmarks()), SLOT(refreshBookmarks()));
 }
 
 void TrayIcon::createActions() {
@@ -79,13 +77,11 @@ void TrayIcon::createActions() {
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     quitAction->setIcon(QIcon(QLatin1String(":/images/close.png")));
     bookmarkCurrentAction = new QAction(tr("Bookmark &Current"), this);
-    connect(bookmarkCurrentAction, SIGNAL(triggered()),
-            bookmarkManager, SLOT(addCurrent()));
+    connect(bookmarkCurrentAction, SIGNAL(triggered()), SLOT(addCurrent()));
     bookmarkCurrentAction->setIcon(
                 QIcon::fromTheme(QLatin1String("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark &Manager"), this);
-    connect(bookmarkManagerAction, SIGNAL(triggered()),
-            bookmarkManager, SLOT(manager()));
+    connect(bookmarkManagerAction, SIGNAL(triggered()), SLOT(showManager()));
     bookmarkManagerAction->setIcon(
                 QIcon::fromTheme(QLatin1String("bookmarks-organize")));
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
@@ -138,7 +134,7 @@ void TrayIcon::createTrayIcon() {
     bookmarksMenu = new QMenu(trayIconMenu);
     bookmarksMenu->setTitle(tr("Lin&ks"));
     trayIconMenu->addAction(bookmarksMenu->menuAction());
-    refreshBookmarks();
+    refreshBookmarks(BookmarkDialog::getList());
     // end of Bookmarks submenu
     // Settings submenu
     QMenu* settingsMenu = new QMenu(trayIconMenu);
@@ -235,14 +231,24 @@ void TrayIcon::addFiles() {
     player->appendFile(files);
 }
 
-void TrayIcon::refreshBookmarks() {
+void TrayIcon::addCurrent() {
+    BookmarkList bl = BookmarkDialog::addCurrent();
+    refreshBookmarks(bl);
+}
+
+void TrayIcon::showManager() {
+    BookmarkDialog* bd = new BookmarkDialog(this);
+    bd->show();
+}
+
+void TrayIcon::refreshBookmarks(const BookmarkList& list) {
     bookmarksMenu->clear();
     bookmarksMenu->addAction(bookmarkCurrentAction);
-    if(bookmarkManager->bookmarks()->isEmpty())
+    if(list.isEmpty())
         return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
-    for(BookmarkEntry entry : *bookmarkManager->bookmarks()) {
+    for(BookmarkEntry entry : list) {
         Bookmark *bookmark = new Bookmark(entry.name, this);
         bookmark->uri = entry.uri;
         bookmarksMenu->addAction(bookmark);

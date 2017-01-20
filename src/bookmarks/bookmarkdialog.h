@@ -27,7 +27,11 @@
 
 class QLineEdit;
 class QListWidget;
-struct BookmarkEntry;
+
+struct BookmarkEntry {
+    QString name;
+    QString uri;
+};
 
 typedef QVector<BookmarkEntry> BookmarkList;
 
@@ -37,7 +41,6 @@ class BookmarkDialog : public BaseDialog
 
     QLineEdit* lineEdit;
     QListWidget* listWidget;
-    BookmarkList* list_;
     BookmarkList list;
     static void saveList(const BookmarkList& list);
     void keyPressEvent(QKeyEvent *e);
@@ -48,7 +51,7 @@ class BookmarkDialog : public BaseDialog
 public:
     static BookmarkList getList();
     static BookmarkList addCurrent();
-    explicit BookmarkDialog(BookmarkList *list, QWidget *parent = nullptr);
+    explicit BookmarkDialog(QWidget *parent = nullptr);
 
 signals:
     void save();

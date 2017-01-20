@@ -8,7 +8,6 @@ set(exo_SRCS
   main.cpp
   bookmarks/bookmark.cpp
   bookmarks/bookmarkdialog.cpp
-  bookmarks/bookmarkmanager.cpp
   core/exo.cpp
   core/mocinterface.cpp
   core/playerinterface.cpp
