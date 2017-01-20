@@ -26,14 +26,14 @@
 #include <QFileDialog>
 #include <QPointer>
 
+#include "bookmarks/bookmark.h"
+#include "bookmarks/bookmarkmanager.h"
 #include "core/exo.h"
 #include "core/playerinterface.h"
 #include "core/process.h"
 #include "gui/lyricsdialog.h"
 #include "gui/aboutdialog.h"
 #include "gui/scrobblersettings.h"
-#include "bookmarks/bookmark.h"
-#include "bookmarks/bookmarkmanager.h"
 #include "gui/tageditor.h"
 #include "trayicon.h"
 
@@ -206,7 +206,7 @@ void TrayIcon::updateToolTip(const QString& message, const QString& currentTime,
 }
 
 void TrayIcon::showLyricsWindow() {
-    QPointer<LyricsDialog> lyricsDialog = new LyricsDialog();
+    LyricsDialog* lyricsDialog = new LyricsDialog(this);
     lyricsDialog->show();
 }
 
