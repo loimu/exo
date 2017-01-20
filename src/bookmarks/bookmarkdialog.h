@@ -39,12 +39,15 @@ class BookmarkDialog : public BaseDialog
     QListWidget* listWidget;
     BookmarkList* list_;
     BookmarkList list;
+    static void saveList(const BookmarkList& list);
     void keyPressEvent(QKeyEvent *e);
     void refreshView();
     void moveUp();
     void moveDown();
 
 public:
+    static BookmarkList getList();
+    static BookmarkList addCurrent();
     explicit BookmarkDialog(BookmarkList *list, QWidget *parent = nullptr);
 
 signals:

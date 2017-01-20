@@ -23,7 +23,9 @@
 #include <QListWidget>
 #include <QDialogButtonBox>
 #include <QKeyEvent>
+#include <QSettings>
 
+#include "core/playerinterface.h"
 #include "bookmarkmanager.h"
 #include "bookmarkdialog.h"
 
@@ -59,6 +61,52 @@ BookmarkDialog::BookmarkDialog(BookmarkList* list, QWidget *parent) :
     connect(buttonBox, SIGNAL(accepted()), SLOT(accepted()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(close()));
     refreshView();
+}
+
+BookmarkList BookmarkDialog::getList() {
+    QSettings settings;
+    QString string = settings.value(
+                QLatin1String("bookmarkmanager/bookmarks")).toString();
+    QStringList stringList = string.split(QLatin1String(";"));
+    BookmarkList list;
+    if(!stringList.isEmpty()) {
+        for(QString str : stringList) {
+            QStringList bookmark = str.split(QLatin1String("|"));
+            if(bookmark.size() == 2) {
+                BookmarkEntry entry;
+                entry.name = bookmark.at(0);
+                entry.uri = bookmark.at(1);
+                list.append(entry);
+            }
+        }
+    }
+    return list;
+}
+
+BookmarkList BookmarkDialog::addCurrent() {
+    BookmarkList list;
+    BookmarkEntry entry;
+    entry.uri  = PlayerInterface::self()->trackObject()->file;
+    entry.name = entry.uri;
+    if(!entry.uri.isEmpty()) {
+        list = BookmarkDialog::getList();
+        list.append(entry);
+        BookmarkDialog::saveList(list);
+    }
+    return list;
+}
+
+void BookmarkDialog::saveList(const BookmarkList& list) {
+    QSettings settings;
+    QString string = QString();
+    int count = 0;
+    for(BookmarkEntry entry : list) {
+        if(count)
+            string.append(QLatin1String(";"));
+        string.append(entry.name + QLatin1String("|") + entry.uri);
+        count++;
+    }
+    settings.setValue(QLatin1String("bookmarkmanager/bookmarks"), string);
 }
 
 void BookmarkDialog::refreshView() {
