@@ -211,7 +211,7 @@ void TrayIcon::showLyricsWindow() {
 }
 
 void TrayIcon::showAboutDialog() {
-    aboutAction->setDisabled(true);
+    aboutAction->setEnabled(false);
     AboutDialog* about = new AboutDialog(this);
     about->show();
     connect(about, SIGNAL(destroyed(bool)), aboutAction, SLOT(setEnabled(bool)));
@@ -237,8 +237,11 @@ void TrayIcon::addCurrent() {
 }
 
 void TrayIcon::showManager() {
-    BookmarkManager* bd = new BookmarkManager(this);
-    bd->show();
+    bookmarkManagerAction->setEnabled(false);
+    BookmarkManager* bm = new BookmarkManager(this);
+    bm->show();
+    connect(bm, SIGNAL(destroyed(bool)),
+            bookmarkManagerAction, SLOT(setEnabled(bool)));
 }
 
 void TrayIcon::refreshBookmarks(const BookmarkList& list) {
