@@ -24,7 +24,7 @@
 #include "core/process.h"
 #include "mocinterface.h"
 
-#define OSD_OPT "OnSongChange=\"" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py\""
+#define OSD_OPT "OnSongChange=" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py"
 
 MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent)
 {
@@ -87,9 +87,7 @@ bool MocInterface::showPlayer() {
     return Process::execute(
                 term, QStringList{
                     QLatin1String("-e"),
-                    QLatin1String("mocp"),
-                    QLatin1String("-O"),
-                    QLatin1String(OSD_OPT)});
+                    QLatin1String("mocp -O " OSD_OPT)});
 }
 
 bool MocInterface::openUri(const QString& file) {
