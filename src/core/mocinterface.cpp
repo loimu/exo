@@ -87,7 +87,7 @@ bool MocInterface::showPlayer() {
     return Process::execute(
                 term, QStringList{
                     QLatin1String("-e"),
-                    QLatin1String("\"mocp -O " OSD_OPT "\"")});
+                    QLatin1String("mocp -O " OSD_OPT)});
 }
 
 bool MocInterface::openUri(const QString& file) {
