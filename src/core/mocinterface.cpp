@@ -84,9 +84,9 @@ void MocInterface::showPlayer() {
                     QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    Process::run(this, term, QStringList{
-                     QLatin1String("-e"),
-                     QLatin1String("mocp -O " OSD_OPT)});
+    Process::execute(term, QStringList{
+                         QLatin1String("-e"),
+                         QLatin1String("mocp -O " OSD_OPT)});
 }
 
 bool MocInterface::openUri(const QString& file) {

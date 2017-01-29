@@ -51,8 +51,8 @@ void CmusInterface::runPlayer() {
                     QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    Process::run(this, term, QStringList{QLatin1String("-e"),
-                                         QLatin1String("cmus")});
+    Process::execute(term, QStringList{QLatin1String("-e"),
+                                       QLatin1String("cmus")});
 }
 
 #define SEND_COMMAND(__method, __option)\

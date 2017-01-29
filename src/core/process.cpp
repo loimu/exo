@@ -30,17 +30,7 @@ QString Process::getOutput(const QString& program, const QStringList& options) {
 
 bool Process::execute(const QString& program, const QStringList& options) {
     QProcess proc;
-    proc.start(program, options);
-    proc.waitForFinished(-1);
-    /* returns true (success) if no output at stderr */
-    return proc.readAllStandardError().isEmpty();
-}
-
-void Process::run(QObject* parent,
-                  const QString& program,
-                  const QStringList& options) {
-    QProcess* proc = new QProcess(parent);
-    proc->start(program, options);
+    return proc.startDetached(program, options);
 }
 
 QStringList Process::detect(const QStringList& apps) {
