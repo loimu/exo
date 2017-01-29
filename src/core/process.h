@@ -20,6 +20,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
+class QObject;
 class QString;
 class QStringList;
 
@@ -31,6 +32,9 @@ public:
                              const QStringList& parameters);
     static bool execute(const QString& process,
                         const QStringList& parameters);
+    static void run(QObject *parent,
+                    const QString& process,
+                    const QStringList& parameters);
     static QStringList detect(const QStringList& apps);
 };
 

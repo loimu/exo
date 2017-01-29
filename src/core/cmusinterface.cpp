@@ -40,7 +40,7 @@ bool CmusInterface::isPlayerRunning() {
                                QStringList{QLatin1String("cmus")}).isEmpty();
 }
 
-bool CmusInterface::runPlayer() {
+void CmusInterface::runPlayer() {
     QString term = QLatin1String("xterm"); // xterm is a fallback app
     QStringList apps = Process::detect(
                 QStringList{
@@ -51,8 +51,8 @@ bool CmusInterface::runPlayer() {
                     QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    return Process::execute(term, QStringList{QLatin1String("-e"),
-                                              QLatin1String("cmus")});
+    Process::run(this, term, QStringList{QLatin1String("-e"),
+                                         QLatin1String("cmus")});
 }
 
 #define SEND_COMMAND(__method, __option)\
@@ -94,8 +94,8 @@ bool CmusInterface::changeVolume(int delta) {
     return Process::execute(cli, QStringList() << QLatin1String("-v") << d);
 }
 
-bool CmusInterface::showPlayer() {
-    return runPlayer();
+void CmusInterface::showPlayer() {
+    runPlayer();
 }
 
 bool CmusInterface::openUri(const QString& file) {

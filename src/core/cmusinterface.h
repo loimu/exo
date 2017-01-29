@@ -26,7 +26,7 @@ class CmusInterface : public PlayerInterface
 {
     QString cli;
     bool isPlayerRunning();
-    bool runPlayer();
+    void runPlayer();
     QString find(const QString&, const QString&);
 
 public:
@@ -45,7 +45,7 @@ public slots:
     bool seek(int);
     bool volume(int);
     bool changeVolume(int);
-    bool showPlayer();
+    void showPlayer();
     bool openUri(const QString&);
     bool appendFile(const QStringList&);
 

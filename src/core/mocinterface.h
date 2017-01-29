@@ -43,7 +43,7 @@ public slots:
     bool seek(int);
     bool volume(int);
     bool changeVolume(int);
-    bool showPlayer();
+    void showPlayer();
     bool openUri(const QString&);
     bool appendFile(const QStringList&);
 

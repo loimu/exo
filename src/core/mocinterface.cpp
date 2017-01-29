@@ -73,7 +73,7 @@ SEND_COMMAND_PARAM(seek, QLatin1String("-k%1"))
 SEND_COMMAND_PARAM(volume, QLatin1String("-v%1"))
 SEND_COMMAND_PARAM(changeVolume, QLatin1String("-v+%1"))
 
-bool MocInterface::showPlayer() {
+void MocInterface::showPlayer() {
     QString term = QLatin1String("xterm"); // xterm is a fallback app
     QStringList apps = Process::detect(
                 QStringList{
@@ -84,10 +84,9 @@ bool MocInterface::showPlayer() {
                     QLatin1String("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    return Process::execute(
-                term, QStringList{
-                    QLatin1String("-e"),
-                    QLatin1String("mocp -O " OSD_OPT)});
+    Process::run(this, term, QStringList{
+                     QLatin1String("-e"),
+                     QLatin1String("mocp -O " OSD_OPT)});
 }
 
 bool MocInterface::openUri(const QString& file) {

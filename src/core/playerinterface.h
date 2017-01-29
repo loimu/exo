@@ -77,7 +77,7 @@ public slots:
     virtual bool seek(int offset) = 0;
     virtual bool volume(int level) = 0;
     virtual bool changeVolume(int delta) = 0;
-    virtual bool showPlayer() = 0;
+    virtual void showPlayer() = 0;
     virtual bool openUri(const QString& uri) = 0;
     virtual bool appendFile(const QStringList& files) = 0;
 

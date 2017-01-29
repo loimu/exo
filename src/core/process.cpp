@@ -36,6 +36,13 @@ bool Process::execute(const QString& program, const QStringList& options) {
     return proc.readAllStandardError().isEmpty();
 }
 
+void Process::run(QObject* parent,
+                  const QString& program,
+                  const QStringList& options) {
+    QProcess* proc = new QProcess(parent);
+    proc->start(program, options);
+}
+
 QStringList Process::detect(const QStringList& apps) {
     QProcess proc;
     proc.start(QLatin1String("which"), apps);
