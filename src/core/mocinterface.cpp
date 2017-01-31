@@ -104,18 +104,18 @@ State MocInterface::getInfo() {
                 QLatin1String("mocp"),
                 QStringList{
                     QLatin1String("-Q"),
-                    QLatin1String("\"{s}%state{a}%a{t}%t{A}%A{f}%file"
-                    "{n}%n{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title{end}\"")});
+                    QLatin1String("%state{a}%a{t}%t{A}%A{f}%file{n}%n"
+                    "{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title")});
     if(info.isEmpty())
         return Offline;
+    if(info.startsWith(QLatin1String("STOP")))
+        return Stop;
     QRegExp infoRgx(
-                QLatin1String("\\{s\\}(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                QLatin1String("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
                               "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)"
-                              "\\{ts\\}(.*)\\{cs\\}(.*)\\{T\\}(.*)\\{end\\}"));
+                              "\\{ts\\}(.*)\\{cs\\}(.*)\\{T\\}(.*)\n"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
-    if(infoRgx.cap(1) == QLatin1String("STOP"))
-        return Stop;
     State state = Offline;
     if(infoRgx.cap(1) == QLatin1String("PLAY"))
         state = Play;
