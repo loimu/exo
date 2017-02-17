@@ -56,10 +56,11 @@ public:
 
 signals:
     // two signals for scrobbler
-    void trackListened(QString, QString, QString, int);
-    void trackChanged(QString, QString, int);
+    void trackListened(const QString&, const QString&, const QString&, int);
+    void trackChanged(const QString&, const QString&, int);
     // signal for trayicon
-    void updateStatus(QString, QString, QString, QString);
+    void updateStatus(const QString&, const QString&,
+                      const QString&, const QString&);
     // two signals for MPRIS
     void newStatus(State);
     void newTrack();
