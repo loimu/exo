@@ -44,7 +44,8 @@ class PlayerInterface : public QObject
 
 protected:
     Track track;
-    void startTimer(int);
+    void timerEvent(QTimerEvent *event);
+    void update();
 
 public:
     explicit PlayerInterface(QObject *parent = nullptr);
@@ -84,9 +85,6 @@ public slots:
 
 protected slots:
     virtual State getInfo() = 0;
-
-private slots:
-    void update();
 };
 
 #endif // PLAYERINTERFACE_H

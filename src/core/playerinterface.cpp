@@ -17,7 +17,7 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QTimer>
+#include <QTimerEvent>
 #include <QDir>
 
 #include "playerinterface.h"
@@ -31,10 +31,8 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
     object = this;
 }
 
-void PlayerInterface::startTimer(int period) {
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(period);
+void PlayerInterface::timerEvent(QTimerEvent *event) {
+    update();
 }
 
 void PlayerInterface::scrobble() {
