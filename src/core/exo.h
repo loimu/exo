@@ -40,9 +40,6 @@ public:
     ~Exo();
     static Exo* self() { return object; }
     static void forceReauth() { reauth = true; }
-#ifdef BUILD_LASTFM
-    void loadScrobbler(bool);
-#endif // BUILD_LASTFM
 };
 
 #endif // EXO_H

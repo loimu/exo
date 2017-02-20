@@ -25,16 +25,19 @@
 #include <QSettings>
 #include <QFileDialog>
 #include <QPointer>
+#include <QCoreApplication>
 
 #include "bookmarks/bookmark.h"
 #include "bookmarks/bookmarkmanager.h"
-#include "core/exo.h"
 #include "core/playerinterface.h"
 #include "core/process.h"
 #include "gui/lyricsdialog.h"
 #include "gui/aboutdialog.h"
-#include "gui/scrobblersettings.h"
 #include "gui/tageditor.h"
+#ifdef BUILD_LASTFM
+  #include "gui/scrobblersettings.h"
+  #include "lastfm/scrobbler.h"
+#endif // BUILD_LASTFM
 #include "trayicon.h"
 
 TrayIcon* TrayIcon::object = nullptr;
@@ -263,13 +266,28 @@ void TrayIcon::enableScrobbler(bool checked) {
     QSettings settings;
     if(settings.value(QLatin1String("scrobbler/sessionkey")).toBool()) {
         settings.setValue(QLatin1String("scrobbler/enabled"), checked);
-        Exo::self()->loadScrobbler(checked);
+        loadScrobbler(checked);
     } else
         if(checked) {
             ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
             settingsDialog->show();
             connect(settingsDialog, SIGNAL(configured(bool)),
                     setScrobblingAction, SLOT(setChecked(bool)));
+            connect(settingsDialog, SIGNAL(configured(bool)),
+                    SLOT(loadScrobbler(bool)));
         }
+}
+
+void TrayIcon::loadScrobbler(bool checked) {
+    QPointer<Scrobbler> scrobbler = Scrobbler::self();
+    if(!scrobbler && checked) {
+        scrobbler = new Scrobbler(this);
+        PlayerInterface* player = PlayerInterface::self();
+        connect(player, SIGNAL(trackChanged(QString, QString, int)),
+                scrobbler, SLOT(init(QString, QString, int)));
+        connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
+                scrobbler, SLOT(submit(QString, QString, QString, int)));
+    } else if(scrobbler && !checked)
+        scrobbler->deleteLater();
 }
 #endif // BUILD_LASTFM

@@ -31,7 +31,6 @@
   #include <lastfm5/XmlQuery.h>
 #endif // BUILD_WITH_QT4
 
-#include "core/exo.h"
 #include "lastfm/scrobbler.h"
 #include "scrobblerauth.h"
 
@@ -73,7 +72,6 @@ void ScrobblerAuth::authReplyFinished() {
         settings.setValue("scrobbler/login", lastfm::ws::Username);
         settings.setValue("scrobbler/sessionkey", lastfm::ws::SessionKey);
         settings.setValue("scrobbler/enabled", true);
-        Exo::self()->loadScrobbler(true);
         emit configured();
     } else
         emit failed(tr("wrong data, try again"));

@@ -17,7 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "core/exo.h"
 #include "lastfm/scrobblerauth.h"
 #include "scrobblersettings.h"
 #include "ui_scrobblersettings.h"

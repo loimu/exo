@@ -58,8 +58,16 @@ Exo::Exo(int &argc, char **argv, bool useGui) : QApplication(argc, argv, useGui)
 
 #ifdef BUILD_LASTFM
     QSettings settings;
-    if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
-        loadScrobbler(true);
+    if(settings.value(QLatin1String("scrobbler/enabled")).toBool()) {
+        if(!scrobbler) {
+            scrobbler = new Scrobbler(this);
+            PlayerInterface* player = PlayerInterface::self();
+            connect(player, SIGNAL(trackChanged(QString, QString, int)),
+                    scrobbler, SLOT(init(QString, QString, int)));
+            connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
+                    scrobbler, SLOT(submit(QString, QString, QString, int)));
+        }
+    }
     if(!useGui && (reauth|| !settings.value(
                        QLatin1String("scrobbler/sessionkey")).toBool()))
         new ConsoleAuth(this);
@@ -78,17 +86,3 @@ Exo::~Exo() {
     if(TrayIcon::self())
         TrayIcon::self()->deleteLater();
 }
-
-#ifdef BUILD_LASTFM
-void Exo::loadScrobbler(bool checked) {
-    if(!scrobbler && checked) {
-        scrobbler = new Scrobbler(this);
-        PlayerInterface* player = PlayerInterface::self();
-        connect(player, SIGNAL(trackChanged(QString, QString, int)),
-                scrobbler, SLOT(init(QString, QString, int)));
-        connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
-                scrobbler, SLOT(submit(QString, QString, QString, int)));
-    } else if(scrobbler && !checked)
-        scrobbler->deleteLater();
-}
-#endif // BUILD_LASTFM

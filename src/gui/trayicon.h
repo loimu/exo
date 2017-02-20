@@ -72,6 +72,7 @@ private slots:
     void showManager();
 #ifdef BUILD_LASTFM
     void enableScrobbler(bool);
+    void loadScrobbler(bool);
 #endif // BUILD_LASTFM
 
 public slots:
