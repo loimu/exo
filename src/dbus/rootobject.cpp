@@ -17,7 +17,8 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "core/exo.h"
+#include <QApplication>
+
 #include "core/playerinterface.h"
 #include "rootobject.h"
 
