@@ -29,6 +29,7 @@ class MocInterface : public PlayerInterface
 
 public:
     explicit MocInterface(QObject *parent = nullptr);
+    ~MocInterface();
 
 public slots:
     QString id();

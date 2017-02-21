@@ -31,6 +31,7 @@
   #include <lastfm5/Track.h>
 #endif // BUILD_WITH_QT4
 
+#include "core/playerinterface.h"
 #include "scrobbler.h"
 
 const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";
@@ -50,6 +51,11 @@ Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
     as = new lastfm::Audioscrobbler(QLatin1String("eXo"));
+    PlayerInterface* player = PlayerInterface::self();
+    connect(player, SIGNAL(trackChanged(QString, QString, int)),
+            SLOT(init(QString, QString, int)));
+    connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
+            SLOT(submit(QString, QString, QString, int)));
 }
 
 Scrobbler::~Scrobbler() {

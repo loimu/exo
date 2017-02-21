@@ -17,26 +17,44 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include "config.h"
+
 #include <QByteArray>
 #include <QNetworkProxyFactory>
+#include <QSettings>
+#include <QApplication>
+
+#ifdef BUILD_DBUS
+  #include "dbus/dbus.h"
+#endif // BUILD_DBUS
+
+#ifdef BUILD_LASTFM
+  #include "core/consoleauth.h"
+  #include "lastfm/scrobbler.h"
+#endif // BUILD_LASTFM
+
+#ifdef USE_CMUS
+  #include "core/cmusinterface.h"
+#endif // USE_CMUS
+
+#include "core/mocinterface.h"
+#include "gui/trayicon.h"
 
 #include "core/singleinstance.h"
-#include "core/exo.h"
 
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(exo);
     bool useGui = true;
+    bool forceReauth = false;
     for(int i=1; i<argc; i++) {
         QByteArray arg = argv[i];
         if(arg == QByteArray("-d") || arg == QByteArray("-b")
-                || arg == QByteArray("--background")) {
+                || arg == QByteArray("--background"))
             useGui = false;
-        }
-        if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
-            useGui = false;
-            Exo::forceReauth();
-        }
+        if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth"))
+            forceReauth = true;
     }
+
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
     QCoreApplication::setApplicationName(QLatin1String("eXo"));
     QCoreApplication::setApplicationVersion(QLatin1String("0.7"));
@@ -46,6 +64,39 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     QNetworkProxyFactory::setUseSystemConfiguration(true);
-    Exo app(argc, argv, useGui);
+    QApplication app(argc, argv, useGui);
+    app.setQuitOnLastWindowClosed(false);
+
+    if(forceReauth) {
+#ifdef BUILD_LASTFM
+        new ConsoleAuth(qApp);
+        return app.exec();
+#else
+        qWarning("Audioscrobbler has been disabled on the build time");
+        return 1;
+#endif // BUILD_LASTFM
+    }
+
+#ifdef USE_CMUS
+    new CmusInterface(qApp);
+#else // USE_CMUS
+    new MocInterface(qApp);
+#endif // USE_CMUS
+
+#ifdef BUILD_DBUS
+    if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
+        new DBus(qApp);
+#endif // BUILD_DBUS
+
+#ifdef BUILD_LASTFM
+    QSettings settings;
+    if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
+        new Scrobbler(qApp);
+#endif // BUILD_LASTFM
+
+    if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
+        TrayIcon* trayIcon = new TrayIcon();
+        trayIcon->hide();
+    }
     return app.exec();
 }

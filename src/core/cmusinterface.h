@@ -31,6 +31,7 @@ class CmusInterface : public PlayerInterface
 
 public:
     explicit CmusInterface(QObject *parent = nullptr);
+    ~CmusInterface();
 
 public slots:
     QString id();

@@ -20,6 +20,7 @@
 #include "config.h"
 
 #include <QStringList>
+#include <QSettings>
 
 #include "core/process.h"
 #include "mocinterface.h"
@@ -31,6 +32,13 @@ MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent)
     if(!isServerRunning())
         runServer();
     startTimer(1000);
+}
+
+MocInterface::~MocInterface()
+{
+    QSettings settings;
+    if(settings.value(QLatin1String("player/quit")).toBool())
+        quit();
 }
 
 QString MocInterface::id() {

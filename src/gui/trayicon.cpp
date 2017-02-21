@@ -280,14 +280,9 @@ void TrayIcon::enableScrobbler(bool checked) {
 
 void TrayIcon::loadScrobbler(bool checked) {
     QPointer<Scrobbler> scrobbler = Scrobbler::self();
-    if(!scrobbler && checked) {
+    if(!scrobbler && checked)
         scrobbler = new Scrobbler(this);
-        PlayerInterface* player = PlayerInterface::self();
-        connect(player, SIGNAL(trackChanged(QString, QString, int)),
-                scrobbler, SLOT(init(QString, QString, int)));
-        connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
-                scrobbler, SLOT(submit(QString, QString, QString, int)));
-    } else if(scrobbler && !checked)
+    else if(scrobbler && !checked)
         scrobbler->deleteLater();
 }
 #endif // BUILD_LASTFM

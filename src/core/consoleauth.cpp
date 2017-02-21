@@ -18,6 +18,7 @@
 * ======================================================================== */
 
 #include <QTextStream>
+#include <QApplication>
 
 #include "lastfm/scrobblerauth.h"
 #include "consoleauth.h"
@@ -50,6 +51,7 @@ void ConsoleAuth::authFail(const QString& errmsg) {
     if(!input.startsWith("y", Qt::CaseInsensitive)) {
         so << tr("Exiting authentication procedure") << endl;
         this->deleteLater();
+        qApp->exit();
         return;
     }
     auth();
@@ -59,4 +61,5 @@ void ConsoleAuth::authSuccess() {
     QTextStream so(stdout);
     so << tr("Authentication succesful!") << endl;
     this->deleteLater();
+    qApp->exit();
 }
