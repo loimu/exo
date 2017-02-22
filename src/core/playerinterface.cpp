@@ -56,10 +56,13 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
     if(status == Play) {
         emit updateStatus(
                     track.title, track.currTime, track.totalTime, cover());
+#ifdef BUILD_LASTFM
         scrobble();
+#endif // BUILD_LASTFM
     }
 }
 
+#ifdef BUILD_LASTFM
 void PlayerInterface::scrobble() {
     static QString nowPlaying = QString();
     static bool listened = true;
@@ -80,6 +83,7 @@ void PlayerInterface::scrobble() {
         emit trackListened(track.artist,track.song,track.album,track.totalSec);
     }
 }
+#endif // BUILD_LASTFM
 
 QString PlayerInterface::cover() {
     if(track.file.startsWith(QLatin1String("http")))
