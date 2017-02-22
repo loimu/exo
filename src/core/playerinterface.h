@@ -45,7 +45,6 @@ class PlayerInterface : public QObject
 protected:
     Track track;
     void timerEvent(QTimerEvent *event);
-    void update();
 
 public:
     explicit PlayerInterface(QObject *parent = nullptr);

@@ -32,7 +32,32 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 }
 
 void PlayerInterface::timerEvent(QTimerEvent *event) {
-    update();
+    State currentStatus = getInfo();
+#ifdef BUILD_DBUS
+    static QString title = QString();
+    if(title != track.title) {
+        title = track.title;
+        emit newTrack();
+    }
+#endif // BUILD_DBUS
+    static State status = Offline;
+    if(status != currentStatus) {
+        status = currentStatus;
+        emit newStatus(status);
+        if(status == Offline)
+            emit updateStatus(tr("Player isn't running."),
+                              QString(), QString(), QString());
+        if(status == Stop)
+            emit updateStatus(tr("Stopped"), QString(), QString(), QString());
+        if(status == Pause)
+            emit updateStatus(
+                    track.title, track.currTime, track.totalTime, cover());
+    }
+    if(status == Play) {
+        emit updateStatus(
+                    track.title, track.currTime, track.totalTime, cover());
+        scrobble();
+    }
 }
 
 void PlayerInterface::scrobble() {
@@ -70,35 +95,6 @@ QString PlayerInterface::cover() {
         return path + QLatin1String("/") + dir.entryList().at(0);
     else
         return QLatin1String(":/images/nocover.png");
-}
-
-void PlayerInterface::update() {
-    State currentStatus = getInfo();
-#ifdef BUILD_DBUS
-    static QString title = QString();
-    if(title != track.title) {
-        title = track.title;
-        emit newTrack();
-    }
-#endif // BUILD_DBUS
-    static State status = Offline;
-    if(status != currentStatus) {
-        status = currentStatus;
-        emit newStatus(status);
-        if(status == Offline)
-            emit updateStatus(tr("Player isn't running."),
-                              QString(), QString(), QString());
-        if(status == Stop)
-            emit updateStatus(tr("Stopped"), QString(), QString(), QString());
-        if(status == Pause)
-            emit updateStatus(
-                    track.title, track.currTime, track.totalTime, cover());
-    }
-    if(status == Play) {
-        emit updateStatus(
-                    track.title, track.currTime, track.totalTime, cover());
-        scrobble();
-    }
 }
 
 #ifdef BUILD_DBUS
