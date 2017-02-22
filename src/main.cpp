@@ -19,6 +19,8 @@
 
 #include "config.h"
 
+#include <unistd.h>
+
 #include <QByteArray>
 #include <QNetworkProxyFactory>
 #include <QSettings>
@@ -49,8 +51,13 @@ int main(int argc, char *argv[]) {
     for(int i=1; i<argc; i++) {
         QByteArray arg = argv[i];
         if(arg == QByteArray("-d") || arg == QByteArray("-b")
-                || arg == QByteArray("--background"))
+                || arg == QByteArray("--background")) {
             useGui = false;
+            if(fork() == 0)
+                qWarning("Running in the background succeeded");
+            else
+                return 0; // exiting the parent process or error condition
+        }
         if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth"))
             forceReauth = true;
     }
@@ -69,7 +76,7 @@ int main(int argc, char *argv[]) {
 
     if(forceReauth) {
 #ifdef BUILD_LASTFM
-        new ConsoleAuth(qApp);
+        new ConsoleAuth(&app);
         return app.exec();
 #else
         qWarning("Audioscrobbler has been disabled on the build time");
@@ -78,20 +85,20 @@ int main(int argc, char *argv[]) {
     }
 
 #ifdef USE_CMUS
-    new CmusInterface(qApp);
+    new CmusInterface(&app);
 #else // USE_CMUS
-    new MocInterface(qApp);
+    new MocInterface(&app);
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
     if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
-        new DBus(qApp);
+        new DBus(&app);
 #endif // BUILD_DBUS
 
 #ifdef BUILD_LASTFM
     QSettings settings;
     if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
-        new Scrobbler(qApp);
+        new Scrobbler(&app);
 #endif // BUILD_LASTFM
 
     if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
