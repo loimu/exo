@@ -45,7 +45,6 @@
 #include "core/singleinstance.h"
 
 int main(int argc, char *argv[]) {
-    Q_INIT_RESOURCE(exo);
     bool useGui = true;
     bool forceReauth = false;
     for(int i=1; i<argc; i++) {
@@ -70,6 +69,7 @@ int main(int argc, char *argv[]) {
         qWarning("Application is already running");
         return 1;
     }
+    Q_INIT_RESOURCE(exo);
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     QApplication app(argc, argv, useGui);
     app.setQuitOnLastWindowClosed(false);
