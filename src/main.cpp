@@ -26,6 +26,8 @@
 #include <QSettings>
 #include <QApplication>
 
+#include "core/singleinstance.h"
+
 #ifdef BUILD_DBUS
   #include "dbus/dbus.h"
 #endif // BUILD_DBUS
@@ -38,11 +40,9 @@
 #ifdef USE_CMUS
   #include "core/cmusinterface.h"
 #endif // USE_CMUS
-
 #include "core/mocinterface.h"
 #include "gui/trayicon.h"
 
-#include "core/singleinstance.h"
 
 int main(int argc, char *argv[]) {
     bool useGui = true;
@@ -57,8 +57,10 @@ int main(int argc, char *argv[]) {
             else
                 return 0; // exiting the parent process or error condition
         }
-        if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth"))
+        if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
+            useGui = false;
             forceReauth = true;
+        }
     }
 
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
@@ -69,7 +71,6 @@ int main(int argc, char *argv[]) {
         qWarning("Application is already running");
         return 1;
     }
-    Q_INIT_RESOURCE(exo);
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     QApplication app(argc, argv, useGui);
     app.setQuitOnLastWindowClosed(false);
@@ -79,15 +80,15 @@ int main(int argc, char *argv[]) {
         new ConsoleAuth(&app);
         return app.exec();
 #else
-        qWarning("Audioscrobbler has been disabled on the build time");
+        qWarning("Scrobbler has been disabled with a build flag");
         return 1;
 #endif // BUILD_LASTFM
     }
 
 #ifdef USE_CMUS
-    new CmusInterface(&app);
+    CmusInterface cmusInterface(&app);
 #else // USE_CMUS
-    new MocInterface(&app);
+    MocInterface mocInterface(&app);
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
@@ -101,9 +102,9 @@ int main(int argc, char *argv[]) {
         new Scrobbler(&app);
 #endif // BUILD_LASTFM
 
-    if(useGui && QSystemTrayIcon::isSystemTrayAvailable()) {
-        TrayIcon* trayIcon = new TrayIcon();
-        trayIcon->hide();
-    }
+    if(!useGui || !QSystemTrayIcon::isSystemTrayAvailable())
+        return app.exec();
+    Q_INIT_RESOURCE(exo);
+    TrayIcon trayIcon;
     return app.exec();
 }

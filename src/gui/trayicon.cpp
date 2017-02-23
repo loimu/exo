@@ -45,6 +45,7 @@ TrayIcon* TrayIcon::object = nullptr;
 TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
     player(PlayerInterface::self())
 {
+    setAttribute(Qt::WA_DontShowOnScreen);
     object = this;
     createActions();
     createTrayIcon();
