@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
     QCoreApplication::setApplicationName(QLatin1String("eXo"));
-    QCoreApplication::setApplicationVersion(QLatin1String("0.7"));
+    QCoreApplication::setApplicationVersion(QLatin1String(EXO_VERSION));
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     QApplication app(argc, argv, useGui);
     app.setQuitOnLastWindowClosed(false);

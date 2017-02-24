@@ -26,5 +26,6 @@
 #cmakedefine USE_CMUS
 
 #define CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
+#define EXO_VERSION "${EXO_VERSION}"
 
 #endif // CONFIG_H_IN
