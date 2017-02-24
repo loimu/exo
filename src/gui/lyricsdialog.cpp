@@ -33,12 +33,12 @@ LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
     replyObject(nullptr)
 {
     ui->setupUi(this);
-    connect(httpObject, SIGNAL(finished(QNetworkReply *)),
-            SLOT(showText(QNetworkReply *)));
+    connect(httpObject, SIGNAL(finished(QNetworkReply*)),
+            SLOT(showText(QNetworkReply*)));
     on_updatePushButton_released();
 }
 
-void LyricsDialog::showText(QNetworkReply *reply) {
+void LyricsDialog::showText(QNetworkReply* reply) {
     ui->stateLabel->setText("OK");
     if(reply->error() != QNetworkReply::NoError) {
         ui->stateLabel->setText(tr("Network error"));
@@ -92,12 +92,7 @@ void LyricsDialog::showText(QNetworkReply *reply) {
     QString lyrics = lyricsRgx.cap(1);
     lyrics = lyrics.trimmed();
     lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
-    if(lyrics.isEmpty())
-        text += QLatin1String("<b>")
-                + tr("There're no lyrics for some reason.")
-                + QLatin1String("</b>");
-    else
-        text += lyrics;
+    text.append(lyrics);
     ui->textBrowser->setHtml(text);
     reply->deleteLater();
 }
