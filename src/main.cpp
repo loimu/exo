@@ -25,6 +25,7 @@
 #include <QNetworkProxyFactory>
 #include <QSettings>
 #include <QApplication>
+#include <QMessageBox>
 
 #include "core/singleinstance.h"
 
@@ -66,14 +67,19 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
     QCoreApplication::setApplicationName(QLatin1String("eXo"));
     QCoreApplication::setApplicationVersion(QLatin1String("0.7"));
-    SingleInstance inst;
-    if(!inst.isUnique()) {
-        qWarning("Application is already running");
-        return 1;
-    }
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     QApplication app(argc, argv, useGui);
     app.setQuitOnLastWindowClosed(false);
+
+    SingleInstance inst;
+    if(!inst.isUnique()) {
+        qWarning("Application is already running");
+        if(useGui)
+            QMessageBox::critical(
+                        nullptr, app.applicationName(),
+                        QObject::tr("Application is already running"));
+        return 1;
+    }
 
     if(forceReauth) {
 #ifdef BUILD_LASTFM
