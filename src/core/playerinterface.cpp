@@ -45,11 +45,10 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
         status = currentStatus;
         emit newStatus(status);
         if(status == Offline)
-            emit updateStatus(tr("Player isn't running."),
-                              QString(), QString(), QString());
-        if(status == Stop)
-            emit updateStatus(tr("Stopped"), QString(), QString(), QString());
-        if(status == Pause)
+            emit updateStatus(tr("Player isn't running."));
+        else if(status == Stop)
+            emit updateStatus(tr("Stopped"));
+        else if(status == Pause)
             emit updateStatus(
                     track.title, track.currTime, track.totalTime, cover());
     }

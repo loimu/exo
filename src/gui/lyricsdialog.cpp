@@ -127,7 +127,7 @@ QString LyricsDialog::format(QString string) {
 
 void LyricsDialog::search() {
     ui->stateLabel->setText(tr("Searching"));
-    setWindowTitle(QString(tr("%1 - %2")).arg(ui->artistLineEdit->text())
+    setWindowTitle(QString("%1 - %2").arg(ui->artistLineEdit->text())
                    .arg(ui->titleLineEdit->text()));
     QNetworkRequest request;
     request.setUrl(QUrl("http://lyrics.wikia.com/api.php?action=lyrics&artist="+

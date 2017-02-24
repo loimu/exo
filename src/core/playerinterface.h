@@ -61,8 +61,10 @@ signals:
     void trackListened(const QString&, const QString&, const QString&, int);
     void trackChanged(const QString&, const QString&, int);
     // signal for trayicon
-    void updateStatus(const QString&, const QString&,
-                      const QString&, const QString&);
+    void updateStatus(const QString&,
+                      const QString& = QString(),
+                      const QString& = QString(),
+                      const QString& = QString());
     // two signals for MPRIS
     void newStatus(State);
     void newTrack();
