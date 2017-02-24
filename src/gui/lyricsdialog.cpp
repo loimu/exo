@@ -51,15 +51,20 @@ void LyricsDialog::showText(QNetworkReply *reply) {
     if(replyObject == reply) {
         replyObject = nullptr;
         reply->deleteLater();
-        QRegExp songRgx("<artist>(.*)</artist>.*<song>(.*)</song>.*"
-                        "<lyrics>(.*)</lyrics>.*<url>(.*)</url>");
+        QRegExp songRgx(
+                    QLatin1String("<artist>(.*)</artist>.*<song>(.*)</song>.*"
+                                  "<lyrics>(.*)</lyrics>.*<url>(.*)</url>"));
         songRgx.setMinimal(true);
         if(songRgx.indexIn(content) < 0) {
-            ui->textBrowser->setHtml("<b>" + tr("Error") + "</b>");
+            ui->textBrowser->setHtml(QLatin1String("<b>")
+                                     + tr("Error")
+                                     + QLatin1String("</b>"));
             return;
         }
-        else if(songRgx.cap(3) == "Not found") {
-            ui->textBrowser->setHtml("<b>" + tr("Not found") + "</b>");
+        else if(songRgx.cap(3) == QLatin1String("Not found")) {
+            ui->textBrowser->setHtml(QLatin1String("<b>")
+                                     + tr("Not found")
+                                     + QLatin1String("</b>"));
             return;
         }
         else {
@@ -67,9 +72,10 @@ void LyricsDialog::showText(QNetworkReply *reply) {
             titleString = songRgx.cap(2);
         }
         QString urlString = songRgx.cap(4).toLatin1();
-        urlString.replace("http://lyrics.wikia.com/",
-                     "http://lyrics.wikia.com/index.php?title=");
-        urlString.append("&action=edit");
+        urlString.replace(
+                    QLatin1String("http://lyrics.wikia.com/"),
+                    QLatin1String("http://lyrics.wikia.com/index.php?title="));
+        urlString.append(QLatin1String("&action=edit"));
         QNetworkRequest request;
         request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
         request.setRawHeader("Referer", songRgx.cap(4).toLatin1());
@@ -78,14 +84,18 @@ void LyricsDialog::showText(QNetworkReply *reply) {
         reply->deleteLater();
         return;
     }
-    QRegExp lyricsRgx("&lt;lyrics>(.*)&lt;/lyrics>");
+    QRegExp lyricsRgx(QLatin1String("&lt;lyrics>(.*)&lt;/lyrics>"));
     lyricsRgx.indexIn(content);
-    QString text = QString("<h2>%1 - %2</h2>").arg(artistString).arg(titleString);
+    QString text = QString("<h2>%1 - %2</h2>")
+            .arg(artistString)
+            .arg(titleString);
     QString lyrics = lyricsRgx.cap(1);
     lyrics = lyrics.trimmed();
-    lyrics.replace("\n", "<br>");
+    lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
     if(lyrics.isEmpty())
-        text += "<b>" + tr("There're no lyrics for some reason.") + "</b>";
+        text += QLatin1String("<b>")
+                + tr("There're no lyrics for some reason.")
+                + QLatin1String("</b>");
     else
         text += lyrics;
     ui->textBrowser->setHtml(text);
@@ -121,7 +131,7 @@ void LyricsDialog::on_nextButton_released() {
 }
 
 QString LyricsDialog::format(QString string) {
-    string.replace("&", "and");
+    string.replace(QLatin1String("&"), QLatin1String("and"));
     return string;
 }
 
@@ -130,9 +140,11 @@ void LyricsDialog::search() {
     setWindowTitle(QString("%1 - %2").arg(ui->artistLineEdit->text())
                    .arg(ui->titleLineEdit->text()));
     QNetworkRequest request;
-    request.setUrl(QUrl("http://lyrics.wikia.com/api.php?action=lyrics&artist="+
-                        ui->artistLineEdit->text() + "&song=" +
-                        ui->titleLineEdit->text() + "&fmt=xml"));
-    request.setRawHeader("User-Agent", QString("Mozilla/5.0").toLatin1());
+    request.setUrl(
+                QUrl(QLatin1String("http://lyrics.wikia.com/api.php"
+                                   "?action=lyrics&artist=")
+                     + ui->artistLineEdit->text() + QLatin1String("&song=")
+                     + ui->titleLineEdit->text() + QLatin1String("&fmt=xml")));
+    request.setRawHeader("User-Agent", "Mozilla/5.0");
     replyObject = httpObject->get(request);
 }
