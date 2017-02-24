@@ -150,6 +150,7 @@ State MocInterface::getInfo() {
         QRegExp titleRgx(QLatin1String("\\s-\\s(.*)$"));
         titleRgx.indexIn(track.title);
         track.song = titleRgx.cap(1);
-    }
+    } else
+        track.title = track.file;
     return state;
 }
