@@ -130,7 +130,7 @@ State MocInterface::getInfo() {
     else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
         state = Pause;
     track.artist = infoRgx.cap(2);
-    track.song = infoRgx.cap(3);
+    track.title = infoRgx.cap(3);
     track.album = infoRgx.cap(4);
     track.file = infoRgx.cap(5);
     track.number = infoRgx.cap(6).toInt();
@@ -138,24 +138,24 @@ State MocInterface::getInfo() {
     track.currTime = infoRgx.cap(8);
     track.totalSec = infoRgx.cap(9).toInt();
     track.currSec = infoRgx.cap(10).toInt();
-    track.title = infoRgx.cap(11);
+    track.caption = infoRgx.cap(11);
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
     if(!track.isStream) {
-        track.title.append(QString(" (%1/%2)")
+        track.caption.append(QString(" (%1/%2)")
                            .arg(track.currTime)
                            .arg(track.totalTime));
         return state;
     }
     track.totalSec = 8*60;
-    if(!track.title.isEmpty()) {
+    if(!track.caption.isEmpty()) {
         QRegExp artistRgx(QLatin1String("^(.*)\\s-\\s"));
         artistRgx.setMinimal(true);
-        artistRgx.indexIn(track.title);
+        artistRgx.indexIn(track.caption);
         track.artist = artistRgx.cap(1);
         QRegExp titleRgx(QLatin1String("\\s-\\s(.*)$"));
-        titleRgx.indexIn(track.title);
-        track.song = titleRgx.cap(1);
+        titleRgx.indexIn(track.caption);
+        track.title = titleRgx.cap(1);
     } else
-        track.title = track.file;
+        track.caption = track.file;
     return state;
 }

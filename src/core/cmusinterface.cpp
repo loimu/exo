@@ -134,7 +134,7 @@ State CmusInterface::getInfo() {
     if(string == QLatin1String("paused"))
         state = Pause;
     track.artist = find(info, QLatin1String("tag\\sartist\\s(.*)\\n"));
-    track.song = find(info, QLatin1String("tag\\stitle\\s(.*)\\n"));
+    track.title = find(info, QLatin1String("tag\\stitle\\s(.*)\\n"));
     track.album = find(info, QLatin1String("tag\\salbum\\s(.*)\\n"));
     track.file = find(info, QLatin1String("file\\s(.*)\\n"));
     track.totalSec = find(info, QLatin1String("duration\\s(.*)\\n")).toInt();
@@ -145,26 +145,26 @@ State CmusInterface::getInfo() {
                 QLatin1String("mm:ss"));
     track.number = find(info,
                         QLatin1String("tag\\stracknumber\\s(.*)\\n")).toInt();
-    track.title = track.artist.isEmpty() ? track.song : track.artist
-                                           + QLatin1String(" - ") + track.song;
+    track.caption = track.artist.isEmpty() ? track.title : track.artist
+                                           + QLatin1String(" - ") + track.title;
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
     if(!track.isStream) {
-        track.title.append(QString(" (%1/%2)")
+        track.caption.append(QString(" (%1/%2)")
                            .arg(track.currTime)
                            .arg(track.totalTime));
         return state;
     }
-    QString song = find(info, QLatin1String("stream\\s(.*)\\n"));
-    track.title += QLatin1String("<br />") + song;
+    QString title = find(info, QLatin1String("stream\\s(.*)\\n"));
+    track.caption += QLatin1String("<br />") + title;
     track.totalSec = 8*60;
-    if(!song.isEmpty()) {
+    if(!title.isEmpty()) {
         QRegExp artistRgx(QLatin1String("^(.*)\\s-\\s"));
         artistRgx.setMinimal(true);
-        artistRgx.indexIn(song);
+        artistRgx.indexIn(title);
         track.artist = artistRgx.cap(1);
         QRegExp titleRgx(QLatin1String("\\s-\\s(.*)$"));
-        titleRgx.indexIn(song);
-        track.song = titleRgx.cap(1);
+        titleRgx.indexIn(title);
+        track.title = titleRgx.cap(1);
     }
     return state;
 }

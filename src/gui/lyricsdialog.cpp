@@ -108,7 +108,7 @@ void LyricsDialog::on_titleLineEdit_returnPressed() {
 void LyricsDialog::on_updatePushButton_released() {
     PlayerInterface* player = PlayerInterface::self();
     ui->artistLineEdit->setText(format(player->trackObject()->artist));
-    ui->titleLineEdit->setText(format(player->trackObject()->song));
+    ui->titleLineEdit->setText(format(player->trackObject()->title));
     if(!ui->artistLineEdit->text().isEmpty())
         search();
 }

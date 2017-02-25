@@ -64,8 +64,8 @@ QVariantMap PlayerObject::metadata() const {
             QVariant::fromValue<QDBusObjectPath>(trackID);
     map[QLatin1String("xesam:album")] = track->album;
     map[QLatin1String("xesam:artist")] = QStringList() << track->artist;
-    map[QLatin1String("xesam:title")] = track->song.isEmpty() ?
-                track->title : track->song;
+    map[QLatin1String("xesam:title")] = track->title.isEmpty() ?
+                track->caption : track->title;
     QString uri = track->file;
     map[QLatin1String("xesam:url")] = track->isStream ?
                 uri : QLatin1String("file://") + uri;

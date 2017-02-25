@@ -35,8 +35,8 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
     State currentStatus = getInfo();
 #ifdef BUILD_DBUS
     static QString title = QString();
-    if(title != track.title) {
-        title = track.title;
+    if(title != track.caption) {
+        title = track.caption;
         emit newTrack();
     }
 #endif // BUILD_DBUS
@@ -49,10 +49,10 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
         else if(status == Stop)
             emit updateStatus(tr("Stopped"));
         else if(status == Pause)
-            emit updateStatus(track.title, cover());
+            emit updateStatus(track.caption, cover());
     }
     if(status == Play) {
-        emit updateStatus(track.title, cover());
+        emit updateStatus(track.caption, cover());
 #ifdef BUILD_LASTFM
         scrobble();
 #endif // BUILD_LASTFM
@@ -63,9 +63,9 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
 void PlayerInterface::scrobble() {
     static QString nowPlaying = QString();
     static bool listened = true;
-    if(nowPlaying != track.title && !track.artist.isEmpty()) {
-        nowPlaying = track.title;
-        emit trackChanged(track.artist, track.song, track.totalSec);
+    if(nowPlaying != track.caption && !track.artist.isEmpty()) {
+        nowPlaying = track.caption;
+        emit trackChanged(track.artist, track.title, track.totalSec);
         return;
     }
     if(track.isStream)
@@ -77,7 +77,7 @@ void PlayerInterface::scrobble() {
     else if(!listened && (track.currSec > track.totalSec/2 ||
                           (track.currSec > 4*60 && track.totalSec > 8*60))) {
         listened = true;
-        emit trackListened(track.artist,track.song,track.album,track.totalSec);
+        emit trackListened(track.artist,track.title,track.album,track.totalSec);
     }
 }
 #endif // BUILD_LASTFM
