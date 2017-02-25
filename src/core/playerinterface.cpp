@@ -103,7 +103,7 @@ QString PlayerInterface::cover() {
 #ifdef BUILD_DBUS
 QString PlayerInterface::artwork() {
     QString art = cover();
-    return art == QLatin1String(":/images/nocover.png") ?
+    return art.endsWith(QLatin1String("/nocover.png")) ?
                 QString() : QLatin1String("file://") + art;
 } // compliance method for MPRIS
 #endif // BUILD_DBUS
