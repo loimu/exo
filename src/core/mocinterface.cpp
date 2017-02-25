@@ -113,7 +113,7 @@ State MocInterface::getInfo() {
                 QStringList{
                     QLatin1String("-Q"),
                     QLatin1String("%state{a}%a{t}%t{A}%A{f}%file{n}%n"
-                    "{tt}%tt{ct}%ct{ts}%ts{cs}%cs{T}%title")});
+                    "{tt}%tt{ts}%ts{cs}%cs{T}%title")});
     if(info.isEmpty())
         return Offline;
     if(info.startsWith(QLatin1String("STOP")))
