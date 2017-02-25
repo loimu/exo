@@ -39,12 +39,11 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
         emit newStatus(state);
         if(state == Offline) emit updateStatus(tr("Player isn't running."));
         else if(state == Stop) emit updateStatus(tr("Stopped"));
-        else if(state == Pause) emit updateStatus(track.caption, cover());
     }
-    if(currentState == Play) emit updateStatus(track.caption, cover());
     static QString nowPlaying = QString();
-    if(nowPlaying != track.title) {
-        nowPlaying = track.title;
+    if(nowPlaying != track.caption) {
+        nowPlaying = track.caption;
+        emit updateStatus(track.caption, cover());
 #ifdef BUILD_DBUS
         emit newTrack();
 #endif // BUILD_DBUS

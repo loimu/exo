@@ -120,7 +120,7 @@ State MocInterface::getInfo() {
         return Stop;
     QRegExp infoRgx(
                 QLatin1String("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                              "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)\\{ct\\}(.*)"
+                              "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)"
                               "\\{ts\\}(.*)\\{cs\\}(.*)\\{T\\}(.*)\n"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
@@ -135,15 +135,12 @@ State MocInterface::getInfo() {
     track.file = infoRgx.cap(5);
     track.number = infoRgx.cap(6).toInt();
     track.totalTime = infoRgx.cap(7);
-    track.currTime = infoRgx.cap(8);
-    track.totalSec = infoRgx.cap(9).toInt();
-    track.currSec = infoRgx.cap(10).toInt();
-    track.caption = infoRgx.cap(11);
+    track.totalSec = infoRgx.cap(8).toInt();
+    track.currSec = infoRgx.cap(9).toInt();
+    track.caption = infoRgx.cap(10);
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
     if(!track.isStream) {
-        track.caption.append(QString(" (%1/%2)")
-                           .arg(track.currTime)
-                           .arg(track.totalTime));
+        track.caption.append(QString(" (%1)").arg(track.totalTime));
         return state;
     }
     track.totalSec = 8*60;

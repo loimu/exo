@@ -32,7 +32,7 @@ struct Track
 {
     bool isStream;
     int number, totalSec, currSec;
-    QString artist, title, album, file, totalTime, currTime, caption;
+    QString artist, title, album, file, totalTime, caption;
 };
 
 class PlayerInterface : public QObject

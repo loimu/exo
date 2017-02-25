@@ -141,17 +141,13 @@ State CmusInterface::getInfo() {
     track.currSec = find(info, QLatin1String("position\\s(.*)\\n")).toInt();
     track.totalTime = QTime().addSecs(track.totalSec).toString(
                 QLatin1String("mm:ss"));
-    track.currTime = QTime().addSecs(track.currSec).toString(
-                QLatin1String("mm:ss"));
     track.number = find(info,
                         QLatin1String("tag\\stracknumber\\s(.*)\\n")).toInt();
     track.caption = track.artist.isEmpty() ? track.title : track.artist
                                            + QLatin1String(" - ") + track.title;
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
     if(!track.isStream) {
-        track.caption.append(QString(" (%1/%2)")
-                           .arg(track.currTime)
-                           .arg(track.totalTime));
+        track.caption.append(QString(" (%1)").arg(track.totalTime));
         return state;
     }
     QString title = find(info, QLatin1String("stream\\s(.*)\\n"));
