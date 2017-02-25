@@ -34,9 +34,9 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 void PlayerInterface::timerEvent(QTimerEvent *event) {
     State currentStatus = getInfo();
 #ifdef BUILD_DBUS
-    static QString title = QString();
-    if(title != track.caption) {
-        title = track.caption;
+    static QString nowPlaying = QString();
+    if(nowPlaying != track.title) {
+        nowPlaying = track.title;
         emit newTrack();
     }
 #endif // BUILD_DBUS
