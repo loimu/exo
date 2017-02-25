@@ -41,9 +41,6 @@ class PlayerInterface : public QObject
 
     static PlayerInterface* object;
     QString cover();
-#ifdef BUILD_LASTFM
-    void scrobble();
-#endif // BUILD_LASTFM
 
 protected:
     Track track;

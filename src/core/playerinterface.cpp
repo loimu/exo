@@ -32,55 +32,40 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 }
 
 void PlayerInterface::timerEvent(QTimerEvent *event) {
-    State currentStatus = getInfo();
-#ifdef BUILD_DBUS
+    State currentState = getInfo();
+    static State state = Offline;
+    if(state != currentState) {
+        state = currentState;
+        emit newStatus(state);
+        if(state == Offline) emit updateStatus(tr("Player isn't running."));
+        else if(state == Stop) emit updateStatus(tr("Stopped"));
+        else if(state == Pause) emit updateStatus(track.caption, cover());
+    }
+    if(currentState == Play) emit updateStatus(track.caption, cover());
     static QString nowPlaying = QString();
     if(nowPlaying != track.title) {
         nowPlaying = track.title;
+#ifdef BUILD_DBUS
         emit newTrack();
-    }
 #endif // BUILD_DBUS
-    static State status = Offline;
-    if(status != currentStatus) {
-        status = currentStatus;
-        emit newStatus(status);
-        if(status == Offline)
-            emit updateStatus(tr("Player isn't running."));
-        else if(status == Stop)
-            emit updateStatus(tr("Stopped"));
-        else if(status == Pause)
-            emit updateStatus(track.caption, cover());
-    }
-    if(status == Play) {
-        emit updateStatus(track.caption, cover());
 #ifdef BUILD_LASTFM
-        scrobble();
+        if(currentState == Play && !track.artist.isEmpty())
+            emit trackChanged(track.artist, track.title, track.totalSec);
 #endif // BUILD_LASTFM
     }
-}
-
 #ifdef BUILD_LASTFM
-void PlayerInterface::scrobble() {
-    static QString nowPlaying = QString();
+    if(currentState != Play || track.isStream) return;
     static bool listened = true;
-    if(nowPlaying != track.title && !track.artist.isEmpty()) {
-        nowPlaying = track.title;
-        emit trackChanged(track.artist, track.title, track.totalSec);
-        return;
-    }
-    if(track.isStream)
-        return;
     if(listened && ((track.currSec < track.totalSec/2 && track.totalSec < 8*60)
-                    || (track.currSec < 4*60 && track.totalSec > 8*60))) {
-        listened = false;
-    }
-    else if(!listened && (track.currSec > track.totalSec/2 ||
-                          (track.currSec > 4*60 && track.totalSec > 8*60))) {
-        listened = true;
+                || (track.currSec < 4*60 && track.totalSec > 8*60)))
+        listened = false; // beginning
+    else if(!listened && (track.currSec > track.totalSec/2
+                || (track.currSec > 4*60 && track.totalSec > 8*60))) {
+        listened = true; // ending
         emit trackListened(track.artist,track.title,track.album,track.totalSec);
     }
-}
 #endif // BUILD_LASTFM
+}
 
 QString PlayerInterface::cover() {
     if(track.isStream)
