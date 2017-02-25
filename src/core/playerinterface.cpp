@@ -63,8 +63,8 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
 void PlayerInterface::scrobble() {
     static QString nowPlaying = QString();
     static bool listened = true;
-    if(nowPlaying != track.caption && !track.artist.isEmpty()) {
-        nowPlaying = track.caption;
+    if(nowPlaying != track.title && !track.artist.isEmpty()) {
+        nowPlaying = track.title;
         emit trackChanged(track.artist, track.title, track.totalSec);
         return;
     }
