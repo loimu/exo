@@ -63,8 +63,7 @@ public:
 
 private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
-    void updateToolTip(const QString& message, const QString& currentTime,
-                       const QString& totalTime, const QString& cover);
+    void updateToolTip(const QString& message, const QString& cover);
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();

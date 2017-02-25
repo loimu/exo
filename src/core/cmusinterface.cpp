@@ -148,8 +148,12 @@ State CmusInterface::getInfo() {
     track.title = track.artist.isEmpty() ? track.song : track.artist
                                            + QLatin1String(" - ") + track.song;
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
-    if(!track.isStream)
+    if(!track.isStream) {
+        track.title.append(QString(" (%1/%2)")
+                           .arg(track.currTime)
+                           .arg(track.totalTime));
         return state;
+    }
     QString song = find(info, QLatin1String("stream\\s(.*)\\n"));
     track.title += QLatin1String("<br />") + song;
     track.totalSec = 8*60;

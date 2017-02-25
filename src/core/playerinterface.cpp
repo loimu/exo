@@ -49,12 +49,10 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
         else if(status == Stop)
             emit updateStatus(tr("Stopped"));
         else if(status == Pause)
-            emit updateStatus(
-                    track.title, track.currTime, track.totalTime, cover());
+            emit updateStatus(track.title, cover());
     }
     if(status == Play) {
-        emit updateStatus(
-                    track.title, track.currTime, track.totalTime, cover());
+        emit updateStatus(track.title, cover());
 #ifdef BUILD_LASTFM
         scrobble();
 #endif // BUILD_LASTFM

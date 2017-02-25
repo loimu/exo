@@ -49,8 +49,8 @@ TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
     object = this;
     createActions();
     createTrayIcon();
-    connect(player, SIGNAL(updateStatus(QString, QString, QString, QString)),
-            SLOT(updateToolTip(QString, QString, QString, QString)));
+    connect(player, SIGNAL(updateStatus(QString, QString)),
+            SLOT(updateToolTip(QString, QString)));
 }
 
 void TrayIcon::createActions() {
@@ -194,17 +194,14 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
     return false;
 }
 
-void TrayIcon::updateToolTip(const QString& message, const QString& currentTime,
-                             const QString& totalTime, const QString& cover) {
+void TrayIcon::updateToolTip(const QString& message, const QString& cover) {
     /* only fixed sized tooltip has an acceptable look in some DEs */
     QString tooltip = QLatin1String("<table width=\"300\"><tr><td><b>")
             + message + QLatin1String("</b></td></tr></table>");
     if(!cover.isEmpty())
-        tooltip.append(QString(
-                           QLatin1String("<br />Current time: %1/%2<br />"
-                                         "<img src=\"%3\" width=\"300\" "
-                                         "height=\"300\" />"))
-                       .arg(currentTime).arg(totalTime).arg(cover));
+        tooltip.append(
+                    QString(QLatin1String("<img src=\"%1\" width=\"300\" "
+                                          "height=\"300\" />")).arg(cover));
     trayIcon->setToolTip(tooltip);
 }
 
