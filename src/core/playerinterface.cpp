@@ -70,7 +70,7 @@ void PlayerInterface::scrobble() {
         emit trackChanged(track.artist, track.song, track.totalSec);
         return;
     }
-    if(track.file.startsWith(QLatin1String("http")))
+    if(track.isStream)
         return;
     if(listened && ((track.currSec < track.totalSec/2 && track.totalSec < 8*60)
                     || (track.currSec < 4*60 && track.totalSec > 8*60))) {
@@ -85,7 +85,7 @@ void PlayerInterface::scrobble() {
 #endif // BUILD_LASTFM
 
 QString PlayerInterface::cover() {
-    if(track.file.startsWith(QLatin1String("http")))
+    if(track.isStream)
         return QString();
     QString path = track.file;
     path.replace(QRegExp(QLatin1String("(.*)/(.*)")), QLatin1String("\\1"));

@@ -139,7 +139,8 @@ State MocInterface::getInfo() {
     track.totalSec = infoRgx.cap(9).toInt();
     track.currSec = infoRgx.cap(10).toInt();
     track.title = infoRgx.cap(11);
-    if(!track.file.startsWith(QLatin1String("http")))
+    track.isStream = !track.file.startsWith(QLatin1Char('/'));
+    if(!track.isStream)
         return state;
     track.totalSec = 8*60;
     if(!track.title.isEmpty()) {

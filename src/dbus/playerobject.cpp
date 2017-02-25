@@ -53,20 +53,22 @@ bool PlayerObject::canPlay() const {
 }
 
 bool PlayerObject::canSeek() const {
-    return !track->file.startsWith(QLatin1String("http"));
+    return !track->isStream;
 }
 
 QVariantMap PlayerObject::metadata() const {
     QVariantMap map;
     map[QLatin1String("mpris:length")] = track->totalSec * 1000000;
     map[QLatin1String("mpris:artUrl")] = player->artwork();
-    map[QLatin1String("mpris:trackid")] = QVariant::fromValue<QDBusObjectPath>(trackID);
+    map[QLatin1String("mpris:trackid")] =
+            QVariant::fromValue<QDBusObjectPath>(trackID);
     map[QLatin1String("xesam:album")] = track->album;
     map[QLatin1String("xesam:artist")] = QStringList() << track->artist;
-    map[QLatin1String("xesam:title")] = track->song.isEmpty() ? track->title : track->song;
+    map[QLatin1String("xesam:title")] = track->song.isEmpty() ?
+                track->title : track->song;
     QString uri = track->file;
-    map[QLatin1String("xesam:url")] = uri.startsWith(
-                QLatin1String("http")) ? uri : QLatin1String("file://") + uri;
+    map[QLatin1String("xesam:url")] = track->isStream ?
+                uri : QLatin1String("file://") + uri;
     return map;
 }
 
@@ -79,8 +81,7 @@ QString PlayerObject::playbackStatus() const {
 }
 
 qlonglong PlayerObject::position() const {
-    if(!track->file.startsWith(QLatin1String("http")))
-        return track->currSec * 1000000;
+        return track->isStream ? 0 : track->currSec * 1000000;
 }
 
 double PlayerObject::volume() const {
@@ -93,8 +94,9 @@ void PlayerObject::setVolume(double value) {
 }
 
 void PlayerObject::trackChanged() {
-    trackID = QDBusObjectPath(
-                QString(QLatin1String("/org/exo/MediaPlayer2/Track/%1")).arg(qrand()));
+    trackID = QDBusObjectPath(QString(QLatin1String(
+                                          "/org/exo/MediaPlayer2/Track/%1"))
+                              .arg(qrand()));
     emitPropsChanged(State::Play);
 }
 
@@ -151,7 +153,8 @@ void PlayerObject::Seek(qlonglong Offset) {
     player->seek(Offset/1000000);
 }
 
-void PlayerObject::SetPosition(const QDBusObjectPath &TrackId, qlonglong Position) {
+void PlayerObject::SetPosition(const QDBusObjectPath &TrackId,
+                               qlonglong Position) {
     if(trackID != TrackId)
         return;
     player->jump(Position/1000000);

@@ -30,8 +30,9 @@ enum State {
 
 struct Track
 {
-    QString artist, song, album, file, totalTime, currTime, title;
+    bool isStream;
     int number, totalSec, currSec;
+    QString artist, song, album, file, totalTime, currTime, title;
 };
 
 class PlayerInterface : public QObject

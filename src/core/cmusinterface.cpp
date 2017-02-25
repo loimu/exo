@@ -147,7 +147,8 @@ State CmusInterface::getInfo() {
                         QLatin1String("tag\\stracknumber\\s(.*)\\n")).toInt();
     track.title = track.artist.isEmpty() ? track.song : track.artist
                                            + QLatin1String(" - ") + track.song;
-    if(!track.file.startsWith(QLatin1String("http")))
+    track.isStream = !track.file.startsWith(QLatin1Char('/'));
+    if(!track.isStream)
         return state;
     QString song = find(info, QLatin1String("stream\\s(.*)\\n"));
     track.title += QLatin1String("<br />") + song;
