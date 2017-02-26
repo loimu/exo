@@ -50,6 +50,10 @@ int main(int argc, char *argv[]) {
     bool forceReauth = false;
     for(int i = 1; i < argc; i++) {
         QByteArray arg = argv[i];
+        if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
+            qWarning("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
+            return 0;
+        }
         if(arg == QByteArray("-d") || arg == QByteArray("-b")
                 || arg == QByteArray("--background")) {
             useGui = false;
