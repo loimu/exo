@@ -48,7 +48,7 @@
 int main(int argc, char *argv[]) {
     bool useGui = true;
     bool forceReauth = false;
-    if(argc > 0) {
+    if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
             qWarning("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
