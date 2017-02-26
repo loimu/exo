@@ -48,24 +48,20 @@
 int main(int argc, char *argv[]) {
     bool useGui = true;
     bool forceReauth = false;
-    for(int i = 1; i < argc; i++) {
-        QByteArray arg = argv[i];
-        if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
-            qWarning("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
-            return 0;
-        }
-        if(arg == QByteArray("-d") || arg == QByteArray("-b")
-                || arg == QByteArray("--background")) {
-            useGui = false;
-            if(fork() == 0)
-                qDebug("Running in the background succeeded");
-            else
-                return 0; // exiting the parent process or it's an error
-        }
-        if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
-            useGui = false;
-            forceReauth = true;
-        }
+    QByteArray arg = argv[1];
+    if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
+        qWarning("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
+        return 0;
+    }
+    else if(arg == QByteArray("-d") || arg == QByteArray("-b")
+            || arg == QByteArray("--background")) {
+        useGui = false;
+        if(fork() == 0) qDebug("Running in the background succeeded");
+        else return 0; // exiting the parent process or it's an error
+    }
+    else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
+        useGui = false;
+        forceReauth = true;
     }
 
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
