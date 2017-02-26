@@ -48,15 +48,15 @@
 int main(int argc, char *argv[]) {
     bool useGui = true;
     bool forceReauth = false;
-    for(int i=1; i<argc; i++) {
+    for(int i = 1; i < argc; i++) {
         QByteArray arg = argv[i];
         if(arg == QByteArray("-d") || arg == QByteArray("-b")
                 || arg == QByteArray("--background")) {
             useGui = false;
             if(fork() == 0)
-                qWarning("Running in the background succeeded");
+                qDebug("Running in the background succeeded");
             else
-                return 0; // exiting the parent process or error condition
+                return 0; // exiting the parent process or it's an error
         }
         if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
             useGui = false;
