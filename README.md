@@ -35,14 +35,14 @@ NOTE: you should link against the corresponding version of liblastfm or program 
 
 ### Features: ###
 * Scrobbling to last.fm (optional)
+* Lyrics from web
+* Background mode
+* DBus and MPRISv2 interfaces (optional)
+* Bookmarks
 * OSD (additional Python script)
-* Shows lyrics from web
-* no GUI mode
-* DBus interface (optional)
-* initial MPRISv2 interface (optional)
 
 ### Screenshot ###
-![exo-tray.png](https://bitbucket.org/repo/8Xb9ez/images/2886715694-exo-tray.png)
+![Screenshot of the eXo app](https://bitbucket.org/repo/8Xb9ez/images/405669011-exo.png)
 
 ### Installation ###
 For Ubuntu packages and instructions check the link above.
