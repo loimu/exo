@@ -28,6 +28,7 @@
 
 AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent)
 {
+    this->setWindowTitle(tr("About eXo"));
     QHBoxLayout* horizontalLayout = new QHBoxLayout(this);
     QLabel* label = new QLabel(this);
     label->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
