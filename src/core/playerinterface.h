@@ -24,12 +24,9 @@
 
 #include <QObject>
 
-enum State {
-    Offline, Stop, Pause, Play
-};
+enum State { Offline, Stop, Play, Pause };
 
-struct Track
-{
+struct Track {
     bool isStream;
     int totalSec, currSec;
     QString artist, title, album, file, totalTime, caption;
