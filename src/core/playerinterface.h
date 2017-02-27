@@ -31,7 +31,7 @@ enum State {
 struct Track
 {
     bool isStream;
-    int number, totalSec, currSec;
+    int totalSec, currSec;
     QString artist, title, album, file, totalTime, caption;
 };
 

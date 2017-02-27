@@ -112,16 +112,16 @@ State MocInterface::getInfo() {
                 QLatin1String("mocp"),
                 QStringList{
                     QLatin1String("-Q"),
-                    QLatin1String("%state{a}%a{t}%t{A}%A{f}%file{n}%n"
-                    "{tt}%tt{ts}%ts{cs}%cs{T}%title")});
+                    QLatin1String("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
+                    "{cs}%cs{T}%title")});
     if(info.isEmpty())
         return Offline;
     if(info.startsWith(QLatin1String("STOP")))
         return Stop;
     QRegExp infoRgx(
                 QLatin1String("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                              "\\{f\\}(.*)\\{n\\}(.*)\\{tt\\}(.*)"
-                              "\\{ts\\}(.*)\\{cs\\}(.*)\\{T\\}(.*)\n"));
+                              "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
+                              "\\{cs\\}(.*)\\{T\\}(.*)\n"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
     State state = Offline;
@@ -133,11 +133,10 @@ State MocInterface::getInfo() {
     track.title = infoRgx.cap(3);
     track.album = infoRgx.cap(4);
     track.file = infoRgx.cap(5);
-    track.number = infoRgx.cap(6).toInt();
-    track.totalTime = infoRgx.cap(7);
-    track.totalSec = infoRgx.cap(8).toInt();
-    track.currSec = infoRgx.cap(9).toInt();
-    track.caption = infoRgx.cap(10);
+    track.totalTime = infoRgx.cap(6);
+    track.totalSec = infoRgx.cap(7).toInt();
+    track.currSec = infoRgx.cap(8).toInt();
+    track.caption = infoRgx.cap(9);
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
     if(!track.isStream) {
         track.caption.append(QString(" (%1)").arg(track.totalTime));
