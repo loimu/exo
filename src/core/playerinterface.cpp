@@ -32,17 +32,20 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 }
 
 void PlayerInterface::timerEvent(QTimerEvent *event) {
+    track.caption.clear();
     State currentState = getInfo();
     static State state = Offline;
     if(state != currentState) {
         state = currentState;
-        emit newStatus(state);
-        if(state == Offline) emit updateStatus(tr("Player isn't running."));
-        else if(state == Stop) emit updateStatus(tr("Stopped"));
+        emit newStatus(currentState);
+        if(currentState == Offline)
+            emit updateStatus(tr("Player isn't running."));
+        else if(currentState == Stop) emit updateStatus(tr("Stopped"));
     }
     static QString nowPlaying = QString();
     if(nowPlaying != track.caption) {
         nowPlaying = track.caption;
+        if(track.caption.isEmpty()) return;
         emit updateStatus(track.caption, cover());
 #ifdef BUILD_DBUS
         emit newTrack();
@@ -61,7 +64,8 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
     else if(!listened && (track.currSec > track.totalSec/2
                 || (track.currSec > 4*60 && track.totalSec > 8*60))) {
         listened = true; // ending
-        emit trackListened(track.artist,track.title,track.album,track.totalSec);
+        emit trackListened(track.artist, track.title,
+                           track.album, track.totalSec);
     }
 #endif // BUILD_LASTFM
 }

@@ -55,14 +55,15 @@ public:
 #endif // BUILD_DBUS
 
 signals:
-    // two signals for scrobbler
+    void updateStatus(const QString&, const QString& = QString());
+#ifdef BUILD_LASTFM
     void trackListened(const QString&, const QString&, const QString&, int);
     void trackChanged(const QString&, const QString&, int);
-    // signal for trayicon
-    void updateStatus(const QString&, const QString& = QString());
-    // two signals for MPRIS
+#endif // BUILD_LASTFM
+#ifdef BUILD_DBUS
     void newStatus(State);
     void newTrack();
+#endif // BUILD_DBUS
 
 public slots:
     virtual QString id() = 0;
