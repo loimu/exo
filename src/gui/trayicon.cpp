@@ -196,12 +196,12 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
 
 void TrayIcon::updateToolTip(const QString& message, const QString& cover) {
     /* only fixed sized tooltip has an acceptable look in some DEs */
-    QString tooltip = QLatin1String("<table width=\"300\"><tr><td><b>")
+    QString tooltip = QLatin1String("<table width=\"350\"><tr><td><b>")
             + message + QLatin1String("</b></td></tr></table>");
     if(!cover.isEmpty())
         tooltip.append(
-                    QString(QLatin1String("<img src=\"%1\" width=\"300\" "
-                                          "height=\"300\" />")).arg(cover));
+                    QString(QLatin1String("<br /><img src=\"%1\" width=\"350\" "
+                                          "height=\"350\" />")).arg(cover));
     trayIcon->setToolTip(tooltip);
 }
 
