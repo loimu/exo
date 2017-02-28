@@ -22,24 +22,23 @@
 
 #include "basedialog.h"
 
-class QAction;
 class QLabel;
+class QTextBrowser;
+class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
-
-namespace Ui {
-class LyricsDialog;
-}
 
 class LyricsDialog : public BaseDialog
 {
     Q_OBJECT
 
-    Ui::LyricsDialog* ui;
+    QLabel* label;
+    QTextBrowser* lyricsBrowser;
+    QLineEdit* artistLineEdit;
+    QLineEdit* titleLineEdit;
     QNetworkAccessManager *httpObject;
     QNetworkReply *replyObject;
     QString artistString, titleString;
-    void search();
     QString format(QString);
 
 public:
@@ -47,11 +46,10 @@ public:
 
 private slots:
     void showText(QNetworkReply *reply);
-    void on_artistLineEdit_returnPressed();
-    void on_titleLineEdit_returnPressed();
-    void on_updatePushButton_released();
-    void on_prevButton_released();
-    void on_nextButton_released();
+    void update();
+    void prev();
+    void next();
+    void search();
 };
 
 #endif // LYRICSDIALOG_H

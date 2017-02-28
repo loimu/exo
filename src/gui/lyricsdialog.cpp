@@ -17,6 +17,16 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include <QDialogButtonBox>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QTextBrowser>
+
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
@@ -25,24 +35,68 @@
 
 #include "core/playerinterface.h"
 #include "lyricsdialog.h"
-#include "ui_lyricsdialog.h"
 
 LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
-    ui(new Ui::LyricsDialog),
     httpObject(new QNetworkAccessManager(this)),
     replyObject(nullptr)
 {
-    ui->setupUi(this);
+    resize(388, 488);
+    setWindowTitle(tr("Lyrics"));
+    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setContentsMargins(6, -1, 6, 6);
+    QHBoxLayout* horizontalLayout = new QHBoxLayout();
+    verticalLayout->addLayout(horizontalLayout);
+    artistLineEdit = new QLineEdit(this);
+    artistLineEdit->setPlaceholderText(tr("artist"));
+    artistLineEdit->setToolTip(tr("Edit artist and then press Enter"));
+    horizontalLayout->addWidget(artistLineEdit);
+    titleLineEdit = new QLineEdit(this);
+    titleLineEdit->setPlaceholderText(tr("title"));
+    titleLineEdit->setToolTip(tr("Edit title and then press Enter"));
+    horizontalLayout->addWidget(titleLineEdit);
+    lyricsBrowser = new QTextBrowser(this);
+    lyricsBrowser->setOpenExternalLinks(true);
+    verticalLayout->addWidget(lyricsBrowser);
+    QHBoxLayout* horizontalLayout2 = new QHBoxLayout();
+    label = new QLabel(this);
+    horizontalLayout2->addWidget(label);
+    QSpacerItem* spacer = new QSpacerItem(383, 20, QSizePolicy::Expanding,
+                                          QSizePolicy::Minimum);
+    horizontalLayout2->addItem(spacer);
+    QPushButton* prevButton = new QPushButton(this);
+    prevButton->setMaximumWidth(23);
+    prevButton->setText(QLatin1String("\253"));
+    prevButton->setToolTip(tr("Prev track"));
+    horizontalLayout2->addWidget(prevButton);
+    QPushButton* nextButton = new QPushButton(this);
+    nextButton->setMaximumWidth(23);
+    nextButton->setText(QLatin1String("\273"));
+    nextButton->setToolTip(tr("Next track"));
+    horizontalLayout2->addWidget(nextButton);
+    QPushButton* updateButton = new QPushButton(this);
+    updateButton->setText(tr("Update"));
+    updateButton->setToolTip(tr("Get lyrics for the current track"));
+    horizontalLayout2->addWidget(updateButton);
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
+    buttonBox->setStandardButtons(QDialogButtonBox::Close);
+    horizontalLayout2->addWidget(buttonBox);
+    verticalLayout->addLayout(horizontalLayout2);
     connect(httpObject, SIGNAL(finished(QNetworkReply*)),
             SLOT(showText(QNetworkReply*)));
-    on_updatePushButton_released();
+    connect(artistLineEdit, SIGNAL(returnPressed()), SLOT(search()));
+    connect(titleLineEdit, SIGNAL(returnPressed()), SLOT(search()));
+    connect(prevButton, SIGNAL(released()), SLOT(prev()));
+    connect(nextButton, SIGNAL(released()), SLOT(next()));
+    connect(updateButton, SIGNAL(released()), SLOT(update()));
+    connect(buttonBox, SIGNAL(rejected()), SLOT(close()));
+    update();
 }
 
 void LyricsDialog::showText(QNetworkReply* reply) {
-    ui->stateLabel->setText("OK");
+    label->setText("OK");
     if(reply->error() != QNetworkReply::NoError) {
-        ui->stateLabel->setText(tr("Network error"));
-        ui->textBrowser->setText(reply->errorString());
+        label->setText(tr("Network error"));
+        lyricsBrowser->setText(reply->errorString());
         replyObject = nullptr;
         reply->deleteLater();
         return;
@@ -56,15 +110,15 @@ void LyricsDialog::showText(QNetworkReply* reply) {
                                   "<lyrics>(.*)</lyrics>.*<url>(.*)</url>"));
         songRgx.setMinimal(true);
         if(songRgx.indexIn(content) < 0) {
-            ui->textBrowser->setHtml(QLatin1String("<b>")
-                                     + tr("Error")
-                                     + QLatin1String("</b>"));
+            lyricsBrowser->setHtml(QLatin1String("<b>")
+                                   + tr("Error")
+                                   + QLatin1String("</b>"));
             return;
         }
         else if(songRgx.cap(3) == QLatin1String("Not found")) {
-            ui->textBrowser->setHtml(QLatin1String("<b>")
-                                     + tr("Not found")
-                                     + QLatin1String("</b>"));
+            lyricsBrowser->setHtml(QLatin1String("<b>")
+                                   + tr("Not found")
+                                   + QLatin1String("</b>"));
             return;
         }
         else {
@@ -79,7 +133,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         QNetworkRequest request;
         request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
         request.setRawHeader("Referer", songRgx.cap(4).toLatin1());
-        ui->stateLabel->setText(tr("Downloading"));
+        label->setText(tr("Downloading"));
         httpObject->get(request);
         reply->deleteLater();
         return;
@@ -93,36 +147,8 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     lyrics = lyrics.trimmed();
     lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
     text.append(lyrics);
-    ui->textBrowser->setHtml(text);
+    lyricsBrowser->setHtml(text);
     reply->deleteLater();
-}
-
-void LyricsDialog::on_artistLineEdit_returnPressed() {
-    search();
-}
-
-void LyricsDialog::on_titleLineEdit_returnPressed() {
-    search();
-}
-
-void LyricsDialog::on_updatePushButton_released() {
-    PlayerInterface* player = PlayerInterface::self();
-    ui->artistLineEdit->setText(format(player->trackObject()->artist));
-    ui->titleLineEdit->setText(format(player->trackObject()->title));
-    if(!ui->artistLineEdit->text().isEmpty())
-        search();
-}
-
-void LyricsDialog::on_prevButton_released() {
-    PlayerInterface::self()->prev();
-    ui->textBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
-}
-
-void LyricsDialog::on_nextButton_released() {
-    PlayerInterface::self()->next();
-    ui->textBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, SLOT(on_updatePushButton_released()));
 }
 
 QString LyricsDialog::format(QString string) {
@@ -130,16 +156,36 @@ QString LyricsDialog::format(QString string) {
     return string;
 }
 
+void LyricsDialog::update() {
+    PlayerInterface* player = PlayerInterface::self();
+    artistLineEdit->setText(format(player->trackObject()->artist));
+    titleLineEdit->setText(format(player->trackObject()->title));
+    if(!artistLineEdit->text().isEmpty())
+        search();
+}
+
+void LyricsDialog::prev() {
+    PlayerInterface::self()->prev();
+    lyricsBrowser->setHtml(tr("Please wait a second"));
+    QTimer::singleShot(1500, this, SLOT(update()));
+}
+
+void LyricsDialog::next() {
+    PlayerInterface::self()->next();
+    lyricsBrowser->setHtml(tr("Please wait a second"));
+    QTimer::singleShot(1500, this, SLOT(update()));
+}
+
 void LyricsDialog::search() {
-    ui->stateLabel->setText(tr("Searching"));
-    setWindowTitle(QString("%1 - %2").arg(ui->artistLineEdit->text())
-                   .arg(ui->titleLineEdit->text()));
+    label->setText(tr("Searching"));
+    setWindowTitle(QString("%1 - %2").arg(artistLineEdit->text())
+                   .arg(titleLineEdit->text()));
     QNetworkRequest request;
     request.setUrl(
                 QUrl(QLatin1String("http://lyrics.wikia.com/api.php"
                                    "?action=lyrics&artist=")
-                     + ui->artistLineEdit->text() + QLatin1String("&song=")
-                     + ui->titleLineEdit->text() + QLatin1String("&fmt=xml")));
+                     + artistLineEdit->text() + QLatin1String("&song=")
+                     + titleLineEdit->text() + QLatin1String("&fmt=xml")));
     request.setRawHeader("User-Agent", "Mozilla/5.0");
     replyObject = httpObject->get(request);
 }

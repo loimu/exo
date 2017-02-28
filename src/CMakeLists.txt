@@ -18,7 +18,6 @@ set(exo_SRCS
   gui/tageditor.cpp
   gui/trayicon.cpp
 )
-set(exo_FRMS gui/lyricsdialog.ui)
 set(exo_RSRCS ../images/exo.qrc)
 
 if(USE_CMUS)
@@ -48,7 +47,6 @@ if(BUILD_WITH_QT4)
     list(APPEND qt_LIBS Qt4::QtDBus)
   endif()
   include_directories(${QT_INCLUDES})
-  qt4_wrap_ui(exo_FORMS_HEADERS ${exo_FRMS})
   qt4_add_resources(exo_RESOURCES_RCC ${exo_RSRCS})
 else()
   find_package(Qt5 5.6.1 REQUIRED COMPONENTS Core Network Widgets Xml)
@@ -60,13 +58,11 @@ else()
   include_directories(${Qt5Core_INCLUDE_DIRS}
                       ${Qt5Widgets_INCLUDE_DIRS}
                       ${Qt5Network_INCLUDE_DIRS})
-  qt5_wrap_ui(exo_FORMS_HEADERS ${exo_FRMS})
   qt5_add_resources(exo_RESOURCES_RCC ${exo_RSRCS})
 endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC}
-                   ${exo_FORMS_HEADERS} ${exo_RESOURCES_RCC})
+add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC} ${exo_RESOURCES_RCC})
 target_link_libraries(exo ${qt_LIBS} ${LASTFM_LIBRARIES})
 target_compile_features(exo PRIVATE cxx_nullptr cxx_generalized_initializers)
 
