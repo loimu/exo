@@ -17,16 +17,14 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QDialogButtonBox>
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QHeaderView>
-#include <QLabel>
 #include <QLineEdit>
-#include <QPushButton>
-#include <QSpacerItem>
 #include <QTextBrowser>
-
+#include <QLabel>
+#include <QSpacerItem>
+#include <QPushButton>
+#include <QDialogButtonBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
@@ -76,6 +74,7 @@ LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
     QPushButton* updateButton = new QPushButton(this);
     updateButton->setText(tr("Update"));
     updateButton->setToolTip(tr("Get lyrics for the current track"));
+    updateButton->setFocus();
     horizontalLayout2->addWidget(updateButton);
     QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(QDialogButtonBox::Close);
