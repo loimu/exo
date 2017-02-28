@@ -34,7 +34,6 @@ if(BUILD_LASTFM)
   list(APPEND exo_SRCS lastfm/scrobbler.cpp lastfm/scrobblerauth.cpp
                        core/consoleauth.cpp
                        gui/scrobblersettings.cpp)
-  list(APPEND exo_FRMS gui/scrobblersettings.ui)
     if(BUILD_WITH_QT4)
       find_library(LASTFM_LIBRARIES lastfm)
     else()

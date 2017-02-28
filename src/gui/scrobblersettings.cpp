@@ -17,44 +17,61 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+
 #include "lastfm/scrobblerauth.h"
 #include "scrobblersettings.h"
-#include "ui_scrobblersettings.h"
 
 ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),
-    success(false),
-    ui(new Ui::ScrobblerSettings)
+    success(false)
 {
-    ui->setupUi(this);
+    resize(500, 88);
+    setWindowTitle(tr("Scrobbler Settings"));
+    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    QHBoxLayout* horizontalLayout = new QHBoxLayout();
+    usernameLineEdit = new QLineEdit(this);
+    usernameLineEdit->setPlaceholderText(tr("login"));
+    horizontalLayout->addWidget(usernameLineEdit);
+    passwordLineEdit = new QLineEdit(this);
+    passwordLineEdit->setEchoMode(QLineEdit::Password);
+    passwordLineEdit->setPlaceholderText(tr("password"));
+    horizontalLayout->addWidget(passwordLineEdit);
+    verticalLayout->addLayout(horizontalLayout);
+    QHBoxLayout* horizontalLayout2 = new QHBoxLayout();
+    label = new QLabel(this);
+    horizontalLayout2->addWidget(label);
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
+    buttonBox->setStandardButtons(
+                QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+    horizontalLayout2->addWidget(buttonBox);
+    verticalLayout->addLayout(horizontalLayout2);
     scrobblerAuth = new ScrobblerAuth(this);
     connect(scrobblerAuth, SIGNAL(failed(QString)), SLOT(authFail(QString)));
     connect(scrobblerAuth, SIGNAL(configured()), SLOT(authSuccess()));
-    connect(ui->usernameLineEdit, SIGNAL(returnPressed()),
-            SLOT(on_buttonBox_accepted()));
-    connect(ui->passwordLineEdit, SIGNAL(returnPressed()),
-            SLOT(on_buttonBox_accepted()));
-    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+    connect(usernameLineEdit, SIGNAL(returnPressed()), SLOT(auth()));
+    connect(usernameLineEdit, SIGNAL(textChanged(QString)),
+            label, SLOT(clear()));
+    connect(passwordLineEdit, SIGNAL(returnPressed()), SLOT(auth()));
+    connect(passwordLineEdit, SIGNAL(textChanged(QString)),
+            label, SLOT(clear()));
+    connect(buttonBox, SIGNAL(accepted()), SLOT(auth()));
+    connect(buttonBox, SIGNAL(rejected()), SLOT(close()));
 }
 
 ScrobblerSettings::~ScrobblerSettings() {
     emit configured(success);
 }
 
-void ScrobblerSettings::on_buttonBox_accepted() {
-    scrobblerAuth->auth(ui->usernameLineEdit->text(),
-                        ui->passwordLineEdit->text());
-}
-
-void ScrobblerSettings::on_usernameLineEdit_textChanged() {
-    ui->label->clear();
-}
-
-void ScrobblerSettings::on_passwordLineEdit_textChanged() {
-    ui->label->clear();
+void ScrobblerSettings::auth() {
+    scrobblerAuth->auth(usernameLineEdit->text(), passwordLineEdit->text());
 }
 
 void ScrobblerSettings::authFail(const QString& errmsg) {
-    ui->label->setText(errmsg);
+    label->setText(errmsg);
 }
 
 void ScrobblerSettings::authSuccess() {

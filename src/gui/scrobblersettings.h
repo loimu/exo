@@ -22,28 +22,26 @@
 
 #include "basedialog.h"
 
+class QLineEdit;
+class QLabel;
 class ScrobblerAuth;
-
-namespace Ui {
-class ScrobblerSettings;
-}
 
 class ScrobblerSettings : public BaseDialog
 {
     Q_OBJECT
 
-    Ui::ScrobblerSettings *ui;
     ScrobblerAuth* scrobblerAuth;
     bool success;
+    QLineEdit* usernameLineEdit;
+    QLineEdit* passwordLineEdit;
+    QLabel* label;
 
 public:
     explicit ScrobblerSettings(QWidget *parent = nullptr);
     ~ScrobblerSettings();
 
 private slots:
-    void on_buttonBox_accepted();
-    void on_usernameLineEdit_textChanged();
-    void on_passwordLineEdit_textChanged();
+    void auth();
     void authFail(const QString& errmsg);
     void authSuccess();
 
