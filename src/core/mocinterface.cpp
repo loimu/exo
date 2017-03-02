@@ -138,10 +138,8 @@ State MocInterface::getInfo() {
     track.currSec = infoRgx.cap(8).toInt();
     track.caption = infoRgx.cap(9);
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
-    if(!track.isStream) {
-        track.caption.append(QString(" (%1)").arg(track.totalTime));
+    if(!track.isStream)
         return state;
-    }
     track.totalSec = 8*60;
     if(!track.caption.isEmpty()) {
         QRegExp artistRgx(QLatin1String("^(.*)\\s-\\s"));

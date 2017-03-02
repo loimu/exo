@@ -48,7 +48,11 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
     if(nowPlaying != track.caption) {
         nowPlaying = track.caption;
         if(track.caption.isEmpty()) return;
-        emit updateStatus(track.caption, cover());
+        if(track.totalTime.isEmpty())
+            emit updateStatus(track.caption, cover());
+        else
+            emit updateStatus(track.caption + QString(QLatin1String(" (%1)"))
+                              .arg(track.totalTime), cover());
 #ifdef BUILD_DBUS
         emit newTrack();
 #endif // BUILD_DBUS
