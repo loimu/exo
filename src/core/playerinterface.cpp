@@ -37,7 +37,9 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
     static State state = Offline;
     if(state != currentState) {
         state = currentState;
+#ifdef BUILD_DBUS
         emit newStatus(currentState);
+#endif // BUILD_DBUS
         if(currentState == Offline)
             emit updateStatus(tr("Player isn't running."));
         else if(currentState == Stop) emit updateStatus(tr("Stopped"));
