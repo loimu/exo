@@ -20,16 +20,9 @@
 #include "config.h"
 
 #include <QSettings>
-
-#ifdef BUILD_WITH_QT4
-  #include <lastfm/ws.h>
-  #include <lastfm/Audioscrobbler.h>
-  #include <lastfm/Track.h>
-#else
-  #include <lastfm5/ws.h>
-  #include <lastfm5/Audioscrobbler.h>
-  #include <lastfm5/Track.h>
-#endif // BUILD_WITH_QT4
+#include <lastfm5/ws.h>
+#include <lastfm5/Audioscrobbler.h>
+#include <lastfm5/Track.h>
 
 #include "core/playerinterface.h"
 #include "scrobbler.h"
