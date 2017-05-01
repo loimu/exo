@@ -12,22 +12,12 @@ cmake ..
 make
 ./src/exo
 ```
-
-### Building with Qt4 ###
-```
-#!Bash
-mkdir build && cd build
-cmake -DBUILD_WITH_QT4=ON ..
-make
-./src/exo
-```
 NOTE: you should link against the corresponding version of liblastfm or program will crash
 
 ### Build options: ###
 
 ```
 #!
--DBUILD_WITH_QT4=ON  - build with Qt4 (Qt5 is default)
 -DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
 -DBUILD_LASTFM=OFF   - disable scrobber module (enabled by default);
 ```
