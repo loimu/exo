@@ -47,10 +47,12 @@ LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
     artistLineEdit = new QLineEdit(this);
     artistLineEdit->setPlaceholderText(tr("artist"));
     artistLineEdit->setToolTip(tr("Edit artist and then press Enter"));
+    artistLineEdit->setClearButtonEnabled(true);
     horizontalLayout->addWidget(artistLineEdit);
     titleLineEdit = new QLineEdit(this);
     titleLineEdit->setPlaceholderText(tr("title"));
     titleLineEdit->setToolTip(tr("Edit title and then press Enter"));
+    titleLineEdit->setClearButtonEnabled(true);
     horizontalLayout->addWidget(titleLineEdit);
     lyricsBrowser = new QTextBrowser(this);
     lyricsBrowser->setOpenExternalLinks(true);

@@ -48,7 +48,7 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
     lineEdit = new QLineEdit(this);
     lineEdit->setToolTip(tr("Rename selected item"));
     lineEdit->setPlaceholderText("Rename");
-    //lineEdit->setClearButtonEnabled(true); // Qt5 only
+    lineEdit->setClearButtonEnabled(true);
     horizontalLayout->addWidget(lineEdit);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
