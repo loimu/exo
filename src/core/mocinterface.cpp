@@ -138,10 +138,10 @@ State MocInterface::getInfo() {
     track.currSec = infoRgx.cap(8).toInt();
     track.caption = infoRgx.cap(9);
     track.isStream = !track.file.startsWith(QLatin1Char('/'));
-    if(!track.isStream)
-        return state;
-    track.totalSec = 8*60;
-    if(!track.caption.isEmpty()) {
+    if(track.caption.isEmpty())
+        track.caption = track.file;
+    if(track.isStream) {
+        track.totalSec = 8*60;
         QRegExp artistRgx(QLatin1String("^(.*)\\s-\\s"));
         artistRgx.setMinimal(true);
         artistRgx.indexIn(track.caption);
@@ -149,7 +149,6 @@ State MocInterface::getInfo() {
         QRegExp titleRgx(QLatin1String("\\s-\\s(.*)$"));
         titleRgx.indexIn(track.caption);
         track.title = titleRgx.cap(1);
-    } else
-        track.caption = track.file;
+    }
     return state;
 }
