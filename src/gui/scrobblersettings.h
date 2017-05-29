@@ -35,15 +35,13 @@ class ScrobblerSettings : public BaseDialog
     QLineEdit* usernameLineEdit;
     QLineEdit* passwordLineEdit;
     QLabel* label;
+    void auth();
+    void authFail(const QString& errmsg);
+    void authSuccess();
 
 public:
     explicit ScrobblerSettings(QWidget *parent = nullptr);
     ~ScrobblerSettings();
-
-private slots:
-    void auth();
-    void authFail(const QString& errmsg);
-    void authSuccess();
 
 signals:
     void configured(bool);

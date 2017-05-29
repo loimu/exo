@@ -44,7 +44,8 @@ void ScrobblerAuth::auth(const QString& username, const QString& password) {
     params["authToken"] =
             lastfm::md5((username +lastfm::md5(password.toUtf8())).toUtf8());
     QNetworkReply* reply = lastfm::ws::post(params);
-    connect(reply, SIGNAL(finished()), SLOT(authReplyFinished()));
+    connect(reply, &QNetworkReply::finished,
+            this, &ScrobblerAuth::authReplyFinished);
     // for more detailed error report handle error(NetworkError) signal
 }
 

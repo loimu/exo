@@ -45,10 +45,8 @@ Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
     lastfm::ws::SharedSecret = secret;
     as = new lastfm::Audioscrobbler(QLatin1String("eXo"));
     PlayerInterface* player = PlayerInterface::self();
-    connect(player, SIGNAL(trackChanged(QString, QString, int)),
-            SLOT(init(QString, QString, int)));
-    connect(player, SIGNAL(trackListened(QString, QString, QString, int)),
-            SLOT(submit(QString, QString, QString, int)));
+    connect(player, &PlayerInterface::trackChanged, this, &Scrobbler::init);
+    connect(player, &PlayerInterface::trackListened, this, &Scrobbler::submit);
 }
 
 Scrobbler::~Scrobbler() {

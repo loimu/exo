@@ -33,6 +33,9 @@ class Scrobbler : public QObject
 
     static QPointer<Scrobbler> object;
     lastfm::Audioscrobbler* as;
+    void init(const QString& artist, const QString& title, int totalSec);
+    void submit(const QString& artist, const QString& title,
+                const QString& album, int totalSec);
 
 public:
     static const char* apiKey;
@@ -40,11 +43,6 @@ public:
     explicit Scrobbler(QObject *parent = nullptr);
     ~Scrobbler();
     static QPointer<Scrobbler> self() { return object; }
-
-private slots:
-    void init(const QString& artist, const QString& title, int totalSec);
-    void submit(const QString& artist, const QString& title,
-                const QString& album, int totalSec);
 };
 
 #endif // SCROBBLER_H

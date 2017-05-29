@@ -50,16 +50,20 @@ ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),
     horizontalLayout2->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout2);
     scrobblerAuth = new ScrobblerAuth(this);
-    connect(scrobblerAuth, SIGNAL(failed(QString)), SLOT(authFail(QString)));
-    connect(scrobblerAuth, SIGNAL(configured()), SLOT(authSuccess()));
-    connect(usernameLineEdit, SIGNAL(returnPressed()), SLOT(auth()));
-    connect(usernameLineEdit, SIGNAL(textChanged(QString)),
-            label, SLOT(clear()));
-    connect(passwordLineEdit, SIGNAL(returnPressed()), SLOT(auth()));
-    connect(passwordLineEdit, SIGNAL(textChanged(QString)),
-            label, SLOT(clear()));
-    connect(buttonBox, SIGNAL(accepted()), SLOT(auth()));
-    connect(buttonBox, SIGNAL(rejected()), SLOT(close()));
+    connect(scrobblerAuth, &ScrobblerAuth::failed,
+            this, &ScrobblerSettings::authFail);
+    connect(scrobblerAuth, &ScrobblerAuth::configured,
+            this, &ScrobblerSettings::authSuccess);
+    connect(usernameLineEdit, &QLineEdit::returnPressed,
+            this, &ScrobblerSettings::auth);
+    connect(usernameLineEdit, &QLineEdit::textChanged, label, &QLabel::clear);
+    connect(passwordLineEdit, &QLineEdit::returnPressed,
+            this, &ScrobblerSettings::auth);
+    connect(passwordLineEdit, &QLineEdit::textChanged, label, &QLabel::clear);
+    connect(buttonBox, &QDialogButtonBox::accepted,
+            this, &ScrobblerSettings::auth);
+    connect(buttonBox, &QDialogButtonBox::rejected,
+            this, &ScrobblerSettings::close);
 }
 
 ScrobblerSettings::~ScrobblerSettings() {
