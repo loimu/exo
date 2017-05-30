@@ -49,43 +49,48 @@ TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
     object = this;
     createActions();
     createTrayIcon();
-    connect(player, SIGNAL(updateStatus(QString, QString)),
-            SLOT(updateToolTip(QString, QString)));
+    connect(player, &PlayerInterface::updateStatus,
+            this, &TrayIcon::updateToolTip);
 }
 
 void TrayIcon::createActions() {
     showAction = new QAction(tr("Player"), this);
-    connect(showAction, SIGNAL(triggered()), player, SLOT(showPlayer()));
+    connect(showAction, &QAction::triggered,
+            player, &PlayerInterface::showPlayer);
     filesAction = new QAction(tr("A&dd ..."), this);
-    connect(filesAction, SIGNAL(triggered()), SLOT(addFiles()));
+    connect(filesAction, &QAction::triggered, this, &TrayIcon::addFiles);
     lyricsAction = new QAction(tr("&Lyrics"), this);
-    connect(lyricsAction, SIGNAL(triggered()), SLOT(showLyricsWindow()));
+    connect(lyricsAction, &QAction::triggered,
+            this, &TrayIcon::showLyricsWindow);
     playAction = new QAction(tr("&Play"), this);
-    connect(playAction, SIGNAL(triggered()), player, SLOT(play()));
+    connect(playAction, &QAction::triggered, player, &PlayerInterface::play);
     playAction->setIcon(QIcon(QLatin1String(":/images/play.png")));
     pauseAction = new QAction(tr("P&ause"), this);
-    connect(pauseAction, SIGNAL(triggered()), player, SLOT(playPause()));
+    connect(pauseAction, &QAction::triggered,
+            player, &PlayerInterface::playPause);
     pauseAction->setIcon(QIcon(QLatin1String(":/images/pause.png")));
     prevAction = new QAction(tr("P&rev"), this);
-    connect(prevAction, SIGNAL(triggered()), player, SLOT(prev()));
+    connect(prevAction, &QAction::triggered, player, &PlayerInterface::prev);
     prevAction->setIcon(QIcon(QLatin1String(":/images/prev.png")));
     nextAction = new QAction(tr("&Next"), this);
-    connect(nextAction, SIGNAL(triggered()), player, SLOT(next()));
+    connect(nextAction, &QAction::triggered, player, &PlayerInterface::next);
     nextAction->setIcon(QIcon(QLatin1String(":/images/next.png")));
     stopAction = new QAction(tr("&Stop"), this);
-    connect(stopAction, SIGNAL(triggered()), player, SLOT(stop()));
+    connect(stopAction, &QAction::triggered, player, &PlayerInterface::stop);
     stopAction->setIcon(QIcon(QLatin1String(":/images/stop.png")));
     aboutAction = new QAction(tr("A&bout"), this);
-    connect(aboutAction, SIGNAL(triggered()), SLOT(showAboutDialog()));
+    connect(aboutAction, &QAction::triggered, this, &TrayIcon::showAboutDialog);
     quitAction = new QAction(tr("&Quit"), this);
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
     quitAction->setIcon(QIcon(QLatin1String(":/images/close.png")));
     bookmarkCurrentAction = new QAction(tr("Bookmark &Current"), this);
-    connect(bookmarkCurrentAction, SIGNAL(triggered()), SLOT(addCurrent()));
+    connect(bookmarkCurrentAction, &QAction::triggered,
+            this, &TrayIcon::addCurrent);
     bookmarkCurrentAction->setIcon(
                 QIcon::fromTheme(QLatin1String("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark &Manager"), this);
-    connect(bookmarkManagerAction, SIGNAL(triggered()), SLOT(showManager()));
+    connect(bookmarkManagerAction, &QAction::triggered,
+            this, &TrayIcon::showManager);
     bookmarkManagerAction->setIcon(
                 QIcon::fromTheme(QLatin1String("bookmarks-organize")));
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
@@ -93,16 +98,16 @@ void TrayIcon::createActions() {
     QSettings settings;
     setQuitBehaviourAction->setChecked(
                 settings.value(QLatin1String("player/quit")).toBool());
-    connect(setQuitBehaviourAction, SIGNAL(triggered(bool)),
-            SLOT(setQuitBehaviour(bool)));
+    connect(setQuitBehaviourAction, &QAction::triggered,
+            this, &TrayIcon::setQuitBehaviour);
 
 #ifdef BUILD_LASTFM
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
     setScrobblingAction->setChecked(
                 settings.value(QLatin1String("scrobbler/enabled")).toBool());
-    connect(setScrobblingAction, SIGNAL(triggered(bool)),
-            SLOT(enableScrobbler(bool)));
+    connect(setScrobblingAction, &QAction::triggered,
+            this, &TrayIcon::enableScrobbler);
 #endif // BUILD_LASTFM
 }
 
@@ -161,8 +166,7 @@ void TrayIcon::createTrayIcon() {
     trayIcon->setIcon(icon);
     // event filter needed for corresponding method in this class
     trayIcon->installEventFilter(this);
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-                      SLOT(clicked(QSystemTrayIcon::ActivationReason)));
+    connect(trayIcon, &QSystemTrayIcon::activated, this, &TrayIcon::clicked);
     trayIcon->show();
 }
 
@@ -214,7 +218,7 @@ void TrayIcon::showAboutDialog() {
     aboutAction->setEnabled(false);
     AboutDialog* about = new AboutDialog(this);
     about->show();
-    connect(about, SIGNAL(destroyed(bool)), aboutAction, SLOT(setEnabled(bool)));
+    connect(about, &AboutDialog::destroyed, aboutAction, &QAction::setEnabled);
 }
 
 void TrayIcon::setQuitBehaviour(bool checked) {
@@ -240,8 +244,7 @@ void TrayIcon::showManager() {
     bookmarkManagerAction->setEnabled(false);
     BookmarkManager* bm = new BookmarkManager(this);
     bm->show();
-    connect(bm, SIGNAL(destroyed(bool)),
-            bookmarkManagerAction, SLOT(setEnabled(bool)));
+    connect(bm, &BookmarkManager::destroyed, aboutAction, &QAction::setEnabled);
 }
 
 void TrayIcon::refreshBookmarks(const BookmarkList& list) {
@@ -268,10 +271,10 @@ void TrayIcon::enableScrobbler(bool checked) {
         if(checked) {
             ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
             settingsDialog->show();
-            connect(settingsDialog, SIGNAL(configured(bool)),
-                    setScrobblingAction, SLOT(setChecked(bool)));
-            connect(settingsDialog, SIGNAL(configured(bool)),
-                    SLOT(loadScrobbler(bool)));
+            connect(settingsDialog, &ScrobblerSettings::configured,
+                    setScrobblingAction, &QAction::setChecked);
+            connect(settingsDialog, &ScrobblerSettings::configured,
+                    this, &TrayIcon::loadScrobbler);
         }
 }
 

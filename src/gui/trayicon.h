@@ -55,13 +55,6 @@ class TrayIcon : public QWidget
     void createActions();
     void createTrayIcon();
     bool eventFilter(QObject *, QEvent *);
-
-public:
-    explicit TrayIcon(QWidget *parent = nullptr);
-    static TrayIcon* self() { return object; }
-    void refreshBookmarks(const QVector<BookmarkEntry>& list);
-
-private slots:
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip(const QString& message, const QString& cover);
     void showAboutDialog();
@@ -73,6 +66,11 @@ private slots:
     void enableScrobbler(bool);
     void loadScrobbler(bool);
 #endif // BUILD_LASTFM
+
+public:
+    explicit TrayIcon(QWidget *parent = nullptr);
+    static TrayIcon* self() { return object; }
+    void refreshBookmarks(const QVector<BookmarkEntry>& list);
 
 public slots:
     void showLyricsWindow();
