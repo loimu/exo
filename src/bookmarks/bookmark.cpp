@@ -22,9 +22,9 @@
 
 Bookmark::Bookmark(const QString &text, QObject *parent) : QAction(text, parent)
 {
-    connect(this, SIGNAL(triggered(bool)), this, SLOT(open()));
+
 }
 
-void Bookmark::open() {
+void Bookmark::triggered(bool checked) {
     PlayerInterface::self()->openUri(uri);
 }

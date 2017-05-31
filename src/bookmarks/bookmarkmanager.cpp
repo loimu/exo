@@ -54,11 +54,16 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
     buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     horizontalLayout->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
-    connect(listWidget, SIGNAL(currentRowChanged(int)), SLOT(updateLineEdit(int)));
-    connect(deleteButton, SIGNAL(released()), SLOT(deleteBookmark()));
-    connect(lineEdit, SIGNAL(textEdited(QString)), SLOT(renameBookmark(QString)));
-    connect(buttonBox, SIGNAL(accepted()), SLOT(accepted()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+    connect(listWidget, &QListWidget::currentRowChanged,
+            this, &BookmarkManager::updateLineEdit);
+    connect(deleteButton, &QPushButton::released,
+            this, &BookmarkManager::deleteBookmark);
+    connect(lineEdit, &QLineEdit::textEdited,
+            this, &BookmarkManager::renameBookmark);
+    connect(buttonBox, &QDialogButtonBox::accepted,
+            this, &BookmarkManager::accepted);
+    connect(buttonBox, &QDialogButtonBox::rejected,
+            this, &BookmarkManager::close);
     refreshView();
 }
 

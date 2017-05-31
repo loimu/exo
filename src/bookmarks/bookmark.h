@@ -24,14 +24,10 @@
 
 class Bookmark : public QAction
 {
-    Q_OBJECT
-
 public:
     Bookmark(const QString &text, QObject *parent = nullptr);
     QString uri;
-
-private slots:
-    void open();
+    void triggered(bool checked);
 };
 
 #endif // BOOKMARK_H

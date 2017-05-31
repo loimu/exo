@@ -47,6 +47,10 @@ class BookmarkManager : public BaseDialog
     void refreshView();
     void moveUp();
     void moveDown();
+    void deleteBookmark();
+    void renameBookmark(QString);
+    void updateLineEdit(int cur);
+    void accepted();
 
 public:
     static BookmarkList getList();
@@ -56,12 +60,6 @@ public:
 
 signals:
     void destroyed(bool);
-
-private slots:
-    void deleteBookmark();
-    void renameBookmark(QString);
-    void updateLineEdit(int cur);
-    void accepted();
 };
 
 #endif // BOOKMARKMANAGER_H

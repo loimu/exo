@@ -24,14 +24,11 @@
 
 class TagEditor : public QAction
 {
-    Q_OBJECT
     QString editorPath;
 
 public:
     TagEditor(const QString &text, QObject *parent = nullptr);
-
-private slots:
-    void open();
+    void triggered(bool checked);
 };
 
 #endif // TAGEDITOR_H
