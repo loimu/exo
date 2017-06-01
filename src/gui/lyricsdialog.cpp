@@ -82,14 +82,16 @@ LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
     buttonBox->setStandardButtons(QDialogButtonBox::Close);
     horizontalLayout2->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout2);
-    connect(httpObject, SIGNAL(finished(QNetworkReply*)),
-            SLOT(showText(QNetworkReply*)));
-    connect(artistLineEdit, SIGNAL(returnPressed()), SLOT(search()));
-    connect(titleLineEdit, SIGNAL(returnPressed()), SLOT(search()));
-    connect(prevButton, SIGNAL(released()), SLOT(prev()));
-    connect(nextButton, SIGNAL(released()), SLOT(next()));
-    connect(updateButton, SIGNAL(released()), SLOT(update()));
-    connect(buttonBox, SIGNAL(rejected()), SLOT(close()));
+    connect(httpObject, &QNetworkAccessManager::finished,
+            this, &LyricsDialog::showText);
+    connect(artistLineEdit, &QLineEdit::returnPressed,
+            this, &LyricsDialog::search);
+    connect(titleLineEdit, &QLineEdit::returnPressed,
+            this, &LyricsDialog::search);
+    connect(prevButton, &QPushButton::released, this, &LyricsDialog::prev);
+    connect(nextButton, &QPushButton::released, this, &LyricsDialog::next);
+    connect(updateButton, &QPushButton::released, this, &LyricsDialog::update);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &LyricsDialog::close);
     update();
 }
 
@@ -168,13 +170,13 @@ void LyricsDialog::update() {
 void LyricsDialog::prev() {
     PlayerInterface::self()->prev();
     lyricsBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, SLOT(update()));
+    QTimer::singleShot(1500, this, [this] { update(); });
 }
 
 void LyricsDialog::next() {
     PlayerInterface::self()->next();
     lyricsBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, SLOT(update()));
+    QTimer::singleShot(1500, this, [this] { update(); });
 }
 
 void LyricsDialog::search() {

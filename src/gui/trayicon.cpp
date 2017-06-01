@@ -244,7 +244,8 @@ void TrayIcon::showManager() {
     bookmarkManagerAction->setEnabled(false);
     BookmarkManager* bm = new BookmarkManager(this);
     bm->show();
-    connect(bm, &BookmarkManager::destroyed, aboutAction, &QAction::setEnabled);
+    connect(bm, &BookmarkManager::destroyed,
+            bookmarkManagerAction, &QAction::setEnabled);
 }
 
 void TrayIcon::refreshBookmarks(const BookmarkList& list) {

@@ -28,8 +28,10 @@ PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent),
     track(PlayerInterface::self()->trackObject()),
     trackID("/org/exo/MediaPlayer2/Track/0")
 {
-    connect(player, SIGNAL(newStatus(State)),SLOT(emitPropsChanged(State)));
-    connect(player, SIGNAL(newTrack()), SLOT(trackChanged()));
+    connect(player, &PlayerInterface::newStatus,
+            this, &PlayerObject::emitPropsChanged);
+    connect(player, &PlayerInterface::newTrack,
+            this, &PlayerObject::trackChanged);
 }
 
 bool PlayerObject::canControl() const {

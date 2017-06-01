@@ -27,17 +27,13 @@ class ScrobblerAuth;
 
 class ConsoleAuth : public QObject
 {
-    Q_OBJECT
-
     ScrobblerAuth* scrobblerAuth;
     void auth();
+    void authFail(const QString& errmsg);
+    void authSuccess();
 
 public:
     explicit ConsoleAuth(QObject *parent = nullptr);
-
-private slots:
-    void authFail(const QString& errmsg);
-    void authSuccess();
 };
 
 #endif // CONSOLEAUTH_H

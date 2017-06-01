@@ -40,16 +40,14 @@ class LyricsDialog : public BaseDialog
     QNetworkReply *replyObject;
     QString artistString, titleString;
     QString format(QString);
-
-public:
-    explicit LyricsDialog(QWidget *parent = nullptr);
-
-private slots:
     void showText(QNetworkReply *reply);
     void update();
     void prev();
     void next();
     void search();
+
+public:
+    explicit LyricsDialog(QWidget *parent = nullptr);
 };
 
 #endif // LYRICSDIALOG_H

@@ -26,8 +26,10 @@
 ConsoleAuth::ConsoleAuth(QObject *parent) : QObject(parent)
 {
     scrobblerAuth = new ScrobblerAuth(this);
-    connect(scrobblerAuth, SIGNAL(failed(QString)), SLOT(authFail(QString)));
-    connect(scrobblerAuth, SIGNAL(configured()), SLOT(authSuccess()));
+    connect(scrobblerAuth, &ScrobblerAuth::failed,
+            this, &ConsoleAuth::authFail);
+    connect(scrobblerAuth, &ScrobblerAuth::configured,
+            this, &ConsoleAuth::authSuccess);
     auth();
 }
 
