@@ -22,9 +22,7 @@
 
 Bookmark::Bookmark(const QString &text, QObject *parent) : QAction(text, parent)
 {
-
-}
-
-void Bookmark::triggered(bool checked) {
-    PlayerInterface::self()->openUri(uri);
+    connect(this, &Bookmark::triggered, this, [=] {
+        PlayerInterface::self()->openUri(uri);
+    });
 }

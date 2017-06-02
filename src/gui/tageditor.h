@@ -28,7 +28,6 @@ class TagEditor : public QAction
 
 public:
     TagEditor(const QString &text, QObject *parent = nullptr);
-    void triggered(bool checked);
 };
 
 #endif // TAGEDITOR_H
