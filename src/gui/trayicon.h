@@ -32,8 +32,6 @@ class BookmarkEntry;
 
 class TrayIcon : public QWidget
 {
-    Q_OBJECT
-
     static TrayIcon* object;
     PlayerInterface *player;
     QMenu *bookmarksMenu;
@@ -71,8 +69,6 @@ public:
     explicit TrayIcon(QWidget *parent = nullptr);
     static TrayIcon* self() { return object; }
     void refreshBookmarks(const QVector<BookmarkEntry>& list);
-
-public slots:
     void showLyricsWindow();
 };
 

@@ -50,19 +50,6 @@ public:
 #ifdef BUILD_DBUS
     QString artwork();
 #endif // BUILD_DBUS
-
-signals:
-    void updateStatus(const QString&, const QString& = QString());
-#ifdef BUILD_LASTFM
-    void trackListened(const QString&, const QString&, const QString&, int);
-    void trackChanged(const QString&, const QString&, int);
-#endif // BUILD_LASTFM
-#ifdef BUILD_DBUS
-    void newStatus(State);
-    void newTrack();
-#endif // BUILD_DBUS
-
-public slots:
     virtual QString id() = 0;
     virtual bool play() = 0;
     virtual bool pause()= 0;
@@ -78,6 +65,17 @@ public slots:
     virtual void showPlayer() = 0;
     virtual bool openUri(const QString& uri) = 0;
     virtual bool appendFile(const QStringList& files) = 0;
+
+signals:
+    void updateStatus(const QString&, const QString& = QString());
+#ifdef BUILD_LASTFM
+    void trackListened(const QString&, const QString&, const QString&, int);
+    void trackChanged(const QString&, const QString&, int);
+#endif // BUILD_LASTFM
+#ifdef BUILD_DBUS
+    void newStatus(State);
+    void newTrack();
+#endif // BUILD_DBUS
 
 protected slots:
     virtual State getInfo() = 0;

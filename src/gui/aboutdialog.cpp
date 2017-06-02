@@ -47,7 +47,7 @@ AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent)
     verticalLayout->addWidget(iconLabel);
     QPushButton* aboutQt = new QPushButton(this);
     aboutQt->setText(tr("About &Qt"));
-    connect(aboutQt, SIGNAL(released()), qApp, SLOT(aboutQt()));
+    connect(aboutQt, &QPushButton::released, qApp, &QApplication::aboutQt);
     verticalLayout->addWidget(aboutQt);
     QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
     buttonBox->setMaximumSize(QSize(128, 16777215));
@@ -56,7 +56,7 @@ AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent)
     buttonBox->setCenterButtons(false);
     verticalLayout->addWidget(buttonBox);
     horizontalLayout->addLayout(verticalLayout);
-    connect(buttonBox, SIGNAL(rejected()), SLOT(close()));
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AboutDialog::close);
     label->setText(QString("<p><b>eXo</b> v%1 &copy; 2013-2017 Blaze<br />"
                         "&lt;blaze@vivaldi.net&gt;</p>"
                         "<p>Qt %2 (built with Qt %3)<br />"

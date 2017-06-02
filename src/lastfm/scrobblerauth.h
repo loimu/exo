@@ -39,13 +39,11 @@ class ScrobblerAuth : public QObject
 
 public:
     explicit ScrobblerAuth(QObject *parent = nullptr);
+    void auth(const QString& username, const QString& password);
 
 signals:
     void configured();
     void failed(const QString& errmsg);
-
-public slots:
-    void auth(const QString& username, const QString& password);
 };
 
 #endif // SCROBBLERAUTH_H

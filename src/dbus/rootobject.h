@@ -20,8 +20,6 @@
 #ifndef ROOTOBJECT_H
 #define ROOTOBJECT_H
 
-#include <QObject>
-
 #include <QDBusAbstractAdaptor>
 #include <QObject>
 
