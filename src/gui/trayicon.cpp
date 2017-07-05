@@ -64,40 +64,40 @@ void TrayIcon::createActions() {
             this, &TrayIcon::showLyricsWindow);
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, &QAction::triggered, player, &PlayerInterface::play);
-    playAction->setIcon(QIcon(QLatin1String(":/images/play.png")));
+    playAction->setIcon(QIcon(QStringLiteral(":/images/play.png")));
     pauseAction = new QAction(tr("P&ause"), this);
     connect(pauseAction, &QAction::triggered,
             player, &PlayerInterface::playPause);
-    pauseAction->setIcon(QIcon(QLatin1String(":/images/pause.png")));
+    pauseAction->setIcon(QIcon(QStringLiteral(":/images/pause.png")));
     prevAction = new QAction(tr("P&rev"), this);
     connect(prevAction, &QAction::triggered, player, &PlayerInterface::prev);
-    prevAction->setIcon(QIcon(QLatin1String(":/images/prev.png")));
+    prevAction->setIcon(QIcon(QStringLiteral(":/images/prev.png")));
     nextAction = new QAction(tr("&Next"), this);
     connect(nextAction, &QAction::triggered, player, &PlayerInterface::next);
-    nextAction->setIcon(QIcon(QLatin1String(":/images/next.png")));
+    nextAction->setIcon(QIcon(QStringLiteral(":/images/next.png")));
     stopAction = new QAction(tr("&Stop"), this);
     connect(stopAction, &QAction::triggered, player, &PlayerInterface::stop);
-    stopAction->setIcon(QIcon(QLatin1String(":/images/stop.png")));
+    stopAction->setIcon(QIcon(QStringLiteral(":/images/stop.png")));
     aboutAction = new QAction(tr("A&bout"), this);
     connect(aboutAction, &QAction::triggered, this, &TrayIcon::showAboutDialog);
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
-    quitAction->setIcon(QIcon(QLatin1String(":/images/close.png")));
+    quitAction->setIcon(QIcon(QStringLiteral(":/images/close.png")));
     bookmarkCurrentAction = new QAction(tr("Bookmark &Current"), this);
     connect(bookmarkCurrentAction, &QAction::triggered,
             this, &TrayIcon::addCurrent);
     bookmarkCurrentAction->setIcon(
-                QIcon::fromTheme(QLatin1String("bookmark-new-list")));
+                QIcon::fromTheme(QStringLiteral("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark &Manager"), this);
     connect(bookmarkManagerAction, &QAction::triggered,
             this, &TrayIcon::showManager);
     bookmarkManagerAction->setIcon(
-                QIcon::fromTheme(QLatin1String("bookmarks-organize")));
+                QIcon::fromTheme(QStringLiteral("bookmarks-organize")));
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
     QSettings settings;
     setQuitBehaviourAction->setChecked(
-                settings.value(QLatin1String("player/quit")).toBool());
+                settings.value(QStringLiteral("player/quit")).toBool());
     connect(setQuitBehaviourAction, &QAction::triggered,
             this, &TrayIcon::setQuitBehaviour);
 
@@ -105,7 +105,7 @@ void TrayIcon::createActions() {
     setScrobblingAction = new QAction(tr("&Enable scrobbling"), this);
     setScrobblingAction->setCheckable(true);
     setScrobblingAction->setChecked(
-                settings.value(QLatin1String("scrobbler/enabled")).toBool());
+                settings.value(QStringLiteral("scrobbler/enabled")).toBool());
     connect(setScrobblingAction, &QAction::triggered,
             this, &TrayIcon::enableScrobbler);
 #endif // BUILD_LASTFM
@@ -162,7 +162,7 @@ void TrayIcon::createTrayIcon() {
     // tray icon setup
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
-    QIcon icon(QLatin1String(":/images/32.png"));
+    QIcon icon(QStringLiteral(":/images/32.png"));
     trayIcon->setIcon(icon);
     // event filter needed for corresponding method in this class
     trayIcon->installEventFilter(this);
@@ -223,15 +223,15 @@ void TrayIcon::showAboutDialog() {
 
 void TrayIcon::setQuitBehaviour(bool checked) {
     QSettings settings;
-    settings.setValue(QLatin1String("player/quit"), checked);
+    settings.setValue(QStringLiteral("player/quit"), checked);
 }
 
 void TrayIcon::addFiles() {
     QStringList files = QFileDialog::getOpenFileNames(
                 this,
-                QLatin1String("Add files to playlist"),
+                QStringLiteral("Add files to playlist"),
                 QString(),
-                QLatin1String("Media (*.pls *.m3u *.ogg *.mp3 *.flac)"));
+                QStringLiteral("Media (*.pls *.m3u *.ogg *.mp3 *.flac)"));
     player->appendFile(files);
 }
 
@@ -265,8 +265,8 @@ void TrayIcon::refreshBookmarks(const BookmarkList& list) {
 #ifdef BUILD_LASTFM
 void TrayIcon::enableScrobbler(bool checked) {
     QSettings settings;
-    if(settings.value(QLatin1String("scrobbler/sessionkey")).toBool()) {
-        settings.setValue(QLatin1String("scrobbler/enabled"), checked);
+    if(settings.value(QStringLiteral("scrobbler/sessionkey")).toBool()) {
+        settings.setValue(QStringLiteral("scrobbler/enabled"), checked);
         loadScrobbler(checked);
     } else
         if(checked) {
