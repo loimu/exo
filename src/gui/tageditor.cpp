@@ -24,12 +24,12 @@
 TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
 {
     editorPath = text;
-    QString app = text.split(QLatin1String("/")).last();
+    QString app = text.split(QChar::fromLatin1('/')).last();
     this->setText(app.left(1).toUpper() + app.mid(1));
     this->setIcon(QIcon::fromTheme(app));
     connect(this, &TagEditor::triggered, this, [=] {
         QString file = PlayerInterface::self()->trackObject()->file;
-        if(file.startsWith(QLatin1String("/")))
+        if(file.startsWith(QChar::fromLatin1('/')))
             Process::execute(editorPath, QStringList() << file);
     });
 }
