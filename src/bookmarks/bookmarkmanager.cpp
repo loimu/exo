@@ -51,7 +51,8 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
     lineEdit->setClearButtonEnabled(true);
     horizontalLayout->addWidget(lineEdit);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
-    buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    buttonBox->setStandardButtons(
+                QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     horizontalLayout->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
     connect(listWidget, &QListWidget::currentRowChanged,
@@ -71,11 +72,11 @@ BookmarkList BookmarkManager::getList() {
     QSettings settings;
     QString string = settings.value(
                 QStringLiteral("bookmarkmanager/bookmarks")).toString();
-    QStringList stringList = string.split(QLatin1Char(';'));
+    QStringList stringList = string.split(QChar::fromLatin1(';'));
     BookmarkList list;
     if(!stringList.isEmpty()) {
         for(QString str : stringList) {
-            QStringList bookmark = str.split(QLatin1Char('|'));
+            QStringList bookmark = str.split(QChar::fromLatin1('|'));
             if(bookmark.size() == 2) {
                 BookmarkEntry entry;
                 entry.name = bookmark.at(0);
@@ -106,8 +107,8 @@ void BookmarkManager::saveList(const BookmarkList& list) {
     int count = 0;
     for(BookmarkEntry entry : list) {
         if(count)
-            string.append(QLatin1Char(';'));
-        string.append(entry.name + QLatin1Char('|') + entry.uri);
+            string.append(QChar::fromLatin1(';'));
+        string.append(entry.name + QChar::fromLatin1('|') + entry.uri);
         count++;
     }
     settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
@@ -156,8 +157,8 @@ void BookmarkManager::deleteBookmark() {
 void BookmarkManager::renameBookmark(QString name) {
     int cur = listWidget->currentRow();
     if(cur > -1) {
-        list[cur].name = name.replace(QLatin1Char(';'), QString())
-                .replace(QLatin1Char('|'), QString());
+        list[cur].name = name.replace(QChar::fromLatin1(';'), QString())
+                .replace(QChar::fromLatin1('|'), QString());
         listWidget->currentItem()->setText(tr("Name: ") + name
                                            + QLatin1String("\n")
                                            + list.at(cur).uri);
