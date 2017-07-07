@@ -24,6 +24,7 @@
 
 class MocInterface : public PlayerInterface
 {
+    QString player;
     bool isServerRunning();
     bool runServer();
 

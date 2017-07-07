@@ -26,8 +26,10 @@
 #include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py"
+#define PLAYER_CLI_EXECUTABLE "mocp"
 
-MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent)
+MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent),
+    player(QStringLiteral(PLAYER_CLI_EXECUTABLE))
 {
     if(!isServerRunning())
         runServer();
@@ -37,7 +39,7 @@ MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent)
 MocInterface::~MocInterface()
 {
     QSettings settings;
-    if(settings.value(QLatin1String("player/quit")).toBool())
+    if(settings.value(QStringLiteral("player/quit")).toBool())
         quit();
 }
 
@@ -47,81 +49,81 @@ QString MocInterface::id() {
 
 bool MocInterface::isServerRunning() {
     return !Process::getOutput(
-                QLatin1String("pidof"),
-                QStringList{QLatin1String("mocp")}).isEmpty();
+                QStringLiteral("pidof"),
+                QStringList{player}).isEmpty();
 }
 
 bool MocInterface::runServer() {
     return Process::execute(
-                QLatin1String("mocp"),
-                QStringList{QLatin1String("-SO"), QLatin1String(OSD_OPT)});
+                player,
+                QStringList{QStringLiteral("-SO"), QStringLiteral(OSD_OPT)});
 }
 
 #define SEND_COMMAND(__method, __option)\
     bool MocInterface::__method() {\
-    return Process::execute(QLatin1String("mocp"), QStringList{__option});\
+    return Process::execute(player, QStringList{__option});\
     }
 
-SEND_COMMAND(play, QLatin1String("-p"))
-SEND_COMMAND(pause,QLatin1String("-P"))
-SEND_COMMAND(playPause, QLatin1String("-G"))
-SEND_COMMAND(prev, QLatin1String("-r"))
-SEND_COMMAND(next, QLatin1String("-f"))
-SEND_COMMAND(stop, QLatin1String("-s"))
-SEND_COMMAND(quit, QLatin1String("-x"))
+SEND_COMMAND(play, QStringLiteral("-p"))
+SEND_COMMAND(pause,QStringLiteral("-P"))
+SEND_COMMAND(playPause, QStringLiteral("-G"))
+SEND_COMMAND(prev, QStringLiteral("-r"))
+SEND_COMMAND(next, QStringLiteral("-f"))
+SEND_COMMAND(stop, QStringLiteral("-s"))
+SEND_COMMAND(quit, QStringLiteral("-x"))
 
 #define SEND_COMMAND_PARAM(__method, __option)\
     bool MocInterface::__method(int param) {\
-    return Process::execute(QLatin1String("mocp"),\
+    return Process::execute(player,\
     QStringList() << QString(__option).arg(param));\
     }
 
-SEND_COMMAND_PARAM(jump, QLatin1String("-j%1s"))
-SEND_COMMAND_PARAM(seek, QLatin1String("-k%1"))
-SEND_COMMAND_PARAM(volume, QLatin1String("-v%1"))
-SEND_COMMAND_PARAM(changeVolume, QLatin1String("-v+%1"))
+SEND_COMMAND_PARAM(jump, QStringLiteral("-j%1s"))
+SEND_COMMAND_PARAM(seek, QStringLiteral("-k%1"))
+SEND_COMMAND_PARAM(volume, QStringLiteral("-v%1"))
+SEND_COMMAND_PARAM(changeVolume, QStringLiteral("-v+%1"))
 
 void MocInterface::showPlayer() {
-    QString term = QLatin1String("xterm"); // xterm is a fallback app
+    QString term = QStringLiteral("xterm"); // xterm is a fallback app
     QStringList apps = Process::detect(
                 QStringList{
-                    QLatin1String("x-terminal-emulator"),
-                    QLatin1String("gnome-terminal"),
-                    QLatin1String("konsole"),
-                    QLatin1String("xfce4-terminal"),
-                    QLatin1String("lxterminal")});
+                    QStringLiteral("x-terminal-emulator"),
+                    QStringLiteral("gnome-terminal"),
+                    QStringLiteral("konsole"),
+                    QStringLiteral("xfce4-terminal"),
+                    QStringLiteral("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
     Process::execute(term, QStringList{
-                         QLatin1String("-e"),
-                         QLatin1String("mocp -O " OSD_OPT)});
+                         QStringLiteral("-e"),
+                         QStringLiteral(PLAYER_CLI_EXECUTABLE " -O " OSD_OPT)});
 }
 
 bool MocInterface::openUri(const QString& file) {
-    return Process::execute(QLatin1String("mocp"),
-                            QStringList() << QLatin1String("-l") << file);
+    return Process::execute(player,
+                            QStringList() << QStringLiteral("-l") << file);
 }
 
 bool MocInterface::appendFile(const QStringList& files) {
-    return Process::execute(QLatin1String("mocp"),
-                            QStringList() << QLatin1String("-a") << files);
+    return Process::execute(player,
+                            QStringList() << QStringLiteral("-a") << files);
 }
 
 State MocInterface::getInfo() {
     QString info = Process::getOutput(
-                QLatin1String("mocp"),
+                player,
                 QStringList{
-                    QLatin1String("-Q"),
-                    QLatin1String("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
+                    QStringLiteral("-Q"),
+                    QStringLiteral("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
                     "{cs}%cs{T}%title")});
     if(info.isEmpty())
         return Offline;
     if(info.startsWith(QLatin1String("STOP")))
         return Stop;
     QRegExp infoRgx(
-                QLatin1String("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                              "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
-                              "\\{cs\\}(.*)\\{T\\}(.*)\n"));
+                QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                               "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
+                               "\\{cs\\}(.*)\\{T\\}(.*)\n"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
     State state = Offline;
@@ -137,16 +139,16 @@ State MocInterface::getInfo() {
     track.totalSec = infoRgx.cap(7).toInt();
     track.currSec = infoRgx.cap(8).toInt();
     track.caption = infoRgx.cap(9);
-    track.isStream = !track.file.startsWith(QLatin1Char('/'));
+    track.isStream = !track.file.startsWith(QChar::fromLatin1('/'));
     if(track.caption.isEmpty())
         track.caption = track.file;
     if(track.isStream) {
         track.totalSec = 8*60;
-        QRegExp artistRgx(QLatin1String("^(.*)\\s-\\s"));
+        QRegExp artistRgx(QStringLiteral("^(.*)\\s-\\s"));
         artistRgx.setMinimal(true);
         artistRgx.indexIn(track.caption);
         track.artist = artistRgx.cap(1);
-        QRegExp titleRgx(QLatin1String("\\s-\\s(.*)$"));
+        QRegExp titleRgx(QStringLiteral("\\s-\\s(.*)$"));
         titleRgx.indexIn(track.caption);
         track.title = titleRgx.cap(1);
     }
