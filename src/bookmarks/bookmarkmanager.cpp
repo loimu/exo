@@ -47,7 +47,7 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
     horizontalLayout->addWidget(deleteButton);
     lineEdit = new QLineEdit(this);
     lineEdit->setToolTip(tr("Rename selected item"));
-    lineEdit->setPlaceholderText("Rename");
+    lineEdit->setPlaceholderText(QStringLiteral("Rename"));
     lineEdit->setClearButtonEnabled(true);
     horizontalLayout->addWidget(lineEdit);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
@@ -70,12 +70,12 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
 BookmarkList BookmarkManager::getList() {
     QSettings settings;
     QString string = settings.value(
-                QLatin1String("bookmarkmanager/bookmarks")).toString();
-    QStringList stringList = string.split(QLatin1String(";"));
+                QStringLiteral("bookmarkmanager/bookmarks")).toString();
+    QStringList stringList = string.split(QLatin1Char(';'));
     BookmarkList list;
     if(!stringList.isEmpty()) {
         for(QString str : stringList) {
-            QStringList bookmark = str.split(QLatin1String("|"));
+            QStringList bookmark = str.split(QLatin1Char('|'));
             if(bookmark.size() == 2) {
                 BookmarkEntry entry;
                 entry.name = bookmark.at(0);
@@ -106,11 +106,11 @@ void BookmarkManager::saveList(const BookmarkList& list) {
     int count = 0;
     for(BookmarkEntry entry : list) {
         if(count)
-            string.append(QLatin1String(";"));
-        string.append(entry.name + QLatin1String("|") + entry.uri);
+            string.append(QLatin1Char(';'));
+        string.append(entry.name + QLatin1Char('|') + entry.uri);
         count++;
     }
-    settings.setValue(QLatin1String("bookmarkmanager/bookmarks"), string);
+    settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
 }
 
 void BookmarkManager::refreshView() {
@@ -118,8 +118,9 @@ void BookmarkManager::refreshView() {
     listWidget->clear();
     for(BookmarkEntry entry : list) {
         QListWidgetItem *item = new QListWidgetItem();
-        item->setText(tr("Name: ") + entry.name + "\n" + entry.uri);
-        item->setIcon(QIcon::fromTheme(QLatin1String("audio-x-generic")));
+        item->setText(tr("Name: ") + entry.name
+                      + QLatin1String("\n") + entry.uri);
+        item->setIcon(QIcon::fromTheme(QStringLiteral("audio-x-generic")));
         listWidget->addItem(item);
     }
 }
@@ -155,8 +156,10 @@ void BookmarkManager::deleteBookmark() {
 void BookmarkManager::renameBookmark(QString name) {
     int cur = listWidget->currentRow();
     if(cur > -1) {
-        list[cur].name = name.replace(";", "").replace("|", "");
-        listWidget->currentItem()->setText(tr("Name: ") + name + "\n"
+        list[cur].name = name.replace(QLatin1Char(';'), QString())
+                .replace(QLatin1Char('|'), QString());
+        listWidget->currentItem()->setText(tr("Name: ") + name
+                                           + QLatin1String("\n")
                                            + list.at(cur).uri);
     }
 }
@@ -176,14 +179,14 @@ void BookmarkManager::keyPressEvent(QKeyEvent *e) {
     BaseDialog::keyPressEvent(e);
     switch(e->key())
     {
-    case Qt::Key_Delete:
-        deleteBookmark();
-        break;
-    case Qt::Key_K:
-        moveUp();
-        break;
-    case Qt::Key_J:
-        moveDown();
-        break;
+        case Qt::Key_Delete:
+            deleteBookmark();
+            break;
+        case Qt::Key_K:
+            moveUp();
+            break;
+        case Qt::Key_J:
+            moveDown();
+            break;
     }
 }
