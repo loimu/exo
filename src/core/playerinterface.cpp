@@ -51,7 +51,7 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
         if(track.totalTime.isEmpty())
             emit updateStatus(track.caption, cover());
         else
-            emit updateStatus(track.caption + QString(QLatin1String(" (%1)"))
+            emit updateStatus(track.caption + QString(QStringLiteral(" (%1)"))
                               .arg(track.totalTime), cover());
 #ifdef BUILD_DBUS
         emit newTrack();
@@ -80,22 +80,22 @@ QString PlayerInterface::cover() {
     if(track.isStream)
         return QString();
     QString path = track.file;
-    path.replace(QRegExp(QLatin1String("(.*)/(.*)")), QLatin1String("\\1"));
+    path.replace(QRegExp(QStringLiteral("(.*)/(.*)")), QStringLiteral("\\1"));
     QDir dir(path);
     dir.setNameFilters(QStringList{
-                           QLatin1String("*.png"),
-                           QLatin1String("*.jpg"),
-                           QLatin1String("*.jpeg")});
+                           QStringLiteral("*.png"),
+                           QStringLiteral("*.jpg"),
+                           QStringLiteral("*.jpeg")});
     if(!dir.entryList().isEmpty())
-        return path + QLatin1String("/") + dir.entryList().at(0);
+        return path + QChar::fromLatin1('/') + dir.entryList().at(0);
     else
-        return QLatin1String(":/images/nocover.png");
+        return QStringLiteral(":/images/nocover.png");
 }
 
 #ifdef BUILD_DBUS
 QString PlayerInterface::artwork() {
     QString art = cover();
-    return art.endsWith(QLatin1String("/nocover.png")) ?
+    return art.endsWith(QStringLiteral("/nocover.png")) ?
                 QString() : QLatin1String("file://") + art;
 } // compliance method for MPRIS
 #endif // BUILD_DBUS

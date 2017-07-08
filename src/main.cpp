@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
         else if(arg == QByteArray("-d") || arg == QByteArray("-b")
                 || arg == QByteArray("--background")) {
             useGui = false;
-            if(fork() == 0) qDebug("Running in the background succeeded");
+            if(fork() == 0) qDebug("Running in the background");
             else return 0; // exiting the parent process or it's an error
         }
         else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")){
