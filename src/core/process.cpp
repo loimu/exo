@@ -35,8 +35,8 @@ bool Process::execute(const QString& program, const QStringList& options) {
 
 QStringList Process::detect(const QStringList& apps) {
     QProcess proc;
-    proc.start(QLatin1String("which"), apps);
+    proc.start(QStringLiteral("which"), apps);
     proc.waitForFinished(-1);
     return QString::fromUtf8(proc.readAllStandardOutput())
-            .split(QLatin1String("\n"), QString::SkipEmptyParts);
+            .split(QStringLiteral("\n"), QString::SkipEmptyParts);
 }
