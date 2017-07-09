@@ -38,12 +38,12 @@ Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
     object = this;
     QSettings settings;
     lastfm::ws::Username = settings.value(
-                QLatin1String("scrobbler/login")).toString();
+                QStringLiteral("scrobbler/login")).toString();
     lastfm::ws::SessionKey = settings.value(
-                QLatin1String("scrobbler/sessionkey")).toString();
+                QStringLiteral("scrobbler/sessionkey")).toString();
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
-    as = new lastfm::Audioscrobbler(QLatin1String("eXo"));
+    as = new lastfm::Audioscrobbler(QStringLiteral("eXo"));
     PlayerInterface* player = PlayerInterface::self();
     connect(player, &PlayerInterface::trackChanged, this, &Scrobbler::init);
     connect(player, &PlayerInterface::trackListened, this, &Scrobbler::submit);

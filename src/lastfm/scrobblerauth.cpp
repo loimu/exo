@@ -63,9 +63,11 @@ void ScrobblerAuth::authReplyFinished() {
         lastfm::ws::SessionKey = lfm["session"]["key"].text();
         // Save the session key
         QSettings settings;
-        settings.setValue("scrobbler/login", lastfm::ws::Username);
-        settings.setValue("scrobbler/sessionkey", lastfm::ws::SessionKey);
-        settings.setValue("scrobbler/enabled", true);
+        settings.setValue(QStringLiteral("scrobbler/login"),
+                          lastfm::ws::Username);
+        settings.setValue(QStringLiteral("scrobbler/sessionkey"),
+                          lastfm::ws::SessionKey);
+        settings.setValue(QStringLiteral("scrobbler/enabled"), true);
         emit configured();
     } else
         emit failed(tr("wrong data, try again"));
