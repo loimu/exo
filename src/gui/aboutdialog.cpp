@@ -42,7 +42,7 @@ AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent)
     sizePolicy.setVerticalStretch(0);
     sizePolicy.setHeightForWidth(iconLabel->sizePolicy().hasHeightForWidth());
     iconLabel->setSizePolicy(sizePolicy);
-    iconLabel->setPixmap(QPixmap(QLatin1String(":/images/128.png")));
+    iconLabel->setPixmap(QPixmap(QStringLiteral(":/images/128.png")));
     iconLabel->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
     verticalLayout->addWidget(iconLabel);
     QPushButton* aboutQt = new QPushButton(this);
