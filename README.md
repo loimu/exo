@@ -1,5 +1,5 @@
 # eXo project
- Qt frontend to MOC - [Webpage about eXo](https://weblog-loimu.rhcloud.com/exo/)
+ Qt frontend to MOC player
 
 ### What it does ###
  Allows you to control your MOC player via tray popup menu.
@@ -15,7 +15,6 @@ make
 NOTE: you should link against the corresponding version of liblastfm or program will crash
 
 ### Build options: ###
-
 ```
 #!
 -DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
@@ -34,5 +33,21 @@ NOTE: you should link against the corresponding version of liblastfm or program 
 ### Screenshot ###
 ![Screenshot of the eXo app](https://bitbucket.org/repo/8Xb9ez/images/405669011-exo.png)
 
-### Installation ###
-For Ubuntu packages and instructions check the link above.
+### Background mode (no GUI or X-session needed): ###
+ Basic running `exo -d 2>/tmp/exo_errors.log &`
+
+ Scrobbler authentication `exo -f` or `exo --force-reauth`
+
+ Shutting down the app `qdbus tk.loimu.exo /Exo tk.loimu.exo.quitApplication` or just `pkill -2 exo`
+
+### Tips: ###
+ Create a global hotkey to see the lyrics at any time.
+ `qdbus tk.loimu.exo /Exo tk.loimu.exo.showLyricsWindow` is the command you want.
+
+### Installation on Ubuntu: ###
+```
+#!Bash
+sudo add-apt-repository ppa:blaze/main
+sudo apt-get update
+sudo apt-get install exo-player
+```
