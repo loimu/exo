@@ -39,7 +39,6 @@ NOTE: you should link against the corresponding version of liblastfm or program 
  Scrobbler authentication `exo -f` or `exo --force-reauth`
 
  Shutting down the app `qdbus tk.loimu.exo /Exo tk.loimu.exo.quitApplication`
-
  or just `pkill -2 exo`
 
 ### Tips: ###

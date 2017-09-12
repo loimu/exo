@@ -65,12 +65,12 @@ LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
     horizontalLayout2->addItem(spacer);
     QPushButton* prevButton = new QPushButton(this);
     prevButton->setMaximumWidth(23);
-    prevButton->setText(QLatin1String("\253"));
+    prevButton->setText(QChar::fromLatin1('\253'));
     prevButton->setToolTip(tr("Prev track"));
     horizontalLayout2->addWidget(prevButton);
     QPushButton* nextButton = new QPushButton(this);
     nextButton->setMaximumWidth(23);
-    nextButton->setText(QLatin1String("\273"));
+    nextButton->setText(QChar::fromLatin1('\273'));
     nextButton->setToolTip(tr("Next track"));
     horizontalLayout2->addWidget(nextButton);
     QPushButton* updateButton = new QPushButton(this);
@@ -96,7 +96,7 @@ LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
 }
 
 void LyricsDialog::showText(QNetworkReply* reply) {
-    label->setText("OK");
+    label->setText(QStringLiteral("OK"));
     if(reply->error() != QNetworkReply::NoError) {
         label->setText(tr("Network error"));
         lyricsBrowser->setText(reply->errorString());
@@ -109,8 +109,8 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         replyObject = nullptr;
         reply->deleteLater();
         QRegExp songRgx(
-                    QLatin1String("<artist>(.*)</artist>.*<song>(.*)</song>.*"
-                                  "<lyrics>(.*)</lyrics>.*<url>(.*)</url>"));
+                    QStringLiteral("<artist>(.*)</artist>.*<song>(.*)</song>.*"
+                                   "<lyrics>(.*)</lyrics>.*<url>(.*)</url>"));
         songRgx.setMinimal(true);
         if(songRgx.indexIn(content) < 0) {
             lyricsBrowser->setHtml(QLatin1String("<b>")
@@ -118,7 +118,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
                                    + QLatin1String("</b>"));
             return;
         }
-        else if(songRgx.cap(3) == QLatin1String("Not found")) {
+        else if(songRgx.cap(3) == QStringLiteral("Not found")) {
             lyricsBrowser->setHtml(QLatin1String("<b>")
                                    + tr("Not found")
                                    + QLatin1String("</b>"));
@@ -141,7 +141,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         reply->deleteLater();
         return;
     }
-    QRegExp lyricsRgx(QLatin1String("&lt;lyrics>(.*)&lt;/lyrics>"));
+    QRegExp lyricsRgx(QStringLiteral("&lt;lyrics>(.*)&lt;/lyrics>"));
     lyricsRgx.indexIn(content);
     QString text = QString("<h2>%1 - %2</h2>")
             .arg(artistString)
