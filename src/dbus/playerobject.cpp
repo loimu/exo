@@ -60,26 +60,26 @@ bool PlayerObject::canSeek() const {
 
 QVariantMap PlayerObject::metadata() const {
     QVariantMap map;
-    map[QLatin1String("mpris:length")] = track->totalSec * 1000000;
-    map[QLatin1String("mpris:artUrl")] = player->artwork();
-    map[QLatin1String("mpris:trackid")] =
-            QVariant::fromValue<QDBusObjectPath>(trackID);
-    map[QLatin1String("xesam:album")] = track->album;
-    map[QLatin1String("xesam:artist")] = QStringList() << track->artist;
-    map[QLatin1String("xesam:title")] = track->title.isEmpty() ?
-                track->caption : track->title;
-    QString uri = track->file;
-    map[QLatin1String("xesam:url")] = track->isStream ?
-                uri : QLatin1String("file://") + uri;
+    map.insert(QStringLiteral("mpris:length"), track->totalSec * 1000000);
+    map.insert(QStringLiteral("mpris:artUrl"), player->artwork());
+    map.insert(QStringLiteral("mpris:trackid"),
+               QVariant::fromValue<QDBusObjectPath>(trackID));
+    map.insert(QStringLiteral("xesam:album"), track->album);
+    map.insert(QStringLiteral("xesam:artist"), QStringList() << track->artist);
+    map.insert(QStringLiteral("xesam:title"),
+               track->title.isEmpty() ? track->caption : track->title);
+    map.insert(QStringLiteral("xesam:url"),
+               track->isStream ? track->file : QLatin1String("file://")
+                                 + track->file);
     return map;
 }
 
 QString PlayerObject::playbackStatus() const {
     if(status == State::Play)
-        return QLatin1String("Playing");
+        return QStringLiteral("Playing");
     else if(status == State::Pause)
-        return QLatin1String("Paused");
-    return QLatin1String("Stopped");
+        return QStringLiteral("Paused");
+    return QStringLiteral("Stopped");
 }
 
 qlonglong PlayerObject::position() const {
@@ -96,20 +96,20 @@ void PlayerObject::setVolume(double value) {
 }
 
 void PlayerObject::trackChanged() {
-    trackID = QDBusObjectPath(QString(QLatin1String(
-                                          "/org/exo/MediaPlayer2/Track/%1"))
-                              .arg(qrand()));
+    trackID = QDBusObjectPath(
+                QString(QLatin1String("/org/exo/MediaPlayer2/Track/%1"))
+                .arg(qrand()));
     emitPropsChanged(State::Play);
 }
 
 void PlayerObject::emitPropsChanged(State st) {
     status = st;
     QList<QByteArray> changedProps;
-    if(props[QLatin1String("CanSeek")] != canSeek())
+    if(props.value(QStringLiteral("CanSeek")) != canSeek())
         changedProps << QByteArray("CanSeek");
-    if(props[QLatin1String("PlaybackStatus")] != playbackStatus())
+    if(props.value(QStringLiteral("PlaybackStatus")) != playbackStatus())
         changedProps << QByteArray("PlaybackStatus");
-    if(props[QLatin1String("Metadata")] != metadata())
+    if(props.value(QStringLiteral("Metadata")) != metadata())
         changedProps << QByteArray("Metadata");
     if(changedProps.isEmpty())
         return;
@@ -118,9 +118,9 @@ void PlayerObject::emitPropsChanged(State st) {
     for(QByteArray name : changedProps)
         map.insert(name, props.value(name));
     QDBusMessage msg = QDBusMessage::createSignal(
-                QLatin1String("/org/mpris/MediaPlayer2"),
-                QLatin1String("org.freedesktop.DBus.Properties"),
-                QLatin1String("PropertiesChanged"));
+                QStringLiteral("/org/mpris/MediaPlayer2"),
+                QStringLiteral("org.freedesktop.DBus.Properties"),
+                QStringLiteral("PropertiesChanged"));
     msg << "org.mpris.MediaPlayer2.Player";
     msg << map;
     msg << QStringList();
@@ -152,14 +152,14 @@ void PlayerObject::Stop() {
 }
 
 void PlayerObject::Seek(qlonglong Offset) {
-    player->seek(Offset/1000000);
+    player->seek(Offset / 1000000);
 }
 
-void PlayerObject::SetPosition(const QDBusObjectPath &TrackId,
-                               qlonglong Position) {
+void PlayerObject::SetPosition(
+        const QDBusObjectPath &TrackId, qlonglong Position) {
     if(trackID != TrackId)
         return;
-    player->jump(Position/1000000);
+    player->jump(Position / 1000000);
 }
 
 void PlayerObject::OpenUri(const QString &Uri) {
@@ -167,11 +167,11 @@ void PlayerObject::OpenUri(const QString &Uri) {
 }
 
 void PlayerObject::syncProperties() {
-    props[QLatin1String("CanGoNext")] = canGoNext();
-    props[QLatin1String("CanGoPrevious")] = canGoPrevious();
-    props[QLatin1String("CanPause")] = canPause();
-    props[QLatin1String("CanPlay")] = canPlay();
-    props[QLatin1String("CanSeek")] = canSeek();
-    props[QLatin1String("PlaybackStatus")] = playbackStatus();
-    props[QLatin1String("Metadata")] = metadata();
+    props.insert(QStringLiteral("CanGoNext"), canGoNext());
+    props.insert(QStringLiteral("CanGoPrevious"), canGoPrevious());
+    props.insert(QStringLiteral("CanPause"), canPause());
+    props.insert(QStringLiteral("CanPlay"), canPlay());
+    props.insert(QStringLiteral("CanSeek"), canSeek());
+    props.insert(QStringLiteral("PlaybackStatus"), playbackStatus());
+    props.insert(QStringLiteral("Metadata"), metadata());
 }

@@ -43,7 +43,7 @@ class PlayerObject : public QDBusAbstractAdaptor
 
     PlayerInterface *player;
     const Track *track;
-    QMap<QString, QVariant> props;
+    QVariantMap props;
     State status;
     QDBusObjectPath trackID;
     void syncProperties();

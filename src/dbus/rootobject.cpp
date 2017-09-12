@@ -36,7 +36,7 @@ bool RootObject::canRaise() const {
 }
 
 QString RootObject::desktopEntry() const {
-    return QLatin1String("exo");
+    return QStringLiteral("exo");
 }
 
 bool RootObject::hasTrackList() const {
