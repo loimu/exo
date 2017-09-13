@@ -64,11 +64,11 @@ void PlayerInterface::timerEvent(QTimerEvent *event) {
 #ifdef BUILD_LASTFM
     if(currentState != Play || track.isStream) return;
     static bool listened = true;
-    if(listened && ((track.currSec < track.totalSec/2 && track.totalSec < 8*60)
-                || (track.currSec < 4*60 && track.totalSec > 8*60)))
+    if(listened && ((track.currSec < track.totalSec/2 && track.totalSec <= 8*60)
+                    || (track.currSec < 4*60 && track.totalSec > 8*60)))
         listened = false; // beginning
     else if(!listened && (track.currSec > track.totalSec/2
-                || (track.currSec > 4*60 && track.totalSec > 8*60))) {
+                          || (track.currSec > 4*60 && track.totalSec > 8*60))) {
         listened = true; // ending
         emit trackListened(track.artist, track.title,
                            track.album, track.totalSec);

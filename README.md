@@ -18,7 +18,7 @@ NOTE: you should link against the corresponding version of liblastfm or program 
 ```
 #!
 -DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
--DBUILD_LASTFM=OFF   - disable scrobber module (enabled by default);
+-DBUILD_LASTFM=OFF   - disable scrobbler module (enabled by default);
 ```
 
 
