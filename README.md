@@ -1,5 +1,5 @@
 # eXo project
- Qt frontend to MOC - [Webpage about eXo](https://weblog-loimu.rhcloud.com/exo/)
+ Qt frontend to MOC
 
 ### What it does ###
  Allows you to control your MOC player via tray popup menu.
@@ -29,7 +29,7 @@ NOTE: you should link against the corresponding version of liblastfm or program 
 #!
 -DBUILD_WITH_QT4=ON  - build with Qt4 (Qt5 is default)
 -DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
--DBUILD_LASTFM=OFF   - disable scrobber module (enabled by default);
+-DBUILD_LASTFM=OFF   - disable scrobbler module (enabled by default);
 ```
 
 
