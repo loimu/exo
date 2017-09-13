@@ -6,14 +6,13 @@ set(CMAKE_AUTOMOC ON)
 
 set(exo_SRCS
   main.cpp
-  bookmarks/bookmark.cpp
-  bookmarks/bookmarkmanager.cpp
   core/mocinterface.cpp
   core/playerinterface.cpp
   core/process.cpp
   core/singleinstance.cpp
   gui/aboutdialog.cpp
   gui/basedialog.cpp
+  gui/bookmarkmanager.cpp
   gui/lyricsdialog.cpp
   gui/tageditor.cpp
   gui/trayicon.cpp

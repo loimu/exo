@@ -27,18 +27,30 @@
 #include <QPointer>
 #include <QCoreApplication>
 
-#include "bookmarks/bookmark.h"
-#include "bookmarks/bookmarkmanager.h"
 #include "core/playerinterface.h"
 #include "core/process.h"
-#include "gui/lyricsdialog.h"
 #include "gui/aboutdialog.h"
+#include "gui/bookmarkmanager.h"
+#include "gui/lyricsdialog.h"
 #include "gui/tageditor.h"
 #ifdef BUILD_LASTFM
   #include "gui/scrobblersettings.h"
   #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
 #include "trayicon.h"
+
+
+struct Bookmark : public QAction {
+    QString uri;
+
+    Bookmark(const QString &text, QObject *parent = nullptr)
+        : QAction(text, parent)
+    {
+        connect(this, &Bookmark::triggered,
+                this, [=] { PlayerInterface::self()->openUri(uri); });
+    }
+};
+
 
 TrayIcon* TrayIcon::object = nullptr;
 
