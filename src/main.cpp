@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
-            qWarning("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
+            qInfo("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
             return 0;
         }
         else if(arg == QByteArray("-d") || arg == QByteArray("-b")
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
         new ConsoleAuth(&app);
         return app.exec();
 #else
-        qWarning("Scrobbler has been disabled with a build flag");
+        qWarning("Scrobbler has been disabled during the build time");
         return 1;
 #endif // BUILD_LASTFM
     }

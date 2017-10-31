@@ -48,7 +48,7 @@ public:
     bool openUri(const QString&);
     bool appendFile(const QStringList&);
 
-protected slots:
+private slots:
     State getInfo();
 };
 
