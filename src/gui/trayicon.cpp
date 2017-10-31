@@ -24,7 +24,6 @@
 #include <QWheelEvent>
 #include <QSettings>
 #include <QFileDialog>
-#include <QPointer>
 #include <QCoreApplication>
 
 #include "core/playerinterface.h"
@@ -292,10 +291,12 @@ void TrayIcon::enableScrobbler(bool checked) {
 }
 
 void TrayIcon::loadScrobbler(bool checked) {
-    QPointer<Scrobbler> scrobbler = Scrobbler::self();
+    Scrobbler* scrobbler = Scrobbler::self();
     if(!scrobbler && checked)
         scrobbler = new Scrobbler(this);
-    else if(scrobbler && !checked)
+    else if(scrobbler && !checked) {
         scrobbler->deleteLater();
+        scrobbler = nullptr;
+    }
 }
 #endif // BUILD_LASTFM
