@@ -27,8 +27,8 @@
 
 SingleInstance::SingleInstance() : success(true)
 {
-    lockFile = new QFile(QDir(QDir::tempPath()).absolutePath()
-                         + QLatin1String("/")
+    lockFile = new QFile(QDir::tempPath()
+                         + QLatin1Char('/')
                          + qApp->applicationName()
                          + QLatin1String(".lock"));
     lockFile->open(QIODevice::ReadWrite);
