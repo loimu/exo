@@ -39,7 +39,7 @@ SingleInstance::SingleInstance() : success(true)
 SingleInstance::~SingleInstance() {
     flock(lockFile->handle(), LOCK_UN);
     lockFile->close();
-    lockFile->deleteLater();
+    delete lockFile;
 }
 
 bool SingleInstance::isUnique() {
