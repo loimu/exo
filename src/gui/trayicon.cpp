@@ -32,7 +32,6 @@
 #include "gui/aboutdialog.h"
 #include "gui/bookmarkmanager.h"
 #include "gui/lyricsdialog.h"
-#include "gui/tageditor.h"
 #ifdef BUILD_LASTFM
   #include "gui/scrobblersettings.h"
   #include "lastfm/scrobbler.h"
@@ -48,6 +47,25 @@ struct Bookmark : public QAction {
     {
         connect(this, &Bookmark::triggered,
                 this, [=] { PlayerInterface::self()->openUri(uri); });
+    }
+};
+
+
+class TagEditor : public QAction {
+    QString editorPath;
+
+public:
+    TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
+    {
+        editorPath = text;
+        QString app = text.split(QChar::fromLatin1('/')).last();
+        this->setText(app.left(1).toUpper() + app.mid(1));
+        this->setIcon(QIcon::fromTheme(app));
+        connect(this, &TagEditor::triggered, this, [=] {
+            QString file = PlayerInterface::self()->trackObject()->file;
+            if(file.startsWith(QChar::fromLatin1('/')))
+                Process::execute(editorPath, QStringList() << file);
+        });
     }
 };
 

@@ -14,7 +14,6 @@ set(exo_SRCS
   gui/basedialog.cpp
   gui/bookmarkmanager.cpp
   gui/lyricsdialog.cpp
-  gui/tageditor.cpp
   gui/trayicon.cpp
   )
 set(exo_RSRCS ../images/exo.qrc)
