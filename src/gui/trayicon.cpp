@@ -39,11 +39,11 @@
 #include "trayicon.h"
 
 
-struct Bookmark : public QAction {
-    QString uri;
-
-    Bookmark(const QString &text, QObject *parent = nullptr)
-        : QAction(text, parent)
+class Bookmark : public QAction {
+    QString path;
+public:
+    Bookmark(const QString &text, const QString &uri, QObject *parent = nullptr)
+        : QAction(text, parent), path(uri)
     {
         connect(this, &Bookmark::triggered,
                 this, [=] { PlayerInterface::self()->openUri(uri); });
@@ -53,7 +53,6 @@ struct Bookmark : public QAction {
 
 class TagEditor : public QAction {
     QString editorPath;
-
 public:
     TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
     {
@@ -64,8 +63,7 @@ public:
         connect(this, &TagEditor::triggered, this, [=] {
             QString file = PlayerInterface::self()->trackObject()->file;
             if(file.startsWith(QChar::fromLatin1('/')))
-                Process::execute(editorPath, QStringList() << file);
-        });
+                Process::execute(editorPath, QStringList() << file); });
     }
 };
 
@@ -286,8 +284,7 @@ void TrayIcon::refreshBookmarks(const BookmarkList& list) {
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
     for(BookmarkEntry entry : list) {
-        Bookmark *bookmark = new Bookmark(entry.name, this);
-        bookmark->uri = entry.uri;
+        Bookmark *bookmark = new Bookmark(entry.name, entry.uri, this);
         bookmarksMenu->addAction(bookmark);
     }
 }
