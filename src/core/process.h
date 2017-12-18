@@ -23,10 +23,9 @@
 class QString;
 class QStringList;
 
-/* A class meant to deal with QProcess */
-class Process
+/* A set of methods to wrap the QProcess calls */
+struct Process
 {
-public:
     static QString getOutput(const QString& process,
                              const QStringList& parameters);
     static bool execute(const QString& process,
