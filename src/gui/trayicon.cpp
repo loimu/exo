@@ -42,7 +42,8 @@
 class Bookmark : public QAction {
     QString path;
 public:
-    Bookmark(const QString &text, const QString &uri, QObject *parent = nullptr)
+    explicit Bookmark(
+            const QString &text, const QString &uri, QObject *parent = nullptr)
         : QAction(text, parent), path(uri)
     {
         connect(this, &Bookmark::triggered,
@@ -54,7 +55,8 @@ public:
 class TagEditor : public QAction {
     QString editorPath;
 public:
-    TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
+    explicit TagEditor(const QString &text, QObject *parent)
+        : QAction(text, parent)
     {
         editorPath = text;
         QString app = text.split(QChar::fromLatin1('/')).last();
