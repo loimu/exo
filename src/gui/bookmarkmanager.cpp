@@ -176,10 +176,15 @@ void BookmarkManager::accepted() {
     close();
 }
 
+void BookmarkManager::appendToPlaylist() {
+    int cur = listWidget->currentRow();
+    if(cur > -1)
+        PlayerInterface::self()->appendFile(QStringList{list.at(cur).uri});
+}
+
 void BookmarkManager::keyPressEvent(QKeyEvent *e) {
     BaseDialog::keyPressEvent(e);
-    switch(e->key())
-    {
+    switch(e->key()) {
         case Qt::Key_Delete:
             deleteBookmark();
             break;
@@ -188,6 +193,9 @@ void BookmarkManager::keyPressEvent(QKeyEvent *e) {
             break;
         case Qt::Key_J:
             moveDown();
+            break;
+        case Qt::Key_Return:
+            appendToPlaylist();
             break;
     }
 }

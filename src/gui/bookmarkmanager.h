@@ -51,6 +51,7 @@ class BookmarkManager : public BaseDialog
     void renameBookmark(QString);
     void updateLineEdit(int cur);
     void accepted();
+    void appendToPlaylist();
 
 public:
     static BookmarkList getList();
