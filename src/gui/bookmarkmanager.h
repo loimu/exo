@@ -56,7 +56,7 @@ class BookmarkManager : public BaseDialog
 public:
     static BookmarkList getList();
     static BookmarkList addCurrent();
-    explicit BookmarkManager(QWidget *parent = nullptr);
+    explicit BookmarkManager(QWidget* parent = nullptr);
     ~BookmarkManager() { emit destroyed(true); }
 
 signals:

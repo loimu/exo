@@ -22,7 +22,6 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QDialogButtonBox>
-#include <QKeyEvent>
 #include <QSettings>
 #include <QApplication>
 #include <QClipboard>
@@ -32,17 +31,17 @@
 #include "gui/trayicon.h"
 #include "bookmarkmanager.h"
 
-BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
+BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent)
 {
     list = BookmarkManager::getList();
     this->setWindowTitle(tr("Bookmark Manager"));
     this->resize(500, 550);
-    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     listWidget->setIconSize(QSize(32, 32));
     verticalLayout->addWidget(listWidget);
-    QHBoxLayout *horizontalLayout = new QHBoxLayout();
-    QPushButton *deleteButton = new QPushButton(this);
+    QHBoxLayout* horizontalLayout = new QHBoxLayout();
+    QPushButton* deleteButton = new QPushButton(this);
     deleteButton->setText(tr("&Delete"));
     deleteButton->setToolTip(tr("Delete selected item"));
     deleteButton->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
@@ -53,7 +52,7 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
     lineEdit->setPlaceholderText(QStringLiteral("Rename"));
     lineEdit->setClearButtonEnabled(true);
     horizontalLayout->addWidget(lineEdit);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(
                 QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     horizontalLayout->addWidget(buttonBox);
@@ -141,7 +140,7 @@ void BookmarkManager::refreshView() {
     lineEdit->clear();
     listWidget->clear();
     for(BookmarkEntry entry : list) {
-        QListWidgetItem *item = new QListWidgetItem();
+        QListWidgetItem* item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name
                       + QLatin1String("\n") + entry.uri);
         item->setIcon(QIcon::fromTheme(QStringLiteral("audio-x-generic")));
