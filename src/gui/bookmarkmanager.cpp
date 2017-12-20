@@ -24,6 +24,9 @@
 #include <QDialogButtonBox>
 #include <QKeyEvent>
 #include <QSettings>
+#include <QApplication>
+#include <QClipboard>
+#include <QMenu>
 
 #include "core/playerinterface.h"
 #include "gui/trayicon.h"
@@ -37,13 +40,13 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     listWidget->setIconSize(QSize(32, 32));
-    listWidget->setToolTip(tr("Use Ctrl+K/J keys to move items up and down"));
     verticalLayout->addWidget(listWidget);
     QHBoxLayout *horizontalLayout = new QHBoxLayout();
     QPushButton *deleteButton = new QPushButton(this);
     deleteButton->setText(tr("&Delete"));
     deleteButton->setToolTip(tr("Delete selected item"));
     deleteButton->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
+    deleteButton->setShortcut(Qt::Key_Delete);
     horizontalLayout->addWidget(deleteButton);
     lineEdit = new QLineEdit(this);
     lineEdit->setToolTip(tr("Rename selected item"));
@@ -55,6 +58,19 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
                 QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     horizontalLayout->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
+    QAction* copyAction = new QAction(tr("Copy URL to clipboard"), this);
+    copyAction->setShortcut(Qt::CTRL + Qt::Key_C);
+    listWidget->addAction(copyAction);
+    QAction* moveUpAction = new QAction(tr("Move up"), this);
+    moveUpAction->setShortcut(Qt::CTRL + Qt::Key_K);
+    listWidget->addAction(moveUpAction);
+    QAction* moveDownAction = new QAction(tr("Move down"), this);
+    moveDownAction->setShortcut(Qt::CTRL + Qt::Key_J);
+    listWidget->addAction(moveDownAction);
+    QAction* appendAction = new QAction(tr("Append to playlist"), this);
+    appendAction->setShortcut(Qt::Key_Return);
+    listWidget->addAction(appendAction);
+    listWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(listWidget, &QListWidget::currentRowChanged,
             this, &BookmarkManager::updateLineEdit);
     connect(deleteButton, &QPushButton::released,
@@ -65,6 +81,13 @@ BookmarkManager::BookmarkManager(QWidget *parent) : BaseDialog(parent)
             this, &BookmarkManager::accepted);
     connect(buttonBox, &QDialogButtonBox::rejected,
             this, &BookmarkManager::close);
+    connect(copyAction, &QAction::triggered,
+            this, &BookmarkManager::copyToClipboard);
+    connect(moveUpAction, &QAction::triggered, this, &BookmarkManager::moveUp);
+    connect(moveDownAction, &QAction::triggered,
+            this, &BookmarkManager::moveDown);
+    connect(appendAction, &QAction::triggered,
+            this, &BookmarkManager::appendToPlaylist);
     refreshView();
 }
 
@@ -176,26 +199,14 @@ void BookmarkManager::accepted() {
     close();
 }
 
+void BookmarkManager::copyToClipboard() {
+    int cur = listWidget->currentRow();
+    if(cur > -1)
+        QApplication::clipboard()->setText(list.at(cur).uri);
+}
+
 void BookmarkManager::appendToPlaylist() {
     int cur = listWidget->currentRow();
     if(cur > -1)
         PlayerInterface::self()->appendFile(QStringList{list.at(cur).uri});
-}
-
-void BookmarkManager::keyPressEvent(QKeyEvent *e) {
-    BaseDialog::keyPressEvent(e);
-    switch(e->key()) {
-        case Qt::Key_Delete:
-            deleteBookmark();
-            break;
-        case Qt::Key_K:
-            moveUp();
-            break;
-        case Qt::Key_J:
-            moveDown();
-            break;
-        case Qt::Key_Return:
-            appendToPlaylist();
-            break;
-    }
 }

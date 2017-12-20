@@ -43,7 +43,6 @@ class BookmarkManager : public BaseDialog
     QListWidget* listWidget;
     BookmarkList list;
     static void saveList(const BookmarkList& list);
-    void keyPressEvent(QKeyEvent *e);
     void refreshView();
     void moveUp();
     void moveDown();
@@ -51,6 +50,7 @@ class BookmarkManager : public BaseDialog
     void renameBookmark(QString);
     void updateLineEdit(int cur);
     void accepted();
+    void copyToClipboard();
     void appendToPlaylist();
 
 public:
