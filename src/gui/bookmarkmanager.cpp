@@ -66,9 +66,6 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent)
     QAction* moveDownAction = new QAction(tr("Move down"), this);
     moveDownAction->setShortcut(Qt::CTRL + Qt::Key_J);
     listWidget->addAction(moveDownAction);
-    QAction* appendAction = new QAction(tr("Append to playlist"), this);
-    appendAction->setShortcut(Qt::Key_Return);
-    listWidget->addAction(appendAction);
     listWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(listWidget, &QListWidget::currentRowChanged,
             this, &BookmarkManager::updateLineEdit);
@@ -85,7 +82,7 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent)
     connect(moveUpAction, &QAction::triggered, this, &BookmarkManager::moveUp);
     connect(moveDownAction, &QAction::triggered,
             this, &BookmarkManager::moveDown);
-    connect(appendAction, &QAction::triggered,
+    connect(listWidget, &QListWidget::activated,
             this, &BookmarkManager::appendToPlaylist);
     refreshView();
 }
