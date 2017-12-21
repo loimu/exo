@@ -27,6 +27,7 @@ class MocInterface : public PlayerInterface
     QString player;
     bool isServerRunning();
     bool runServer();
+    State getInfo();
 
 public:
     explicit MocInterface(QObject *parent = nullptr);
@@ -46,9 +47,6 @@ public:
     void showPlayer();
     bool openUri(const QString&);
     bool appendFile(const QStringList&);
-
-private slots:
-    State getInfo();
 };
 
 #endif // MOCINTERFACE_H

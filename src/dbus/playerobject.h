@@ -47,6 +47,8 @@ class PlayerObject : public QDBusAbstractAdaptor
     State status;
     QDBusObjectPath trackID;
     void syncProperties();
+    void trackChanged();
+    void emitPropsChanged(State);
 
 public:
     explicit PlayerObject(QObject *parent = nullptr);
@@ -61,10 +63,6 @@ public:
     qlonglong position() const;
     double volume() const;
     void setVolume(double value);
-
-private slots:
-    void trackChanged();
-    void emitPropsChanged(State);
 
 public slots:
     void Next();

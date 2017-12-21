@@ -28,6 +28,7 @@ class CmusInterface : public PlayerInterface
     bool isPlayerRunning();
     void runPlayer();
     QString find(const QString&, const QString&);
+    State getInfo();
 
 public:
     explicit CmusInterface(QObject *parent = nullptr);
@@ -47,9 +48,6 @@ public:
     void showPlayer();
     bool openUri(const QString&);
     bool appendFile(const QStringList&);
-
-private slots:
-    State getInfo();
 };
 
 #endif // CMUSINTERFACE_H

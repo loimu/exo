@@ -29,8 +29,6 @@ namespace lastfm {
 
 class Scrobbler : public QObject
 {
-    Q_OBJECT
-
     static QPointer<Scrobbler> object;
     lastfm::Audioscrobbler* as;
     void init(const QString& artist, const QString& title, int totalSec);

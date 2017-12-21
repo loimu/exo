@@ -42,6 +42,7 @@ class PlayerInterface : public QObject
 protected:
     Track track;
     void timerEvent(QTimerEvent *event);
+    virtual State getInfo() = 0;
 
 public:
     explicit PlayerInterface(QObject *parent = nullptr);
@@ -76,9 +77,6 @@ signals:
     void newStatus(State);
     void newTrack();
 #endif // BUILD_DBUS
-
-protected slots:
-    virtual State getInfo() = 0;
 };
 
 #endif // PLAYERINTERFACE_H

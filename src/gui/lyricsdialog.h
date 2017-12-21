@@ -30,8 +30,6 @@ class QNetworkReply;
 
 class LyricsDialog : public BaseDialog
 {
-    Q_OBJECT
-
     QLabel* label;
     QTextBrowser* lyricsBrowser;
     QLineEdit* artistLineEdit;
