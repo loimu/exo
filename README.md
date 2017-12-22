@@ -38,13 +38,13 @@ NOTE: you should link against the corresponding version of liblastfm or program 
 
  Scrobbler authentication `exo -f` or `exo --force-reauth`
 
- Shutting down the app `qdbus tk.loimu.exo /Exo tk.loimu.exo.quitApplication`
+ Shutting down the app `qdbus local.exo_player /exo local.exo_player.quitApplication`
  or just `pkill -2 exo`
 
 ### Tips: ###
  Create a global hotkey to see the lyrics at any time.
 
- `qdbus tk.loimu.exo /Exo tk.loimu.exo.showLyricsWindow` is the command you want.
+ `qdbus local.exo_player /exo local.exo_player.showLyricsWindow` is the command you want.
 
 ### Installation on Ubuntu: ###
 ```

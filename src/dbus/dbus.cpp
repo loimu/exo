@@ -28,9 +28,9 @@
 DBus::DBus(QObject *parent) : QObject(parent)
 {
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject(QStringLiteral("/Exo"), new ExoObject(this),
+    connection.registerObject(QStringLiteral("/exo"), new ExoObject(this),
                               QDBusConnection::ExportAllContents);
-    if(!connection.registerService(QStringLiteral("tk.loimu.exo")))
+    if(!connection.registerService(QStringLiteral("local.exo_player")))
         qFatal("DBus: service registration failed");
     new RootObject(this);
     new PlayerObject(this);
@@ -43,7 +43,7 @@ DBus::DBus(QObject *parent) : QObject(parent)
 DBus::~DBus()
 {
     QDBusConnection::sessionBus().unregisterService(
-                QStringLiteral("tk.loimu.exo"));
+                QStringLiteral("local.exo_player"));
     QDBusConnection::sessionBus().unregisterService(
                 QStringLiteral("org.mpris.MediaPlayer2.exo"));
 }

@@ -25,7 +25,7 @@
 class ExoObject : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "tk.loimu.exo")
+    Q_CLASSINFO("D-Bus Interface", "local.exo_player")
 
 public:
     explicit ExoObject(QObject *parent = nullptr);
