@@ -23,7 +23,7 @@
 class DBus : public QObject
 {
 public:
-    explicit DBus(QObject *parent = nullptr);
+    explicit DBus(QObject* parent = nullptr);
     ~DBus();
 };
 

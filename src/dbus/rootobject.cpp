@@ -22,7 +22,7 @@
 #include "core/playerinterface.h"
 #include "rootobject.h"
 
-RootObject::RootObject(QObject *parent) : QDBusAbstractAdaptor(parent)
+RootObject::RootObject(QObject* parent) : QDBusAbstractAdaptor(parent)
 {
 
 }

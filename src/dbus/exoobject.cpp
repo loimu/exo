@@ -22,7 +22,7 @@
 #include "gui/trayicon.h"
 #include "exoobject.h"
 
-ExoObject::ExoObject(QObject *parent) : QObject(parent)
+ExoObject::ExoObject(QObject* parent) : QObject(parent)
 {
 
 }

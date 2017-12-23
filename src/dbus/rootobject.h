@@ -34,7 +34,7 @@ class RootObject : public QDBusAbstractAdaptor
     Q_PROPERTY(QString Identity READ identity)
 
 public:
-    explicit RootObject(QObject *parent = nullptr);
+    explicit RootObject(QObject* parent = nullptr);
     bool canQuit() const;
     bool canRaise() const;
     QString desktopEntry() const;

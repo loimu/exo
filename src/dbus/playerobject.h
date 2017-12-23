@@ -41,8 +41,8 @@ class PlayerObject : public QDBusAbstractAdaptor
     Q_PROPERTY(qlonglong Position READ position)
     Q_PROPERTY(double Volume READ volume WRITE setVolume)
 
-    PlayerInterface *player;
-    const Track *track;
+    PlayerInterface* player;
+    const Track* track;
     QVariantMap props;
     State status;
     QDBusObjectPath trackID;
@@ -51,7 +51,7 @@ class PlayerObject : public QDBusAbstractAdaptor
     void emitPropsChanged(State);
 
 public:
-    explicit PlayerObject(QObject *parent = nullptr);
+    explicit PlayerObject(QObject* parent = nullptr);
     bool canControl() const;
     bool canGoNext() const;
     bool canGoPrevious() const;

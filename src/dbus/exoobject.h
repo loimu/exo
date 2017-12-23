@@ -28,7 +28,7 @@ class ExoObject : public QObject
     Q_CLASSINFO("D-Bus Interface", "local.exo_player")
 
 public:
-    explicit ExoObject(QObject *parent = nullptr);
+    explicit ExoObject(QObject* parent = nullptr);
 
 public slots:
     void showLyricsWindow();

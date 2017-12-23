@@ -25,7 +25,7 @@
 #include "dbus/rootobject.h"
 #include "dbus/playerobject.h"
 
-DBus::DBus(QObject *parent) : QObject(parent)
+DBus::DBus(QObject* parent) : QObject(parent)
 {
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.registerObject(QStringLiteral("/exo"), new ExoObject(this),

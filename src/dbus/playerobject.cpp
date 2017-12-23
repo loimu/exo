@@ -23,7 +23,7 @@
 
 #include "playerobject.h"
 
-PlayerObject::PlayerObject(QObject *parent) : QDBusAbstractAdaptor(parent),
+PlayerObject::PlayerObject(QObject* parent) : QDBusAbstractAdaptor(parent),
     player(PlayerInterface::self()),
     track(PlayerInterface::self()->trackObject()),
     trackID("/org/exo/MediaPlayer2/Track/0")
