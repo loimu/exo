@@ -35,3 +35,8 @@ void ExoObject::showLyricsWindow() {
 void ExoObject::quitApplication() {
     qApp->quit();
 }
+
+void ExoObject::bookmarkCurrent() {
+    if(TrayIcon::self())
+        TrayIcon::self()->addCurrent();
+}

@@ -33,6 +33,7 @@ public:
 public slots:
     void showLyricsWindow();
     void quitApplication();
+    void bookmarkCurrent();
 };
 
 #endif // EXOOBJECT_H
