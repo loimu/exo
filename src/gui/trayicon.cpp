@@ -43,7 +43,7 @@ class Bookmark : public QAction {
     QString path;
 public:
     explicit Bookmark(
-            const QString &text, const QString &uri, QObject *parent = nullptr)
+            const QString &text, const QString &uri, QObject* parent = nullptr)
         : QAction(text, parent), path(uri)
     {
         connect(this, &Bookmark::triggered,
@@ -55,7 +55,7 @@ public:
 class TagEditor : public QAction {
     QString editorPath;
 public:
-    explicit TagEditor(const QString &text, QObject *parent)
+    explicit TagEditor(const QString &text, QObject* parent)
         : QAction(text, parent)
     {
         editorPath = text;
@@ -286,7 +286,7 @@ void TrayIcon::refreshBookmarks(const BookmarkList& list) {
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
     for(BookmarkEntry entry : list) {
-        Bookmark *bookmark = new Bookmark(entry.name, entry.uri, this);
+        Bookmark* bookmark = new Bookmark(entry.name, entry.uri, this);
         bookmarksMenu->addAction(bookmark);
     }
 }
@@ -299,7 +299,7 @@ void TrayIcon::enableScrobbler(bool checked) {
         loadScrobbler(checked);
     } else
         if(checked) {
-            ScrobblerSettings *settingsDialog = new ScrobblerSettings(this);
+            ScrobblerSettings* settingsDialog = new ScrobblerSettings(this);
             settingsDialog->show();
             connect(settingsDialog, &ScrobblerSettings::configured,
                     setScrobblingAction, &QAction::setChecked);

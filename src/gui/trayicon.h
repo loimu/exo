@@ -33,26 +33,26 @@ class BookmarkEntry;
 class TrayIcon : public QWidget
 {
     static TrayIcon* object;
-    PlayerInterface *player;
-    QMenu *bookmarksMenu;
-    QAction *showAction;
-    QAction *filesAction;
-    QAction *lyricsAction;
-    QAction *bookmarkCurrentAction;
-    QAction *bookmarkManagerAction;
-    QAction *playAction;
-    QAction *pauseAction;
-    QAction *prevAction;
-    QAction *nextAction;
-    QAction *stopAction;
-    QAction *aboutAction;
-    QAction *quitAction;
-    QAction *setQuitBehaviourAction;
-    QAction *setScrobblingAction;
-    QSystemTrayIcon *trayIcon;
+    PlayerInterface* player;
+    QMenu*bookmarksMenu;
+    QAction* showAction;
+    QAction* filesAction;
+    QAction* lyricsAction;
+    QAction* bookmarkCurrentAction;
+    QAction* bookmarkManagerAction;
+    QAction* playAction;
+    QAction* pauseAction;
+    QAction* prevAction;
+    QAction* nextAction;
+    QAction* stopAction;
+    QAction* aboutAction;
+    QAction* quitAction;
+    QAction* setQuitBehaviourAction;
+    QAction* setScrobblingAction;
+    QSystemTrayIcon* trayIcon;
     void createActions();
     void createTrayIcon();
-    bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject*, QEvent*);
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateToolTip(const QString& message, const QString& cover);
     void showAboutDialog();
@@ -65,7 +65,7 @@ class TrayIcon : public QWidget
 #endif // BUILD_LASTFM
 
 public:
-    explicit TrayIcon(QWidget *parent = nullptr);
+    explicit TrayIcon(QWidget* parent = nullptr);
     static TrayIcon* self() { return object; }
     void refreshBookmarks(const QVector<BookmarkEntry>& list);
     void showLyricsWindow();
