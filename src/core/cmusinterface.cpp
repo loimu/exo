@@ -24,7 +24,7 @@
 #include "core/process.h"
 #include "cmusinterface.h"
 
-CmusInterface::CmusInterface(QObject *parent) : PlayerInterface(parent),
+CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     cli(QLatin1String("cmus-remote"))
 {
     if(!isPlayerRunning())

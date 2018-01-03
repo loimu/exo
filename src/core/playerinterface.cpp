@@ -31,7 +31,7 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
     object = this;
 }
 
-void PlayerInterface::timerEvent(QTimerEvent *event) {
+void PlayerInterface::timerEvent(QTimerEvent* event) {
     track.caption.clear();
     State currentState = getInfo();
     static State state = Offline;

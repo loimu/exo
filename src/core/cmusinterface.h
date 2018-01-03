@@ -31,7 +31,7 @@ class CmusInterface : public PlayerInterface
     State getInfo();
 
 public:
-    explicit CmusInterface(QObject *parent = nullptr);
+    explicit CmusInterface(QObject* parent = nullptr);
     ~CmusInterface();
     QString id();
     bool play();

@@ -28,7 +28,7 @@
 #define OSD_OPT "OnSongChange=" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py"
 #define PLAYER_CLI_EXECUTABLE "mocp"
 
-MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent),
+MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     player(QStringLiteral(PLAYER_CLI_EXECUTABLE))
 {
     if(!isServerRunning())

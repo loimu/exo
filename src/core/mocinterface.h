@@ -30,7 +30,7 @@ class MocInterface : public PlayerInterface
     State getInfo();
 
 public:
-    explicit MocInterface(QObject *parent = nullptr);
+    explicit MocInterface(QObject* parent = nullptr);
     ~MocInterface();
     QString id();
     bool play();

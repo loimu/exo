@@ -41,11 +41,11 @@ class PlayerInterface : public QObject
 
 protected:
     Track track;
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent* event);
     virtual State getInfo() = 0;
 
 public:
-    explicit PlayerInterface(QObject *parent = nullptr);
+    explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
     const Track* trackObject() const { return &track; }
 #ifdef BUILD_DBUS
