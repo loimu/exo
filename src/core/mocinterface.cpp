@@ -109,7 +109,7 @@ bool MocInterface::appendFile(const QStringList& files) {
                             QStringList() << QStringLiteral("-a") << files);
 }
 
-State MocInterface::getInfo() {
+PIState MocInterface::getInfo() {
     QString info = Process::getOutput(
                 player,
                 QStringList{
@@ -117,20 +117,20 @@ State MocInterface::getInfo() {
                     QStringLiteral("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
                     "{cs}%cs{T}%title")});
     if(info.isEmpty())
-        return Offline;
+        return PIState::Offline;
     if(info.startsWith(QLatin1String("STOP")))
-        return Stop;
+        return PIState::Stop;
     QRegExp infoRgx(
                 QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
                                "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
                                "\\{cs\\}(.*)\\{T\\}(.*)\n"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
-    State state = Offline;
+    PIState state = PIState::Offline;
     if(infoRgx.cap(1) == QLatin1String("PLAY"))
-        state = Play;
+        state = PIState::Play;
     else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
-        state = Pause;
+        state = PIState::Pause;
     track.artist = infoRgx.cap(2);
     track.title = infoRgx.cap(3);
     track.album = infoRgx.cap(4);

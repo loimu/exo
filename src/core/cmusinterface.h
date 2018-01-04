@@ -28,7 +28,7 @@ class CmusInterface : public PlayerInterface
     bool isPlayerRunning();
     void runPlayer();
     QString find(const QString&, const QString&);
-    State getInfo();
+    PIState getInfo();
 
 public:
     explicit CmusInterface(QObject* parent = nullptr);

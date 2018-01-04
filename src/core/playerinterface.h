@@ -24,20 +24,21 @@
 
 #include <QObject>
 
-enum State { Offline, Stop, Play, Pause };
-
-struct Track {
-    bool isStream;
-    int totalSec, currSec;
-    QString artist, title, album, file, totalTime, caption;
-};
-
 class PlayerInterface : public QObject
 {
     Q_OBJECT
 
     static PlayerInterface* object;
     QString cover();
+
+public:
+    enum State { Offline, Stop, Play, Pause };
+
+    struct Track {
+        bool isStream;
+        int totalSec, currSec;
+        QString artist, title, album, file, totalTime, caption;
+    };
 
 protected:
     Track track;
@@ -78,5 +79,8 @@ signals:
     void newTrack();
 #endif // BUILD_DBUS
 };
+
+using PIState = PlayerInterface::State;
+using PITrack = PlayerInterface::Track;
 
 #endif // PLAYERINTERFACE_H

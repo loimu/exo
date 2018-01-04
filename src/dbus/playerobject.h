@@ -42,13 +42,13 @@ class PlayerObject : public QDBusAbstractAdaptor
     Q_PROPERTY(double Volume READ volume WRITE setVolume)
 
     PlayerInterface* player;
-    const Track* track;
+    const PITrack* track;
     QVariantMap props;
-    State status;
+    PIState status;
     QDBusObjectPath trackID;
     void syncProperties();
     void trackChanged();
-    void emitPropsChanged(State);
+    void emitPropsChanged(PIState);
 
 public:
     explicit PlayerObject(QObject* parent = nullptr);

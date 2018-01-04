@@ -121,18 +121,18 @@ QString CmusInterface::find(const QString& string, const QString& regEx) {
     return findRgx.cap(1);
 }
 
-State CmusInterface::getInfo() {
+PIState CmusInterface::getInfo() {
     QString info = Process::getOutput(cli, QStringList{QLatin1String("-Q")});
     if(info.isEmpty())
-        return Offline;
+        return PIState::Offline;
     QString string = find(info, QLatin1String("status\\s(.*)\\n"));
     if(string == QLatin1String("stopped"))
-        return Stop;
-    State state = Offline;
+        return PIState::Stop;
+    PIState state = PIState::Offline;
     if(string == QLatin1String("playing"))
-        state = Play;
+        state = PIState::Play;
     if(string == QLatin1String("paused"))
-        state = Pause;
+        state = PIState::Pause;
     track.artist = find(info, QLatin1String("tag\\sartist\\s(.*)\\n"));
     track.title = find(info, QLatin1String("tag\\stitle\\s(.*)\\n"));
     track.album = find(info, QLatin1String("tag\\salbum\\s(.*)\\n"));

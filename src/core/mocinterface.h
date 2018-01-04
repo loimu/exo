@@ -27,7 +27,7 @@ class MocInterface : public PlayerInterface
     QString player;
     bool isServerRunning();
     bool runServer();
-    State getInfo();
+    PIState getInfo();
 
 public:
     explicit MocInterface(QObject* parent = nullptr);

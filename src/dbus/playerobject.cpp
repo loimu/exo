@@ -75,9 +75,9 @@ QVariantMap PlayerObject::metadata() const {
 }
 
 QString PlayerObject::playbackStatus() const {
-    if(status == State::Play)
+    if(status == PIState::Play)
         return QStringLiteral("Playing");
-    else if(status == State::Pause)
+    else if(status == PIState::Pause)
         return QStringLiteral("Paused");
     return QStringLiteral("Stopped");
 }
@@ -99,10 +99,10 @@ void PlayerObject::trackChanged() {
     trackID = QDBusObjectPath(
                 QString(QLatin1String("/org/exo/MediaPlayer2/Track/%1"))
                 .arg(qrand()));
-    emitPropsChanged(State::Play);
+    emitPropsChanged(PIState::Play);
 }
 
-void PlayerObject::emitPropsChanged(State st) {
+void PlayerObject::emitPropsChanged(PIState st) {
     status = st;
     QList<QByteArray> changedProps;
     if(props.value(QStringLiteral("CanSeek")) != canSeek())
