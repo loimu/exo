@@ -32,7 +32,7 @@ const char* Scrobbler::secret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
 
 QPointer<Scrobbler> Scrobbler::object = nullptr;
 
-Scrobbler::Scrobbler(QObject *parent) : QObject(parent) {
+Scrobbler::Scrobbler(QObject* parent) : QObject(parent) {
     if(object)
         qFatal("Scrobbler: only one instance is allowed");
     object = this;

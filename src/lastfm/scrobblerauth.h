@@ -38,7 +38,7 @@ class ScrobblerAuth : public QObject
     void authReplyFinished();
 
 public:
-    explicit ScrobblerAuth(QObject *parent = nullptr);
+    explicit ScrobblerAuth(QObject* parent = nullptr);
     void auth(const QString& username, const QString& password);
 
 signals:

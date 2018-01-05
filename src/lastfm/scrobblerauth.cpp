@@ -27,7 +27,7 @@
 #include "lastfm/scrobbler.h"
 #include "scrobblerauth.h"
 
-ScrobblerAuth::ScrobblerAuth(QObject *parent) : QObject(parent)
+ScrobblerAuth::ScrobblerAuth(QObject* parent) : QObject(parent)
 {
     lastfm::ws::ApiKey = Scrobbler::apiKey;
     lastfm::ws::SharedSecret = Scrobbler::secret;

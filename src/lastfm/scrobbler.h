@@ -38,7 +38,7 @@ class Scrobbler : public QObject
 public:
     static const char* apiKey;
     static const char* secret;
-    explicit Scrobbler(QObject *parent = nullptr);
+    explicit Scrobbler(QObject* parent = nullptr);
     ~Scrobbler();
     static QPointer<Scrobbler> self() { return object; }
 };
