@@ -19,7 +19,7 @@
 
 #include <QApplication>
 
-#include "core/playerinterface.h"
+#include "playerinterface.h"
 #include "rootobject.h"
 
 RootObject::RootObject(QObject* parent) : QDBusAbstractAdaptor(parent)

@@ -20,7 +20,7 @@
 #include <QTextStream>
 #include <QApplication>
 
-#include "lastfm/scrobblerauth.h"
+#include "scrobblerauth.h"
 #include "consoleauth.h"
 
 ConsoleAuth::ConsoleAuth(QObject *parent) : QObject(parent)

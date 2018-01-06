@@ -27,8 +27,8 @@
 #include <QClipboard>
 #include <QMenu>
 
-#include "core/playerinterface.h"
-#include "gui/trayicon.h"
+#include "playerinterface.h"
+#include "trayicon.h"
 #include "bookmarkmanager.h"
 
 BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent)

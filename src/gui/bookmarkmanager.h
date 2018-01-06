@@ -23,7 +23,7 @@
 
 #include <QVector>
 
-#include "gui/basedialog.h"
+#include "basedialog.h"
 
 class QLineEdit;
 class QListWidget;

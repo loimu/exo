@@ -21,7 +21,7 @@
 #include <QTime>
 #include <QSettings>
 
-#include "core/process.h"
+#include "process.h"
 #include "cmusinterface.h"
 
 CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),

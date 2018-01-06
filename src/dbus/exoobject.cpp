@@ -19,7 +19,7 @@
 
 #include <QCoreApplication>
 
-#include "gui/trayicon.h"
+#include "trayicon.h"
 #include "exoobject.h"
 
 ExoObject::ExoObject(QObject* parent) : QObject(parent)

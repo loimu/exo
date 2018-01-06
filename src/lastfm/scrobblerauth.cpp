@@ -24,7 +24,7 @@
 #include <lastfm5/misc.h>
 #include <lastfm5/XmlQuery.h>
 
-#include "lastfm/scrobbler.h"
+#include "scrobbler.h"
 #include "scrobblerauth.h"
 
 ScrobblerAuth::ScrobblerAuth(QObject* parent) : QObject(parent)

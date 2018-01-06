@@ -31,7 +31,7 @@
 #include <QRegExp>
 #include <QTimer>
 
-#include "core/playerinterface.h"
+#include "playerinterface.h"
 #include "lyricsdialog.h"
 
 LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),

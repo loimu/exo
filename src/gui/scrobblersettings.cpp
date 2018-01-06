@@ -23,7 +23,7 @@
 #include <QLabel>
 #include <QLineEdit>
 
-#include "lastfm/scrobblerauth.h"
+#include "scrobblerauth.h"
 #include "scrobblersettings.h"
 
 ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),

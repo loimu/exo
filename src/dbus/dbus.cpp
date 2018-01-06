@@ -20,10 +20,10 @@
 #include <QtDBus>
 
 #include "dbus.h"
-#include "dbus/exoobject.h"
+#include "exoobject.h"
 //MPRISv2
-#include "dbus/rootobject.h"
-#include "dbus/playerobject.h"
+#include "rootobject.h"
+#include "playerobject.h"
 
 DBus::DBus(QObject* parent) : QObject(parent)
 {

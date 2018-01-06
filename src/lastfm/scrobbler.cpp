@@ -24,7 +24,7 @@
 #include <lastfm5/Audioscrobbler.h>
 #include <lastfm5/Track.h>
 
-#include "core/playerinterface.h"
+#include "playerinterface.h"
 #include "scrobbler.h"
 
 const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";

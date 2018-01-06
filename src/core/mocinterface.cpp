@@ -22,7 +22,7 @@
 #include <QStringList>
 #include <QSettings>
 
-#include "core/process.h"
+#include "process.h"
 #include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py"

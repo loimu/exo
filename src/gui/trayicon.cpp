@@ -27,14 +27,16 @@
 #include <QPointer>
 #include <QCoreApplication>
 
-#include "core/playerinterface.h"
-#include "core/process.h"
-#include "gui/aboutdialog.h"
-#include "gui/bookmarkmanager.h"
-#include "gui/lyricsdialog.h"
+// core
+#include "playerinterface.h"
+#include "process.h"
+// gui
+#include "aboutdialog.h"
+#include "bookmarkmanager.h"
+#include "lyricsdialog.h"
 #ifdef BUILD_LASTFM
-  #include "gui/scrobblersettings.h"
-  #include "lastfm/scrobbler.h"
+  #include "scrobblersettings.h"
+  #include "scrobbler.h"
 #endif // BUILD_LASTFM
 #include "trayicon.h"
 
