@@ -6,7 +6,6 @@
 
 ### Build and run ###
 ```
-#!Bash
 mkdir build && cd build
 cmake ..
 make -j2
@@ -16,7 +15,6 @@ NOTE: you should link against the corresponding version of liblastfm or program 
 
 ### Build options: ###
 ```
-#!
 -DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
 -DBUILD_LASTFM=OFF   - disable scrobbler module (enabled by default);
 -DUSE_CMUS=ON        - switch to Cmus player, experimental option;
@@ -49,8 +47,7 @@ NOTE: you should link against the corresponding version of liblastfm or program 
 
 ### Installation on Ubuntu: ###
 ```
-#!Bash
 sudo add-apt-repository ppa:blaze/main
-sudo apt-get update
-sudo apt-get install exo-player
+sudo apt update
+sudo apt install exo-player
 ```
