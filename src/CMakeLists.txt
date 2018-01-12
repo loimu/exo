@@ -7,40 +7,39 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5 5.6.1 REQUIRED COMPONENTS Core Network Widgets Xml)
 set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
 
-set(exo_SRCS
-  main.cpp
-  core/mocinterface.cpp
-  core/playerinterface.cpp
-  core/process.cpp
-  core/singleinstance.cpp
-  gui/aboutdialog.cpp
-  gui/basedialog.cpp
-  gui/bookmarkmanager.cpp
-  gui/lyricsdialog.cpp
-  gui/trayicon.cpp
-  )
+set(exo_SRCS main.cpp
+    core/mocinterface.cpp
+    core/playerinterface.cpp
+    core/process.cpp
+    core/singleinstance.cpp
+    gui/aboutdialog.cpp
+    gui/basedialog.cpp
+    gui/bookmarkmanager.cpp
+    gui/lyricsdialog.cpp
+    gui/trayicon.cpp)
 
 if(USE_CMUS)
   list(APPEND exo_SRCS core/cmusinterface.cpp)
 endif()
 
 if(BUILD_DBUS)
-  list(APPEND exo_SRCS dbus/dbus.cpp dbus/exoobject.cpp
-                       dbus/rootobject.cpp dbus/playerobject.cpp)
+  list(APPEND exo_SRCS dbus/dbus.cpp
+      dbus/exoobject.cpp
+      dbus/rootobject.cpp
+      dbus/playerobject.cpp)
   find_package(Qt5DBus)
   list(APPEND qt_LIBS Qt5::DBus)
 endif()
 
 if(BUILD_LASTFM)
-  list(APPEND exo_SRCS lastfm/scrobbler.cpp lastfm/scrobblerauth.cpp
-                       core/consoleauth.cpp
-                       gui/scrobblersettings.cpp)
+  list(APPEND exo_SRCS lastfm/scrobbler.cpp
+      lastfm/scrobblerauth.cpp
+      core/consoleauth.cpp
+      gui/scrobblersettings.cpp)
   find_library(LASTFM_LIBRARIES lastfm5)
 endif()
 
-set(exo_RSRCS ../images/exo.qrc)
-qt5_add_resources(exo_RESOURCES_RCC ${exo_RSRCS})
-
+qt5_add_resources(exo_RESOURCES_RCC ../images/exo.qrc)
 include_directories(${CMAKE_CURRENT_BINARY_DIR} core dbus gui lastfm)
 
 add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC} ${exo_RESOURCES_RCC})
