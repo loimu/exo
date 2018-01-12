@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment[en_US]=
 Comment=
-Exec=mocp -S -O OnSongChange="/usr/share/exo/moc-osd.py"; mocp -l %s
+Exec=mocp -S -O OnSongChange="/usr/bin/moc-osd"; mocp -l %s
 GenericName[en_US]=
 GenericName=
 MimeType=audio/mpeg;application/ogg;application/x-ogg;audio/flac;audio/aac;audio/x-aac;audio/m4a;audio/x-m4a;

@@ -1,2 +1,2 @@
 
-install(PROGRAMS moc-osd.py DESTINATION share/exo )
+install(PROGRAMS moc-osd DESTINATION bin)

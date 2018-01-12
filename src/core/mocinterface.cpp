@@ -25,7 +25,7 @@
 #include "process.h"
 #include "mocinterface.h"
 
-#define OSD_OPT "OnSongChange=" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py"
+#define OSD_OPT "OnSongChange=" CMAKE_INSTALL_PREFIX "/bin/moc-osd"
 #define PLAYER_CLI_EXECUTABLE "mocp"
 
 MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
