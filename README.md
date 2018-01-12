@@ -5,7 +5,7 @@
  Allows you to control your MOC player via tray popup menu.
 
 ### Build and run ###
-```
+```bash
 mkdir build && cd build
 cmake ..
 make -j2
