@@ -27,7 +27,7 @@
 
 void PITests::initTestCase() {
     player = new MocInterface(this);
-    QTest::qWait(2000);
+    QTest::qWait(3000);
     player->appendFile(QStringList{
                            QStringLiteral(SOURCE_ROOT "/test/audiofile1.ogg"),
                            QStringLiteral(SOURCE_ROOT "/test/audiofile2.ogg")});
