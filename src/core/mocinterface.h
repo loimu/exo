@@ -31,7 +31,6 @@ class MocInterface : public PlayerInterface
 
 public:
     explicit MocInterface(QObject* parent = nullptr);
-    ~MocInterface();
     QString id();
     bool play();
     bool pause();

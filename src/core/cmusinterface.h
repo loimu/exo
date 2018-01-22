@@ -32,7 +32,6 @@ class CmusInterface : public PlayerInterface
 
 public:
     explicit CmusInterface(QObject* parent = nullptr);
-    ~CmusInterface();
     QString id();
     bool play();
     bool pause();

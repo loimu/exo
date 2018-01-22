@@ -95,9 +95,9 @@ int main(int argc, char *argv[]) {
     }
 
 #ifdef USE_CMUS
-    CmusInterface cmusInterface(&app);
+    CmusInterface player(&app);
 #else // USE_CMUS
-    MocInterface mocInterface(&app);
+    MocInterface player(&app);
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
@@ -105,8 +105,8 @@ int main(int argc, char *argv[]) {
         new DBus(&app);
 #endif // BUILD_DBUS
 
-#ifdef BUILD_LASTFM
     QSettings settings;
+#ifdef BUILD_LASTFM
     if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
         new Scrobbler(&app);
 #endif // BUILD_LASTFM
@@ -115,5 +115,8 @@ int main(int argc, char *argv[]) {
         return app.exec();
     Q_INIT_RESOURCE(exo);
     TrayIcon trayIcon;
-    return app.exec();
+    int result = app.exec();
+    if(settings.value(QLatin1String("player/quit")).toBool())
+        player.quit();
+    return result;
 }

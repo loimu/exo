@@ -19,7 +19,6 @@
 
 #include <QTest>
 
-#include "playerinterface.h"
 #include "mocinterface.h"
 #include "cmusinterface.h"
 #include "pitests.h"

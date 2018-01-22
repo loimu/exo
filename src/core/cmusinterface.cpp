@@ -19,7 +19,6 @@
 
 #include <QStringList>
 #include <QTime>
-#include <QSettings>
 
 #include "process.h"
 #include "cmusinterface.h"
@@ -30,13 +29,6 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     if(!isPlayerRunning())
         runPlayer();
     startTimer(1000);
-}
-
-CmusInterface::~CmusInterface()
-{
-    QSettings settings;
-    if(settings.value(QLatin1String("player/quit")).toBool())
-        quit();
 }
 
 QString CmusInterface::id() {
