@@ -27,14 +27,14 @@ make -j2
 ### Screenshot ###
 ![Screenshot of the eXo app](https://bitbucket.org/repo/8Xb9ez/images/405669011-exo.png)
 
-### Installation on Ubuntu: ###
+### Installation on Ubuntu ###
 ```
 sudo add-apt-repository ppa:blaze/main
 sudo apt update
 sudo apt install exo-player
 ```
 
-### Background mode (no GUI or X-session needed): ###
+### Background mode (no GUI or X-session needed) ###
  Basic running `exo -d 2>/tmp/exo_errors.log &`
 
  Scrobbler authentication `exo -f` or `exo --force-reauth`
@@ -42,7 +42,7 @@ sudo apt install exo-player
  Shutting down the app `qdbus local.exo_player /exo local.exo_player.quitApplication`
  or just `pkill -2 exo`
 
-### Tips: ###
+### Tips ###
  Create a global hotkey to see the lyrics at any time.
 
  `qdbus local.exo_player /exo local.exo_player.showLyricsWindow` is the command you want.
