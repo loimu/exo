@@ -4,7 +4,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
 
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt5 5.6.1 REQUIRED COMPONENTS Core Network Widgets Xml)
+find_package(Qt5 5.6.1 REQUIRED COMPONENTS Core Network Widgets Xml Test)
 set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
 
 set(exo_SRCS main.cpp
@@ -47,3 +47,17 @@ target_link_libraries(exo ${qt_LIBS} ${LASTFM_LIBRARIES})
 target_compile_features(exo PRIVATE cxx_nullptr cxx_generalized_initializers)
 
 install(TARGETS exo RUNTIME DESTINATION bin)
+
+
+if(BUILD_TESTS)
+  set(test_LIBS Qt5::Core Qt5::Test)
+  set(tests_SRCS tests/tests.cpp
+      tests/pitests.cpp
+      core/process.cpp
+      core/playerinterface.cpp
+      core/mocinterface.cpp
+      core/cmusinterface.cpp)
+  add_executable(tests ${tests_SRCS})
+  target_link_libraries(tests ${test_LIBS})
+  target_compile_features(tests PRIVATE cxx_nullptr)
+endif()
