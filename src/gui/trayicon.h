@@ -27,7 +27,6 @@
 #include <QVector>
 
 class PlayerInterface;
-class QSettings;
 class BookmarkEntry;
 
 class TrayIcon : public QWidget
