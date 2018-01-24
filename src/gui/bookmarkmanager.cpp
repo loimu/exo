@@ -94,7 +94,7 @@ BookmarkList BookmarkManager::getList() {
     QStringList stringList = string.split(QChar::fromLatin1(';'));
     BookmarkList list;
     if(!stringList.isEmpty()) {
-        for(QString str : stringList) {
+        for(const QString& str : stringList) {
             QStringList bookmark = str.split(QChar::fromLatin1('|'));
             if(bookmark.size() == 2) {
                 BookmarkEntry entry;
@@ -124,7 +124,7 @@ void BookmarkManager::saveList(const BookmarkList& list) {
     QSettings settings;
     QString string = QString();
     int count = 0;
-    for(BookmarkEntry entry : list) {
+    for(const BookmarkEntry& entry : list) {
         if(count)
             string.append(QChar::fromLatin1(';'));
         string.append(entry.name + QChar::fromLatin1('|') + entry.uri);
@@ -136,7 +136,7 @@ void BookmarkManager::saveList(const BookmarkList& list) {
 void BookmarkManager::refreshView() {
     lineEdit->clear();
     listWidget->clear();
-    for(BookmarkEntry entry : list) {
+    for(const BookmarkEntry& entry : list) {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name
                       + QLatin1String("\n") + entry.uri);

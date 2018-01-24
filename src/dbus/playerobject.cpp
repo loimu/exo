@@ -115,7 +115,7 @@ void PlayerObject::emitPropsChanged(PIState st) {
         return;
     syncProperties();
     QVariantMap map;
-    for(QByteArray name : changedProps)
+    for(QByteArray& name : changedProps)
         map.insert(name, props.value(name));
     QDBusMessage msg = QDBusMessage::createSignal(
                 QStringLiteral("/org/mpris/MediaPlayer2"),

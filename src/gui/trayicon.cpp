@@ -159,7 +159,7 @@ void TrayIcon::createTrayIcon() {
         QMenu* tagEditorsMenu = new QMenu(trayIconMenu);
         tagEditorsMenu->setTitle(tr("&Edit with"));
         trayIconMenu->addAction(tagEditorsMenu->menuAction());
-        for(QString entry : editors) {
+        for(const QString& entry : editors) {
             TagEditor* newEditor = new TagEditor(entry, this);
             tagEditorsMenu->addAction(newEditor);
         }
@@ -287,7 +287,7 @@ void TrayIcon::refreshBookmarks(const BookmarkList& list) {
         return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
-    for(BookmarkEntry entry : list) {
+    for(const BookmarkEntry& entry : list) {
         Bookmark* bookmark = new Bookmark(entry.name, entry.uri, this);
         bookmarksMenu->addAction(bookmark);
     }
