@@ -143,9 +143,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     }
     QRegExp lyricsRgx(QStringLiteral("&lt;lyrics>(.*)&lt;/lyrics>"));
     lyricsRgx.indexIn(content);
-    QString text = QString("<h2>%1 - %2</h2>")
-            .arg(artistString)
-            .arg(titleString);
+    QString text = QString("<h2>%1 - %2</h2>").arg(artistString, titleString);
     QString lyrics = lyricsRgx.cap(1);
     lyrics = lyrics.trimmed();
     lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
@@ -181,8 +179,8 @@ void LyricsDialog::next() {
 
 void LyricsDialog::search() {
     label->setText(tr("Searching"));
-    setWindowTitle(QString("%1 - %2").arg(artistLineEdit->text())
-                   .arg(titleLineEdit->text()));
+    setWindowTitle(QString("%1 - %2").arg(artistLineEdit->text(),
+                                          titleLineEdit->text()));
     QNetworkRequest request;
     request.setUrl(
                 QUrl(QLatin1String("http://lyrics.wikia.com/api.php"
