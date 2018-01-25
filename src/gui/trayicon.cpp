@@ -62,7 +62,7 @@ public:
     {
         editorPath = text;
         QString app = text.split(QChar::fromLatin1('/')).last();
-        this->setText(app.left(1).toUpper() + app.mid(1));
+        this->setText(app.at(0).toUpper() + app.mid(1));
         this->setIcon(QIcon::fromTheme(app));
         connect(this, &TagEditor::triggered, this, [=] {
             QString file = PlayerInterface::self()->trackObject()->file;

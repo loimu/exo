@@ -75,7 +75,7 @@ signals:
     void trackChanged(const QString&, const QString&, int);
 #endif // BUILD_LASTFM
 #ifdef BUILD_DBUS
-    void newStatus(State);
+    void newStatus(PlayerInterface::State);
     void newTrack();
 #endif // BUILD_DBUS
 };
