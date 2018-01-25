@@ -136,7 +136,7 @@ void BookmarkManager::saveList(const BookmarkList& list) {
 void BookmarkManager::refreshView() {
     lineEdit->clear();
     listWidget->clear();
-    for(const BookmarkEntry& entry : list) {
+    for(BookmarkEntry& entry : list) {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name
                       + QLatin1String("\n") + entry.uri);
