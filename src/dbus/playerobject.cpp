@@ -25,7 +25,7 @@
 
 PlayerObject::PlayerObject(QObject* parent) : QDBusAbstractAdaptor(parent),
     player(PlayerInterface::self()),
-    track(PlayerInterface::self()->trackObject()),
+    track(PlayerInterface::self()->getTrack()),
     trackID("/org/exo/MediaPlayer2/Track/0")
 {
     connect(player, &PlayerInterface::newStatus,

@@ -110,7 +110,7 @@ BookmarkList BookmarkManager::getList() {
 BookmarkList BookmarkManager::addCurrent() {
     BookmarkList list;
     BookmarkEntry entry;
-    entry.uri  = PlayerInterface::self()->trackObject()->file;
+    entry.uri  = PlayerInterface::self()->getTrack()->file;
     entry.name = entry.uri;
     if(!entry.uri.isEmpty()) {
         list = BookmarkManager::getList();

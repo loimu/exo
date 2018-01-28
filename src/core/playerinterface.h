@@ -48,7 +48,7 @@ protected:
 public:
     explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
-    const Track* trackObject() const { return &track; }
+    const Track* getTrack() const { return &track; }
     virtual QString id() = 0;
     virtual bool play() = 0;
     virtual bool pause()= 0;

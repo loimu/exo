@@ -159,8 +159,8 @@ QString LyricsDialog::format(QString string) {
 
 void LyricsDialog::update() {
     PlayerInterface* player = PlayerInterface::self();
-    artistLineEdit->setText(format(player->trackObject()->artist));
-    titleLineEdit->setText(format(player->trackObject()->title));
+    artistLineEdit->setText(format(player->getTrack()->artist));
+    titleLineEdit->setText(format(player->getTrack()->title));
     if(!artistLineEdit->text().isEmpty())
         search();
 }
