@@ -23,12 +23,14 @@
 #include "playerinterface.h"
 
 PlayerInterface* PlayerInterface::object = nullptr;
+PITrack* PlayerInterface::ptrack = nullptr;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent)
 {
     if(object)
         qFatal("PlayerInterface: only one instance is allowed");
     object = this;
+    ptrack = &track;
 }
 
 void PlayerInterface::timerEvent(QTimerEvent* event) {

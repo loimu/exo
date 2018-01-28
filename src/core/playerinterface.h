@@ -28,9 +28,6 @@ class PlayerInterface : public QObject
 {
     Q_OBJECT
 
-    static PlayerInterface* object;
-    void getCover();
-
 public:
     enum State { Offline, Stop, Play, Pause };
 
@@ -40,18 +37,12 @@ public:
         QString artist, title, album, file, totalTime, caption, cover;
     };
 
-protected:
-    Track track;
-    void timerEvent(QTimerEvent* event);
-    virtual State getInfo() = 0;
-
-public:
     explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
-    const Track* getTrack() const { return &track; }
+    static Track* getTrack() { return ptrack; }
     virtual QString id() = 0;
     virtual bool play() = 0;
-    virtual bool pause()= 0;
+    virtual bool pause() = 0;
     virtual bool playPause() = 0;
     virtual bool prev() = 0;
     virtual bool next() = 0;
@@ -64,6 +55,16 @@ public:
     virtual void showPlayer() = 0;
     virtual bool openUri(const QString& uri) = 0;
     virtual bool appendFile(const QStringList& files) = 0;
+
+protected:
+    Track track;
+    void timerEvent(QTimerEvent* event);
+    virtual State getInfo() = 0;
+
+private:
+    static PlayerInterface* object;
+    static Track* ptrack;
+    void getCover();
 
 signals:
     void newStatus(PlayerInterface::State);

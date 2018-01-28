@@ -65,8 +65,8 @@ public:
         this->setText(app.at(0).toUpper() + app.mid(1));
         this->setIcon(QIcon::fromTheme(app));
         connect(this, &TagEditor::triggered, this, [=] {
-            QString file = PlayerInterface::self()->getTrack()->file;
-            if(!PlayerInterface::self()->getTrack()->isStream)
+            QString file = PlayerInterface::getTrack()->file;
+            if(!PlayerInterface::getTrack()->isStream)
                 Process::execute(editorPath, QStringList() << file); });
     }
 };
@@ -240,7 +240,7 @@ void TrayIcon::updateStatus(int state) {
 }
 
 void TrayIcon::updateTrack() {
-    const PITrack* track = player->getTrack();
+    PITrack* track = PlayerInterface::getTrack();
     QString message = track->caption;
     QString cover;
     if(!track->isStream) {
