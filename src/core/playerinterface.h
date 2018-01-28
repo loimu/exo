@@ -29,7 +29,7 @@ class PlayerInterface : public QObject
     Q_OBJECT
 
     static PlayerInterface* object;
-    QString cover();
+    void getCover();
 
 public:
     enum State { Offline, Stop, Play, Pause };
@@ -37,7 +37,7 @@ public:
     struct Track {
         bool isStream;
         int totalSec, currSec;
-        QString artist, title, album, file, totalTime, caption;
+        QString artist, title, album, file, totalTime, caption, cover;
     };
 
 protected:
@@ -49,9 +49,6 @@ public:
     explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
     const Track* trackObject() const { return &track; }
-#ifdef BUILD_DBUS
-    QString artwork();
-#endif // BUILD_DBUS
     virtual QString id() = 0;
     virtual bool play() = 0;
     virtual bool pause()= 0;
@@ -69,15 +66,12 @@ public:
     virtual bool appendFile(const QStringList& files) = 0;
 
 signals:
-    void updateStatus(const QString&, const QString& = QString());
+    void newStatus(PlayerInterface::State);
+    void newTrack();
 #ifdef BUILD_LASTFM
     void trackListened(const QString&, const QString&, const QString&, int);
     void trackChanged(const QString&, const QString&, int);
 #endif // BUILD_LASTFM
-#ifdef BUILD_DBUS
-    void newStatus(PlayerInterface::State);
-    void newTrack();
-#endif // BUILD_DBUS
 };
 
 using PIState = PlayerInterface::State;

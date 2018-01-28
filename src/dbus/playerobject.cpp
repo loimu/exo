@@ -61,7 +61,8 @@ bool PlayerObject::canSeek() const {
 QVariantMap PlayerObject::metadata() const {
     QVariantMap map;
     map.insert(QStringLiteral("mpris:length"), track->totalSec * 1000000);
-    map.insert(QStringLiteral("mpris:artUrl"), player->artwork());
+    map.insert(QStringLiteral("mpris:artUrl"), track->cover.isEmpty()
+               ? track->cover : QLatin1String("file://") + track->cover);
     map.insert(QStringLiteral("mpris:trackid"),
                QVariant::fromValue<QDBusObjectPath>(trackID));
     map.insert(QStringLiteral("xesam:album"), track->album);

@@ -66,7 +66,7 @@ public:
         this->setIcon(QIcon::fromTheme(app));
         connect(this, &TagEditor::triggered, this, [=] {
             QString file = PlayerInterface::self()->trackObject()->file;
-            if(file.startsWith(QChar::fromLatin1('/')))
+            if(!PlayerInterface::self()->trackObject()->isStream)
                 Process::execute(editorPath, QStringList() << file); });
     }
 };
@@ -81,8 +81,8 @@ TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
     object = this;
     createActions();
     createTrayIcon();
-    connect(player, &PlayerInterface::updateStatus,
-            this, &TrayIcon::updateToolTip);
+    connect(player, &PlayerInterface::newStatus, this, &TrayIcon::updateStatus);
+    connect(player, &PlayerInterface::newTrack, this, &TrayIcon::updateTrack);
 }
 
 void TrayIcon::createActions() {
@@ -230,14 +230,31 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
     return false;
 }
 
-void TrayIcon::updateToolTip(const QString& message, const QString& cover) {
-    /* only fixed sized tooltip has an acceptable look in some DEs */
-    QString tooltip = QLatin1String("<table width=\"320\"><tr><td><b>")
-            + message + QLatin1String("</b></td></tr></table>");
-    if(!cover.isEmpty())
-        tooltip.append(
-                    QString(QLatin1String("<br /><img src=\"%1\" width=\"320\" "
-                                          "height=\"320\" />")).arg(cover));
+void TrayIcon::updateStatus(int state) {
+    if(state < PIState::Play) {
+        QString tooltip = QString();
+        if(state == PIState::Offline) tooltip = tr("Player isn't running");
+        else if(state == PIState::Stop) tooltip = tr("<b>Stopped</b>");
+        trayIcon->setToolTip(tooltip);
+    }
+}
+
+void TrayIcon::updateTrack() {
+    const PITrack* track = player->trackObject();
+    QString message = track->caption;
+    QString cover;
+    if(!track->isStream) {
+        message.append(QString(QStringLiteral(" (%1)")).arg(track->totalTime));
+        cover = QString(
+                    QStringLiteral("<br /><img src=\"%1\" width=\"320\" "
+                                   "height=\"320\" />")).arg(
+                    track->cover.isEmpty()
+                    ? QStringLiteral(":/images/nocover.png") : track->cover);
+    }
+    /* only tooltips with fixed size have acceptable look in some DEs */
+    QString tooltip = QString(
+                QStringLiteral("<table width=\"320\"><tr><td><b>%1"
+                               "</b></td></tr></table>%2")).arg(message, cover);
     trayIcon->setToolTip(tooltip);
 }
 

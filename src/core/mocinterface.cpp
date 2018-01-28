@@ -131,7 +131,7 @@ PIState MocInterface::getInfo() {
     track.totalSec = infoRgx.cap(7).toInt();
     track.currSec = infoRgx.cap(8).toInt();
     track.caption = infoRgx.cap(9);
-    track.isStream = !track.file.startsWith(QChar::fromLatin1('/'));
+    track.isStream = track.totalTime.isEmpty();
     if(track.caption.isEmpty())
         track.caption = track.file;
     if(track.isStream) {
