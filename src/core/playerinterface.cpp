@@ -64,7 +64,7 @@ void PlayerInterface::timerEvent(QTimerEvent* event) {
         state = currentState;
         emit newStatus(currentState);
     }
-    static QString nowPlaying = QString();
+    static QString nowPlaying;
     if(nowPlaying != track.caption) {
         nowPlaying = track.caption;
         if(track.caption.isEmpty()) return;

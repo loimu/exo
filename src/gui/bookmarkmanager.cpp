@@ -122,7 +122,7 @@ BookmarkList BookmarkManager::addCurrent() {
 
 void BookmarkManager::saveList(const BookmarkList& list) {
     QSettings settings;
-    QString string = QString();
+    QString string;
     int count = 0;
     for(const BookmarkEntry& entry : list) {
         if(count)

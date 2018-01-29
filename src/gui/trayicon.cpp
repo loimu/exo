@@ -231,7 +231,7 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
 
 void TrayIcon::updateStatus(int state) {
     if(state < PIState::Play) {
-        QString tooltip = QString();
+        QString tooltip;
         if(state == PIState::Offline) tooltip = tr("Player isn't running");
         else if(state == PIState::Stop) tooltip = tr("<b>Stopped</b>");
         trayIcon->setToolTip(tooltip);
