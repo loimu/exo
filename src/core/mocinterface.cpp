@@ -21,7 +21,6 @@
 
 #include <QStringList>
 
-#include "process.h"
 #include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=" INSTALL_PREFIX "/bin/moc-osd"

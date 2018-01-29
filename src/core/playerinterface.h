@@ -24,6 +24,14 @@
 
 #include <QObject>
 
+
+namespace Process {
+QString getOutput(const QString& program, const QStringList& options);
+bool execute(const QString& program, const QStringList& options);
+QStringList detect(const QStringList& apps);
+}
+
+
 class PlayerInterface : public QObject
 {
     Q_OBJECT

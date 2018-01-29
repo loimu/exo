@@ -20,7 +20,6 @@
 #include <QStringList>
 #include <QTime>
 
-#include "process.h"
 #include "cmusinterface.h"
 
 CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),

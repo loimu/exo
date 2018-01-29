@@ -10,7 +10,6 @@ set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
 set(exo_SRCS main.cpp
     core/mocinterface.cpp
     core/playerinterface.cpp
-    core/process.cpp
     core/singleinstance.cpp
     gui/aboutdialog.cpp
     gui/basedialog.cpp
@@ -53,7 +52,6 @@ if(BUILD_TESTS)
   set(test_LIBS Qt5::Core Qt5::Test)
   set(tests_SRCS tests/tests.cpp
       tests/pitests.cpp
-      core/process.cpp
       core/playerinterface.cpp
       core/mocinterface.cpp
       core/cmusinterface.cpp)

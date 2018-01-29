@@ -29,7 +29,6 @@
 
 // core
 #include "playerinterface.h"
-#include "process.h"
 // gui
 #include "aboutdialog.h"
 #include "bookmarkmanager.h"
