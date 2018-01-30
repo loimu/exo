@@ -22,13 +22,16 @@
 
 #include "playerinterface.h"
 
+class QProcess;
+
 class CmusInterface : public PlayerInterface
 {
+    QProcess* cmus;
     QString cli;
     bool isPlayerRunning();
     void runPlayer();
     QString find(const QString&, const QString&);
-    PIState getInfo();
+    void timerEvent(QTimerEvent* event);
 
 public:
     explicit CmusInterface(QObject* parent = nullptr);

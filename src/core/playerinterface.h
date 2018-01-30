@@ -66,8 +66,7 @@ public:
 
 protected:
     Track track;
-    void timerEvent(QTimerEvent* event);
-    virtual State getInfo() = 0;
+    void notify(State currentState);
 
 private:
     static PlayerInterface* object;

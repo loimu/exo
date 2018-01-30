@@ -22,12 +22,15 @@
 
 #include "playerinterface.h"
 
+class QProcess;
+
 class MocInterface : public PlayerInterface
 {
+    QProcess* moc;
     QString player;
     bool isServerRunning();
     bool runServer();
-    PIState getInfo();
+    void timerEvent(QTimerEvent* event);
 
 public:
     explicit MocInterface(QObject* parent = nullptr);

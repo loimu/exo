@@ -56,9 +56,7 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
     ptrack = &track;
 }
 
-void PlayerInterface::timerEvent(QTimerEvent* event) {
-    track.caption.clear();
-    State currentState = getInfo();
+void PlayerInterface::notify(State currentState) {
     static State state = Offline;
     if(state != currentState) {
         state = currentState;
@@ -75,6 +73,7 @@ void PlayerInterface::timerEvent(QTimerEvent* event) {
             emit trackChanged(track.artist, track.title, track.totalSec);
 #endif // BUILD_LASTFM
     }
+    track.caption.clear();
 #ifdef BUILD_LASTFM
     if(currentState != Play || track.isStream) return;
     static bool listened = true;
@@ -91,7 +90,7 @@ void PlayerInterface::timerEvent(QTimerEvent* event) {
 }
 
 void PlayerInterface::getCover() {
-    track.cover = QString();
+    track.cover.clear();
     if(!track.isStream) {
         QString path = track.file;
         path.replace(QRegExp(
