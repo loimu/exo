@@ -37,57 +37,59 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     if(QString::fromUtf8(proc.readAllStandardOutput()).isEmpty())
         runServer();
     startTimer(1000);
-
-    connect(moc, QOverload<int>::of(&QProcess::finished), this, [=] {
-        QString info = moc->readAllStandardOutput();
-        if(info.isEmpty()) {
-            notify(PIState::Offline);
-            return;
-        }
-        if(info.startsWith(QLatin1String("STOP"))) {
-            notify(PIState::Stop);
-            return;
-        }
-        QRegExp infoRgx(
-                    QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                                   "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
-                                   "\\{cs\\}(.*)\\{T\\}(.*)\n"));
-        infoRgx.setMinimal(true);
-        infoRgx.indexIn(info);
-        PIState state = PIState::Offline;
-        if(infoRgx.cap(1) == QLatin1String("PLAY"))
-            state = PIState::Play;
-        else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
-            state = PIState::Pause;
-        track.artist = infoRgx.cap(2);
-        track.title = infoRgx.cap(3);
-        track.album = infoRgx.cap(4);
-        track.file = infoRgx.cap(5);
-        track.totalTime = infoRgx.cap(6);
-        track.totalSec = infoRgx.cap(7).toInt();
-        track.currSec = infoRgx.cap(8).toInt();
-        track.caption = infoRgx.cap(9);
-        track.isStream = track.totalTime.isEmpty();
-        if(track.caption.isEmpty())
-            track.caption = track.file;
-        if(track.isStream) {
-            track.totalSec = 8*60;
-            QRegExp artistRgx(QStringLiteral("^(.*)\\s-\\s"));
-            artistRgx.setMinimal(true);
-            artistRgx.indexIn(track.caption);
-            track.artist = artistRgx.cap(1);
-            QRegExp titleRgx(QStringLiteral("\\s-\\s(.*)$"));
-            titleRgx.indexIn(track.caption);
-            track.title = titleRgx.cap(1);
-        }
-        notify(state);
-    });
+    connect(moc, QOverload<int>::of(&QProcess::finished),
+            this, &MocInterface::updateInfo);
 }
 
 bool MocInterface::runServer() {
     return Process::execute(
                 player,
                 QStringList{QStringLiteral("-SO"), QStringLiteral(OSD_OPT)});
+}
+
+void MocInterface::updateInfo() {
+    QString info = moc->readAllStandardOutput();
+    if(info.isEmpty()) {
+        notify(PIState::Offline);
+        return;
+    }
+    if(info.startsWith(QLatin1String("STOP"))) {
+        notify(PIState::Stop);
+        return;
+    }
+    QRegExp infoRgx(
+                QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                               "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
+                               "\\{cs\\}(.*)\\{T\\}(.*)\n"));
+    infoRgx.setMinimal(true);
+    infoRgx.indexIn(info);
+    PIState state = PIState::Offline;
+    if(infoRgx.cap(1) == QLatin1String("PLAY"))
+        state = PIState::Play;
+    else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
+        state = PIState::Pause;
+    track.artist = infoRgx.cap(2);
+    track.title = infoRgx.cap(3);
+    track.album = infoRgx.cap(4);
+    track.file = infoRgx.cap(5);
+    track.totalTime = infoRgx.cap(6);
+    track.totalSec = infoRgx.cap(7).toInt();
+    track.currSec = infoRgx.cap(8).toInt();
+    track.caption = infoRgx.cap(9);
+    track.isStream = track.totalTime.isEmpty();
+    if(track.caption.isEmpty())
+        track.caption = track.file;
+    if(track.isStream) {
+        track.totalSec = 8*60;
+        QRegExp artistRgx(QStringLiteral("^(.*)\\s-\\s"));
+        artistRgx.setMinimal(true);
+        artistRgx.indexIn(track.caption);
+        track.artist = artistRgx.cap(1);
+        QRegExp titleRgx(QStringLiteral("\\s-\\s(.*)$"));
+        titleRgx.indexIn(track.caption);
+        track.title = titleRgx.cap(1);
+    }
+    notify(state);
 }
 
 QString MocInterface::id() {

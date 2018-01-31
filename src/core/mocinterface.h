@@ -29,6 +29,7 @@ class MocInterface : public PlayerInterface
     QProcess* moc;
     QString player;
     bool runServer();
+    void updateInfo();
     void timerEvent(QTimerEvent* event);
 
 public:
