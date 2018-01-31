@@ -29,7 +29,7 @@
 
 MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     player(QStringLiteral(PLAYER_EXECUTABLE)),
-    moc(new QProcess())
+    moc(new QProcess(this))
 {
     QProcess proc;
     proc.start(QStringLiteral("pidof"), QStringList{player});

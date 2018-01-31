@@ -27,7 +27,7 @@
 
 CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     cli(QStringLiteral(PLAYER_EXECUTABLE)),
-    cmus(new QProcess)
+    cmus(new QProcess(this))
 {
     QProcess proc;
     proc.start(QStringLiteral("pidof"), QStringList{QStringLiteral("cmus")});
