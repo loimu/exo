@@ -54,7 +54,7 @@ class TrayIcon : public QWidget
     bool eventFilter(QObject*, QEvent*);
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateStatus(int);
-    void updateTrack();
+    void updateTrack(const QString&);
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();

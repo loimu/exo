@@ -59,8 +59,7 @@ void PlayerInterface::notify(State currentState) {
     if(nowPlaying != track.caption) {
         nowPlaying = track.caption;
         if(track.caption.isEmpty()) return;
-        getCover();
-        emit newTrack();
+        emit newTrack(getCover());
 #ifdef BUILD_LASTFM
         if(currentState == Play && !track.artist.isEmpty())
             emit trackChanged(track.artist, track.title, track.totalSec);
@@ -82,8 +81,7 @@ void PlayerInterface::notify(State currentState) {
 #endif // BUILD_LASTFM
 }
 
-void PlayerInterface::getCover() {
-    track.cover.clear();
+QString PlayerInterface::getCover() {
     if(!track.isStream) {
         QString path = track.file;
         path.replace(QRegExp(
@@ -94,6 +92,7 @@ void PlayerInterface::getCover() {
                                QStringLiteral("*.jpg"),
                                QStringLiteral("*.jpeg")});
         if(!dir.entryList().isEmpty())
-            track.cover = path + QChar::fromLatin1('/') + dir.entryList().at(0);
+            return path + QChar::fromLatin1('/') + dir.entryList().at(0);
     }
+    return QString();
 }

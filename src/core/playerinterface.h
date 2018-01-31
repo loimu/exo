@@ -41,7 +41,7 @@ public:
     struct Track {
         bool isStream;
         int totalSec, currSec;
-        QString artist, title, album, file, totalTime, caption, cover;
+        QString artist, title, album, file, totalTime, caption;
     };
 
     explicit PlayerInterface(QObject* parent = nullptr);
@@ -70,11 +70,11 @@ protected:
 private:
     static PlayerInterface* object;
     static Track* ptrack;
-    void getCover();
+    QString getCover();
 
 signals:
     void newStatus(PlayerInterface::State);
-    void newTrack();
+    void newTrack(const QString&);
 #ifdef BUILD_LASTFM
     void trackListened(const QString&, const QString&, const QString&, int);
     void trackChanged(const QString&, const QString&, int);

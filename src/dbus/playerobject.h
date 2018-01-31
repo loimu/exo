@@ -45,9 +45,10 @@ class PlayerObject : public QDBusAbstractAdaptor
     const PITrack* track;
     QVariantMap props;
     PIState status;
+    QString cover;
     QDBusObjectPath trackID;
     void syncProperties();
-    void trackChanged();
+    void trackChanged(const QString&);
     void emitPropsChanged(PIState);
 
 public:

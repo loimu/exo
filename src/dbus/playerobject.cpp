@@ -61,8 +61,7 @@ bool PlayerObject::canSeek() const {
 QVariantMap PlayerObject::metadata() const {
     QVariantMap map;
     map.insert(QStringLiteral("mpris:length"), track->totalSec * 1000000);
-    map.insert(QStringLiteral("mpris:artUrl"), track->cover.isEmpty()
-               ? track->cover : QLatin1String("file://") + track->cover);
+    map.insert(QStringLiteral("mpris:artUrl"), cover);
     map.insert(QStringLiteral("mpris:trackid"),
                QVariant::fromValue<QDBusObjectPath>(trackID));
     map.insert(QStringLiteral("xesam:album"), track->album);
@@ -96,7 +95,9 @@ void PlayerObject::setVolume(double value) {
     player->volume(value * 100);
 }
 
-void PlayerObject::trackChanged() {
+void PlayerObject::trackChanged(const QString& coverString) {
+    cover = coverString.isEmpty()
+            ? coverString : QLatin1String("file://") + coverString;
     trackID = QDBusObjectPath(
                 QString(QLatin1String("/org/exo/MediaPlayer2/Track/%1"))
                 .arg(qrand()));

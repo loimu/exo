@@ -238,22 +238,22 @@ void TrayIcon::updateStatus(int state) {
     }
 }
 
-void TrayIcon::updateTrack() {
+void TrayIcon::updateTrack(const QString& cover) {
     PITrack* track = PlayerInterface::getTrack();
     QString message = track->caption;
-    QString cover;
+    QString rest;
     if(!track->isStream) {
         message.append(QString(QStringLiteral(" (%1)")).arg(track->totalTime));
-        cover = QString(
+        rest = QString(
                     QStringLiteral("<br /><img src=\"%1\" width=\"320\" "
                                    "height=\"320\" />")).arg(
-                    track->cover.isEmpty()
-                    ? QStringLiteral(":/images/nocover.png") : track->cover);
+                    cover.isEmpty()
+                    ? QStringLiteral(":/images/nocover.png") : cover);
     }
     /* only tooltips with fixed size have acceptable look in some DEs */
     QString tooltip = QString(
                 QStringLiteral("<table width=\"320\"><tr><td><b>%1"
-                               "</b></td></tr></table>%2")).arg(message, cover);
+                               "</b></td></tr></table>%2")).arg(message, rest);
     trayIcon->setToolTip(tooltip);
 }
 
