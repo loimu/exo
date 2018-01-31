@@ -25,10 +25,10 @@
 #include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=" INSTALL_PREFIX "/bin/moc-osd"
-#define PLAYER_CLI_EXECUTABLE "mocp"
+#define PLAYER_EXECUTABLE "mocp"
 
 MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
-    player(QStringLiteral(PLAYER_CLI_EXECUTABLE)),
+    player(QStringLiteral(PLAYER_EXECUTABLE)),
     moc(new QProcess())
 {
     QProcess proc;
@@ -131,7 +131,7 @@ void MocInterface::showPlayer() {
         term = apps.at(0);
     Process::execute(term, QStringList{
                          QStringLiteral("-e"),
-                         QStringLiteral(PLAYER_CLI_EXECUTABLE " -O " OSD_OPT)});
+                         QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
 }
 
 bool MocInterface::openUri(const QString& file) {
