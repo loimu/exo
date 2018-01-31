@@ -31,7 +31,10 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     player(QStringLiteral(PLAYER_CLI_EXECUTABLE)),
     moc(new QProcess())
 {
-    if(!isServerRunning())
+    QProcess proc;
+    proc.start(QStringLiteral("pidof"), QStringList{player});
+    proc.waitForFinished();
+    if(QString::fromUtf8(proc.readAllStandardOutput()).isEmpty())
         runServer();
     startTimer(1000);
 
@@ -81,20 +84,14 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     });
 }
 
-QString MocInterface::id() {
-    return QLatin1String("music on console");
-}
-
-bool MocInterface::isServerRunning() {
-    return !Process::getOutput(
-                QStringLiteral("pidof"),
-                QStringList{player}).isEmpty();
-}
-
 bool MocInterface::runServer() {
     return Process::execute(
                 player,
                 QStringList{QStringLiteral("-SO"), QStringLiteral(OSD_OPT)});
+}
+
+QString MocInterface::id() {
+    return QLatin1String("music on console");
 }
 
 #define SEND_COMMAND(__method, __option)\

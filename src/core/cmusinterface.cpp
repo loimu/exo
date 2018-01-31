@@ -27,7 +27,10 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     cli(QLatin1String("cmus-remote")),
     cmus(new QProcess)
 {
-    if(!isPlayerRunning())
+    QProcess proc;
+    proc.start(QStringLiteral("pidof"), QStringList{QStringLiteral("cmus")});
+    proc.waitForFinished();
+    if(QString::fromUtf8(proc.readAllStandardOutput()).isEmpty())
         runPlayer();
     startTimer(1000);
 
@@ -80,11 +83,6 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
 
 QString CmusInterface::id() {
     return QLatin1String("Cmus");
-}
-
-bool CmusInterface::isPlayerRunning() {
-    return !Process::getOutput(QLatin1String("pidof"),
-                               QStringList{QLatin1String("cmus")}).isEmpty();
 }
 
 void CmusInterface::runPlayer() {

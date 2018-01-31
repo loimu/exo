@@ -28,7 +28,6 @@ class CmusInterface : public PlayerInterface
 {
     QProcess* cmus;
     QString cli;
-    bool isPlayerRunning();
     void runPlayer();
     QString find(const QString&, const QString&);
     void timerEvent(QTimerEvent* event);

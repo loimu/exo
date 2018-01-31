@@ -24,13 +24,6 @@
 #include "playerinterface.h"
 
 
-QString Process::getOutput(const QString& program, const QStringList& options) {
-    QProcess proc;
-    proc.start(program, options);
-    proc.waitForFinished(-1);
-    return QString::fromUtf8(proc.readAllStandardOutput());
-}
-
 bool Process::execute(const QString& program, const QStringList& options) {
     QProcess proc;
     return proc.startDetached(program, options);
