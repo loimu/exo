@@ -38,7 +38,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
         runServer();
     startTimer(1000);
     connect(moc, QOverload<int>::of(&QProcess::finished),
-            this, &MocInterface::updateInfo);
+            this, &MocInterface::notify);
 }
 
 bool MocInterface::runServer() {
@@ -47,20 +47,15 @@ bool MocInterface::runServer() {
                 QStringList{QStringLiteral("-SO"), QStringLiteral(OSD_OPT)});
 }
 
-void MocInterface::updateInfo() {
+PIState MocInterface::updateInfo() {
     QString info = moc->readAllStandardOutput();
-    if(info.isEmpty()) {
-        notify(PIState::Offline);
-        return;
-    }
-    if(info.startsWith(QLatin1String("STOP"))) {
-        notify(PIState::Stop);
-        return;
-    }
-    QRegExp infoRgx(
-                QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                               "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
-                               "\\{cs\\}(.*)\\{T\\}(.*)\n"));
+    if(info.isEmpty())
+        return PIState::Offline;
+    if(info.startsWith(QLatin1String("STOP")))
+        return PIState::Stop;
+    QRegExp infoRgx(QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                                   "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
+                                   "\\{cs\\}(.*)\\{T\\}(.*)\n"));
     infoRgx.setMinimal(true);
     infoRgx.indexIn(info);
     PIState state = PIState::Offline;
@@ -89,7 +84,7 @@ void MocInterface::updateInfo() {
         titleRgx.indexIn(track.caption);
         track.title = titleRgx.cap(1);
     }
-    notify(state);
+    return state;
 }
 
 QString MocInterface::id() {

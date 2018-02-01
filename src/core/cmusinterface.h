@@ -30,7 +30,7 @@ class CmusInterface : public PlayerInterface
     QString cli;
     void runPlayer();
     QString find(const QString&, const QString&);
-    void updateInfo();
+    PIState updateInfo();
     void timerEvent(QTimerEvent* event);
 
 public:

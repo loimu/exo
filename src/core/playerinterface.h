@@ -65,7 +65,8 @@ public:
 
 protected:
     Track track;
-    void notify(State currentState);
+    void notify();
+    virtual State updateInfo() = 0;
 
 private:
     static PlayerInterface* object;

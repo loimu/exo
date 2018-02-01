@@ -49,8 +49,10 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
     ptrack = &track;
 }
 
-void PlayerInterface::notify(State currentState) {
+void PlayerInterface::notify() {
+    track.caption.clear();
     static State state = Offline;
+    State currentState = updateInfo();
     if(state != currentState) {
         state = currentState;
         emit newStatus(currentState);
@@ -65,7 +67,6 @@ void PlayerInterface::notify(State currentState) {
             emit trackChanged(track.artist, track.title, track.totalSec);
 #endif // BUILD_LASTFM
     }
-    track.caption.clear();
 #ifdef BUILD_LASTFM
     if(currentState != Play || track.isStream) return;
     static bool listened = true;

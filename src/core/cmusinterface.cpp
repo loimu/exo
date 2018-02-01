@@ -36,7 +36,7 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
         runPlayer();
     startTimer(1000);
     connect(cmus, QOverload<int>::of(&QProcess::finished),
-            this, &CmusInterface::updateInfo);
+            this, &CmusInterface::notify);
 }
 
 void CmusInterface::runPlayer() {
@@ -61,17 +61,13 @@ QString CmusInterface::find(const QString& string, const QString& regEx) {
     return findRgx.cap(1);
 }
 
-void CmusInterface::updateInfo() {
+PIState CmusInterface::updateInfo() {
     QString info = cmus->readAllStandardOutput();
-    if(info.isEmpty()) {
-        notify(PIState::Offline);
-        return;
-    }
+    if(info.isEmpty())
+        return PIState::Offline;
     QString string = find(info, QStringLiteral("status\\s(.*)\\n"));
-    if(string == QLatin1String("stopped")) {
-        notify(PIState::Stop);
-        return;
-    }
+    if(string == QLatin1String("stopped"))
+        return PIState::Stop;
     PIState state = PIState::Offline;
     if(string == QLatin1String("playing"))
         state = PIState::Play;
@@ -81,20 +77,16 @@ void CmusInterface::updateInfo() {
     track.title = find(info, QStringLiteral("tag\\stitle\\s(.*)\\n"));
     track.album = find(info, QStringLiteral("tag\\salbum\\s(.*)\\n"));
     track.file = find(info, QStringLiteral("file\\s(.*)\\n"));
-    track.totalSec = find(info,
-                          QStringLiteral("duration\\s(.*)\\n")).toInt();
-    track.currSec = find(info,
-                         QStringLiteral("position\\s(.*)\\n")).toInt();
-    track.totalTime = QTime().addSecs(track.totalSec).toString(
-                QStringLiteral("mm:ss"));
+    track.totalSec = find(info, QStringLiteral("duration\\s(.*)\\n")).toInt();
+    track.currSec = find(info, QStringLiteral("position\\s(.*)\\n")).toInt();
+    track.totalTime = QTime().addSecs(
+                track.totalSec).toString(QStringLiteral("mm:ss"));
     track.caption = track.artist.isEmpty()
             ? track.title
             : track.artist + QLatin1String(" - ") + track.title;
     track.isStream = !track.file.startsWith(QChar::fromLatin1('/'));
-    if(!track.isStream) {
-        notify(state);
-        return;
-    }
+    if(!track.isStream)
+        return state;
     QString title = find(info, QStringLiteral("stream\\s(.*)\\n"));
     track.caption += QLatin1String("<br />") + title;
     track.totalSec = 8*60;
@@ -107,7 +99,7 @@ void CmusInterface::updateInfo() {
         titleRgx.indexIn(title);
         track.title = titleRgx.cap(1);
     }
-    notify(state);
+    return state;
 }
 
 QString CmusInterface::id() {
