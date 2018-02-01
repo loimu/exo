@@ -26,8 +26,8 @@
 #define PLAYER_EXECUTABLE "cmus-remote"
 
 CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
-    cli(QStringLiteral(PLAYER_EXECUTABLE)),
-    cmus(new QProcess(this))
+    cmus(new QProcess(this)),
+    cli(QStringLiteral(PLAYER_EXECUTABLE))
 {
     QProcess proc;
     proc.start(QStringLiteral("pidof"), QStringList{QStringLiteral("cmus")});

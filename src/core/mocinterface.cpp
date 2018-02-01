@@ -28,8 +28,8 @@
 #define PLAYER_EXECUTABLE "mocp"
 
 MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
-    player(QStringLiteral(PLAYER_EXECUTABLE)),
-    moc(new QProcess(this))
+    moc(new QProcess(this)),
+    player(QStringLiteral(PLAYER_EXECUTABLE))
 {
     QProcess proc;
     proc.start(QStringLiteral("pidof"), QStringList{player});
