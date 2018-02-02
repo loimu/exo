@@ -32,7 +32,6 @@ public:
 
 public slots:
     void showLyricsWindow();
-    void quitApplication();
     void bookmarkCurrent();
 };
 

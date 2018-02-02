@@ -35,11 +35,14 @@ sudo apt install exo-player
 ```
 
 ### Background mode (no GUI or X-session needed) ###
- Basic running `exo -d 2>/tmp/exo_errors.log &`
+ Basic running: `exo -d 2>/tmp/exo_errors.log &`
 
- Scrobbler authentication `exo -f` or `exo --force-reauth`
+ Scrobbler authentication: `exo -f` or `exo --force-reauth`
 
- Shutting down the app `qdbus local.exo_player /exo local.exo_player.quitApplication`
+ Shutting down the app:
+ 
+ `qdbus org.mpris.MediaPlayer2.exo /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Quit`
+ 
  or just `pkill -2 exo`
 
 ### Tips ###
