@@ -23,6 +23,7 @@
 
 #include "playerobject.h"
 
+
 PlayerObject::PlayerObject(QObject* parent) : QDBusAbstractAdaptor(parent),
     player(PlayerInterface::self()),
     track(PlayerInterface::getTrack()),
@@ -69,8 +70,8 @@ QVariantMap PlayerObject::metadata() const {
     map.insert(QStringLiteral("xesam:title"),
                track->title.isEmpty() ? track->caption : track->title);
     map.insert(QStringLiteral("xesam:url"),
-               track->isStream ? track->file : QLatin1String("file://")
-                                 + track->file);
+               track->isStream ? track->file
+                               : QLatin1String("file://") + track->file);
     return map;
 }
 
@@ -83,7 +84,7 @@ QString PlayerObject::playbackStatus() const {
 }
 
 qlonglong PlayerObject::position() const {
-        return track->isStream ? 0 : track->currSec * 1000000;
+    return track->isStream ? 0 : track->currSec * 1000000;
 }
 
 double PlayerObject::volume() const {
@@ -96,10 +97,10 @@ void PlayerObject::setVolume(double value) {
 }
 
 void PlayerObject::trackChanged(const QString& coverString) {
-    cover = coverString.isEmpty()
-            ? coverString : QLatin1String("file://") + coverString;
+    cover = coverString.isEmpty() ? coverString
+                                  : QLatin1String("file://") + coverString;
     trackID = QDBusObjectPath(
-                QString(QLatin1String("/org/exo/MediaPlayer2/Track/%1"))
+                QString(QStringLiteral("/org/exo/MediaPlayer2/Track/%1"))
                 .arg(qrand()));
     emitPropsChanged(PIState::Play);
 }
@@ -159,8 +160,7 @@ void PlayerObject::Seek(qlonglong Offset) {
 
 void PlayerObject::SetPosition(
         const QDBusObjectPath &TrackId, qlonglong Position) {
-    if(trackID != TrackId)
-        return;
+    if(trackID != TrackId) return;
     player->jump(Position / 1000000);
 }
 

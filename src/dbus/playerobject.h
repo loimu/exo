@@ -30,11 +30,11 @@ class PlayerObject : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.mpris.MediaPlayer2.Player")
-    Q_PROPERTY(bool CanControl READ canControl)
-    Q_PROPERTY(bool CanGoNext READ canGoNext)
-    Q_PROPERTY(bool CanGoPrevious READ canGoPrevious)
-    Q_PROPERTY(bool CanPause READ canPause)
-    Q_PROPERTY(bool CanPlay READ canPlay)
+    Q_PROPERTY(bool CanControl READ canControl CONSTANT)
+    Q_PROPERTY(bool CanGoNext READ canGoNext CONSTANT)
+    Q_PROPERTY(bool CanGoPrevious READ canGoPrevious CONSTANT)
+    Q_PROPERTY(bool CanPause READ canPause CONSTANT)
+    Q_PROPERTY(bool CanPlay READ canPlay CONSTANT)
     Q_PROPERTY(bool CanSeek READ canSeek)
     Q_PROPERTY(QVariantMap Metadata READ metadata)
     Q_PROPERTY(QString PlaybackStatus READ playbackStatus)
