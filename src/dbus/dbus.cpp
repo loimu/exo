@@ -17,7 +17,7 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QtDBus>
+#include <QDBusConnection>
 
 #include "dbus.h"
 #include "exoobject.h"
@@ -31,13 +31,13 @@ DBus::DBus(QObject* parent) : QObject(parent)
     connection.registerObject(QStringLiteral("/exo"), new ExoObject(this),
                               QDBusConnection::ExportAllContents);
     if(!connection.registerService(QStringLiteral("local.exo_player")))
-        qFatal("DBus: service registration failed");
+        qWarning("DBus: service registration failed");
     new RootObject(this);
     new PlayerObject(this);
     connection.registerObject(QStringLiteral("/org/mpris/MediaPlayer2"), this);
     if(!connection.registerService(
                 QStringLiteral("org.mpris.MediaPlayer2.exo")))
-        qFatal("DBus: MPRISv2 service registration failed");
+        qWarning("DBus: MPRISv2 service registration failed");
 }
 
 DBus::~DBus()
