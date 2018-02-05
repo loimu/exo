@@ -41,6 +41,10 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
             this, &MocInterface::notify);
 }
 
+MocInterface::~MocInterface() {
+    moc->close();
+}
+
 bool MocInterface::runServer() {
     return Process::execute(
                 player,

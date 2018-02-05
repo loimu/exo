@@ -39,6 +39,10 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
             this, &CmusInterface::notify);
 }
 
+CmusInterface::~CmusInterface() {
+    cmus->close();
+}
+
 void CmusInterface::runPlayer() {
     QString term = QStringLiteral("xterm"); // xterm is a fallback app
     QStringList apps = Process::detect(
