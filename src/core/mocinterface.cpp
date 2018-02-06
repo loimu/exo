@@ -146,6 +146,7 @@ bool MocInterface::appendFile(const QStringList& files) {
 }
 
 void MocInterface::timerEvent(QTimerEvent* event) {
+    Q_UNUSED(event);
     moc->start(player, QStringList{
                    QStringLiteral("-Q"),
                    QStringLiteral("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"

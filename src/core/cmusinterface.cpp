@@ -163,5 +163,6 @@ bool CmusInterface::appendFile(const QStringList& files) {
 }
 
 void CmusInterface::timerEvent(QTimerEvent *event) {
+    Q_UNUSED(event);
     cmus->start(cli, QStringList{QStringLiteral("-Q")});
 }

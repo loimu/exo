@@ -115,6 +115,7 @@ int main(int argc, char *argv[]) {
         return app.exec();
     Q_INIT_RESOURCE(exo);
     TrayIcon trayIcon;
+    Q_UNUSED(trayIcon);
     int result = app.exec();
     if(settings.value(QLatin1String("player/quit")).toBool())
         player.quit();
