@@ -1,6 +1,3 @@
 #! /usr/bin/env sh
 
-# workaround for qxcb bug
-export QT_QPA_PLATFORM=offscreen
-
-exo --background 2>/tmp/exo-daemon_errors.log
+exo --background 2>/tmp/exo-daemon_errors.log &
