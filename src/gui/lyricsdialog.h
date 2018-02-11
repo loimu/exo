@@ -34,18 +34,18 @@ class LyricsDialog : public BaseDialog
     QTextBrowser* lyricsBrowser;
     QLineEdit* artistLineEdit;
     QLineEdit* titleLineEdit;
-    QNetworkAccessManager *httpObject;
-    QNetworkReply *replyObject;
+    QNetworkAccessManager* httpObject;
+    QNetworkReply* replyObject;
     QString artistString, titleString;
-    QString format(QString);
-    void showText(QNetworkReply *reply);
+    QString format(QString& string);
+    void showText(QNetworkReply* reply);
     void update();
     void prev();
     void next();
     void search();
 
 public:
-    explicit LyricsDialog(QWidget *parent = nullptr);
+    explicit LyricsDialog(QWidget* parent = nullptr);
 };
 
 #endif // LYRICSDIALOG_H

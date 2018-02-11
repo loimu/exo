@@ -34,7 +34,7 @@
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 
-LyricsDialog::LyricsDialog(QWidget *parent) : BaseDialog(parent),
+LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
     httpObject(new QNetworkAccessManager(this)),
     replyObject(nullptr)
 {
@@ -143,7 +143,8 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     }
     QRegExp lyricsRgx(QStringLiteral("&lt;lyrics>(.*)&lt;/lyrics>"));
     lyricsRgx.indexIn(content);
-    QString text = QString("<h2>%1 - %2</h2>").arg(artistString, titleString);
+    QString text = QString(QStringLiteral("<h2>%1 - %2</h2>"))
+            .arg(artistString, titleString);
     QString lyrics = lyricsRgx.cap(1);
     lyrics = lyrics.trimmed();
     lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
@@ -152,7 +153,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     reply->deleteLater();
 }
 
-QString LyricsDialog::format(QString string) {
+QString LyricsDialog::format(QString& string) {
     string.replace(QLatin1String("&"), QLatin1String("and"));
     return string;
 }
@@ -167,25 +168,24 @@ void LyricsDialog::update() {
 void LyricsDialog::prev() {
     PlayerInterface::self()->prev();
     lyricsBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, [this] { update(); });
+    QTimer::singleShot(1500, this, &LyricsDialog::update);
 }
 
 void LyricsDialog::next() {
     PlayerInterface::self()->next();
     lyricsBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, [this] { update(); });
+    QTimer::singleShot(1500, this, &LyricsDialog::update);
 }
 
 void LyricsDialog::search() {
     label->setText(tr("Searching"));
-    setWindowTitle(QString("%1 - %2").arg(artistLineEdit->text(),
-                                          titleLineEdit->text()));
+    setWindowTitle(QString(QStringLiteral("%1 - %2"))
+                   .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
-    request.setUrl(
-                QUrl(QLatin1String("http://lyrics.wikia.com/api.php"
-                                   "?action=lyrics&artist=")
-                     + artistLineEdit->text() + QLatin1String("&song=")
-                     + titleLineEdit->text() + QLatin1String("&fmt=xml")));
+    request.setUrl(QUrl(QStringLiteral("http://lyrics.wikia.com/api.php"
+                                       "?action=lyrics&artist=")
+                        + artistLineEdit->text() + QLatin1String("&song=")
+                        + titleLineEdit->text() + QLatin1String("&fmt=xml")));
     request.setRawHeader("User-Agent", "Mozilla/5.0");
     replyObject = httpObject->get(request);
 }
