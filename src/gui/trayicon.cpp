@@ -26,6 +26,7 @@
 #include <QFileDialog>
 #include <QPointer>
 #include <QCoreApplication>
+#include <QProcess>
 
 // core
 #include "playerinterface.h"
@@ -66,7 +67,7 @@ public:
         connect(this, &TagEditor::triggered, this, [=] {
             QString file = PlayerInterface::getTrack()->file;
             if(!PlayerInterface::getTrack()->isStream)
-                Process::execute(editorPath, QStringList() << file); });
+                QProcess::startDetached(editorPath, QStringList() << file); });
     }
 };
 

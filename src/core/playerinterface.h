@@ -26,7 +26,6 @@
 
 
 namespace Process {
-bool execute(const QString& program, const QStringList& options);
 QStringList detect(const QStringList& apps);
 }
 

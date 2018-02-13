@@ -23,11 +23,10 @@
 
 #include "cmusinterface.h"
 
-#define PLAYER_EXECUTABLE "cmus-remote"
 
 CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     cmus(new QProcess(this)),
-    cli(QStringLiteral(PLAYER_EXECUTABLE))
+    cli(QStringLiteral("cmus-remote"))
 {
     QProcess proc;
     proc.start(QStringLiteral("pidof"), QStringList{QStringLiteral("cmus")});
@@ -54,8 +53,8 @@ void CmusInterface::runPlayer() {
                     QStringLiteral("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    Process::execute(term, QStringList{QStringLiteral("-e"),
-                                       QStringLiteral("cmus")});
+    QProcess::startDetached(term, QStringList{QStringLiteral("-e"),
+                                              QStringLiteral("cmus")});
 }
 
 QString CmusInterface::find(const QString& string, const QString& regEx) {
@@ -112,7 +111,7 @@ QString CmusInterface::id() {
 
 #define SEND_COMMAND(__method, __option)\
     bool CmusInterface::__method() {\
-    return Process::execute(cli, QStringList{__option});\
+    return QProcess::startDetached(cli, QStringList{__option});\
     }
 
 SEND_COMMAND(play, QStringLiteral("-p"))
@@ -123,30 +122,33 @@ SEND_COMMAND(next, QStringLiteral("-n"))
 SEND_COMMAND(stop, QStringLiteral("-s"))
 
 bool CmusInterface::quit() {
-    return Process::execute(cli, QStringList{QStringLiteral("-C"),
-                                             QStringLiteral("quit")});
+    return QProcess::startDetached(cli, QStringList{QStringLiteral("-C"),
+                                                    QStringLiteral("quit")});
 }
 
 bool CmusInterface::jump(int pos) {
-    return Process::execute(cli, QStringList() << QStringLiteral("-k")
-                            << QString::number(pos));
+    return QProcess::startDetached(cli, QStringList() << QStringLiteral("-k")
+                                   << QString::number(pos));
 }
 
 bool CmusInterface::seek(int offset) {
     QString o = (offset > 0) ? QLatin1String("+") + QString::number(offset)
                              : QString::number(offset);
-    return Process::execute(cli, QStringList() << QStringLiteral("-k") << o);
+    return QProcess::startDetached(cli,
+                                   QStringList() << QStringLiteral("-k") << o);
 }
 
 bool CmusInterface::volume(int lev) {
-    return Process::execute(cli, QStringList() << QStringLiteral("-v")
-                            << QString::number(lev) + QLatin1String("%"));
+    return QProcess::startDetached(
+                cli, QStringList() << QStringLiteral("-v")
+                << QString::number(lev) + QLatin1String("%"));
 }
 
 bool CmusInterface::changeVolume(int delta) {
     QString d = ((delta > 0) ? QLatin1String("+") + QString::number(delta)
                              : QString::number(delta)) + QLatin1String("%");
-    return Process::execute(cli, QStringList() << QStringLiteral("-v") << d);
+    return QProcess::startDetached(
+                cli, QStringList() << QStringLiteral("-v") << d);
 }
 
 void CmusInterface::showPlayer() {
@@ -154,12 +156,13 @@ void CmusInterface::showPlayer() {
 }
 
 bool CmusInterface::openUri(const QString& file) {
-    return Process::execute(cli, QStringList() << QStringLiteral("-q") << file);
+    return QProcess::startDetached(
+                cli, QStringList() << QStringLiteral("-q") << file);
 }
 
 bool CmusInterface::appendFile(const QStringList& files) {
-    return Process::execute(cli,
-                            QStringList() << QStringLiteral("-q") << files);
+    return QProcess::startDetached(
+                cli, QStringList() << QStringLiteral("-q") << files);
 }
 
 void CmusInterface::timerEvent(QTimerEvent *event) {

@@ -24,15 +24,10 @@
 #include "playerinterface.h"
 
 
-bool Process::execute(const QString& program, const QStringList& options) {
-    QProcess proc;
-    return proc.startDetached(program, options);
-}
-
 QStringList Process::detect(const QStringList& apps) {
     QProcess proc;
     proc.start(QStringLiteral("which"), apps);
-    proc.waitForFinished(-1);
+    proc.waitForFinished();
     return QString::fromUtf8(proc.readAllStandardOutput())
             .split(QStringLiteral("\n"), QString::SkipEmptyParts);
 }

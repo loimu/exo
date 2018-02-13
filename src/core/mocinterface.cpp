@@ -28,6 +28,7 @@
 #define OSD_OPT "OnSongChange=" INSTALL_PREFIX "/bin/moc-osd"
 #define PLAYER_EXECUTABLE "mocp"
 
+
 MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     moc(new QProcess(this)),
     player(QStringLiteral(PLAYER_EXECUTABLE))
@@ -36,7 +37,9 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     proc.start(QStringLiteral("pidof"), QStringList{player});
     proc.waitForFinished();
     if(QString::fromUtf8(proc.readAllStandardOutput()).isEmpty())
-        runServer();
+        QProcess::startDetached(player,
+                                QStringList{QStringLiteral("-SO"),
+                                            QStringLiteral(OSD_OPT)});
     startTimer(1000);
     connect(moc, QOverload<int>::of(&QProcess::finished),
             this, &MocInterface::notify);
@@ -44,12 +47,6 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
 
 MocInterface::~MocInterface() {
     moc->close();
-}
-
-bool MocInterface::runServer() {
-    return Process::execute(
-                player,
-                QStringList{QStringLiteral("-SO"), QStringLiteral(OSD_OPT)});
 }
 
 PIState MocInterface::updateInfo() {
@@ -91,12 +88,12 @@ PIState MocInterface::updateInfo() {
 }
 
 QString MocInterface::id() {
-    return QLatin1String("music on console");
+    return QStringLiteral("music on console");
 }
 
 #define SEND_COMMAND(__method, __option)\
     bool MocInterface::__method() {\
-    return Process::execute(player, QStringList{__option});\
+    return QProcess::startDetached(player, QStringList{__option});\
     }
 
 SEND_COMMAND(play, QStringLiteral("-p"))
@@ -109,7 +106,7 @@ SEND_COMMAND(quit, QStringLiteral("-x"))
 
 #define SEND_COMMAND_PARAM(__method, __option)\
     bool MocInterface::__method(int param) {\
-    return Process::execute(player,\
+    return QProcess::startDetached(player,\
     QStringList() << QString(__option).arg(param));\
     }
 
@@ -129,19 +126,20 @@ void MocInterface::showPlayer() {
                     QStringLiteral("lxterminal")});
     if(!apps.isEmpty())
         term = apps.at(0);
-    Process::execute(term, QStringList{
-                         QStringLiteral("-e"),
-                         QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
+    QProcess::startDetached(
+                term,
+                QStringList{QStringLiteral("-e"),
+                            QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
 }
 
 bool MocInterface::openUri(const QString& file) {
-    return Process::execute(player,
-                            QStringList() << QStringLiteral("-l") << file);
+    return QProcess::startDetached(
+                player, QStringList() << QStringLiteral("-l") << file);
 }
 
 bool MocInterface::appendFile(const QStringList& files) {
-    return Process::execute(player,
-                            QStringList() << QStringLiteral("-a") << files);
+    return QProcess::startDetached(
+                player, QStringList() << QStringLiteral("-a") << files);
 }
 
 void MocInterface::timerEvent(QTimerEvent* event) {
