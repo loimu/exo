@@ -28,7 +28,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTimer>
 
 #include "playerinterface.h"
@@ -108,54 +108,54 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     if(replyObject == reply) {
         replyObject = nullptr;
         reply->deleteLater();
-        QRegExp songRgx(
-                    QStringLiteral("<artist>(.*)</artist>.*<song>(.*)</song>.*"
-                                   "<lyrics>(.*)</lyrics>.*<url>(.*)</url>"));
-        songRgx.setMinimal(true);
-        if(songRgx.indexIn(content) < 0) {
+        QRegularExpression re(
+                    QStringLiteral("<artist>(.*)</artist>.*<song>(.*)</song>"
+                                   ".*<lyrics>(.*)</lyrics>.*<url>(.*)</url>"),
+                    QRegularExpression::DotMatchesEverythingOption);
+        QRegularExpressionMatch match = re.match(content);
+        if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QLatin1String("<b>")
                                    + tr("Error")
                                    + QLatin1String("</b>"));
             return;
-        }
-        else if(songRgx.cap(3) == QStringLiteral("Not found")) {
+        } else if(match.captured(3) == QStringLiteral("Not found")) {
             lyricsBrowser->setHtml(QLatin1String("<b>")
                                    + tr("Not found")
                                    + QLatin1String("</b>"));
             return;
+        } else {
+            artistString = match.captured(1);
+            titleString = match.captured(2);
         }
-        else {
-            artistString = songRgx.cap(1);
-            titleString = songRgx.cap(2);
-        }
-        QString urlString = songRgx.cap(4).toLatin1();
+        QString urlString = match.captured(4).toLatin1();
         urlString.replace(
                     QLatin1String("http://lyrics.wikia.com/"),
                     QLatin1String("http://lyrics.wikia.com/index.php?title="));
         urlString.append(QLatin1String("&action=edit"));
         QNetworkRequest request;
         request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
-        request.setRawHeader("Referer", songRgx.cap(4).toLatin1());
+        request.setRawHeader("Referer", match.captured(4).toLatin1());
         label->setText(tr("Downloading"));
         httpObject->get(request);
         reply->deleteLater();
         return;
     }
-    QRegExp lyricsRgx(QStringLiteral("&lt;lyrics>(.*)&lt;/lyrics>"));
-    lyricsRgx.indexIn(content);
+    QRegularExpression re(QStringLiteral("&lt;lyrics>(.*)&lt;/lyrics>"),
+                          QRegularExpression::DotMatchesEverythingOption);
+    QRegularExpressionMatch match = re.match(content);
     QString text = QString(QStringLiteral("<h2>%1 - %2</h2>"))
             .arg(artistString, titleString);
-    QString lyrics = lyricsRgx.cap(1);
-    lyrics = lyrics.trimmed();
-    lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
-    text.append(lyrics);
+    if(match.hasMatch()) {
+        QString lyrics = match.captured(1).trimmed();
+        lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
+        text.append(lyrics);
+    }
     lyricsBrowser->setHtml(text);
     reply->deleteLater();
 }
 
-QString LyricsDialog::format(QString& string) {
-    string.replace(QLatin1String("&"), QLatin1String("and"));
-    return string;
+QString LyricsDialog::format(QString string) {
+    return string.replace(QLatin1String("&"), QLatin1String("and"));
 }
 
 void LyricsDialog::update() {

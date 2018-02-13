@@ -37,7 +37,7 @@ class LyricsDialog : public BaseDialog
     QNetworkAccessManager* httpObject;
     QNetworkReply* replyObject;
     QString artistString, titleString;
-    QString format(QString& string);
+    QString format(QString string);
     void showText(QNetworkReply* reply);
     void update();
     void prev();
