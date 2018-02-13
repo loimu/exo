@@ -84,9 +84,7 @@ void PlayerInterface::notify() {
 
 QString PlayerInterface::getCover() {
     if(!track.isStream) {
-        QString path = track.file;
-        path.replace(QRegExp(
-                         QStringLiteral("(.*)/(.*)")), QStringLiteral("\\1"));
+        QString path = track.file.section(QChar::fromLatin1('/'), 0, -2);
         QDir dir(path);
         dir.setNameFilters(QStringList{
                                QStringLiteral("*.png"),

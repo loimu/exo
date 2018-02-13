@@ -21,6 +21,7 @@
 
 #include <QStringList>
 #include <QProcess>
+#include <QRegularExpression>
 
 #include "mocinterface.h"
 
@@ -57,36 +58,34 @@ PIState MocInterface::updateInfo() {
         return PIState::Offline;
     if(info.startsWith(QLatin1String("STOP")))
         return PIState::Stop;
-    QRegExp infoRgx(QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                                   "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
-                                   "\\{cs\\}(.*)\\{T\\}(.*)\n"));
-    infoRgx.setMinimal(true);
-    infoRgx.indexIn(info);
+    QRegularExpression re(
+                QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                               "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
+                               "\\{cs\\}(.*)\\{T\\}(.*)\n"));
+    QRegularExpressionMatch match = re.match(info);
     PIState state = PIState::Offline;
-    if(infoRgx.cap(1) == QLatin1String("PLAY"))
+    if(match.captured(1) == QLatin1String("PLAY"))
         state = PIState::Play;
-    else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
+    else if(match.captured(1) == QLatin1String("PAUSE"))
         state = PIState::Pause;
-    track.artist = infoRgx.cap(2);
-    track.title = infoRgx.cap(3);
-    track.album = infoRgx.cap(4);
-    track.file = infoRgx.cap(5);
-    track.totalTime = infoRgx.cap(6);
-    track.totalSec = infoRgx.cap(7).toInt();
-    track.currSec = infoRgx.cap(8).toInt();
-    track.caption = infoRgx.cap(9);
+    track.artist = match.captured(2);
+    track.title = match.captured(3);
+    track.album = match.captured(4);
+    track.file = match.captured(5);
+    track.totalTime = match.captured(6);
+    track.totalSec = match.captured(7).toInt();
+    track.currSec = match.captured(8).toInt();
+    track.caption = match.captured(9);
     track.isStream = track.totalTime.isEmpty();
     if(track.caption.isEmpty())
         track.caption = track.file;
     if(track.isStream) {
         track.totalSec = 8*60;
-        QRegExp artistRgx(QStringLiteral("^(.*)\\s-\\s"));
-        artistRgx.setMinimal(true);
-        artistRgx.indexIn(track.caption);
-        track.artist = artistRgx.cap(1);
-        QRegExp titleRgx(QStringLiteral("\\s-\\s(.*)$"));
-        titleRgx.indexIn(track.caption);
-        track.title = titleRgx.cap(1);
+        QString dash = QStringLiteral(" - ");
+        if(track.caption.contains(dash)) {
+            track.artist = track.caption.section(dash, 0, 0);
+            track.title = track.caption.section(dash, 1, -1);
+        }
     }
     return state;
 }
