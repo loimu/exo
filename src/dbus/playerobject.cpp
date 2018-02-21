@@ -21,12 +21,12 @@
 #include <QDBusMessage>
 #include <QDBusConnection>
 
+#include "playerinterface.h"
 #include "playerobject.h"
 
 
 PlayerObject::PlayerObject(QObject* parent) : QDBusAbstractAdaptor(parent),
     player(PlayerInterface::self()),
-    track(PlayerInterface::getTrack()),
     trackID("/org/exo/MediaPlayer2/Track/0")
 {
     connect(player, &PlayerInterface::newStatus,
@@ -56,10 +56,11 @@ bool PlayerObject::canPlay() const {
 }
 
 bool PlayerObject::canSeek() const {
-    return !track->isStream;
+    return !(player->getTrack()->isStream);
 }
 
 QVariantMap PlayerObject::metadata() const {
+    PITrack* track = player->getTrack();
     QVariantMap map;
     map.insert(QStringLiteral("mpris:length"), track->totalSec * 1000000);
     map.insert(QStringLiteral("mpris:artUrl"), cover);
@@ -84,6 +85,7 @@ QString PlayerObject::playbackStatus() const {
 }
 
 qlonglong PlayerObject::position() const {
+    PITrack* track = player->getTrack();
     return track->isStream ? 0 : track->currSec * 1000000;
 }
 
@@ -105,8 +107,8 @@ void PlayerObject::trackChanged(const QString& coverString) {
     emitPropsChanged(PIState::Play);
 }
 
-void PlayerObject::emitPropsChanged(PIState st) {
-    status = st;
+void PlayerObject::emitPropsChanged(int state) {
+    status = state;
     QList<QByteArray> changedProps;
     if(props.value(QStringLiteral("CanSeek")) != canSeek())
         changedProps << QByteArray("CanSeek");

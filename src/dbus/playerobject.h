@@ -24,7 +24,8 @@
 #include <QDBusObjectPath>
 #include <QObject>
 
-#include "playerinterface.h"
+
+class PlayerInterface;
 
 class PlayerObject : public QDBusAbstractAdaptor
 {
@@ -42,14 +43,13 @@ class PlayerObject : public QDBusAbstractAdaptor
     Q_PROPERTY(double Volume READ volume WRITE setVolume)
 
     PlayerInterface* player;
-    const PITrack* track;
     QVariantMap props;
-    PIState status;
+    int status;
     QString cover;
     QDBusObjectPath trackID;
     void syncProperties();
     void trackChanged(const QString&);
-    void emitPropsChanged(PIState);
+    void emitPropsChanged(int state);
 
 public:
     explicit PlayerObject(QObject* parent = nullptr);
