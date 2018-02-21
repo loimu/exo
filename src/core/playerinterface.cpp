@@ -18,9 +18,32 @@
 * ======================================================================== */
 
 #include <QTimerEvent>
+#include <QProcess>
 #include <QDir>
 
 #include "playerinterface.h"
+
+
+QString Process::getOutput(const QString& program, const QStringList& options) {
+    QProcess proc;
+    proc.start(program, options);
+    proc.waitForFinished();
+    return QString::fromUtf8(proc.readAllStandardOutput());
+}
+
+bool Process::execute(const QString& program, const QStringList& options) {
+    QProcess proc;
+    return proc.startDetached(program, options);
+}
+
+QStringList Process::detect(const QStringList& apps) {
+    QProcess proc;
+    proc.start(QLatin1String("which"), apps);
+    proc.waitForFinished();
+    return QString::fromUtf8(proc.readAllStandardOutput())
+            .split(QLatin1String("\n"), QString::SkipEmptyParts);
+}
+
 
 PlayerInterface* PlayerInterface::object = nullptr;
 
@@ -31,9 +54,9 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
     object = this;
 }
 
-void PlayerInterface::timerEvent(QTimerEvent *event) {
+void PlayerInterface::notify() {
     track.caption.clear();
-    State currentState = getInfo();
+    State currentState = updateInfo();
     static State state = Offline;
     if(state != currentState) {
         state = currentState;

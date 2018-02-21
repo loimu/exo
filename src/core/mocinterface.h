@@ -22,10 +22,15 @@
 
 #include "playerinterface.h"
 
+class QProcess;
+
 class MocInterface : public PlayerInterface
 {
+    QProcess* moc;
     bool isServerRunning();
     bool runServer();
+    State updateInfo();
+    void timerEvent(QTimerEvent *event);
 
 public:
     explicit MocInterface(QObject *parent = nullptr);
@@ -47,9 +52,6 @@ public slots:
     void showPlayer();
     bool openUri(const QString&);
     bool appendFile(const QStringList&);
-
-protected slots:
-    State getInfo();
 };
 
 #endif // MOCINTERFACE_H

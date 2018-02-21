@@ -20,25 +20,63 @@
 #include "config.h"
 
 #include <QStringList>
-#include <QSettings>
+#include <QProcess>
 
-#include "core/process.h"
 #include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=" CMAKE_INSTALL_PREFIX "/share/exo/moc-osd.py"
 
-MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent)
+
+MocInterface::MocInterface(QObject *parent) : PlayerInterface(parent),
+    moc(new QProcess(this))
 {
     if(!isServerRunning())
         runServer();
     startTimer(1000);
+    connect(moc, SIGNAL(finished(int)), SLOT(notify()));
 }
 
-MocInterface::~MocInterface()
-{
-    QSettings settings;
-    if(settings.value(QLatin1String("player/quit")).toBool())
-        quit();
+MocInterface::~MocInterface() {
+    moc->close();
+}
+
+State MocInterface::updateInfo() {
+    QString info = moc->readAllStandardOutput();
+    if(info.isEmpty())
+        return State::Offline;
+    if(info.startsWith(QLatin1String("STOP")))
+        return State::Stop;
+    QRegExp infoRgx(
+                QLatin1String("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
+                              "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
+                              "\\{cs\\}(.*)\\{T\\}(.*)\n"));
+    infoRgx.setMinimal(true);
+    infoRgx.indexIn(info);
+    State state = State::Offline;
+    if(infoRgx.cap(1) == QLatin1String("PLAY"))
+        state = State::Play;
+    else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
+        state = State::Pause;
+    track.artist = infoRgx.cap(2);
+    track.title = infoRgx.cap(3);
+    track.album = infoRgx.cap(4);
+    track.file = infoRgx.cap(5);
+    track.totalTime = infoRgx.cap(6);
+    track.totalSec = infoRgx.cap(7).toInt();
+    track.currSec = infoRgx.cap(8).toInt();
+    track.caption = infoRgx.cap(9);
+    track.isStream = track.totalTime.isEmpty();
+    if(track.caption.isEmpty())
+        track.caption = track.file;
+    if(track.isStream) {
+        track.totalSec = 8*60;
+        QString dash = QLatin1String(" - ");
+        if(track.caption.contains(dash)) {
+            track.artist = track.caption.section(dash, 0, 0);
+            track.title = track.caption.section(dash, 1, -1);
+        }
+    }
+    return state;
 }
 
 QString MocInterface::id() {
@@ -107,48 +145,9 @@ bool MocInterface::appendFile(const QStringList& files) {
                             QStringList() << QLatin1String("-a") << files);
 }
 
-State MocInterface::getInfo() {
-    QString info = Process::getOutput(
-                QLatin1String("mocp"),
-                QStringList{
-                    QLatin1String("-Q"),
-                    QLatin1String("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
-                    "{cs}%cs{T}%title")});
-    if(info.isEmpty())
-        return Offline;
-    if(info.startsWith(QLatin1String("STOP")))
-        return Stop;
-    QRegExp infoRgx(
-                QLatin1String("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
-                              "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
-                              "\\{cs\\}(.*)\\{T\\}(.*)\n"));
-    infoRgx.setMinimal(true);
-    infoRgx.indexIn(info);
-    State state = Offline;
-    if(infoRgx.cap(1) == QLatin1String("PLAY"))
-        state = Play;
-    else if(infoRgx.cap(1) == QLatin1String("PAUSE"))
-        state = Pause;
-    track.artist = infoRgx.cap(2);
-    track.title = infoRgx.cap(3);
-    track.album = infoRgx.cap(4);
-    track.file = infoRgx.cap(5);
-    track.totalTime = infoRgx.cap(6);
-    track.totalSec = infoRgx.cap(7).toInt();
-    track.currSec = infoRgx.cap(8).toInt();
-    track.caption = infoRgx.cap(9);
-    track.isStream = !track.file.startsWith(QLatin1Char('/'));
-    if(track.caption.isEmpty())
-        track.caption = track.file;
-    if(track.isStream) {
-        track.totalSec = 8*60;
-        QRegExp artistRgx(QLatin1String("^(.*)\\s-\\s"));
-        artistRgx.setMinimal(true);
-        artistRgx.indexIn(track.caption);
-        track.artist = artistRgx.cap(1);
-        QRegExp titleRgx(QLatin1String("\\s-\\s(.*)$"));
-        titleRgx.indexIn(track.caption);
-        track.title = titleRgx.cap(1);
-    }
-    return state;
+void MocInterface::timerEvent(QTimerEvent* event) {
+    moc->start(QLatin1String("mocp"), QStringList{
+                   QLatin1String("-Q"),
+                   QLatin1String("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
+                   "{cs}%cs{T}%title")});
 }

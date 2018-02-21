@@ -24,6 +24,13 @@
 
 #include <QObject>
 
+namespace Process {
+QString getOutput(const QString& process, const QStringList& parameters);
+bool execute(const QString& process, const QStringList& parameters);
+QStringList detect(const QStringList& apps);
+}
+
+
 enum State { Offline, Stop, Play, Pause };
 
 struct Track {
@@ -41,7 +48,7 @@ class PlayerInterface : public QObject
 
 protected:
     Track track;
-    void timerEvent(QTimerEvent *event);
+    virtual State updateInfo() = 0;
 
 public:
     explicit PlayerInterface(QObject *parent = nullptr);
@@ -80,7 +87,7 @@ public slots:
     virtual bool appendFile(const QStringList& files) = 0;
 
 protected slots:
-    virtual State getInfo() = 0;
+    void notify();
 };
 
 #endif // PLAYERINTERFACE_H

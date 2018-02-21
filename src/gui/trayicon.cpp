@@ -30,7 +30,6 @@
 #include "bookmarks/bookmark.h"
 #include "bookmarks/bookmarkmanager.h"
 #include "core/playerinterface.h"
-#include "core/process.h"
 #include "gui/lyricsdialog.h"
 #include "gui/aboutdialog.h"
 #include "gui/tageditor.h"

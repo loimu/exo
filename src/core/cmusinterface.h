@@ -22,12 +22,17 @@
 
 #include "playerinterface.h"
 
+class QProcess;
+
 class CmusInterface : public PlayerInterface
 {
+    QProcess* cmus;
     QString cli;
     bool isPlayerRunning();
     void runPlayer();
     QString find(const QString&, const QString&);
+    State updateInfo();
+    void timerEvent(QTimerEvent *event);
 
 public:
     explicit CmusInterface(QObject *parent = nullptr);
@@ -49,9 +54,6 @@ public slots:
     void showPlayer();
     bool openUri(const QString&);
     bool appendFile(const QStringList&);
-
-protected slots:
-    State getInfo();
 };
 
 #endif // CMUSINTERFACE_H

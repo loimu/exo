@@ -18,7 +18,6 @@
 * ======================================================================== */
 
 #include "core/playerinterface.h"
-#include "core/process.h"
 #include "tageditor.h"
 
 TagEditor::TagEditor(const QString &text, QObject *parent) : QAction(text, parent)
