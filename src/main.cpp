@@ -70,49 +70,86 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName(QLatin1String("eXo"));
     QCoreApplication::setApplicationVersion(QLatin1String(EXO_VERSION));
     QNetworkProxyFactory::setUseSystemConfiguration(true);
-    QApplication app(argc, argv, useGui);
-    app.setQuitOnLastWindowClosed(false);
+    SingleInstance instance;
+    int result = 0;
 
-    SingleInstance inst;
-    if(!inst.isUnique()) {
-        qWarning("Application is already running");
-        if(useGui)
+    if(useGui) {
+        /* graphical application */
+        QApplication app(argc, argv);
+        app.setQuitOnLastWindowClosed(false);
+        if(!instance.isUnique()) {
             QMessageBox::critical(
                         nullptr, app.applicationName(),
                         QObject::tr("Application is already running"));
-        return 1;
-    }
-
-    if(forceReauth) {
-#ifdef BUILD_LASTFM
-        new ConsoleAuth(&app);
-        return app.exec();
-#else
-        qWarning("Scrobbler has been disabled with a build flag");
-        return 1;
-#endif // BUILD_LASTFM
-    }
+            return 1;
+        }
 
 #ifdef USE_CMUS
-    CmusInterface cmusInterface(&app);
+        CmusInterface player(&app);
 #else // USE_CMUS
-    MocInterface mocInterface(&app);
+        MocInterface player(&app);
 #endif // USE_CMUS
 
 #ifdef BUILD_DBUS
-    if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
         new DBus(&app);
 #endif // BUILD_DBUS
 
+        QSettings settings;
+
 #ifdef BUILD_LASTFM
-    QSettings settings;
-    if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
-        new Scrobbler(&app);
+        if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
+            new Scrobbler(&app);
 #endif // BUILD_LASTFM
 
-    if(!useGui || !QSystemTrayIcon::isSystemTrayAvailable())
-        return app.exec();
-    Q_INIT_RESOURCE(exo);
-    TrayIcon trayIcon;
-    return app.exec();
+        if(!QSystemTrayIcon::isSystemTrayAvailable())
+            qWarning("System tray is not available. Running with no tray");
+        Q_INIT_RESOURCE(exo);
+        TrayIcon trayIcon;
+
+        result = app.exec();
+        if(settings.value(QLatin1String("player/quit")).toBool())
+            player.quit();
+        /* end of graphical application */
+    } else {
+        /* console application */
+        QCoreApplication app(argc, argv);
+        if(!instance.isUnique()) {
+            qWarning("Application is already running");
+            return 1;
+        }
+
+        if(forceReauth) {
+#ifdef BUILD_LASTFM
+            new ConsoleAuth(&app);
+            return app.exec();
+#else
+            qWarning("Scrobbler has been disabled during the build time");
+            return 1;
+#endif // BUILD_LASTFM
+        }
+
+#ifdef USE_CMUS
+        CmusInterface player(&app);
+#else // USE_CMUS
+        MocInterface player(&app);
+#endif // USE_CMUS
+
+#ifdef BUILD_DBUS
+        if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
+            new DBus(&app);
+#endif // BUILD_DBUS
+
+        QSettings settings;
+
+#ifdef BUILD_LASTFM
+        if(settings.value(QLatin1String("scrobbler/enabled")).toBool())
+            new Scrobbler(&app);
+#endif // BUILD_LASTFM
+
+        result = app.exec();
+        if(settings.value(QLatin1String("player/quit")).toBool())
+            player.quit();
+        /* end of console application */
+    }
+    return result;
 }
