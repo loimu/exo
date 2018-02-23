@@ -25,12 +25,11 @@
 
 #include "singleinstance.h"
 
-SingleInstance::SingleInstance() : success(true)
+
+SingleInstance::SingleInstance()
+    : lockFile(new QFile(QDir::tempPath() + QLatin1Char('/')
+                         + qApp->applicationName() + QLatin1String(".lock")))
 {
-    lockFile = new QFile(QDir::tempPath()
-                         + QLatin1Char('/')
-                         + qApp->applicationName()
-                         + QLatin1String(".lock"));
     lockFile->open(QIODevice::ReadWrite);
     if(flock(lockFile->handle(), LOCK_EX | LOCK_NB) == -1)
         success = false;
@@ -39,9 +38,4 @@ SingleInstance::SingleInstance() : success(true)
 SingleInstance::~SingleInstance() {
     flock(lockFile->handle(), LOCK_UN);
     lockFile->close();
-    delete lockFile;
-}
-
-bool SingleInstance::isUnique() {
-    return success;
 }

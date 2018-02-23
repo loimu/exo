@@ -20,17 +20,29 @@
 #ifndef SINGLEINSTANCE_H
 #define SINGLEINSTANCE_H
 
+#include <memory>
+
+
 class QFile;
 
-/* Minimalistic single instance protection for Linux */
+/**
+ * @brief The SingleInstance class
+ * Minimalistic single instance protection for Linux
+ */
 class SingleInstance
 {
-    QFile* lockFile;
-    bool success;
+    std::unique_ptr<QFile> lockFile;
+    bool success = true;
+
 public:
     SingleInstance();
     ~SingleInstance();
-    bool isUnique(); // returns 'true' if no other instances are running
+
+    /**
+     * @brief isUnique
+     * @return returns 'true' if no other instances are running
+     */
+    bool isUnique() { return success; }
 };
 
 #endif // SINGLEINSTANCE_H
