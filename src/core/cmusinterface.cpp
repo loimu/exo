@@ -104,13 +104,13 @@ PIState CmusInterface::updateInfo() {
     return state;
 }
 
-QString CmusInterface::id() {
+QString CmusInterface::id() const {
     return QStringLiteral("Cmus");
 }
 
 #define SEND_COMMAND(__method, __option)\
-    bool CmusInterface::__method() {\
-    return QProcess::startDetached(cli, QStringList{__option});\
+    void CmusInterface::__method() {\
+    QProcess::startDetached(cli, QStringList{__option});\
     }
 
 SEND_COMMAND(play, QStringLiteral("-p"))
@@ -120,50 +120,47 @@ SEND_COMMAND(prev, QStringLiteral("-r"))
 SEND_COMMAND(next, QStringLiteral("-n"))
 SEND_COMMAND(stop, QStringLiteral("-s"))
 
-bool CmusInterface::quit() {
-    return QProcess::startDetached(cli, QStringList{QStringLiteral("-C"),
-                                                    QStringLiteral("quit")});
+void CmusInterface::quit() {
+    QProcess::startDetached(cli, QStringList{QStringLiteral("-C"),
+                                             QStringLiteral("quit")});
 }
 
-bool CmusInterface::jump(int pos) {
-    return QProcess::startDetached(cli, QStringList() << QStringLiteral("-k")
-                                   << QString::number(pos));
+void CmusInterface::jump(int pos) {
+    QProcess::startDetached(cli, QStringList() << QStringLiteral("-k")
+                            << QString::number(pos));
 }
 
-bool CmusInterface::seek(int offset) {
+void CmusInterface::seek(int offset) {
     QString o = (offset > 0) ? QLatin1String("+") + QString::number(offset)
                              : QString::number(offset);
-    return QProcess::startDetached(cli,
-                                   QStringList() << QStringLiteral("-k") << o);
+    QProcess::startDetached(cli, QStringList() << QStringLiteral("-k") << o);
 }
 
-bool CmusInterface::volume(int lev) {
-    return QProcess::startDetached(
-                cli, QStringList() << QStringLiteral("-v")
-                << QString::number(lev) + QLatin1String("%"));
+void CmusInterface::volume(int lev) {
+    QProcess::startDetached(cli, QStringList() << QStringLiteral("-v")
+                            << QString::number(lev) + QLatin1String("%"));
 }
 
-bool CmusInterface::changeVolume(int delta) {
+void CmusInterface::changeVolume(int delta) {
     QString d = ((delta > 0) ? QLatin1String("+") + QString::number(delta)
                              : QString::number(delta)) + QLatin1String("%");
-    return QProcess::startDetached(
-                cli, QStringList() << QStringLiteral("-v") << d);
+    QProcess::startDetached(cli, QStringList() << QStringLiteral("-v") << d);
 }
 
 void CmusInterface::showPlayer() {
     runPlayer();
 }
 
-bool CmusInterface::openUri(const QString& file) {
+void CmusInterface::openUri(const QString& file) {
     QProcess::startDetached(cli, QStringList() << QStringLiteral("-q")
                             << QStringLiteral("-c")); // clear queue
     QProcess::startDetached(cli, QStringList() << QStringLiteral("-q")
                             << file); // append file to queue
-    return QProcess::startDetached(cli, QStringList() << QStringLiteral("-n"));
+    QProcess::startDetached(cli, QStringList() << QStringLiteral("-n"));
 }
 
-bool CmusInterface::appendFile(const QStringList& files) {
-    return QProcess::startDetached(
+void CmusInterface::appendFile(const QStringList& files) {
+    QProcess::startDetached(
                 cli, QStringList() << QStringLiteral("-q") << files);
 }
 

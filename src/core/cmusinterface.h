@@ -36,21 +36,21 @@ class CmusInterface : public PlayerInterface
 public:
     explicit CmusInterface(QObject* parent = nullptr);
     ~CmusInterface();
-    QString id();
-    bool play();
-    bool pause();
-    bool playPause();
-    bool prev();
-    bool next();
-    bool stop();
-    bool quit();
-    bool jump(int);
-    bool seek(int);
-    bool volume(int);
-    bool changeVolume(int);
+    QString id() const;
+    void play();
+    void pause();
+    void playPause();
+    void prev();
+    void next();
+    void stop();
+    void quit();
+    void jump(int);
+    void seek(int);
+    void volume(int);
+    void changeVolume(int);
     void showPlayer();
-    bool openUri(const QString&);
-    bool appendFile(const QStringList&);
+    void openUri(const QString&);
+    void appendFile(const QStringList&);
 };
 
 #endif // CMUSINTERFACE_H

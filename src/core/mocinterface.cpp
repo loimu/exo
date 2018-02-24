@@ -87,13 +87,13 @@ PIState MocInterface::updateInfo() {
     return state;
 }
 
-QString MocInterface::id() {
+QString MocInterface::id() const {
     return QStringLiteral("music on console");
 }
 
 #define SEND_COMMAND(__method, __option)\
-    bool MocInterface::__method() {\
-    return QProcess::startDetached(player, QStringList{__option});\
+    void MocInterface::__method() {\
+    QProcess::startDetached(player, QStringList{__option});\
     }
 
 SEND_COMMAND(play, QStringLiteral("-p"))
@@ -105,8 +105,8 @@ SEND_COMMAND(stop, QStringLiteral("-s"))
 SEND_COMMAND(quit, QStringLiteral("-x"))
 
 #define SEND_COMMAND_PARAM(__method, __option)\
-    bool MocInterface::__method(int param) {\
-    return QProcess::startDetached(player,\
+    void MocInterface::__method(int param) {\
+    QProcess::startDetached(player,\
     QStringList() << QString(__option).arg(param));\
     }
 
@@ -132,14 +132,14 @@ void MocInterface::showPlayer() {
                             QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
 }
 
-bool MocInterface::openUri(const QString& file) {
-    return QProcess::startDetached(
-                player, QStringList() << QStringLiteral("-l") << file);
+void MocInterface::openUri(const QString& file) {
+    QProcess::startDetached(player,
+                            QStringList() << QStringLiteral("-l") << file);
 }
 
-bool MocInterface::appendFile(const QStringList& files) {
-    return QProcess::startDetached(
-                player, QStringList() << QStringLiteral("-a") << files);
+void MocInterface::appendFile(const QStringList& files) {
+    QProcess::startDetached(player,
+                            QStringList() << QStringLiteral("-a") << files);
 }
 
 void MocInterface::timerEvent(QTimerEvent* event) {

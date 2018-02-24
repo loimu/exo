@@ -46,21 +46,21 @@ public:
     explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
     static Track* getTrack() { return ptrack; }
-    virtual QString id() = 0;
-    virtual bool play() = 0;
-    virtual bool pause() = 0;
-    virtual bool playPause() = 0;
-    virtual bool prev() = 0;
-    virtual bool next() = 0;
-    virtual bool stop() = 0;
-    virtual bool quit() = 0;
-    virtual bool jump(int position) = 0;
-    virtual bool seek(int offset) = 0;
-    virtual bool volume(int level) = 0;
-    virtual bool changeVolume(int delta) = 0;
+    virtual QString id() const = 0;
+    virtual void play() = 0;
+    virtual void pause() = 0;
+    virtual void playPause() = 0;
+    virtual void prev() = 0;
+    virtual void next() = 0;
+    virtual void stop() = 0;
+    virtual void quit() = 0;
+    virtual void jump(int position) = 0;
+    virtual void seek(int offset) = 0;
+    virtual void volume(int level) = 0;
+    virtual void changeVolume(int delta) = 0;
     virtual void showPlayer() = 0;
-    virtual bool openUri(const QString& uri) = 0;
-    virtual bool appendFile(const QStringList& files) = 0;
+    virtual void openUri(const QString& uri) = 0;
+    virtual void appendFile(const QStringList& files) = 0;
 
 protected:
     Track track;
