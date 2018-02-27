@@ -71,7 +71,7 @@ void PlayerInterface::notify() {
                     || (track.currSec < 4*60 && track.totalSec > 8*60))) {
         listened = false; // beginning
         threshold = QTime::currentTime()
-                .addSecs(track.totalSec > 60 ? 30 : track.totalSec/2);
+                .addSecs(track.totalSec > 2*60 ? 60 : track.totalSec/2);
     }
     else if(!listened && (track.currSec > track.totalSec/2
                           || (track.currSec > 4*60 && track.totalSec > 8*60))) {
