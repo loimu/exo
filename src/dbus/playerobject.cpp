@@ -60,7 +60,7 @@ bool PlayerObject::canSeek() const {
 }
 
 QVariantMap PlayerObject::metadata() const {
-    PITrack* track = player->getTrack();
+    PTrack* track = player->getTrack();
     QVariantMap map;
     map.insert(QStringLiteral("mpris:length"), track->totalSec * 1000000);
     map.insert(QStringLiteral("mpris:artUrl"), cover);
@@ -77,15 +77,15 @@ QVariantMap PlayerObject::metadata() const {
 }
 
 QString PlayerObject::playbackStatus() const {
-    if(status == PIState::Play)
+    if(status == PState::Play)
         return QStringLiteral("Playing");
-    else if(status == PIState::Pause)
+    else if(status == PState::Pause)
         return QStringLiteral("Paused");
     return QStringLiteral("Stopped");
 }
 
 qlonglong PlayerObject::position() const {
-    PITrack* track = player->getTrack();
+    PTrack* track = player->getTrack();
     return track->isStream ? 0 : track->currSec * 1000000;
 }
 
@@ -104,7 +104,7 @@ void PlayerObject::trackChanged(const QString& coverString) {
     trackID = QDBusObjectPath(
                 QString(QStringLiteral("/org/exo/MediaPlayer2/Track/%1"))
                 .arg(qrand()));
-    emitPropsChanged(PIState::Play);
+    emitPropsChanged(PState::Play);
 }
 
 void PlayerObject::emitPropsChanged(int state) {

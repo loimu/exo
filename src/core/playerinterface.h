@@ -29,23 +29,35 @@ namespace Process {
 QStringList detect(const QStringList& apps);
 }
 
+namespace Player {
+enum State { Offline, Stop, Play, Pause };
+struct Track {
+    bool isStream;
+    int totalSec, currSec;
+    QString artist, title, album, file, totalTime, caption;
+};
+}
+using PState = Player::State;
+using PTrack = Player::Track;
+
 
 class PlayerInterface : public QObject
 {
     Q_OBJECT
 
+    static PlayerInterface* object;
+    static PTrack* ptrack;
+    QString getCover();
+
+protected:
+    PTrack track;
+    void notify();
+    virtual PState updateInfo() = 0;
+
 public:
-    enum State { Offline, Stop, Play, Pause };
-
-    struct Track {
-        bool isStream;
-        int totalSec, currSec;
-        QString artist, title, album, file, totalTime, caption;
-    };
-
     explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
-    static Track* getTrack() { return ptrack; }
+    static PTrack* getTrack() { return ptrack; }
     virtual QString id() const = 0;
     virtual void play() = 0;
     virtual void pause() = 0;
@@ -62,26 +74,13 @@ public:
     virtual void openUri(const QString& uri) = 0;
     virtual void appendFile(const QStringList& files) = 0;
 
-protected:
-    Track track;
-    void notify();
-    virtual State updateInfo() = 0;
-
-private:
-    static PlayerInterface* object;
-    static Track* ptrack;
-    QString getCover();
-
 signals:
-    void newStatus(PlayerInterface::State);
+    void newStatus(PState);
     void newTrack(const QString&);
 #ifdef BUILD_LASTFM
     void trackListened(const QString&, const QString&, const QString&, int);
     void trackChanged(const QString&, const QString&, int);
 #endif // BUILD_LASTFM
 };
-
-using PIState = PlayerInterface::State;
-using PITrack = PlayerInterface::Track;
 
 #endif // PLAYERINTERFACE_H

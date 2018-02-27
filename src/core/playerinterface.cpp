@@ -35,7 +35,7 @@ QStringList Process::detect(const QStringList& apps) {
 
 
 PlayerInterface* PlayerInterface::object = nullptr;
-PITrack* PlayerInterface::ptrack = nullptr;
+PTrack* PlayerInterface::ptrack = nullptr;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 {
@@ -47,8 +47,8 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
 
 void PlayerInterface::notify() {
     track.caption.clear();
-    static State state = Offline;
-    State currentState = updateInfo();
+    static PState state = PState::Offline;
+    PState currentState = updateInfo();
     if(state != currentState) {
         state = currentState;
         emit newStatus(currentState);
@@ -59,12 +59,12 @@ void PlayerInterface::notify() {
         if(track.caption.isEmpty()) return;
         emit newTrack(getCover());
 #ifdef BUILD_LASTFM
-        if(currentState == Play && !track.artist.isEmpty())
+        if(currentState == PState::Play && !track.artist.isEmpty())
             emit trackChanged(track.artist, track.title, track.totalSec);
 #endif // BUILD_LASTFM
     }
 #ifdef BUILD_LASTFM
-    if(currentState != Play || track.isStream) return;
+    if(currentState != PState::Play || track.isStream) return;
     static bool listened = true;
     static QTime threshold;
     if(listened && ((track.currSec < track.totalSec/2 && track.totalSec <= 8*60)

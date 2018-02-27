@@ -64,18 +64,18 @@ QString CmusInterface::find(const QString& string, const QString& regexp) {
     return match.hasMatch() ? match.captured(1) : QString();
 }
 
-PIState CmusInterface::updateInfo() {
+PState CmusInterface::updateInfo() {
     QString info = cmus->readAllStandardOutput();
     if(info.isEmpty())
-        return PIState::Offline;
+        return PState::Offline;
     QString string = find(info, QStringLiteral("status\\s(.*)"));
     if(string == QLatin1String("stopped"))
-        return PIState::Stop;
-    PIState state = PIState::Offline;
+        return PState::Stop;
+    PState state = PState::Offline;
     if(string == QLatin1String("playing"))
-        state = PIState::Play;
+        state = PState::Play;
     if(string == QLatin1String("paused"))
-        state = PIState::Pause;
+        state = PState::Pause;
     track.artist = find(info, QStringLiteral("tag\\sartist\\s(.*)"));
     track.title = find(info, QStringLiteral("tag\\stitle\\s(.*)"));
     track.album = find(info, QStringLiteral("tag\\salbum\\s(.*)"));

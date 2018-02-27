@@ -231,17 +231,17 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
 }
 
 void TrayIcon::updateStatus(int state) {
-    if(state < PIState::Play) {
+    if(state < PState::Play) {
         QString tooltip;
-        if(state == PIState::Offline) tooltip = tr("Player isn't running");
-        else if(state == PIState::Stop) tooltip = tr("<b>Stopped</b>");
+        if(state == PState::Offline) tooltip = tr("Player isn't running");
+        else if(state == PState::Stop) tooltip = tr("<b>Stopped</b>");
         trayIcon->setToolTip(tooltip);
     }
 }
 
 void TrayIcon::updateTrack(const QString& cover) {
     QString tooltip;
-    PITrack* track = PlayerInterface::getTrack();
+    PTrack* track = PlayerInterface::getTrack();
     if(track->isStream) {
         tooltip = QString(QStringLiteral("<b>%1</b>")).arg(track->caption);
     } else {

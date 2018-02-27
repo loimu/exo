@@ -49,22 +49,22 @@ MocInterface::~MocInterface() {
     moc->close();
 }
 
-PIState MocInterface::updateInfo() {
+PState MocInterface::updateInfo() {
     QString info = moc->readAllStandardOutput();
     if(info.isEmpty())
-        return PIState::Offline;
+        return PState::Offline;
     if(info.startsWith(QLatin1String("STOP")))
-        return PIState::Stop;
+        return PState::Stop;
     QRegularExpression re(
                 QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
                                "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
                                "\\{cs\\}(.*)\\{T\\}(.*)\n"));
     QRegularExpressionMatch match = re.match(info);
-    PIState state = PIState::Offline;
+    PState state = PState::Offline;
     if(match.captured(1) == QLatin1String("PLAY"))
-        state = PIState::Play;
+        state = PState::Play;
     else if(match.captured(1) == QLatin1String("PAUSE"))
-        state = PIState::Pause;
+        state = PState::Pause;
     track.artist = match.captured(2);
     track.title = match.captured(3);
     track.album = match.captured(4);
