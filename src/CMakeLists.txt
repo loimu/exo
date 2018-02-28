@@ -4,7 +4,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
 
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt5 5.6.1 REQUIRED COMPONENTS Core Network Widgets Xml Test)
+find_package(Qt5 5.9.1 REQUIRED COMPONENTS Core Network Widgets Xml Test)
 set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
 
 set(exo_SRCS main.cpp
