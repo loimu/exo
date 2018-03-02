@@ -1,5 +1,43 @@
  v0.8.0
-  - clean port to Qt5 and C++11
-  - popup menu added to Bookmark Manager
-  - blocking calls to player replaced with async code
-  - lots of minor fixes and improvements
+  - clean port to Qt5 and C++11, Qt4 dropped
+  - popup menu for bookmark manager
+  - blocking calls replaced with async code
+  - do not scrobble fast forwarded files
+  - updated CMus support
+  - minor fixes and improvements
+
+ v0.7.0
+  - fix: MOC player window was not showing up with the latest Konsole version
+  - possibility to move items in the bookmark manager
+  - single instance protection
+  - Qt5 build by default
+  - updated CMus support
+  - various fixes and improvements
+
+ v0.6.0
+  - audioscrobbler auth with CLI
+  - detection of installed tag editors (Picard, EasyTag etc.)
+  - bookmark dialog improved and simplified
+
+ v0.5.0
+  - bookmark manager
+  - fix: running on TTY
+
+ v0.4.0
+  - experimental CMus support
+  - DBus and MPRISv2 improvements
+  - various fixes
+
+ v0.3.0
+  - fixes for sni-qt
+  - DBus and MPRISv2 support
+  - improved UI
+
+ v0.2.0
+  - background mode
+  - system http proxy support
+  - Qt5 build support
+  - new artwork
+
+ v0.1.0
+ Initial release
