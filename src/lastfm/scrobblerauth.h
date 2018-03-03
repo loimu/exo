@@ -35,7 +35,6 @@ class ScrobblerAuth : public QObject
     lastfm::XmlQuery EmptyXmlQuery();
     bool parseQuery(const QByteArray& data, lastfm::XmlQuery* query,
                     bool* connectionProblems = nullptr);
-    void authReplyFinished();
 
 public:
     explicit ScrobblerAuth(QObject* parent = nullptr);

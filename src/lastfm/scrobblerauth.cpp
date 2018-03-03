@@ -39,45 +39,36 @@ void ScrobblerAuth::auth(const QString& username, const QString& password) {
         return;
     }
     QMap<QString, QString> params;
-    params["method"] = "auth.getMobileSession";
+    params["method"] = QStringLiteral("auth.getMobileSession");
     params["username"] = username;
     params["authToken"] =
-            lastfm::md5((username +lastfm::md5(password.toUtf8())).toUtf8());
+            lastfm::md5((username + lastfm::md5(password.toUtf8())).toUtf8());
     QNetworkReply* reply = lastfm::ws::post(params);
-    connect(reply, &QNetworkReply::finished,
-            this, &ScrobblerAuth::authReplyFinished);
-    // for more detailed error report handle error(NetworkError) signal
-}
-
-void ScrobblerAuth::authReplyFinished() {
-    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
-    if(!reply) {
-        emit failed(tr("network error, try again"));
-        return;
-    }
-    reply->deleteLater();
-    // Parse the reply
-    lastfm::XmlQuery lfm = lastfm::XmlQuery();
-    if (parseQuery(reply->readAll(), &lfm)) {
-        lastfm::ws::Username = lfm["session"]["name"].text();
-        lastfm::ws::SessionKey = lfm["session"]["key"].text();
-        // Save the session key
-        QSettings settings;
-        settings.setValue(QStringLiteral("scrobbler/login"),
-                          lastfm::ws::Username);
-        settings.setValue(QStringLiteral("scrobbler/sessionkey"),
-                          lastfm::ws::SessionKey);
-        settings.setValue(QStringLiteral("scrobbler/enabled"), true);
-        emit configured();
-    } else
-        emit failed(tr("wrong data, try again"));
+    connect(reply, &QNetworkReply::finished, this, [=] {
+            if(!reply) {
+                emit failed(tr("network error, try again"));
+                return;
+            }
+            reply->deleteLater();
+            lastfm::XmlQuery lfm = lastfm::XmlQuery();
+            if(parseQuery(reply->readAll(), &lfm)) {
+                /* save the session key and username */
+                QSettings settings;
+                settings.setValue(QStringLiteral("scrobbler/login"),
+                                  lfm["session"]["name"].text());
+                settings.setValue(QStringLiteral("scrobbler/sessionkey"),
+                                  lfm["session"]["key"].text());
+                settings.setValue(QStringLiteral("scrobbler/enabled"), true);
+                emit configured();
+            } else emit failed(tr("wrong data, try again"));
+    }); // for more detailed error report handle error(NetworkError) signal
 }
 
 bool ScrobblerAuth::parseQuery(const QByteArray& data, lastfm::XmlQuery* query,
-                                   bool* connectionProblems) {
+                               bool* connectionProblems) {
     const bool dataParsed = query->parse(data);
     if(connectionProblems)
-        *connectionProblems = !dataParsed && query->parseError().enumValue() ==
-                lastfm::ws::MalformedResponse;
+        *connectionProblems = !dataParsed
+            && query->parseError().enumValue() == lastfm::ws::MalformedResponse;
     return dataParsed;
 }
