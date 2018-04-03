@@ -145,7 +145,7 @@ void TrayIcon::createActions() {
 
 void TrayIcon::createTrayIcon() {
     // creating menu and adding actions
-    QMenu* trayIconMenu = new QMenu(this);
+    auto trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
@@ -156,11 +156,11 @@ void TrayIcon::createTrayIcon() {
                     QStringLiteral("easytag"),
                     QStringLiteral("puddletag")}); // detects tag editors
     if(!editors.isEmpty()) {
-        QMenu* tagEditorsMenu = new QMenu(trayIconMenu);
+        auto tagEditorsMenu = new QMenu(trayIconMenu);
         tagEditorsMenu->setTitle(tr("&Edit with"));
         trayIconMenu->addAction(tagEditorsMenu->menuAction());
         for(const QString& entry : editors) {
-            TagEditor* newEditor = new TagEditor(entry, this);
+            auto newEditor = new TagEditor(entry, this);
             tagEditorsMenu->addAction(newEditor);
         }
     }
@@ -178,7 +178,7 @@ void TrayIcon::createTrayIcon() {
     refreshBookmarks(BookmarkManager::getList());
     // end of Bookmarks submenu
     // Settings submenu
-    QMenu* settingsMenu = new QMenu(trayIconMenu);
+    auto settingsMenu = new QMenu(trayIconMenu);
     settingsMenu->setTitle(tr("Se&ttings"));
     trayIconMenu->addAction(settingsMenu->menuAction());
     settingsMenu->addAction(setQuitBehaviourAction);
@@ -259,13 +259,13 @@ void TrayIcon::updateTrack(const QString& cover) {
 }
 
 void TrayIcon::showLyricsWindow() {
-    LyricsDialog* lyricsDialog = new LyricsDialog(this);
+    auto lyricsDialog = new LyricsDialog(this);
     lyricsDialog->show();
 }
 
 void TrayIcon::showAboutDialog() {
     aboutAction->setEnabled(false);
-    AboutDialog* about = new AboutDialog(this);
+    auto about = new AboutDialog(this);
     about->show();
     connect(about, &AboutDialog::destroyed, aboutAction, &QAction::setEnabled);
 }
@@ -291,7 +291,7 @@ void TrayIcon::addCurrent() {
 
 void TrayIcon::showManager() {
     bookmarkManagerAction->setEnabled(false);
-    BookmarkManager* bm = new BookmarkManager(this);
+    auto bm = new BookmarkManager(this);
     bm->show();
     connect(bm, &BookmarkManager::destroyed,
             bookmarkManagerAction, &QAction::setEnabled);
@@ -305,7 +305,7 @@ void TrayIcon::refreshBookmarks(const BookmarkList& list) {
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
     for(const BookmarkEntry& entry : list) {
-        Bookmark* bookmark = new Bookmark(entry.name, entry.uri, this);
+        auto bookmark = new Bookmark(entry.name, entry.uri, this);
         bookmarksMenu->addAction(bookmark);
     }
 }
@@ -318,7 +318,7 @@ void TrayIcon::enableScrobbler(bool checked) {
         loadScrobbler(checked);
     } else
         if(checked) {
-            ScrobblerSettings* settingsDialog = new ScrobblerSettings(this);
+            auto settingsDialog = new ScrobblerSettings(this);
             settingsDialog->show();
             connect(settingsDialog, &ScrobblerSettings::configured,
                     setScrobblingAction, &QAction::setChecked);
