@@ -40,9 +40,9 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
 {
     resize(388, 488);
     setWindowTitle(tr("Lyrics"));
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    auto verticalLayout = new QVBoxLayout(this);
     verticalLayout->setContentsMargins(6, -1, 6, 6);
-    QHBoxLayout* horizontalLayout = new QHBoxLayout();
+    auto horizontalLayout = new QHBoxLayout();
     verticalLayout->addLayout(horizontalLayout);
     artistLineEdit = new QLineEdit(this);
     artistLineEdit->setPlaceholderText(tr("artist"));
@@ -57,23 +57,23 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
     lyricsBrowser = new QTextBrowser(this);
     lyricsBrowser->setOpenExternalLinks(true);
     verticalLayout->addWidget(lyricsBrowser);
-    QHBoxLayout* horizontalLayout2 = new QHBoxLayout();
+    auto horizontalLayout2 = new QHBoxLayout();
     label = new QLabel(this);
     horizontalLayout2->addWidget(label);
-    QSpacerItem* spacer = new QSpacerItem(383, 20, QSizePolicy::Expanding,
+    auto spacer = new QSpacerItem(383, 20, QSizePolicy::Expanding,
                                           QSizePolicy::Minimum);
     horizontalLayout2->addItem(spacer);
-    QPushButton* autoButton = new QPushButton(this);
+    auto autoButton = new QPushButton(this);
     autoButton->setText(tr("Auto"));
     autoButton->setToolTip(tr("Autoupdate track when changed"));
     autoButton->setCheckable(true);
     horizontalLayout2->addWidget(autoButton);
-    QPushButton* updateButton = new QPushButton(this);
+    auto updateButton = new QPushButton(this);
     updateButton->setText(tr("Update"));
     updateButton->setToolTip(tr("Get lyrics for the current track"));
     updateButton->setFocus();
     horizontalLayout2->addWidget(updateButton);
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
+    auto buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(QDialogButtonBox::Close);
     horizontalLayout2->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout2);
