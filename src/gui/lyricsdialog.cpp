@@ -63,16 +63,11 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
     QSpacerItem* spacer = new QSpacerItem(383, 20, QSizePolicy::Expanding,
                                           QSizePolicy::Minimum);
     horizontalLayout2->addItem(spacer);
-    QPushButton* prevButton = new QPushButton(this);
-    prevButton->setMaximumWidth(23);
-    prevButton->setText(QChar::fromLatin1('\253'));
-    prevButton->setToolTip(tr("Prev track"));
-    horizontalLayout2->addWidget(prevButton);
-    QPushButton* nextButton = new QPushButton(this);
-    nextButton->setMaximumWidth(23);
-    nextButton->setText(QChar::fromLatin1('\273'));
-    nextButton->setToolTip(tr("Next track"));
-    horizontalLayout2->addWidget(nextButton);
+    QPushButton* autoButton = new QPushButton(this);
+    autoButton->setText(tr("Auto"));
+    autoButton->setToolTip(tr("Autoupdate track when changed"));
+    autoButton->setCheckable(true);
+    horizontalLayout2->addWidget(autoButton);
     QPushButton* updateButton = new QPushButton(this);
     updateButton->setText(tr("Update"));
     updateButton->setToolTip(tr("Get lyrics for the current track"));
@@ -88,10 +83,12 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
             this, &LyricsDialog::search);
     connect(titleLineEdit, &QLineEdit::returnPressed,
             this, &LyricsDialog::search);
-    connect(prevButton, &QPushButton::released, this, &LyricsDialog::prev);
-    connect(nextButton, &QPushButton::released, this, &LyricsDialog::next);
     connect(updateButton, &QPushButton::released, this, &LyricsDialog::update);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &LyricsDialog::close);
+    connect(PlayerInterface::self(), &PlayerInterface::newTrack, this, [=] {
+        if(autoButton->isChecked())
+            update();
+    });
     update();
 }
 
@@ -163,18 +160,6 @@ void LyricsDialog::update() {
     titleLineEdit->setText(format(PlayerInterface::getTrack()->title));
     if(!artistLineEdit->text().isEmpty())
         search();
-}
-
-void LyricsDialog::prev() {
-    PlayerInterface::self()->prev();
-    lyricsBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, &LyricsDialog::update);
-}
-
-void LyricsDialog::next() {
-    PlayerInterface::self()->next();
-    lyricsBrowser->setHtml(tr("Please wait a second"));
-    QTimer::singleShot(1500, this, &LyricsDialog::update);
 }
 
 void LyricsDialog::search() {

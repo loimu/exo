@@ -40,8 +40,6 @@ class LyricsDialog : public BaseDialog
     QString format(QString string);
     void showText(QNetworkReply* reply);
     void update();
-    void prev();
-    void next();
     void search();
 
 public:
