@@ -31,8 +31,8 @@ ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),
 {
     resize(500, 88);
     setWindowTitle(tr("Scrobbler Settings"));
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
-    QHBoxLayout* horizontalLayout = new QHBoxLayout();
+    auto verticalLayout = new QVBoxLayout(this);
+    auto horizontalLayout = new QHBoxLayout();
     usernameLineEdit = new QLineEdit(this);
     usernameLineEdit->setPlaceholderText(tr("login"));
     horizontalLayout->addWidget(usernameLineEdit);
@@ -41,10 +41,10 @@ ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),
     passwordLineEdit->setPlaceholderText(tr("password"));
     horizontalLayout->addWidget(passwordLineEdit);
     verticalLayout->addLayout(horizontalLayout);
-    QHBoxLayout* horizontalLayout2 = new QHBoxLayout();
+    auto horizontalLayout2 = new QHBoxLayout();
     label = new QLabel(this);
     horizontalLayout2->addWidget(label);
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
+    auto buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(
                 QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
     horizontalLayout2->addWidget(buttonBox);
