@@ -31,17 +31,18 @@
 #include "trayicon.h"
 #include "bookmarkmanager.h"
 
+
 BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent)
 {
     list = BookmarkManager::getList();
     this->setWindowTitle(tr("Bookmark Manager"));
     this->resize(500, 550);
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    auto verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     listWidget->setIconSize(QSize(32, 32));
     verticalLayout->addWidget(listWidget);
-    QHBoxLayout* horizontalLayout = new QHBoxLayout();
-    QPushButton* deleteButton = new QPushButton(this);
+    auto horizontalLayout = new QHBoxLayout();
+    auto deleteButton = new QPushButton(this);
     deleteButton->setText(tr("&Delete"));
     deleteButton->setToolTip(tr("Delete selected item"));
     deleteButton->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
@@ -52,18 +53,18 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent)
     lineEdit->setPlaceholderText(QStringLiteral("Rename"));
     lineEdit->setClearButtonEnabled(true);
     horizontalLayout->addWidget(lineEdit);
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
+    auto buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons(
                 QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     horizontalLayout->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
-    QAction* copyAction = new QAction(tr("Copy URL to clipboard"), this);
+    auto copyAction = new QAction(tr("Copy URL to clipboard"), this);
     copyAction->setShortcut(Qt::CTRL + Qt::Key_C);
     listWidget->addAction(copyAction);
-    QAction* moveUpAction = new QAction(tr("Move up"), this);
+    auto moveUpAction = new QAction(tr("Move up"), this);
     moveUpAction->setShortcut(Qt::CTRL + Qt::Key_K);
     listWidget->addAction(moveUpAction);
-    QAction* moveDownAction = new QAction(tr("Move down"), this);
+    auto moveDownAction = new QAction(tr("Move down"), this);
     moveDownAction->setShortcut(Qt::CTRL + Qt::Key_J);
     listWidget->addAction(moveDownAction);
     listWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -137,7 +138,7 @@ void BookmarkManager::refreshView() {
     lineEdit->clear();
     listWidget->clear();
     for(BookmarkEntry& entry : list) {
-        QListWidgetItem* item = new QListWidgetItem();
+        auto item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name
                       + QLatin1String("\n") + entry.uri);
         item->setIcon(QIcon::fromTheme(QStringLiteral("audio-x-generic")));
