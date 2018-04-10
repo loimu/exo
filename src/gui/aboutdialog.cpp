@@ -29,14 +29,14 @@
 AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent)
 {
     this->setWindowTitle(tr("About eXo"));
-    QHBoxLayout* horizontalLayout = new QHBoxLayout(this);
-    QLabel* label = new QLabel(this);
+    auto horizontalLayout = new QHBoxLayout(this);
+    auto label = new QLabel(this);
     label->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
     horizontalLayout->addWidget(label);
-    QVBoxLayout* verticalLayout = new QVBoxLayout();
+    auto verticalLayout = new QVBoxLayout();
     verticalLayout->setSpacing(6);
     verticalLayout->setSizeConstraint(QLayout::SetMaximumSize);
-    QLabel* iconLabel = new QLabel(this);
+    auto iconLabel = new QLabel(this);
     QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
@@ -45,11 +45,11 @@ AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent)
     iconLabel->setPixmap(QPixmap(QStringLiteral(":/images/128.png")));
     iconLabel->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
     verticalLayout->addWidget(iconLabel);
-    QPushButton* aboutQt = new QPushButton(this);
+    auto aboutQt = new QPushButton(this);
     aboutQt->setText(tr("About &Qt"));
     connect(aboutQt, &QPushButton::released, qApp, &QApplication::aboutQt);
     verticalLayout->addWidget(aboutQt);
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
+    auto buttonBox = new QDialogButtonBox(this);
     buttonBox->setMaximumSize(QSize(128, 16777215));
     buttonBox->setOrientation(Qt::Vertical);
     buttonBox->setStandardButtons(QDialogButtonBox::Close);
