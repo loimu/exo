@@ -20,17 +20,19 @@
 #ifndef SCROBBLER_H
 #define SCROBBLER_H
 
+#include <memory>
+
 #include <QObject>
 #include <QPointer>
 
 namespace lastfm {
-    class Audioscrobbler;
+class Audioscrobbler;
 }
 
 class Scrobbler : public QObject
 {
     static QPointer<Scrobbler> object;
-    lastfm::Audioscrobbler* as;
+    std::unique_ptr<lastfm::Audioscrobbler> as;
     void init(const QString& artist, const QString& title, int totalSec);
     void submit(const QString& artist, const QString& title,
                 const QString& album, int totalSec);
@@ -39,7 +41,6 @@ public:
     static const char* apiKey;
     static const char* secret;
     explicit Scrobbler(QObject* parent = nullptr);
-    ~Scrobbler();
     static QPointer<Scrobbler> self() { return object; }
 };
 

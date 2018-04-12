@@ -27,12 +27,15 @@
 #include "playerinterface.h"
 #include "scrobbler.h"
 
+
 const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";
 const char* Scrobbler::secret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
 
 QPointer<Scrobbler> Scrobbler::object = nullptr;
 
-Scrobbler::Scrobbler(QObject* parent) : QObject(parent) {
+Scrobbler::Scrobbler(QObject* parent) : QObject(parent),
+    as(new lastfm::Audioscrobbler(QStringLiteral("eXo")))
+{
     if(object)
         qFatal("Scrobbler: only one instance is allowed");
     object = this;
@@ -43,14 +46,9 @@ Scrobbler::Scrobbler(QObject* parent) : QObject(parent) {
                 QStringLiteral("scrobbler/sessionkey")).toString();
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
-    as = new lastfm::Audioscrobbler(QStringLiteral("eXo"));
     PlayerInterface* player = PlayerInterface::self();
     connect(player, &PlayerInterface::trackChanged, this, &Scrobbler::init);
     connect(player, &PlayerInterface::trackListened, this, &Scrobbler::submit);
-}
-
-Scrobbler::~Scrobbler() {
-    delete as;
 }
 
 void Scrobbler::init(const QString& artist, const QString& title,
