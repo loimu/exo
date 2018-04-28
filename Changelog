@@ -1,8 +1,9 @@
  v0.8.0
   - clean port to Qt5 and C++11, Qt4 dropped
-  - popup menu for bookmark manager
+  - popup menu for bookmark manager entries (move items, copy URL)
   - blocking calls replaced with async code
   - do not scrobble fast forwarded files
+  - lyrics autoupdate option in the lyrics dialog
   - updated CMus support
   - minor fixes and improvements
 
