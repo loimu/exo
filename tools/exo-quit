@@ -1,0 +1,6 @@
+#! /usr/bin/env sh
+
+if [ -z $DISPLAY ]; then export DISPLAY=":0"; fi
+
+qdbus org.mpris.MediaPlayer2.exo /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Quit\
+  || pkill -2 exo
