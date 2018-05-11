@@ -73,6 +73,7 @@ public:
     virtual void showPlayer() = 0;
     virtual void openUri(const QString& uri) = 0;
     virtual void appendFile(const QStringList& files) = 0;
+    virtual void clearPlaylist() = 0;
 
 signals:
     void newStatus(PState);

@@ -164,6 +164,12 @@ void CmusInterface::appendFile(const QStringList& files) {
                 cli, QStringList() << QStringLiteral("-q") << files);
 }
 
+void CmusInterface::clearPlaylist() {
+    /* despite the name of the method in fact it clears the player queue */
+    QProcess::startDetached(cli, QStringList() << QStringLiteral("-q")
+                            << QStringLiteral("-c"));
+}
+
 void CmusInterface::timerEvent(QTimerEvent *event) {
     Q_UNUSED(event);
     cmus->close();

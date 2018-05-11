@@ -103,6 +103,7 @@ SEND_COMMAND(prev, QStringLiteral("-r"))
 SEND_COMMAND(next, QStringLiteral("-f"))
 SEND_COMMAND(stop, QStringLiteral("-s"))
 SEND_COMMAND(quit, QStringLiteral("-x"))
+SEND_COMMAND(clearPlaylist, QStringLiteral("-c"))
 
 #define SEND_COMMAND_PARAM(__method, __option)\
     void MocInterface::__method(int param) {\

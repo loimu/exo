@@ -51,6 +51,7 @@ public:
     void showPlayer();
     void openUri(const QString&);
     void appendFile(const QStringList&);
+    void clearPlaylist();
 };
 
 #endif // CMUSINTERFACE_H
