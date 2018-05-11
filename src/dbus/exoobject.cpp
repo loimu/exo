@@ -20,7 +20,9 @@
 #include <QCoreApplication>
 
 #include "trayicon.h"
+#include "playerinterface.h"
 #include "exoobject.h"
+
 
 ExoObject::ExoObject(QObject* parent) : QObject(parent)
 {
@@ -35,4 +37,8 @@ void ExoObject::showLyricsWindow() {
 void ExoObject::bookmarkCurrent() {
     if(TrayIcon::self())
         TrayIcon::self()->addCurrent();
+}
+
+void ExoObject::clearPlaylist() {
+    PlayerInterface::self()->clearPlaylist();
 }
