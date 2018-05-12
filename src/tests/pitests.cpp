@@ -26,6 +26,8 @@
 
 void PITests::initTestCase() {
     player = new MocInterface(this);
+    QTest::qWait(1000);
+    player->clearPlaylist();
     QTest::qWait(3000);
     player->appendFile(QStringList{
                            QStringLiteral(SOURCE_ROOT "/test/audiofile1.ogg"),
@@ -37,13 +39,13 @@ void PITests::testPlayback() {
     QString tokenString1 = QStringLiteral("Audiofile 1");
     QString tokenString2 = QStringLiteral("Audiofile 2");
     player->play();
-    QTest::qWait(1000);
+    QTest::qWait(2000);
     QString t1 = PlayerInterface::getTrack()->title;
     player->next();
-    QTest::qWait(1000);
+    QTest::qWait(2000);
     QString t2 = PlayerInterface::getTrack()->title;
     player->prev();
-    QTest::qWait(1000);
+    QTest::qWait(2000);
     player->pause();
     QTest::qWait(1000);
     QString t3 = PlayerInterface::getTrack()->title;
@@ -54,6 +56,8 @@ void PITests::testPlayback() {
 }
 
 void PITests::cleanupTestCase() {
+    QTest::qWait(1000);
+    player->clearPlaylist();
     QTest::qWait(1000);
     player->quit();
 }
