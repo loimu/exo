@@ -39,10 +39,10 @@ if(BUILD_LASTFM)
 endif()
 
 qt5_add_resources(exo_RESOURCES_RCC ../images/exo.qrc)
-include_directories(${CMAKE_CURRENT_BINARY_DIR} core dbus gui lastfm)
 
 add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC} ${exo_RESOURCES_RCC})
-target_link_libraries(exo ${qt_LIBS} ${LASTFM_LIBRARIES})
+target_include_directories(exo PRIVATE ${CMAKE_CURRENT_BINARY_DIR} core dbus gui lastfm)
+target_link_libraries(exo PRIVATE ${qt_LIBS} ${LASTFM_LIBRARIES})
 target_compile_features(exo PRIVATE cxx_nullptr cxx_generalized_initializers)
 
 install(TARGETS exo RUNTIME DESTINATION bin)
@@ -56,6 +56,7 @@ if(BUILD_TESTS)
       core/mocinterface.cpp
       core/cmusinterface.cpp)
   add_executable(tests ${tests_SRCS})
-  target_link_libraries(tests ${test_LIBS})
+  target_include_directories(tests PRIVATE ${CMAKE_CURRENT_BINARY_DIR} core)
+  target_link_libraries(tests PRIVATE ${test_LIBS})
   target_compile_features(tests PRIVATE cxx_nullptr)
 endif()
