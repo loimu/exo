@@ -33,10 +33,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     moc(new QProcess(this)),
     player(QStringLiteral(PLAYER_EXECUTABLE))
 {
-    QProcess proc;
-    proc.start(QStringLiteral("pidof"), QStringList{player});
-    proc.waitForFinished();
-    if(QString::fromUtf8(proc.readAllStandardOutput()).isEmpty())
+    if(!isPlayerRunning(player))
         QProcess::startDetached(player,
                                 QStringList{QStringLiteral("-SO"),
                                             QStringLiteral(OSD_OPT)});
@@ -134,11 +131,23 @@ void MocInterface::showPlayer() {
 }
 
 void MocInterface::openUri(const QString& file) {
+    if(!isPlayerRunning(player)) {
+        QProcess procPlayer;
+        procPlayer.start(player, QStringList{QStringLiteral("-SO"),
+                                             QStringLiteral(OSD_OPT)});
+        procPlayer.waitForFinished();
+    }
     QProcess::startDetached(player,
                             QStringList() << QStringLiteral("-l") << file);
 }
 
 void MocInterface::appendFile(const QStringList& files) {
+    if(!isPlayerRunning(player)) {
+        QProcess procPlayer;
+        procPlayer.start(player, QStringList{QStringLiteral("-SO"),
+                                             QStringLiteral(OSD_OPT)});
+        procPlayer.waitForFinished();
+    }
     QProcess::startDetached(player,
                             QStringList() << QStringLiteral("-a") << files);
 }
