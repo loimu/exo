@@ -45,6 +45,13 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
     ptrack = &track;
 }
 
+bool PlayerInterface::isPlayerRunning(const QString &player) {
+    QProcess proc;
+    proc.start(QStringLiteral("pidof"), QStringList{player});
+    proc.waitForFinished();
+    return !QString::fromUtf8(proc.readAllStandardOutput()).isEmpty();
+}
+
 void PlayerInterface::notify() {
     track.caption.clear();
     static PState state = PState::Offline;
