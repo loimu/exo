@@ -27,6 +27,7 @@
 #include <QPointer>
 #include <QCoreApplication>
 #include <QProcess>
+#include <QRegularExpression>
 
 // core
 #include "playerinterface.h"
@@ -245,12 +246,19 @@ void TrayIcon::updateTrack(const QString& cover) {
     if(track->isStream) {
         tooltip = QString(QStringLiteral("<b>%1</b>")).arg(track->caption);
     } else {
-        /* only tooltips with fixed size have acceptable look in some DEs */
+        /* try to guess a year from file path
+         * only years starting with 19, 20  are considered to be valid
+         *  in order to exclude false positives as much as possible */
+        QRegularExpression re(QStringLiteral("((19|20){1}\\d{2})"));
+        QRegularExpressionMatch match = re.match(track->file);
+        /* only tooltips with fixed size have acceptable look in some DEs
+         * therefore we are using a fixed-size table here */
         tooltip = QString(
-                    QStringLiteral("<table width=\"320\"><tr><td><b>%1 (%2)</b>"
-                                   "</td></tr></table><br /><img src=\"%3\""
+                    QStringLiteral("<table width=\"320\"><tr><td><b>%1 %2 (%3)"
+                                   "</b></td></tr></table><br /><img src=\"%4\""
                                    " width=\"320\" height=\"320\" />"))
                 .arg(track->caption,
+                     match.captured(1),
                      track->totalTime,
                      cover.isEmpty()
                      ? QStringLiteral(":/images/nocover.png") : cover);
