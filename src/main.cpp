@@ -26,6 +26,7 @@
 #include <QSettings>
 #include <QApplication>
 #include <QMessageBox>
+#include <QTranslator>
 
 #include "core/singleinstance.h"
 
@@ -73,11 +74,16 @@ int main(int argc, char *argv[]) {
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     SingleInstance instance;
     int result = 0;
+    QTranslator translator;
+    translator.load(QApplication::applicationDirPath() +
+                    QLatin1String("/../share/exo/translations/") +
+                    QLocale::system().name() + QLatin1String(".qm"));
 
     if(useGui) {
         /* graphical application */
         QApplication app(argc, argv);
         app.setQuitOnLastWindowClosed(false);
+        app.installTranslator(&translator);
         if(!instance.isUnique()) {
             QMessageBox::critical(
                         nullptr, app.applicationName(),
@@ -120,6 +126,7 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
+        app.installTranslator(&translator);
         if(forceReauth) {
 #ifdef BUILD_LASTFM
             new ConsoleAuth(&app);

@@ -48,6 +48,16 @@ target_compile_features(exo PRIVATE cxx_nullptr cxx_generalized_initializers)
 install(TARGETS exo RUNTIME DESTINATION bin)
 
 
+# translations
+SET(TRANSLATION
+    ../translations/be_BY.ts
+)
+find_package(Qt5LinguistTools REQUIRED)
+qt5_add_translation(QM_FILES ${TRANSLATION})
+install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/exo/translations)
+
+
+# tests
 if(BUILD_TESTS)
   set(test_LIBS Qt5::Core Qt5::Test)
   set(tests_SRCS tests/tests.cpp
