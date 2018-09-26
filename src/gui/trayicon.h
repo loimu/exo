@@ -31,6 +31,8 @@ class BookmarkEntry;
 
 class TrayIcon : public QWidget
 {
+    Q_OBJECT
+
     static TrayIcon* object;
     PlayerInterface* player;
     QMenu*bookmarksMenu;

@@ -27,6 +27,8 @@ class ScrobblerAuth;
 
 class ConsoleAuth : public QObject
 {
+    Q_OBJECT
+
     ScrobblerAuth* scrobblerAuth;
     void auth();
     void authFail(const QString& errmsg);
