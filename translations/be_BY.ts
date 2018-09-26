@@ -121,7 +121,7 @@
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="67"/>
         <source>Auto</source>
-        <translation>Аўтаматычна</translation>
+        <translation>Аўта</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="68"/>
@@ -263,7 +263,7 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="119"/>
         <source>Bookmark &amp;Current</source>
-        <translation>Дадаць у закладкі &amp;бягучы паток</translation>
+        <translation>Дадаць у закладкі &amp;бягучы</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="124"/>
@@ -273,7 +273,7 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="129"/>
         <source>&amp;Close player on exit</source>
-        <translation>Завершы&amp;ць плэер пры выхадзе з прылады</translation>
+        <translation>За&amp;чыніць плэер пры выхадзе</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="138"/>
@@ -283,7 +283,7 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="161"/>
         <source>&amp;Edit with</source>
-        <translation>Зь&amp;мяніць праз</translation>
+        <translation>Зь&amp;мяніць у</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="177"/>
