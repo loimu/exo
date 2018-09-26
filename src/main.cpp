@@ -75,14 +75,14 @@ int main(int argc, char *argv[]) {
     SingleInstance instance;
     int result = 0;
     QTranslator translator;
-    translator.load(QApplication::applicationDirPath() +
-                    QLatin1String("/../share/exo/translations/") +
-                    QLocale::system().name() + QLatin1String(".qm"));
 
     if(useGui) {
         /* graphical application */
         QApplication app(argc, argv);
         app.setQuitOnLastWindowClosed(false);
+        translator.load(QApplication::applicationDirPath() +
+                        QLatin1String("/../share/exo/translations/") +
+                        QLocale::system().name() + QLatin1String(".qm"));
         app.installTranslator(&translator);
         if(!instance.isUnique()) {
             QMessageBox::critical(
@@ -126,6 +126,9 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
+        translator.load(QApplication::applicationDirPath() +
+                        QLatin1String("/../share/exo/translations/") +
+                        QLocale::system().name() + QLatin1String(".qm"));
         app.installTranslator(&translator);
         if(forceReauth) {
 #ifdef BUILD_LASTFM
