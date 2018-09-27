@@ -196,7 +196,7 @@
     <message>
         <location filename="../src/gui/scrobblersettings.cpp" line="33"/>
         <source>Scrobbler Settings</source>
-        <translation>Налады скроблера</translation>
+        <translation>Налады скроблеру</translation>
     </message>
     <message>
         <location filename="../src/gui/scrobblersettings.cpp" line="37"/>
@@ -264,7 +264,7 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="119"/>
         <source>Bookmark &amp;Current</source>
-        <translation>Дадаць у закладкі &amp;бягучы</translation>
+        <translation>Дадаць у закладкі &amp;бягучае</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="124"/>
