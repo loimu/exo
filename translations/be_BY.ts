@@ -78,15 +78,21 @@
     <message>
         <location filename="../src/core/consoleauth.cpp" line="50"/>
         <source>Try again? (y/n)</source>
-        <translation>Пасправаць яшчэ? (y/n)</translation>
+        <translation>Пасправаць яшчэ? (т/н)</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="54"/>
+        <source>y</source>
+        <translatorcomment>the first letter of &quot;yes&quot;</translatorcomment>
+        <translation>т</translation>
+    </message>
+    <message>
+        <location filename="../src/core/consoleauth.cpp" line="55"/>
         <source>Exiting authentication procedure</source>
         <translation>Працэдура аўтарызацыі завершана</translation>
     </message>
     <message>
-        <location filename="../src/core/consoleauth.cpp" line="64"/>
+        <location filename="../src/core/consoleauth.cpp" line="65"/>
         <source>Authentication succesful!</source>
         <translation>Аўтарызацыя пасьпяховая!</translation>
     </message>
