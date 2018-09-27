@@ -92,7 +92,7 @@
         <translation>Працэдура аўтарызацыі завершана</translation>
     </message>
     <message>
-        <location filename="../src/core/consoleauth.cpp" line="65"/>
+        <location filename="../src/core/consoleauth.cpp" line="62"/>
         <source>Authentication succesful!</source>
         <translation>Аўтарызацыя пасьпяховая!</translation>
     </message>
@@ -181,19 +181,14 @@
 <context>
     <name>ScrobblerAuth</name>
     <message>
-        <location filename="../src/lastfm/scrobblerauth.cpp" line="38"/>
-        <source>enter username and password</source>
-        <translation>увядзіце логін і пароль</translation>
-    </message>
-    <message>
-        <location filename="../src/lastfm/scrobblerauth.cpp" line="49"/>
+        <location filename="../src/lastfm/scrobblerauth.cpp" line="45"/>
         <source>network error, try again</source>
-        <translation>памылка спалучэньня, паспрабуйце яшчэ</translation>
+        <translation>сеткавая памылка, паспрабуйце яшчэ</translation>
     </message>
     <message>
-        <location filename="../src/lastfm/scrobblerauth.cpp" line="63"/>
-        <source>wrong data, try again</source>
-        <translation>недакладныя дадзеныя, паспрабуйце яшчэ</translation>
+        <location filename="../src/lastfm/scrobblerauth.cpp" line="59"/>
+        <source>wrong data or connection error, try again</source>
+        <translation>недакладныя дадзеныя ці памылка спалучэньня, паспрабуйце яшчэ</translation>
     </message>
 </context>
 <context>

@@ -34,10 +34,6 @@ ScrobblerAuth::ScrobblerAuth(QObject* parent) : QObject(parent)
 }
 
 void ScrobblerAuth::auth(const QString& username, const QString& password) {
-    if(username.isEmpty() || password.isEmpty()) {
-        emit failed(tr("enter username and password"));
-        return;
-    }
     QMap<QString, QString> params;
     params["method"] = QStringLiteral("auth.getMobileSession");
     params["username"] = username;
@@ -60,7 +56,7 @@ void ScrobblerAuth::auth(const QString& username, const QString& password) {
                                   lfm["session"]["key"].text());
                 settings.setValue(QStringLiteral("scrobbler/enabled"), true);
                 emit configured();
-            } else emit failed(tr("wrong data, try again"));
+            } else emit failed(tr("wrong data or connection error, try again"));
     }); // for more detailed error report handle error(NetworkError) signal
 }
 

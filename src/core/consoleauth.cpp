@@ -53,16 +53,12 @@ void ConsoleAuth::authFail(const QString& errmsg) {
     if(!(input.startsWith(QLatin1Char('y'), Qt::CaseInsensitive)
          || input.startsWith(tr("y"), Qt::CaseInsensitive))) {
         so << tr("Exiting authentication procedure") << endl;
-        this->deleteLater();
         qApp->exit();
-        return;
-    }
-    auth();
+    } else auth();
 }
 
 void ConsoleAuth::authSuccess() {
     QTextStream so(stdout);
     so << tr("Authentication succesful!") << endl;
-    this->deleteLater();
     qApp->exit();
 }
