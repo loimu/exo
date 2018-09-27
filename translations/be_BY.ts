@@ -78,7 +78,7 @@
     <message>
         <location filename="../src/core/consoleauth.cpp" line="50"/>
         <source>Try again? (y/n)</source>
-        <translation>Пасправаць яшчэ? (т/н)</translation>
+        <translation>Паспрабаваць яшчэ? (т/н)</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="54"/>
