@@ -196,7 +196,7 @@ void TrayIcon::createTrayIcon() {
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
     QIcon icon(QStringLiteral(":/images/32.png"));
-    trayIcon->setIcon(icon);
+    trayIcon->setIcon(QIcon::fromTheme("exo", icon));
     // event filter needed for corresponding method in this class
     trayIcon->installEventFilter(this);
     connect(trayIcon, &QSystemTrayIcon::activated, this, &TrayIcon::clicked);
