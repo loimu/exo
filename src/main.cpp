@@ -26,7 +26,10 @@
 #include <QSettings>
 #include <QApplication>
 #include <QMessageBox>
-#include <QTranslator>
+
+#ifdef BUILD_TRANSLATIONS
+  #include <QTranslator>
+#endif // BUILD_TRANSLATIONS
 
 #include "core/singleinstance.h"
 
@@ -74,16 +77,20 @@ int main(int argc, char *argv[]) {
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     SingleInstance instance;
     int result = 0;
+#ifdef BUILD_TRANSLATIONS
     QTranslator translator;
+#endif // BUILD_TRANSLATIONS
 
     if(useGui) {
         /* graphical application */
         QApplication app(argc, argv);
         app.setQuitOnLastWindowClosed(false);
+#ifdef BUILD_TRANSLATIONS
         translator.load(QApplication::applicationDirPath() +
                         QLatin1String("/../share/exo/translations/") +
                         QLocale::system().name() + QLatin1String(".qm"));
         app.installTranslator(&translator);
+#endif // BUILD_TRANSLATIONS
         if(!instance.isUnique()) {
             QMessageBox::critical(
                         nullptr, app.applicationName(),
@@ -126,10 +133,12 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
+#ifdef BUILD_TRANSLATIONS
         translator.load(QApplication::applicationDirPath() +
                         QLatin1String("/../share/exo/translations/") +
                         QLocale::system().name() + QLatin1String(".qm"));
         app.installTranslator(&translator);
+#endif // BUILD_TRANSLATIONS
         if(forceReauth) {
 #ifdef BUILD_LASTFM
             new ConsoleAuth(&app);
