@@ -50,7 +50,7 @@ void ConsoleAuth::authFail(const QString& errmsg) {
     so << tr("Try again? (y/n)") << endl;
     QTextStream si(stdin);
     QString input = si.readLine();
-    if(!(input.startsWith(QLatin1Char('y'), Qt::CaseInsensitive)
+    if(!(input.startsWith(QChar::fromLatin1('y'), Qt::CaseInsensitive)
          || input.startsWith(tr("y"), Qt::CaseInsensitive))) {
         so << tr("Exiting authentication procedure") << endl;
         qApp->exit();
