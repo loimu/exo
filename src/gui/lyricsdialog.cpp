@@ -89,6 +89,12 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
         if(autoButton->isChecked())
             update();
     });
+    connect(autoButton, &QPushButton::pressed, this, [=] {
+        if(artistLineEdit->text() != format(PlayerInterface::getTrack()->artist)
+                || titleLineEdit->text() != format(
+                    PlayerInterface::getTrack()->title))
+            update();
+    });
     update();
 }
 
@@ -152,7 +158,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
 }
 
 QString LyricsDialog::format(QString string) {
-    return string.replace(QLatin1String("&"), QLatin1String("and"));
+    return string.replace(QChar::fromLatin1('&'), QLatin1String("and"));
 }
 
 void LyricsDialog::update() {
