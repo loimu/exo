@@ -30,28 +30,28 @@ class CmusInterface : public PlayerInterface
     QString cli;
     void runPlayer();
     QString find(const QString&, const QString&);
-    PState updateInfo();
+    PState updateInfo() override;
     void timerEvent(QTimerEvent* event);
 
 public:
     explicit CmusInterface(QObject* parent = nullptr);
     ~CmusInterface();
-    QString id() const;
-    void play();
-    void pause();
-    void playPause();
-    void prev();
-    void next();
-    void stop();
-    void quit();
-    void jump(int);
-    void seek(int);
-    void volume(int);
-    void changeVolume(int);
-    void showPlayer();
-    void openUri(const QString&);
-    void appendFile(const QStringList&);
-    void clearPlaylist();
+    QString id() const override;
+    void play() override;
+    void pause() override;
+    void playPause() override;
+    void prev() override;
+    void next() override;
+    void stop() override;
+    void quit() override;
+    void jump(int) override;
+    void seek(int) override;
+    void volume(int) override;
+    void changeVolume(int) override;
+    void showPlayer() override;
+    void openUri(const QString&) override;
+    void appendFile(const QStringList&) override;
+    void clearPlaylist() override;
 };
 
 #endif // CMUSINTERFACE_H
