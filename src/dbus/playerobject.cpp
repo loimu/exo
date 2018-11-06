@@ -107,7 +107,7 @@ void PlayerObject::trackChanged(const QString& coverString) {
     emitPropsChanged(PState::Play);
 }
 
-void PlayerObject::emitPropsChanged(int state) {
+void PlayerObject::emitPropsChanged(PState state) {
     status = state;
     QList<QByteArray> changedProps;
     if(props.value(QStringLiteral("CanSeek")) != canSeek())

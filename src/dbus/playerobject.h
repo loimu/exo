@@ -26,6 +26,8 @@
 
 
 class PlayerInterface;
+enum class PlayerState;
+using PState = PlayerState;
 
 class PlayerObject : public QDBusAbstractAdaptor
 {
@@ -44,12 +46,12 @@ class PlayerObject : public QDBusAbstractAdaptor
 
     PlayerInterface* player;
     QVariantMap props;
-    int status;
+    PState status;
     QString cover;
     QDBusObjectPath trackID;
     void syncProperties();
     void trackChanged(const QString&);
-    void emitPropsChanged(int state);
+    void emitPropsChanged(PState state);
 
 public:
     explicit PlayerObject(QObject* parent = nullptr);

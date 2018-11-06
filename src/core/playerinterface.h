@@ -29,16 +29,14 @@ namespace Process {
 QStringList detect(const QStringList& apps);
 }
 
-namespace Player {
-enum State { Offline, Stop, Play, Pause };
-struct Track {
+enum class PlayerState { Offline, Stop, Play, Pause };
+struct PlayerTrack {
     bool isStream;
     int totalSec, currSec;
     QString artist, title, album, file, totalTime, caption;
 };
-}
-using PState = Player::State;
-using PTrack = Player::Track;
+using PState = PlayerState;
+using PTrack = PlayerTrack;
 
 
 class PlayerInterface : public QObject

@@ -28,6 +28,8 @@
 
 class PlayerInterface;
 class BookmarkEntry;
+enum class PlayerState;
+using PState = PlayerState;
 
 class TrayIcon : public QWidget
 {
@@ -55,7 +57,7 @@ class TrayIcon : public QWidget
     void createTrayIcon();
     bool eventFilter(QObject*, QEvent*);
     void clicked(QSystemTrayIcon::ActivationReason);
-    void updateStatus(int);
+    void updateStatus(PState);
     void updateTrack(const QString&);
     void showAboutDialog();
     void setQuitBehaviour(bool);
