@@ -27,7 +27,7 @@
 #include <QVector>
 
 class PlayerInterface;
-class BookmarkEntry;
+struct BookmarkEntry;
 enum class PlayerState;
 using PState = PlayerState;
 
