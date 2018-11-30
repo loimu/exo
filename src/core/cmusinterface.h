@@ -31,7 +31,7 @@ class CmusInterface : public PlayerInterface
     void runPlayer();
     QString find(const QString&, const QString&);
     PState updateInfo() override;
-    void timerEvent(QTimerEvent* event);
+    void timerEvent(QTimerEvent* event) override;
 
 public:
     explicit CmusInterface(QObject* parent = nullptr);
