@@ -29,7 +29,7 @@ class MocInterface : public PlayerInterface
     QProcess* moc;
     QString player;
     PState updateInfo() override;
-    void timerEvent(QTimerEvent* event);
+    void timerEvent(QTimerEvent* event) override;
 
 public:
     explicit MocInterface(QObject* parent = nullptr);
