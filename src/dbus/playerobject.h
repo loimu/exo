@@ -29,6 +29,7 @@ class PlayerInterface;
 enum class PlayerState;
 using PState = PlayerState;
 
+// clazy:excludeall=qproperty-without-notify
 class PlayerObject : public QDBusAbstractAdaptor
 {
     Q_OBJECT
