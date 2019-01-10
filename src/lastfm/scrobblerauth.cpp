@@ -40,7 +40,7 @@ void ScrobblerAuth::auth(const QString& username, const QString& password) {
     params["authToken"] =
             lastfm::md5((username + lastfm::md5(password.toUtf8())).toUtf8());
     QNetworkReply* reply = lastfm::ws::post(params);
-    connect(reply, &QNetworkReply::finished, this, [=] {
+    connect(reply, &QNetworkReply::finished, this, [this, reply] {
             if(!reply) {
                 emit failed(tr("network error, try again"));
                 return;
