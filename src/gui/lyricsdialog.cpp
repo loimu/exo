@@ -85,15 +85,12 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
             this, &LyricsDialog::search);
     connect(updateButton, &QPushButton::released, this, &LyricsDialog::update);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &LyricsDialog::close);
-    connect(PlayerInterface::self(), &PlayerInterface::newTrack, this, [=] {
-        if(autoButton->isChecked())
-            update();
-    });
-    connect(autoButton, &QPushButton::pressed, this, [=] {
+    connect(PlayerInterface::self(), &PlayerInterface::newTrack,
+            this, [this, autoButton] { if(autoButton->isChecked()) update(); });
+    connect(autoButton, &QPushButton::pressed, this, [this] {
         if(artistLineEdit->text() != format(PlayerInterface::getTrack()->artist)
                 || titleLineEdit->text() != format(
-                    PlayerInterface::getTrack()->title))
-            update();
+                    PlayerInterface::getTrack()->title)) update();
     });
     update();
 }
