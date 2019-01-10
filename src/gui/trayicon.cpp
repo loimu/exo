@@ -50,7 +50,7 @@ public:
         : QAction(text, parent), path(uri)
     {
         connect(this, &Bookmark::triggered,
-                this, [=] { PlayerInterface::self()->openUri(uri); });
+                this, [uri] { PlayerInterface::self()->openUri(uri); });
     }
 };
 
@@ -65,7 +65,7 @@ public:
         QString app = text.split(QChar::fromLatin1('/')).last();
         this->setText(app.at(0).toUpper() + app.mid(1));
         this->setIcon(QIcon::fromTheme(app));
-        connect(this, &TagEditor::triggered, this, [=] {
+        connect(this, &TagEditor::triggered, this, [this] {
             QString file = PlayerInterface::getTrack()->file;
             if(!PlayerInterface::getTrack()->isStream)
                 QProcess::startDetached(editorPath, QStringList() << file); });
