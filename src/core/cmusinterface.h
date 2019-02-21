@@ -35,7 +35,6 @@ class CmusInterface : public PlayerInterface
 
 public:
     explicit CmusInterface(QObject* parent = nullptr);
-    ~CmusInterface();
     QString id() const override;
     void play() override;
     void pause() override;
@@ -52,6 +51,7 @@ public:
     void openUri(const QString&) override;
     void appendFile(const QStringList&) override;
     void clearPlaylist() override;
+    void shutdown() override;
 };
 
 #endif // CMUSINTERFACE_H

@@ -122,6 +122,7 @@ int main(int argc, char *argv[]) {
         Q_UNUSED(trayIcon);
 
         result = app.exec();
+        player.shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool())
             player.quit();
         /* end of graphical application */
@@ -168,6 +169,7 @@ int main(int argc, char *argv[]) {
 #endif // BUILD_LASTFM
 
         result = app.exec();
+        player.shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool())
             player.quit();
         /* end of console application */

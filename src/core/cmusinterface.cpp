@@ -39,10 +39,6 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
             this, &CmusInterface::notify);
 }
 
-CmusInterface::~CmusInterface() {
-    cmus->close();
-}
-
 void CmusInterface::runPlayer() {
     QString term = QStringLiteral("xterm"); // xterm is a fallback app
     QStringList apps = Process::detect(
@@ -174,4 +170,8 @@ void CmusInterface::timerEvent(QTimerEvent *event) {
     Q_UNUSED(event);
     cmus->close();
     cmus->start(cli, QStringList{QStringLiteral("-Q")});
+}
+
+void CmusInterface::shutdown() {
+    cmus->close();
 }

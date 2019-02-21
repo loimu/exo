@@ -64,7 +64,7 @@ public:
     virtual void prev() = 0;
     virtual void next() = 0;
     virtual void stop() = 0;
-    virtual void quit() = 0;
+    virtual void quit() = 0; // quit the player app
     virtual void jump(int position) = 0;
     virtual void seek(int offset) = 0;
     virtual void volume(int level) = 0;
@@ -73,6 +73,7 @@ public:
     virtual void openUri(const QString& uri) = 0;
     virtual void appendFile(const QStringList& files) = 0;
     virtual void clearPlaylist() = 0;
+    virtual void shutdown() = 0;
 
 signals:
     void newStatus(PState);

@@ -33,7 +33,6 @@ class MocInterface : public PlayerInterface
 
 public:
     explicit MocInterface(QObject* parent = nullptr);
-    ~MocInterface();
     QString id() const  override;
     void play() override;
     void pause() override;
@@ -50,6 +49,7 @@ public:
     void openUri(const QString&) override;
     void appendFile(const QStringList&) override;
     void clearPlaylist() override;
+    void shutdown() override;
 };
 
 #endif // MOCINTERFACE_H

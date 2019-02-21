@@ -42,10 +42,6 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
             this, &MocInterface::notify);
 }
 
-MocInterface::~MocInterface() {
-    moc->close();
-}
-
 PState MocInterface::updateInfo() {
     QString info = moc->readAllStandardOutput();
     if(info.isEmpty())
@@ -158,4 +154,8 @@ void MocInterface::timerEvent(QTimerEvent* event) {
                    QStringLiteral("-Q"),
                    QStringLiteral("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
                    "{cs}%cs{T}%title")});
+}
+
+void MocInterface::shutdown() {
+    moc->close();
 }
