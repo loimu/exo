@@ -39,11 +39,3 @@ DBus::DBus(QObject* parent) : QObject(parent)
                 QStringLiteral("org.mpris.MediaPlayer2.exo")))
         qWarning("DBus: MPRISv2 service registration failed");
 }
-
-DBus::~DBus()
-{
-    QDBusConnection::sessionBus().unregisterService(
-                QStringLiteral("local.exo_player"));
-    QDBusConnection::sessionBus().unregisterService(
-                QStringLiteral("org.mpris.MediaPlayer2.exo"));
-}

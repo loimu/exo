@@ -24,7 +24,6 @@ class DBus : public QObject
 {
 public:
     explicit DBus(QObject* parent = nullptr);
-    ~DBus();
 };
 
 #endif // DBUS_H
