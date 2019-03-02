@@ -275,7 +275,8 @@ void TrayIcon::showAboutDialog() {
     aboutAction->setEnabled(false);
     auto about = new AboutDialog(this);
     about->show();
-    connect(about, &AboutDialog::destroyed, aboutAction, &QAction::setEnabled);
+    connect(about, &AboutDialog::destroyed,
+            this, [this] { aboutAction->setEnabled(true); });
 }
 
 void TrayIcon::setQuitBehaviour(bool checked) {
