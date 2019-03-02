@@ -325,15 +325,16 @@ void TrayIcon::enableScrobbler(bool checked) {
     if(settings.value(QStringLiteral("scrobbler/sessionkey")).toBool()) {
         settings.setValue(QStringLiteral("scrobbler/enabled"), checked);
         loadScrobbler(checked);
-    } else
-        if(checked) {
-            auto settingsDialog = new ScrobblerSettings(this);
-            settingsDialog->show();
-            connect(settingsDialog, &ScrobblerSettings::configured,
-                    setScrobblingAction, &QAction::setChecked);
-            connect(settingsDialog, &ScrobblerSettings::configured,
-                    this, &TrayIcon::loadScrobbler);
-        }
+    } else {
+        setScrobblingAction->setChecked(false);
+        auto settingsDialog = new ScrobblerSettings(this);
+        settingsDialog->show();
+        connect(settingsDialog, &ScrobblerSettings::configured,
+                this, [this] {
+            setScrobblingAction->setChecked(true);
+            loadScrobbler(true);
+        });
+    }
 }
 
 void TrayIcon::loadScrobbler(bool checked) {

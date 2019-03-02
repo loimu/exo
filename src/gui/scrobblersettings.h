@@ -31,7 +31,6 @@ class ScrobblerSettings : public BaseDialog
     Q_OBJECT
 
     ScrobblerAuth* scrobblerAuth;
-    bool success;
     QLineEdit* usernameLineEdit;
     QLineEdit* passwordLineEdit;
     QLabel* label;
@@ -41,10 +40,7 @@ class ScrobblerSettings : public BaseDialog
 
 public:
     explicit ScrobblerSettings(QWidget *parent = nullptr);
-    ~ScrobblerSettings();
-
-signals:
-    void configured(bool);
+    Q_SIGNAL void configured();
 };
 
 #endif // SCROBBLERSETTINGS_H

@@ -26,8 +26,7 @@
 #include "scrobblerauth.h"
 #include "scrobblersettings.h"
 
-ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),
-    success(false)
+ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent)
 {
     resize(500, 88);
     setWindowTitle(tr("Scrobbler Settings"));
@@ -66,10 +65,6 @@ ScrobblerSettings::ScrobblerSettings(QWidget *parent) : BaseDialog(parent),
             this, &ScrobblerSettings::close);
 }
 
-ScrobblerSettings::~ScrobblerSettings() {
-    emit configured(success);
-}
-
 void ScrobblerSettings::auth() {
     scrobblerAuth->auth(usernameLineEdit->text(), passwordLineEdit->text());
 }
@@ -79,6 +74,6 @@ void ScrobblerSettings::authFail(const QString& errmsg) {
 }
 
 void ScrobblerSettings::authSuccess() {
-    success = true;
+    emit configured();
     this->close();
 }
