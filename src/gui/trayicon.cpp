@@ -303,7 +303,7 @@ void TrayIcon::showManager() {
     auto bm = new BookmarkManager(this);
     bm->show();
     connect(bm, &BookmarkManager::destroyed,
-            bookmarkManagerAction, &QAction::setEnabled);
+            this, [this] { bookmarkManagerAction->setEnabled(true); });
 }
 
 void TrayIcon::refreshBookmarks(const BookmarkList& list) {

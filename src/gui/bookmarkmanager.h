@@ -37,8 +37,6 @@ typedef QVector<BookmarkEntry> BookmarkList;
 
 class BookmarkManager : public BaseDialog
 {
-    Q_OBJECT
-
     QLineEdit* lineEdit;
     QListWidget* listWidget;
     BookmarkList list;
@@ -57,10 +55,6 @@ public:
     static BookmarkList getList();
     static BookmarkList addCurrent();
     explicit BookmarkManager(QWidget* parent = nullptr);
-    ~BookmarkManager() { emit destroyed(true); }
-
-signals:
-    void destroyed(bool);
 };
 
 #endif // BOOKMARKMANAGER_H
