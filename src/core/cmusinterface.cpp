@@ -18,7 +18,6 @@
 * ======================================================================== */
 
 #include <QStringList>
-#include <QTime>
 #include <QProcess>
 #include <QRegularExpression>
 
@@ -78,8 +77,8 @@ PState CmusInterface::updateInfo() {
     track.file = find(info, QStringLiteral("file\\s(.*)"));
     track.totalSec = find(info, QStringLiteral("duration\\s(.*)")).toInt();
     track.currSec = find(info, QStringLiteral("position\\s(.*)")).toInt();
-    track.totalTime = QTime(0, 0)
-            .addSecs(track.totalSec).toString(QStringLiteral("m:ss"));
+    track.totalTime = QString(QStringLiteral("%1:%2")).arg(track.totalSec / 60)
+            .arg(track.totalSec % 60, 2, 10, QChar::fromLatin1('0'));
     track.caption = track.artist.isEmpty()
             ? track.title
             : QString(QStringLiteral("%1 - %2 (%3)")).arg(
