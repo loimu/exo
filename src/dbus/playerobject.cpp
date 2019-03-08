@@ -141,7 +141,10 @@ void PlayerObject::Pause() {
 }
 
 void PlayerObject::Play() {
-    player->play();
+    if(status == PState::Pause)
+        player->playPause();
+    else
+        player->play();
 }
 
 void PlayerObject::PlayPause() {
