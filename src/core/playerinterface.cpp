@@ -17,7 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <QTimerEvent>
 #include <QDir>
 #include <QProcess>
 #include <QTime>
@@ -83,10 +82,9 @@ void PlayerInterface::notify() {
     else if(!listened && (track.currSec > track.totalSec/2
                           || (track.currSec > 4*60 && track.totalSec > 8*60))) {
         listened = true; // ending
-        if(QTime::currentTime() > threshold) {
+        if(QTime::currentTime() > threshold)
             emit trackListened(track.artist, track.title,
                                track.album, track.totalSec);
-        }
     }
 #endif // BUILD_LASTFM
 }
