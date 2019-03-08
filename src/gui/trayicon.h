@@ -53,12 +53,14 @@ class TrayIcon : public QWidget
     QAction* setQuitBehaviourAction;
     QAction* setScrobblingAction;
     QSystemTrayIcon* trayIcon;
+    QString coverArt;
+    PState playerState;
     void createActions();
     void createTrayIcon();
     bool eventFilter(QObject*, QEvent*);
     void clicked(QSystemTrayIcon::ActivationReason);
     void updateStatus(PState);
-    void updateTrack(const QString&);
+    void updateTrack(const QString&, bool);
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();

@@ -223,6 +223,12 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
         return true;
     if(object != trayIcon)
         return false;
+    if(event->type() == QEvent::ToolTip) {
+        if(playerState == PState::Play
+                && !PlayerInterface::getTrack()->isStream)
+            updateTrack(coverArt, true);
+        return true;
+    }
     if(event->type() == QEvent::Wheel) {
         QWheelEvent* e = static_cast<QWheelEvent*>(event);
         player->changeVolume(e->delta()/100);
@@ -232,6 +238,7 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
 }
 
 void TrayIcon::updateStatus(PState state) {
+    playerState = state;
     if(state < PState::Play) {
         QString tooltip;
         if(state < PState::Stop) tooltip = tr("Player isn't running");
@@ -240,9 +247,18 @@ void TrayIcon::updateStatus(PState state) {
     }
 }
 
-void TrayIcon::updateTrack(const QString& cover) {
-    QString tooltip;
+void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
+    QString tooltip, time;
     PTrack* track = PlayerInterface::getTrack();
+    if(toolTipEvent) {
+        time = QString(QStringLiteral("%1:%2/%3"))
+                .arg(track->currSec / 60)
+                .arg(track->currSec % 60, 2, 10, QChar::fromLatin1('0'))
+                .arg(track->totalTime);
+    } else {
+        time = track->totalTime;
+        coverArt = cover;
+    }
     if(track->isStream) {
         tooltip = QString(QStringLiteral("<b>%1</b>")).arg(track->caption);
     } else {
@@ -257,9 +273,7 @@ void TrayIcon::updateTrack(const QString& cover) {
                     QStringLiteral("<table width=\"320\"><tr><td><b>%1 %2 (%3)"
                                    "</b></td></tr></table><br /><img src=\"%4\""
                                    " width=\"320\" height=\"320\" />"))
-                .arg(track->caption,
-                     match.captured(1),
-                     track->totalTime,
+                .arg(track->caption, match.captured(1), time,
                      cover.isEmpty()
                      ? QStringLiteral(":/images/nocover.png") : cover);
     }

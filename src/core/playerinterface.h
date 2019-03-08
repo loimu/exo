@@ -77,7 +77,7 @@ public:
 
 signals:
     void newStatus(PState);
-    void newTrack(const QString&);
+    void newTrack(const QString&, bool check = false);
 #ifdef BUILD_LASTFM
     void trackListened(const QString&, const QString&, const QString&, int);
     void trackChanged(const QString&, const QString&, int);
