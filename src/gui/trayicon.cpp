@@ -50,7 +50,7 @@ public:
         : QAction(text, parent), path(uri)
     {
         connect(this, &Bookmark::triggered,
-                this, [uri] { PlayerInterface::self()->openUri(uri); });
+                this, [this] { PlayerInterface::self()->openUri(path); });
     }
 };
 
@@ -59,9 +59,8 @@ class TagEditor : public QAction {
     QString editorPath;
 public:
     explicit TagEditor(const QString &text, QObject* parent)
-        : QAction(text, parent)
+        : QAction(text, parent), editorPath(text)
     {
-        editorPath = text;
         QString app = text.split(QChar::fromLatin1('/')).last();
         this->setText(app.at(0).toUpper() + app.mid(1));
         this->setIcon(QIcon::fromTheme(app));
