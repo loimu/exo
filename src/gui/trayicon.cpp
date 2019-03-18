@@ -342,8 +342,7 @@ void TrayIcon::enableScrobbler(bool checked) {
         setScrobblingAction->setChecked(false);
         auto settingsDialog = new ScrobblerSettings(this);
         settingsDialog->show();
-        connect(settingsDialog, &ScrobblerSettings::configured,
-                this, [this] {
+        connect(settingsDialog, &ScrobblerSettings::configured, this, [this] {
             setScrobblingAction->setChecked(true);
             loadScrobbler(true);
         });
