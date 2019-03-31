@@ -29,8 +29,14 @@ make -j2
 ![Screenshot of the eXo app](https://bitbucket.org/repo/8Xb9ez/images/405669011-exo.png)
 
 ### Installation on Ubuntu ###
-```
+```bash
+# stable releases
 sudo add-apt-repository ppa:blaze/main
+sudo apt update
+sudo apt install exo-player
+
+# development snapshots
+sudo add-apt-repository ppa:blaze/dev
 sudo apt update
 sudo apt install exo-player
 ```
