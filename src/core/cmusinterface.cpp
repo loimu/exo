@@ -99,7 +99,7 @@ PState CmusInterface::updateInfo() {
     return state;
 }
 
-QString CmusInterface::id() const {
+const QString CmusInterface::id() const {
     return QStringLiteral("Cmus");
 }
 

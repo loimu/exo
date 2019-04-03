@@ -80,7 +80,7 @@ PState MocInterface::updateInfo() {
     return state;
 }
 
-QString MocInterface::id() const {
+const QString MocInterface::id() const {
     return QStringLiteral("music on console");
 }
 

@@ -35,7 +35,7 @@ class CmusInterface : public PlayerInterface
 
 public:
     explicit CmusInterface(QObject* parent = nullptr);
-    QString id() const override;
+    const QString id() const override;
     void play() override;
     void pause() override;
     void playPause() override;

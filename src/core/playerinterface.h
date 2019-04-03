@@ -57,7 +57,7 @@ public:
     explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
     static PTrack* getTrack() { return ptrack; }
-    virtual QString id() const = 0;
+    virtual const QString id() const = 0;
     virtual void play() = 0;
     virtual void pause() = 0;
     virtual void playPause() = 0;
