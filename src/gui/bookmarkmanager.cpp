@@ -111,7 +111,7 @@ BookmarkList BookmarkManager::getList() {
 BookmarkList BookmarkManager::addCurrent() {
     BookmarkList list;
     BookmarkEntry entry;
-    entry.uri  = PlayerInterface::getTrack()->file;
+    entry.uri = PLAYER->getTrack().file;
     entry.name = entry.uri;
     if(!entry.uri.isEmpty()) {
         list = BookmarkManager::getList();
@@ -205,5 +205,5 @@ void BookmarkManager::copyToClipboard() {
 void BookmarkManager::appendToPlaylist() {
     int cur = listWidget->currentRow();
     if(cur > -1)
-        PlayerInterface::self()->appendFile(QStringList{list.at(cur).uri});
+        PLAYER->appendFile(QStringList{list.at(cur).uri});
 }

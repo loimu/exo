@@ -26,7 +26,7 @@
 
 
 PlayerObject::PlayerObject(QObject* parent) : QDBusAbstractAdaptor(parent),
-    player(PlayerInterface::self()),
+    player(PLAYER),
     trackID("/org/exo/MediaPlayer2/Track/0")
 {
     connect(player, &PlayerInterface::newStatus,
@@ -56,23 +56,23 @@ bool PlayerObject::canPlay() const {
 }
 
 bool PlayerObject::canSeek() const {
-    return !(player->getTrack()->isStream);
+    return !(player->getTrack().isStream);
 }
 
 QVariantMap PlayerObject::metadata() const {
-    PTrack* track = player->getTrack();
+    const PTrack& track = player->getTrack();
     QVariantMap map;
-    map.insert(QStringLiteral("mpris:length"), track->totalSec * 1000000);
+    map.insert(QStringLiteral("mpris:length"), track.totalSec * 1000000);
     map.insert(QStringLiteral("mpris:artUrl"), cover);
     map.insert(QStringLiteral("mpris:trackid"),
                QVariant::fromValue<QDBusObjectPath>(trackID));
-    map.insert(QStringLiteral("xesam:album"), track->album);
-    map.insert(QStringLiteral("xesam:artist"), QStringList() << track->artist);
+    map.insert(QStringLiteral("xesam:album"), track.album);
+    map.insert(QStringLiteral("xesam:artist"), QStringList() << track.artist);
     map.insert(QStringLiteral("xesam:title"),
-               track->title.isEmpty() ? track->caption : track->title);
+               track.title.isEmpty() ? track.caption : track.title);
     map.insert(QStringLiteral("xesam:url"),
-               track->isStream ? track->file
-                               : QLatin1String("file://") + track->file);
+               track.isStream ? track.file
+                              : QLatin1String("file://") + track.file);
     return map;
 }
 
@@ -85,8 +85,8 @@ QString PlayerObject::playbackStatus() const {
 }
 
 qlonglong PlayerObject::position() const {
-    PTrack* track = player->getTrack();
-    return track->isStream ? 0 : track->currSec * 1000000;
+    const PTrack& track = player->getTrack();
+    return track.isStream ? 0 : track.currSec * 1000000;
 }
 
 double PlayerObject::volume() const {

@@ -46,9 +46,8 @@ Scrobbler::Scrobbler(QObject* parent) : QObject(parent),
                 QStringLiteral("scrobbler/sessionkey")).toString();
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
-    PlayerInterface* player = PlayerInterface::self();
-    connect(player, &PlayerInterface::trackChanged, this, &Scrobbler::init);
-    connect(player, &PlayerInterface::trackListened, this, &Scrobbler::submit);
+    connect(PLAYER, &PlayerInterface::trackChanged, this, &Scrobbler::init);
+    connect(PLAYER, &PlayerInterface::trackListened, this, &Scrobbler::submit);
 }
 
 void Scrobbler::init(const QString& artist, const QString& title,

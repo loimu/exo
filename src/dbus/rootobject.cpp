@@ -44,7 +44,7 @@ bool RootObject::hasTrackList() const {
 }
 
 QString RootObject::identity() const {
-    return PlayerInterface::self()->id();
+    return PLAYER->id();
 }
 
 void RootObject::Quit() {
@@ -52,5 +52,5 @@ void RootObject::Quit() {
 }
 
 void RootObject::Raise() {
-    PlayerInterface::self()->showPlayer();
+    PLAYER->showPlayer();
 }

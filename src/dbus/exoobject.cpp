@@ -40,5 +40,5 @@ void ExoObject::bookmarkCurrent() {
 }
 
 void ExoObject::clearPlaylist() {
-    PlayerInterface::self()->clearPlaylist();
+    PLAYER->clearPlaylist();
 }

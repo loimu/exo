@@ -50,7 +50,7 @@ public:
         : QAction(text, parent), path(uri)
     {
         connect(this, &Bookmark::triggered,
-                this, [this] { PlayerInterface::self()->openUri(path); });
+                this, [this] { PLAYER->openUri(path); });
     }
 };
 
@@ -65,8 +65,8 @@ public:
         this->setText(app.at(0).toUpper() + app.mid(1));
         this->setIcon(QIcon::fromTheme(app));
         connect(this, &TagEditor::triggered, this, [this] {
-            QString file = PlayerInterface::getTrack()->file;
-            if(!PlayerInterface::getTrack()->isStream)
+            QString file = PLAYER->getTrack().file;
+            if(!PLAYER->getTrack().isStream)
                 QProcess::startDetached(editorPath, QStringList() << file); });
     }
 };
@@ -75,7 +75,7 @@ public:
 TrayIcon* TrayIcon::object = nullptr;
 
 TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
-    player(PlayerInterface::self())
+    player(PLAYER)
 {
     setAttribute(Qt::WA_DontShowOnScreen);
     object = this;
@@ -224,7 +224,7 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
         return false;
     if(event->type() == QEvent::ToolTip) {
         if(playerState == PState::Play
-                && !PlayerInterface::getTrack()->isStream)
+                && !player->getTrack().isStream)
             updateTrack(coverArt, true);
         return true;
     }
@@ -245,31 +245,31 @@ void TrayIcon::updateStatus(PState state) {
 
 void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
     QString tooltip, time;
-    PTrack* track = PlayerInterface::getTrack();
+    const PTrack& track = player->getTrack();
     if(toolTipEvent) {
         time = QString(QStringLiteral("%1:%2/%3"))
-                .arg(track->currSec / 60)
-                .arg(track->currSec % 60, 2, 10, QChar::fromLatin1('0'))
-                .arg(track->totalTime);
+                .arg(track.currSec / 60)
+                .arg(track.currSec % 60, 2, 10, QChar::fromLatin1('0'))
+                .arg(track.totalTime);
     } else {
-        time = track->totalTime;
+        time = track.totalTime;
         coverArt = cover;
     }
-    if(track->isStream) {
-        tooltip = QString(QStringLiteral("<b>%1</b>")).arg(track->caption);
+    if(track.isStream) {
+        tooltip = QString(QStringLiteral("<b>%1</b>")).arg(track.caption);
     } else {
         /* try to guess a year from file path
          * only years starting with 19, 20  are considered to be valid
          *  in order to exclude false positives as much as possible */
         QRegularExpression re(QStringLiteral("((19|20){1}\\d{2})"));
-        QRegularExpressionMatch match = re.match(track->file);
+        QRegularExpressionMatch match = re.match(track.file);
         /* only tooltips with fixed size have acceptable look in some DEs
          * therefore we are using a fixed-size table here */
         tooltip = QString(
                     QStringLiteral("<table width=\"320\"><tr><td><b>%1 %2 (%3)"
                                    "</b></td></tr></table><br /><img src=\"%4\""
                                    " width=\"320\" height=\"320\" />"))
-                .arg(track->caption, match.captured(1), time,
+                .arg(track.caption, match.captured(1), time,
                      cover.isEmpty()
                      ? QStringLiteral(":/images/nocover.png") : cover);
     }

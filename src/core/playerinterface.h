@@ -24,6 +24,8 @@
 
 #include <QObject>
 
+#define PLAYER PlayerInterface::self()
+
 
 namespace Process {
 QStringList detect(const QStringList& apps);
@@ -44,7 +46,6 @@ class PlayerInterface : public QObject
     Q_OBJECT
 
     static PlayerInterface* object;
-    static PTrack* ptrack;
     QString getCover();
 
 protected:
@@ -56,7 +57,7 @@ protected:
 public:
     explicit PlayerInterface(QObject* parent = nullptr);
     static PlayerInterface* self() { return object; }
-    static PTrack* getTrack() { return ptrack; }
+    const PTrack& getTrack() const { return track; }
     virtual const QString id() const = 0;
     virtual void play() = 0;
     virtual void pause() = 0;
