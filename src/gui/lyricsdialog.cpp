@@ -131,7 +131,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         QString urlString = match.captured(4).toLatin1();
         urlString.replace(
                     QLatin1String("http://lyrics.wikia.com/"),
-                    QLatin1String("http://lyrics.wikia.com/index.php?title="));
+                    QLatin1String("https://lyrics.fandom.com/index.php?title="));
         urlString.append(QLatin1String("&action=edit"));
         QNetworkRequest request;
         request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
@@ -171,7 +171,7 @@ void LyricsDialog::search() {
     setWindowTitle(QString(QStringLiteral("%1 - %2"))
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
-    request.setUrl(QUrl(QStringLiteral("http://lyrics.wikia.com/api.php"
+    request.setUrl(QUrl(QStringLiteral("https://lyrics.fandom.com/api.php"
                                        "?action=lyrics&artist=")
                         + artistLineEdit->text() + QLatin1String("&song=")
                         + titleLineEdit->text() + QLatin1String("&fmt=xml")));
