@@ -53,7 +53,7 @@ class BookmarkManager : public BaseDialog
 
 public:
     static BookmarkList getList();
-    static BookmarkList addCurrent();
+    static void addBookmark(BookmarkList&, const QString& url);
     explicit BookmarkManager(QWidget* parent = nullptr);
 };
 

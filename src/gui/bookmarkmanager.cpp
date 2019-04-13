@@ -92,44 +92,35 @@ BookmarkList BookmarkManager::getList() {
     QSettings settings;
     QString string = settings.value(
                 QStringLiteral("bookmarkmanager/bookmarks")).toString();
-    QStringList stringList = string.split(QChar::fromLatin1(';'));
+    QStringList stringList = string.split(
+                QChar::fromLatin1(';'), QString::SkipEmptyParts);
     BookmarkList list;
-    if(!stringList.isEmpty()) {
-        for(const QString& str : stringList) {
-            QStringList bookmark = str.split(QChar::fromLatin1('|'));
-            if(bookmark.size() == 2) {
-                BookmarkEntry entry;
-                entry.name = bookmark.at(0);
-                entry.uri = bookmark.at(1);
-                list.append(entry);
-            }
+    for(const QString& str: stringList) {
+        QStringList bookmark = str.split(QChar::fromLatin1('|'));
+        if(bookmark.size() == 2) {
+            BookmarkEntry entry{bookmark.at(0), bookmark.at(1)};
+            list.append(entry);
         }
     }
     return list;
 }
 
-BookmarkList BookmarkManager::addCurrent() {
-    BookmarkList list;
-    BookmarkEntry entry;
-    entry.uri = PLAYER->getTrack().file;
-    entry.name = entry.uri;
-    if(!entry.uri.isEmpty()) {
-        list = BookmarkManager::getList();
+void BookmarkManager::addBookmark(BookmarkList& list, const QString& url) {
+    if(!url.isEmpty()) {
+        QString name = url.split(
+                    QChar::fromLatin1('/'), QString::SkipEmptyParts).last();
+        BookmarkEntry entry{name, url};
         list.append(entry);
         BookmarkManager::saveList(list);
     }
-    return list;
 }
 
 void BookmarkManager::saveList(const BookmarkList& list) {
     QSettings settings;
     QString string;
-    int count = 0;
-    for(const BookmarkEntry& entry : list) {
-        if(count)
-            string.append(QChar::fromLatin1(';'));
+    for(const BookmarkEntry& entry: list) {
         string.append(entry.name + QChar::fromLatin1('|') + entry.uri);
-        count++;
+        string.append(QChar::fromLatin1(';'));
     }
     settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
 }
