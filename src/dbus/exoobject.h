@@ -30,7 +30,7 @@ class ExoObject : public QObject
 public:
     explicit ExoObject(QObject* parent = nullptr);
 
-public slots:
+public Q_SLOTS:
     void showLyricsWindow();
     void bookmarkCurrent();
     void clearPlaylist();

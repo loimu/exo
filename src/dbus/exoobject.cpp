@@ -19,6 +19,7 @@
 
 #include <QCoreApplication>
 
+#include "bookmarkmanager.h"
 #include "trayicon.h"
 #include "playerinterface.h"
 #include "exoobject.h"
@@ -35,8 +36,10 @@ void ExoObject::showLyricsWindow() {
 }
 
 void ExoObject::bookmarkCurrent() {
+    BookmarkList list(BookmarkManager::getList());
+    BookmarkManager::addBookmark(list, PLAYER->getTrack().file);
     if(TrayIcon::self())
-        TrayIcon::self()->addCurrent();
+        TrayIcon::self()->refreshBookmarks(list);
 }
 
 void ExoObject::clearPlaylist() {

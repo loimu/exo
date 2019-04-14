@@ -64,6 +64,7 @@ class TrayIcon : public QWidget
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();
+    void addCurrent();
     void showManager();
 #ifdef BUILD_LASTFM
     void enableScrobbler(bool);
@@ -75,7 +76,6 @@ public:
     static TrayIcon* self() { return object; }
     void refreshBookmarks(const QVector<BookmarkEntry>& list);
     void showLyricsWindow();
-    void addCurrent();
 };
 
 #endif // TRAYICON_H
