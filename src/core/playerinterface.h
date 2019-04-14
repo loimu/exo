@@ -49,7 +49,7 @@ class PlayerInterface : public QObject
     QString getCover();
 
 protected:
-    PTrack track;
+    PTrack track{};
     bool isPlayerRunning(const QString& player);
     void notify();
     virtual PState updateInfo() = 0;
@@ -76,7 +76,7 @@ public:
     virtual void clearPlaylist() = 0;
     virtual void shutdown() = 0;
 
-signals:
+Q_SIGNALS:
     void newStatus(PState);
     void newTrack(const QString&, bool check = false);
 #ifdef BUILD_LASTFM

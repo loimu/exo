@@ -35,7 +35,7 @@ QStringList Process::detect(const QStringList& apps) {
 
 PlayerInterface* PlayerInterface::object = nullptr;
 
-PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent), track()
+PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent)
 {
     if(object)
         qFatal("PlayerInterface: only one instance is allowed");
