@@ -68,7 +68,7 @@ public:
     double volume() const;
     void setVolume(double value);
 
-public slots:
+public Q_SLOTS:
     void Next();
     void Pause();
     void Play();

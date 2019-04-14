@@ -40,7 +40,7 @@ public:
     explicit ScrobblerAuth(QObject* parent = nullptr);
     void auth(const QString& username, const QString& password);
 
-signals:
+Q_SIGNALS:
     void configured();
     void failed(const QString& errmsg);
 };

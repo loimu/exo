@@ -32,7 +32,7 @@ class PITests: public QObject {
 public:
     PITests(QObject *parent = nullptr) : QObject(parent) {;}
 
-private slots:
+public Q_SLOTS:
     void initTestCase();
     void testPlayback();
     void cleanupTestCase();
