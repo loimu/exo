@@ -33,7 +33,7 @@ struct BookmarkEntry {
     QString uri;
 };
 
-typedef QVector<BookmarkEntry> BookmarkList;
+using BookmarkList = QVector<BookmarkEntry>;
 
 class BookmarkManager : public BaseDialog
 {
