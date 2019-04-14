@@ -32,9 +32,9 @@
 #include "bookmarkmanager.h"
 
 
-BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent)
+BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
+    list(BookmarkManager::getList())
 {
-    list = BookmarkManager::getList();
     this->setWindowTitle(tr("Bookmark Manager"));
     this->resize(500, 550);
     auto verticalLayout = new QVBoxLayout(this);

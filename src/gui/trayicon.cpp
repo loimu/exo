@@ -304,9 +304,9 @@ void TrayIcon::addFiles() {
 }
 
 void TrayIcon::addCurrent() {
-    BookmarkList bl = BookmarkManager::getList();
-    BookmarkManager::addBookmark(bl, player->getTrack().file);
-    refreshBookmarks(bl);
+    BookmarkList list(BookmarkManager::getList());
+    BookmarkManager::addBookmark(list, player->getTrack().file);
+    refreshBookmarks(list);
 }
 
 void TrayIcon::showManager() {
