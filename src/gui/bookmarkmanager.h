@@ -37,6 +37,8 @@ using BookmarkList = QVector<BookmarkEntry>;
 
 class BookmarkManager : public BaseDialog
 {
+    Q_OBJECT
+
     QLineEdit* lineEdit;
     QListWidget* listWidget;
     BookmarkList list;

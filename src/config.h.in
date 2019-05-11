@@ -23,6 +23,7 @@
 #cmakedefine BUILD_DBUS
 #cmakedefine BUILD_LASTFM
 #cmakedefine USE_CMUS
+#cmakedefine BUILD_TRANSLATIONS
 
 #define INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
 #define SOURCE_ROOT "${PROJECT_SOURCE_DIR}"

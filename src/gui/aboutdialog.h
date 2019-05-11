@@ -24,6 +24,8 @@
 
 class AboutDialog : public BaseDialog
 {
+    Q_OBJECT
+
 public:
     explicit AboutDialog(QWidget *parent = nullptr);
 };
