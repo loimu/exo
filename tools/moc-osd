@@ -8,30 +8,35 @@ import re
 import subprocess
 import notify2
 
+
 def find_year(path):
-    strings = re.split('([12]{1}[09]{1}\d{2})', path, 1)
+    strings = re.split(r'([12]{1}[09]{1}\d{2})', path, 1)
     return strings[1] if len(strings) > 1 else 'none'
+
 
 def cover_path(path):
     entries = os.listdir(path)
     for entry in entries:
-        if re.match('([^\s]+(?=\.(jpg|jpeg|png)))', entry):
-            return '%s/%s' % (path, entry)
-    return ''
+        if re.match(r'([^\s]+(?=\.(jpg|jpeg|png)))', entry):
+            return "{}/{}".format(path, entry)
+    return ""
+
 
 def main():
     filename = subprocess.getoutput('mocp -Q %file')
     if not filename.find('/') == 0:
-        os._exit(0) # radio stream is playing
+        os._exit(0)  # radio stream is playing
     file_dir = filename.rsplit('/', 1)[0]
-    output = subprocess.getoutput("mocp -Q '%artist <i>{0}</i> %album\n"\
-        "<b>%song (%tt)</b>'".format(find_year(file_dir)))
+    output = subprocess.getoutput(
+        "mocp -Q '%artist <i>{}</i> %album\n<b>%song (%tt)</b>'"
+        .format(find_year(file_dir))).replace("&", "&amp;")
     if not notify2.init('moc'):
-        os._exit(0) # notify2 is out of reach
+        os._exit(0)  # notify2 is out of reach
     ni = notify2.Notification('music on console', output, cover_path(file_dir))
     ni.timeout = 5000
     if not ni.show():
-        os._exit(1) # notify2 is not operational
+        os._exit(1)  # notify2 is not operational
+
 
 if __name__ == '__main__':
     main()
