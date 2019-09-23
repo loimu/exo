@@ -1,3 +1,10 @@
+ v0.9.0
+  - application now is fully translatable
+  - fix lyrics urls, bring lyrics back to service
+  - show current position in the tooltip, works with xembed tray only
+  - show a year in the tooltip
+  - various fixes and improvements
+
  v0.8.0
   - clean port to Qt5 and C++11, Qt4 dropped
   - popup menu for bookmark manager entries (move items, copy URL)
