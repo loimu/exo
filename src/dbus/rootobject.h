@@ -32,6 +32,8 @@ class RootObject : public QDBusAbstractAdaptor
     Q_PROPERTY(QString DesktopEntry READ desktopEntry CONSTANT)
     Q_PROPERTY(bool HasTrackList READ hasTrackList CONSTANT)
     Q_PROPERTY(QString Identity READ identity CONSTANT)
+    Q_PROPERTY(QStringList SupportedUriSchemes READ uriSchemes CONSTANT)
+    Q_PROPERTY(QStringList SupportedMimeTypes READ mimeTypes CONSTANT)
 
 public:
     explicit RootObject(QObject* parent = nullptr);
@@ -40,6 +42,8 @@ public:
     QString desktopEntry() const;
     bool hasTrackList() const;
     QString identity() const;
+    QStringList uriSchemes() const;
+    QStringList mimeTypes() const;
 
 public Q_SLOTS:
     void Quit();

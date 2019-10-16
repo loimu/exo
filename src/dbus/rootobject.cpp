@@ -47,6 +47,22 @@ QString RootObject::identity() const {
     return PLAYER->id();
 }
 
+QStringList RootObject::uriSchemes() const {
+    return QStringList { QStringLiteral("file"), QStringLiteral("http") };
+}
+
+QStringList RootObject::mimeTypes() const {
+    return QStringList { QStringLiteral("application/ogg"),
+                QStringLiteral("application/x-ogg"),
+                QStringLiteral("audio/aac"),
+                QStringLiteral("audio/x-aac"),
+                QStringLiteral("audio/flac"),
+                QStringLiteral("audio/m4a"),
+                QStringLiteral("audio/x-m4a"),
+                QStringLiteral("audio/mpeg")
+    };
+}
+
 void RootObject::Quit() {
     qApp->quit();
 }
