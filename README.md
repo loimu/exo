@@ -26,7 +26,7 @@ make -j2
 ```
 
 ### Screenshot ###
-![Screenshot of the eXo app](https://bitbucket.org/repo/8Xb9ez/images/405669011-exo.png)
+![Screenshot of the eXo app](https://raw.githubusercontent.com/loimu/exo/master/assets/screenshot.png)
 
 ### Installation on Ubuntu ###
 ```bash
