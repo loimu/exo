@@ -19,7 +19,7 @@
 
 #include <QDir>
 #include <QProcess>
-#include <QTime>
+#include <QDateTime>
 
 #include "playerinterface.h"
 
@@ -70,17 +70,17 @@ void PlayerInterface::notify() {
 #ifdef BUILD_LASTFM
     if(currentState != PState::Play || track.isStream) return;
     static bool listened = true;
-    static QTime threshold;
+    static QDateTime threshold;
     if(listened && ((track.currSec < track.totalSec/2 && track.totalSec <= 8*60)
                     || (track.currSec < 4*60 && track.totalSec > 8*60))) {
         listened = false; // beginning
-        threshold = QTime::currentTime()
+        threshold = QDateTime::currentDateTime()
                 .addSecs(track.totalSec > 2*60 ? 60 : track.totalSec/2);
     }
     else if(!listened && (track.currSec > track.totalSec/2
                           || (track.currSec > 4*60 && track.totalSec > 8*60))) {
         listened = true; // ending
-        if(QTime::currentTime() > threshold)
+        if(QDateTime::currentDateTime() > threshold)
             emit trackListened(track.artist, track.title,
                                track.album, track.totalSec);
     }
