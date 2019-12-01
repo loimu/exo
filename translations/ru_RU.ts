@@ -219,7 +219,7 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="92"/>
         <source>A&amp;dd ...</source>
-        <translation>&amp;Двадцать ...</translation>
+        <translation>&amp;Добавить...</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="94"/>
@@ -254,7 +254,7 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="113"/>
         <source>A&amp;bout</source>
-        <translation>О&amp; программе</translation>
+        <translation>&amp;О программе</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="115"/>
