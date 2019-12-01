@@ -3,8 +3,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_CXX_FLAGS_RELEASE "-O2")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -fsanitize=address")
+# set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+# set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -fsanitize=address")
 
 find_package(Qt5 5.9.1 REQUIRED COMPONENTS Core Network Widgets Xml Test)
 set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
