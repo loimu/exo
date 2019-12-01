@@ -89,35 +89,49 @@ void TrayIcon::createActions() {
     showAction = new QAction(tr("Player"), this);
     connect(showAction, &QAction::triggered,
             player, &PlayerInterface::showPlayer);
+
     filesAction = new QAction(tr("A&dd ..."), this);
     connect(filesAction, &QAction::triggered, this, &TrayIcon::addFiles);
+
     lyricsAction = new QAction(tr("&Lyrics"), this);
     connect(lyricsAction, &QAction::triggered,
             this, &TrayIcon::showLyricsWindow);
+
+    startAction = new QAction(tr("&Start"), this);
+    connect(startAction, &QAction::triggered, player, &PlayerInterface::start);
+
     playAction = new QAction(tr("&Play"), this);
-    connect(playAction, &QAction::triggered, player, &PlayerInterface::play);
-    playAction->setIcon(QIcon(QStringLiteral(":/images/play.png")));
+    connect(playAction, &QAction::triggered,
+            player, &PlayerInterface::play);
+    pauseAction->setIcon(QIcon(QStringLiteral(":/images/play.png")));
+
     pauseAction = new QAction(tr("P&ause"), this);
     connect(pauseAction, &QAction::triggered,
             player, &PlayerInterface::pause);
     pauseAction->setIcon(QIcon(QStringLiteral(":/images/pause.png")));
+
     prevAction = new QAction(tr("P&rev"), this);
     connect(prevAction, &QAction::triggered, player, &PlayerInterface::prev);
+
     prevAction->setIcon(QIcon(QStringLiteral(":/images/prev.png")));
     nextAction = new QAction(tr("&Next"), this);
     connect(nextAction, &QAction::triggered, player, &PlayerInterface::next);
+
     nextAction->setIcon(QIcon(QStringLiteral(":/images/next.png")));
     stopAction = new QAction(tr("&Stop"), this);
     connect(stopAction, &QAction::triggered, player, &PlayerInterface::stop);
+
     stopAction->setIcon(QIcon(QStringLiteral(":/images/stop.png")));
     aboutAction = new QAction(tr("A&bout"), this);
     connect(aboutAction, &QAction::triggered, this, &TrayIcon::showAboutDialog);
+
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
     quitAction->setIcon(QIcon(QStringLiteral(":/images/close.png")));
     bookmarkCurrentAction = new QAction(tr("Bookmark &Current"), this);
     connect(bookmarkCurrentAction, &QAction::triggered,
             this, &TrayIcon::addCurrent);
+
     bookmarkCurrentAction->setIcon(
                 QIcon::fromTheme(QStringLiteral("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark &Manager"), this);
@@ -125,8 +139,10 @@ void TrayIcon::createActions() {
             this, &TrayIcon::showManager);
     bookmarkManagerAction->setIcon(
                 QIcon::fromTheme(QStringLiteral("bookmarks-organize")));
+
     setQuitBehaviourAction = new QAction(tr("&Close player on exit"), this);
     setQuitBehaviourAction->setCheckable(true);
+
     QSettings settings;
     setQuitBehaviourAction->setChecked(
                 settings.value(QStringLiteral("player/quit")).toBool());
@@ -165,6 +181,7 @@ void TrayIcon::createTrayIcon() {
         }
     }
     trayIconMenu->addSeparator();
+    trayIconMenu->addAction(startAction);
     trayIconMenu->addAction(playAction);
     trayIconMenu->addAction(pauseAction);
     trayIconMenu->addAction(prevAction);
