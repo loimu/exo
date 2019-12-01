@@ -38,7 +38,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
                                 QStringList{QStringLiteral("-SO"),
                                             QStringLiteral(OSD_OPT)});
     startTimer(1000);
-    connect(moc, QOverload<int>::of(&QProcess::finished),
+    connect(moc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &MocInterface::notify);
 }
 

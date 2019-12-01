@@ -99,7 +99,7 @@ void TrayIcon::createActions() {
     playAction->setIcon(QIcon(QStringLiteral(":/images/play.png")));
     pauseAction = new QAction(tr("P&ause"), this);
     connect(pauseAction, &QAction::triggered,
-            player, &PlayerInterface::playPause);
+            player, &PlayerInterface::pause);
     pauseAction->setIcon(QIcon(QStringLiteral(":/images/pause.png")));
     prevAction = new QAction(tr("P&rev"), this);
     connect(prevAction, &QAction::triggered, player, &PlayerInterface::prev);

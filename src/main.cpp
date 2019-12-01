@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
-            qInfo("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
+            qInfo("Usage: exo-player [-h] [-b] [-f]\nSee also `man exo-player`");
             return 0;
         }
         else if(arg == QByteArray("-d") || arg == QByteArray("-b")
