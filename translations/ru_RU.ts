@@ -232,7 +232,7 @@
         <translation>Старт</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="104"/>
+        <location filename="../src/gui/trayicon.cpp" line="103"/>
         <source>&amp;Play</source>
         <translation>&amp;Играть</translation>
     </message>
@@ -267,47 +267,47 @@
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="132"/>
+        <location filename="../src/gui/trayicon.cpp" line="131"/>
         <source>Bookmark &amp;Current</source>
         <translation>&amp;Текущие закладки</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="138"/>
+        <location filename="../src/gui/trayicon.cpp" line="137"/>
         <source>Bookmark &amp;Manager</source>
         <translation>&amp;Менеджер закладок</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="144"/>
+        <location filename="../src/gui/trayicon.cpp" line="143"/>
         <source>&amp;Close player on exit</source>
         <translation>За&amp;крыть mocp при выходе</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="154"/>
+        <location filename="../src/gui/trayicon.cpp" line="153"/>
         <source>&amp;Enable scrobbling</source>
         <translation>&amp;Включить скробблинг</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="177"/>
+        <location filename="../src/gui/trayicon.cpp" line="176"/>
         <source>&amp;Edit with</source>
         <translation>Ре&amp;дактировать с помощью</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="194"/>
+        <location filename="../src/gui/trayicon.cpp" line="193"/>
         <source>Lin&amp;ks</source>
         <translation>&amp;Закладки</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="200"/>
+        <location filename="../src/gui/trayicon.cpp" line="199"/>
         <source>Se&amp;ttings</source>
         <translation>На&amp;стройки</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="260"/>
+        <location filename="../src/gui/trayicon.cpp" line="259"/>
         <source>Player isn&apos;t running</source>
         <translation>Плеер не запущен</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="261"/>
+        <location filename="../src/gui/trayicon.cpp" line="260"/>
         <source>&lt;b&gt;Stopped&lt;/b&gt;</source>
         <translation>&lt;b&gt;Остановлено&lt;/b&gt;</translation>
     </message>
