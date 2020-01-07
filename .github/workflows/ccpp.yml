@@ -15,11 +15,9 @@ jobs:
     - name: install dependencies
       run: |
         sudo apt update
-        sudo apt install -y libc6 libgcc1 liblastfm5-1 libqt5core5a libqt5dbus5 libqt5gui5 libqt5network5 libqt5widgets5 libstdc++6 moc python3-notify2
+        sudo apt install -y libc6 libgcc1 liblastfm5-1 libqt5core5a libqt5dbus5 libqt5gui5 libqt5network5 libqt5widgets5 libstdc++6 moc python3-notify2 qt5-default qttools5-dev
     - name: configure
       run: |
-        pwd
-        ls -la .
         mkdir build
         cd build
         cmake .. 
