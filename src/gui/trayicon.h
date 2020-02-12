@@ -43,6 +43,7 @@ class TrayIcon : public QWidget
     QAction* lyricsAction;
     QAction* bookmarkCurrentAction;
     QAction* bookmarkManagerAction;
+    QAction* startAction;
     QAction* playAction;
     QAction* pauseAction;
     QAction* prevAction;

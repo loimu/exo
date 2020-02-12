@@ -38,7 +38,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
                                 QStringList{QStringLiteral("-SO"),
                                             QStringLiteral(OSD_OPT)});
     startTimer(1000);
-    connect(moc, QOverload<int>::of(&QProcess::finished),
+    connect(moc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &MocInterface::notify);
 }
 
@@ -89,7 +89,8 @@ const QString MocInterface::id() const {
     QProcess::startDetached(player, QStringList{__option});\
     }
 
-SEND_COMMAND(play, QStringLiteral("-p"))
+SEND_COMMAND(start, QStringLiteral("-p"))
+SEND_COMMAND(play, QStringLiteral("-U"))
 SEND_COMMAND(pause,QStringLiteral("-P"))
 SEND_COMMAND(playPause, QStringLiteral("-G"))
 SEND_COMMAND(prev, QStringLiteral("-r"))
@@ -116,6 +117,8 @@ void MocInterface::showPlayer() {
                     QStringLiteral("x-terminal-emulator"),
                     QStringLiteral("gnome-terminal"),
                     QStringLiteral("konsole"),
+                    QStringLiteral("alacritty"),
+                    QStringLiteral("xterm"),
                     QStringLiteral("xfce4-terminal"),
                     QStringLiteral("lxterminal")});
     if(!apps.isEmpty())

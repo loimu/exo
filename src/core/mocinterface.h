@@ -34,6 +34,7 @@ class MocInterface : public PlayerInterface
 public:
     explicit MocInterface(QObject* parent = nullptr);
     const QString id() const override;
+    void start() override;
     void play() override;
     void pause() override;
     void playPause() override;

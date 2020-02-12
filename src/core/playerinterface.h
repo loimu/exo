@@ -59,6 +59,7 @@ public:
     static PlayerInterface* self() { return object; }
     const PTrack& getTrack() const { return track; }
     virtual const QString id() const = 0;
+    virtual void start() = 0;
     virtual void play() = 0;
     virtual void pause() = 0;
     virtual void playPause() = 0;

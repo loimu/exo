@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="be_BY" sourcelanguage="en">
+<TS version="2.1" language="ru_RU" sourcelanguage="en">
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="31"/>
         <source>About eXo</source>
-        <translation>Аб праграме eXo</translation>
+        <translation>О программе eXo</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="49"/>
         <source>About &amp;Qt</source>
-        <translation>Аб &amp;Qt</translation>
+        <translation>О &amp;Qt</translation>
     </message>
 </context>
 <context>
@@ -19,43 +19,43 @@
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="38"/>
         <source>Bookmark Manager</source>
-        <translation>Мэнэджар закладак</translation>
+        <translation>Менеджер закладок</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="46"/>
         <source>&amp;Delete</source>
-        <translation>&amp;Выдаліць</translation>
+        <translation>&amp;Удалить</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="47"/>
         <source>Delete selected item</source>
-        <translation>Выдаліць вылучаны элемент</translation>
+        <translation>Удалить выбранный элемент</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="52"/>
         <source>Rename selected item</source>
-        <translation>Пераіменаваць вылучаны элемент</translation>
+        <translation>Переименовать выбранный элемент</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="61"/>
         <source>Copy URL to clipboard</source>
-        <translation>Скапіраваць адрас у буфер абмену</translation>
+        <translation>Скопировать URL в буфер обмена</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="64"/>
         <source>Move up</source>
-        <translation>Перамясьціць уверх</translation>
+        <translation>Переместить вверх</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="67"/>
         <source>Move down</source>
-        <translation>Перамясьціць уніз</translation>
+        <translation>Переместить вниз</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="133"/>
         <location filename="../src/gui/bookmarkmanager.cpp" line="173"/>
         <source>Name: </source>
-        <translation>Назва: </translation>
+        <translation>Название: </translation>
     </message>
 </context>
 <context>
@@ -63,12 +63,12 @@
     <message>
         <location filename="../src/core/consoleauth.cpp" line="39"/>
         <source>Last.fm authentication</source>
-        <translation>Last.fm аўтарызацыя</translation>
+        <translation>Last.fm аутентификация</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="40"/>
         <source>Login:</source>
-        <translation>Логін:</translation>
+        <translation>Логин:</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="42"/>
@@ -78,7 +78,7 @@
     <message>
         <location filename="../src/core/consoleauth.cpp" line="50"/>
         <source>Try again? (y/n)</source>
-        <translation>Паспрабаваць яшчэ? (т/н)</translation>
+        <translation>Попробовать ещё? (д/н)</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="54"/>
@@ -89,12 +89,12 @@
     <message>
         <location filename="../src/core/consoleauth.cpp" line="55"/>
         <source>Exiting authentication procedure</source>
-        <translation>Працэдура аўтарызацыі завершана</translation>
+        <translation>Процедура аутентификации завершана</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="62"/>
         <source>Authentication succesful!</source>
-        <translation>Аўтарызацыя пасьпяховая!</translation>
+        <translation>Успекшная аутентификация!</translation>
     </message>
 </context>
 <context>
@@ -102,72 +102,72 @@
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="42"/>
         <source>Lyrics</source>
-        <translation>Тэкст</translation>
+        <translation>Текст песни</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="48"/>
         <source>artist</source>
-        <translation>выканаўца</translation>
+        <translation>исполнитель</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="49"/>
         <source>Edit artist and then press Enter</source>
-        <translation>Упішыце выканаўцу і націсьніце Enter</translation>
+        <translation>Отредактируйте автора, затем нажмите Enter</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="53"/>
         <source>title</source>
-        <translation>назва</translation>
+        <translation>название</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="54"/>
         <source>Edit title and then press Enter</source>
-        <translation>Упішыце назву і націсьніце Enter</translation>
+        <translation>Отредактируйте название, затем нажмите Enter</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="67"/>
         <source>Auto</source>
-        <translation>Аўта</translation>
+        <translation>Авто</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="68"/>
         <source>Autoupdate track when changed</source>
-        <translation>Абнаўляць тэкст калі трэк зьмяняецца</translation>
+        <translation>Автомотически обновлять трек при изменении</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="72"/>
         <source>Update</source>
-        <translation>Абнавіць</translation>
+        <translation>Обновить</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="73"/>
         <source>Get lyrics for the current track</source>
-        <translation>Атрымаць тэкст да актуальнага трэку</translation>
+        <translation>Получить текст песни для текущего трека</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="102"/>
         <source>Network error</source>
-        <translation>Памылка спалучэньня</translation>
+        <translation>Ошибка сети</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="119"/>
         <source>Error</source>
-        <translation>Памылка</translation>
+        <translation>Ошибка</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="124"/>
         <source>Not found</source>
-        <translation>Ня знойдзена</translation>
+        <translation>Не найдено</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="139"/>
         <source>Downloading</source>
-        <translation>Запампоўка</translation>
+        <translation>Загрузка</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="170"/>
         <source>Searching</source>
-        <translation>Пошук</translation>
+        <translation>Поиск</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@
     <message>
         <location filename="../src/main.cpp" line="97"/>
         <source>Application is already running</source>
-        <translation>Праграма ўжо выконваецца</translation>
+        <translation>Программа уже запущена</translation>
     </message>
 </context>
 <context>
@@ -183,12 +183,12 @@
     <message>
         <location filename="../src/lastfm/scrobblerauth.cpp" line="45"/>
         <source>network error, try again</source>
-        <translation>сеткавая памылка, паспрабуйце яшчэ</translation>
+        <translation>ошибка сети, прпробуйте снова</translation>
     </message>
     <message>
         <location filename="../src/lastfm/scrobblerauth.cpp" line="59"/>
         <source>wrong data or connection error, try again</source>
-        <translation>недакладныя дадзеныя ці памылка спалучэньня, паспрабуйце яшчэ</translation>
+        <translation>неправильные данные или ошибка соединения, попробуйте снова</translation>
     </message>
 </context>
 <context>
@@ -196,12 +196,12 @@
     <message>
         <location filename="../src/gui/scrobblersettings.cpp" line="32"/>
         <source>Scrobbler Settings</source>
-        <translation>Налады скроблеру</translation>
+        <translation>Настройки скробблера</translation>
     </message>
     <message>
         <location filename="../src/gui/scrobblersettings.cpp" line="36"/>
         <source>login</source>
-        <translation>логін</translation>
+        <translation>логин</translation>
     </message>
     <message>
         <location filename="../src/gui/scrobblersettings.cpp" line="40"/>
@@ -214,42 +214,42 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="89"/>
         <source>Player</source>
-        <translation>Плэер</translation>
+        <translation>Плеер</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="93"/>
         <source>A&amp;dd ...</source>
-        <translation>&amp;Дадаць ...</translation>
+        <translation>&amp;Добавить...</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="96"/>
         <source>&amp;Lyrics</source>
-        <translation>&amp;Тэкст</translation>
+        <translation>&amp;Текст песни</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="100"/>
         <source>&amp;Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Старт</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="103"/>
         <source>&amp;Play</source>
-        <translation>&amp;Прайграць</translation>
+        <translation>&amp;Играть</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="108"/>
         <source>P&amp;ause</source>
-        <translation>П&amp;аўза</translation>
+        <translation>П&amp;ауза</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="113"/>
         <source>P&amp;rev</source>
-        <translation>Папя&amp;рэдні</translation>
+        <translation>П&amp;редыдущий</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="117"/>
         <source>&amp;Next</source>
-        <translation>&amp;Наступны</translation>
+        <translation>&amp;Следующий</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="121"/>
@@ -259,57 +259,57 @@
     <message>
         <location filename="../src/gui/trayicon.cpp" line="125"/>
         <source>A&amp;bout</source>
-        <translation>А&amp;б праграме</translation>
+        <translation>&amp;О программе</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="128"/>
         <source>&amp;Quit</source>
-        <translation>&amp;Выхад</translation>
+        <translation>&amp;Выход</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="131"/>
         <source>Bookmark &amp;Current</source>
-        <translation>Дадаць у закладкі &amp;бягучае</translation>
+        <translation>&amp;Текущие закладки</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="137"/>
         <source>Bookmark &amp;Manager</source>
-        <translation>&amp;Мэнэджар закладак</translation>
+        <translation>&amp;Менеджер закладок</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="143"/>
         <source>&amp;Close player on exit</source>
-        <translation>За&amp;чыніць плэер пры выхадзе</translation>
+        <translation>За&amp;крыть mocp при выходе</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="153"/>
         <source>&amp;Enable scrobbling</source>
-        <translation>&amp;Уключыць скроблінг</translation>
+        <translation>&amp;Включить скробблинг</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="176"/>
         <source>&amp;Edit with</source>
-        <translation>Зь&amp;мяніць у</translation>
+        <translation>Ре&amp;дактировать с помощью</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="193"/>
         <source>Lin&amp;ks</source>
-        <translation>&amp;Закладкі</translation>
+        <translation>&amp;Закладки</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="199"/>
         <source>Se&amp;ttings</source>
-        <translation>На&amp;лады</translation>
+        <translation>На&amp;стройки</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="259"/>
         <source>Player isn&apos;t running</source>
-        <translation>Плэер не запушчаны</translation>
+        <translation>Плеер не запущен</translation>
     </message>
     <message>
         <location filename="../src/gui/trayicon.cpp" line="260"/>
         <source>&lt;b&gt;Stopped&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Астаноўлена&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Остановлено&lt;/b&gt;</translation>
     </message>
 </context>
 </TS>
