@@ -62,8 +62,8 @@ AboutDialog::AboutDialog(QWidget *parent) : BaseDialog(parent)
                         "<p>Qt %2 (built with Qt %3)<br />"
                         "Licensed under GPL v3 or later.</p>"
                         "Project:<br />"
-                        "<a href=\"https://bitbucket.org/blaze/exo\">"
-                        "https://bitbucket.org/blaze/exo</a>")
+                        "<a href=\"https://launchpad.net/exo-player\">"
+                        "https://launchpad.net/exo-player</a>")
                    .arg(qApp->applicationVersion(),
                         qVersion(),
                         QT_VERSION_STR));
