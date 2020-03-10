@@ -43,12 +43,12 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
 }
 
 PState MocInterface::updateInfo() {
-    QString info = moc->readAllStandardOutput();
+    const QString info = moc->readAllStandardOutput();
     if(info.isEmpty())
         return PState::Offline;
     if(info.startsWith(QLatin1String("STOP")))
         return PState::Stop;
-    QRegularExpression re(
+    const QRegularExpression re(
                 QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
                                "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
                                "\\{cs\\}(.*)\\{T\\}(.*)\n"));
@@ -71,7 +71,7 @@ PState MocInterface::updateInfo() {
         track.caption = track.file;
     if(track.isStream) {
         track.totalSec = 8*60;
-        QString dash = QStringLiteral(" - ");
+        const QString dash = QStringLiteral(" - ");
         if(track.caption.contains(dash)) {
             track.artist = track.caption.section(dash, 0, 0);
             track.title = track.caption.section(dash, 1, -1);
@@ -110,16 +110,14 @@ SEND_COMMAND_PARAM(volume, QStringLiteral("-v%1"))
 SEND_COMMAND_PARAM(changeVolume, QStringLiteral("-v+%1"))
 
 void MocInterface::showPlayer() {
-    QString term = QStringLiteral("xterm"); // xterm is a fallback app
-    QStringList apps = Process::detect(
+    const QStringList apps = Process::detect(
                 QStringList{
                     QStringLiteral("x-terminal-emulator"),
                     QStringLiteral("gnome-terminal"),
                     QStringLiteral("konsole"),
                     QStringLiteral("xfce4-terminal"),
                     QStringLiteral("lxterminal")});
-    if(!apps.isEmpty())
-        term = apps.at(0);
+    const QString term = apps.isEmpty() ? QStringLiteral("xterm") : apps.at(0);
     QProcess::startDetached(
                 term,
                 QStringList{QStringLiteral("-e"),
