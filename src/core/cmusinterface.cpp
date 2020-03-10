@@ -36,19 +36,18 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     startTimer(1000);
     connect(cmus, QOverload<int>::of(&QProcess::finished),
             this, &CmusInterface::notify);
+    qInfo("using cmus interface");
 }
 
 void CmusInterface::runPlayer() {
-    QString term = QStringLiteral("xterm"); // xterm is a fallback app
-    QStringList apps = Process::detect(
+    const QStringList apps = Process::detect(
                 QStringList{
                     QStringLiteral("x-terminal-emulator"),
                     QStringLiteral("gnome-terminal"),
                     QStringLiteral("konsole"),
                     QStringLiteral("xfce4-terminal"),
                     QStringLiteral("lxterminal")});
-    if(!apps.isEmpty())
-        term = apps.at(0);
+    const QString term = apps.isEmpty() ? QStringLiteral("xterm") : apps.at(0);
     QProcess::startDetached(term, QStringList{QStringLiteral("-e"),
                                               QStringLiteral("cmus")});
 }
@@ -60,10 +59,10 @@ QString CmusInterface::find(const QString& string, const QString& regexp) {
 }
 
 PState CmusInterface::updateInfo() {
-    QString info = cmus->readAllStandardOutput();
+    const QString info = cmus->readAllStandardOutput();
     if(info.isEmpty())
         return PState::Offline;
-    QString string = find(info, QStringLiteral("status\\s(.*)"));
+    const QString string = find(info, QStringLiteral("status\\s(.*)"));
     if(string == QLatin1String("stopped"))
         return PState::Stop;
     PState state = PState::Offline;
@@ -86,11 +85,11 @@ PState CmusInterface::updateInfo() {
     track.isStream = !track.file.startsWith(QChar::fromLatin1('/'));
     if(!track.isStream)
         return state;
-    QString title = find(info, QStringLiteral("stream\\s(.*)"));
+    const QString title = find(info, QStringLiteral("stream\\s(.*)"));
     track.caption += QLatin1String("<br />") + title;
     track.totalSec = 8*60;
     if(!title.isEmpty()) {
-        QString dash = QStringLiteral(" - ");
+        const QString dash = QStringLiteral(" - ");
         if(title.contains(dash)) {
             track.artist = title.section(dash, 0, 0);
             track.title = title.section(dash, 1, -1);
