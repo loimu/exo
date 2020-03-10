@@ -90,9 +90,9 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
 
 BookmarkList BookmarkManager::getList() {
     QSettings settings;
-    QString string = settings.value(
+    const QString string = settings.value(
                 QStringLiteral("bookmarkmanager/bookmarks")).toString();
-    QStringList stringList = string.split(
+    const QStringList stringList = string.split(
                 QChar::fromLatin1(';'), QString::SkipEmptyParts);
     BookmarkList list;
     for(const QString& str: stringList) {
