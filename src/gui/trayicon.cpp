@@ -61,11 +61,11 @@ public:
     explicit TagEditor(const QString &text, QObject* parent)
         : QAction(text, parent), editorPath(text)
     {
-        QString app = text.split(QChar::fromLatin1('/')).last();
+        const QString app = text.split(QChar::fromLatin1('/')).last();
         this->setText(app.at(0).toUpper() + app.mid(1));
         this->setIcon(QIcon::fromTheme(app));
         connect(this, &TagEditor::triggered, this, [this] {
-            QString file = PLAYER->getTrack().file;
+            const QString file = PLAYER->getTrack().file;
             if(!PLAYER->getTrack().isStream)
                 QProcess::startDetached(editorPath, QStringList() << file); });
     }
@@ -149,7 +149,7 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
-    QStringList editors = Process::detect(
+    const QStringList editors = Process::detect(
                 QStringList{
                     QStringLiteral("picard"),
                     QStringLiteral("kid3"),
@@ -261,7 +261,7 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
         /* try to guess a year from file path
          * only years starting with 19, 20  are considered to be valid
          *  in order to exclude false positives as much as possible */
-        QRegularExpression re(QStringLiteral("((19|20){1}\\d{2})"));
+        const QRegularExpression re(QStringLiteral("((19|20){1}\\d{2})"));
         QRegularExpressionMatch match = re.match(track.file);
         /* only tooltips with fixed size have acceptable look in some DEs
          * therefore we are using a fixed-size table here */
@@ -295,13 +295,13 @@ void TrayIcon::setQuitBehaviour(bool checked) {
 }
 
 void TrayIcon::addFiles() {
-    QStringList files = QFileDialog::getOpenFileNames(
+    const QStringList files = QFileDialog::getOpenFileNames(
                 this,
                 QStringLiteral("Add files to playlist"),
                 QString(),
                 QStringLiteral("Media (*.aac *.flac *.m4a *.mp3 *.ogg *.wma);;"
                                "Playlists (*.m3u *.pls *.xspf );;All files (*)"
-                ));
+                               ));
     player->appendFile(files);
 }
 
