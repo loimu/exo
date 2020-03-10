@@ -40,15 +40,15 @@ void PITests::testPlayback() {
     QString tokenString2 = QStringLiteral("Audiofile 2");
     player->play();
     QTest::qWait(2000);
-    QString t1 = PlayerInterface::getTrack()->title;
+    QString t1 = PLAYER->getTrack().title;
     player->next();
     QTest::qWait(2000);
-    QString t2 = PlayerInterface::getTrack()->title;
+    QString t2 = PLAYER->getTrack().title;
     player->prev();
     QTest::qWait(2000);
     player->pause();
     QTest::qWait(1000);
-    QString t3 = PlayerInterface::getTrack()->title;
+    QString t3 = PLAYER->getTrack().title;
     player->stop();
     QCOMPARE(tokenString1, t1);
     QCOMPARE(tokenString2, t2);
