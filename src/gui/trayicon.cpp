@@ -261,7 +261,7 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
         /* try to guess a year from file path
          * only years starting with 19, 20  are considered to be valid
          *  in order to exclude false positives as much as possible */
-        const QRegularExpression re(QStringLiteral("((19|20){1}\\d{2})"));
+        static const QRegularExpression re(QStringLiteral("((19|20){1}\\d{2})"));
         QRegularExpressionMatch match = re.match(track.file);
         /* only tooltips with fixed size have acceptable look in some DEs
          * therefore we are using a fixed-size table here */

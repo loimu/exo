@@ -48,7 +48,7 @@ PState MocInterface::updateInfo() {
         return PState::Offline;
     if(info.startsWith(QLatin1String("STOP")))
         return PState::Stop;
-    const QRegularExpression re(
+    static const QRegularExpression re(
                 QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
                                "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
                                "\\{cs\\}(.*)\\{T\\}(.*)\n"));
