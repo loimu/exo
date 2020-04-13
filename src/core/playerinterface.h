@@ -20,8 +20,6 @@
 #ifndef PLAYERINTERFACE_H
 #define PLAYERINTERFACE_H
 
-#include "config.h"
-
 #include <QObject>
 
 #define PLAYER PlayerInterface::self()
@@ -75,14 +73,8 @@ public:
     virtual void appendFile(const QStringList& files) = 0;
     virtual void clearPlaylist() = 0;
     virtual void shutdown() = 0;
-
-Q_SIGNALS:
-    void newStatus(PState);
-    void newTrack(const QString&, bool check = false);
-#ifdef BUILD_LASTFM
-    void trackListened(const QString&, const QString&, const QString&, int);
-    void trackChanged(const QString&, const QString&, int);
-#endif // BUILD_LASTFM
+    Q_SIGNAL void newStatus(PState);
+    Q_SIGNAL void newTrack(const QString&, bool check = false);
 };
 
 #endif // PLAYERINTERFACE_H

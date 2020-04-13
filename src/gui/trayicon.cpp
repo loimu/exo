@@ -35,11 +35,12 @@
 #include "aboutdialog.h"
 #include "bookmarkmanager.h"
 #include "lyricsdialog.h"
+#include "trayicon.h"
+
 #ifdef BUILD_LASTFM
   #include "scrobblersettings.h"
   #include "scrobbler.h"
 #endif // BUILD_LASTFM
-#include "trayicon.h"
 
 
 class Bookmark : public QAction {

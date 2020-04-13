@@ -33,15 +33,16 @@ class Scrobbler : public QObject
 {
     static QPointer<Scrobbler> object;
     std::unique_ptr<lastfm::Audioscrobbler> as;
-    void init(const QString& artist, const QString& title, int totalSec);
-    void submit(const QString& artist, const QString& title,
-                const QString& album, int totalSec);
 
 public:
     static const char* apiKey;
     static const char* secret;
     explicit Scrobbler(QObject* parent = nullptr);
     static QPointer<Scrobbler> self() { return object; }
+    void init(const QString& artist, const QString& title,
+              int totalSec);
+    void submit(const QString& artist, const QString& title,
+                const QString& album, int totalSec);
 };
 
 #endif // SCROBBLER_H

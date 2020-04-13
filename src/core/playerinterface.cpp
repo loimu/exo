@@ -21,6 +21,10 @@
 #include <QProcess>
 #include <QDateTime>
 
+#include "config.h"
+#ifdef BUILD_LASTFM
+  #include "scrobbler.h"
+#endif // BUILD_LASTFM
 #include "playerinterface.h"
 
 
@@ -53,6 +57,9 @@ void PlayerInterface::notify() {
     track.caption.clear();
     static PState state = PState::Offline;
     PState currentState = updateInfo();
+#ifdef BUILD_LASTFM
+    QPointer<Scrobbler> scrobbler = Scrobbler::self();
+#endif // BUILD_LASTFM
     if(state != currentState) {
         state = currentState;
         emit newStatus(currentState);
@@ -64,7 +71,8 @@ void PlayerInterface::notify() {
         emit newTrack(getCover());
 #ifdef BUILD_LASTFM
         if(currentState == PState::Play && !track.artist.isEmpty())
-            emit trackChanged(track.artist, track.title, track.totalSec);
+            if(scrobbler)
+                scrobbler->init(track.artist, track.title, track.totalSec);
 #endif // BUILD_LASTFM
     }
 #ifdef BUILD_LASTFM
@@ -81,8 +89,9 @@ void PlayerInterface::notify() {
                           || (track.currSec > 4*60 && track.totalSec > 8*60))) {
         listened = true; // ending
         if(QDateTime::currentDateTime() > threshold)
-            emit trackListened(track.artist, track.title,
-                               track.album, track.totalSec);
+            if(scrobbler)
+                scrobbler->submit(track.artist, track.title, track.album,
+                                  track.totalSec);
     }
 #endif // BUILD_LASTFM
 }

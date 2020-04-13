@@ -24,7 +24,6 @@
 #include <lastfm5/Audioscrobbler.h>
 #include <lastfm5/Track.h>
 
-#include "playerinterface.h"
 #include "scrobbler.h"
 
 
@@ -46,8 +45,6 @@ Scrobbler::Scrobbler(QObject* parent) : QObject(parent),
                 QStringLiteral("scrobbler/sessionkey")).toString();
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
-    connect(PLAYER, &PlayerInterface::trackChanged, this, &Scrobbler::init);
-    connect(PLAYER, &PlayerInterface::trackListened, this, &Scrobbler::submit);
 }
 
 void Scrobbler::init(const QString& artist, const QString& title,
