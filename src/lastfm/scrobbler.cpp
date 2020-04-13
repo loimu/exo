@@ -17,8 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "config.h"
-
 #include <QSettings>
 #include <lastfm5/ws.h>
 #include <lastfm5/Audioscrobbler.h>
@@ -30,7 +28,7 @@
 const char* Scrobbler::apiKey = "75ca28a33e04af35b315c086736a6e7c";
 const char* Scrobbler::secret = "a341d91dcf4b4ed725b72f27f1e4f2ef";
 
-QPointer<Scrobbler> Scrobbler::object = nullptr;
+Scrobbler* Scrobbler::object = nullptr;
 
 Scrobbler::Scrobbler(QObject* parent) : QObject(parent),
     as(new lastfm::Audioscrobbler(QStringLiteral("eXo")))
@@ -46,6 +44,8 @@ Scrobbler::Scrobbler(QObject* parent) : QObject(parent),
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
 }
+
+Scrobbler::~Scrobbler() { object = nullptr; }
 
 void Scrobbler::init(const QString& artist, const QString& title,
                      const QString& album, int totalSec) {

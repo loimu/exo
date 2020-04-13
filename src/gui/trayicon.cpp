@@ -24,7 +24,6 @@
 #include <QWheelEvent>
 #include <QSettings>
 #include <QFileDialog>
-#include <QPointer>
 #include <QCoreApplication>
 #include <QProcess>
 #include <QRegularExpression>
@@ -351,7 +350,7 @@ void TrayIcon::enableScrobbler(bool checked) {
 }
 
 void TrayIcon::loadScrobbler(bool checked) {
-    QPointer<Scrobbler> scrobbler = Scrobbler::self();
+    Scrobbler* scrobbler = Scrobbler::self();
     if(!scrobbler && checked)
         scrobbler = new Scrobbler(this);
     else if(scrobbler && !checked)

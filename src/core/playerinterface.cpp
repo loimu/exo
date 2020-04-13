@@ -58,7 +58,7 @@ void PlayerInterface::notify() {
     static PState state = PState::Offline;
     PState currentState = updateInfo();
 #ifdef BUILD_LASTFM
-    QPointer<Scrobbler> scrobbler = Scrobbler::self();
+    Scrobbler* scrobbler = Scrobbler::self();
 #endif // BUILD_LASTFM
     if(state != currentState) {
         state = currentState;
