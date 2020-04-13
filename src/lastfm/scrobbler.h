@@ -40,7 +40,7 @@ public:
     explicit Scrobbler(QObject* parent = nullptr);
     static QPointer<Scrobbler> self() { return object; }
     void init(const QString& artist, const QString& title,
-              int totalSec);
+              const QString& album, int totalSec);
     void submit(const QString& artist, const QString& title,
                 const QString& album, int totalSec);
 };

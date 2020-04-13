@@ -48,10 +48,11 @@ Scrobbler::Scrobbler(QObject* parent) : QObject(parent),
 }
 
 void Scrobbler::init(const QString& artist, const QString& title,
-                     int totalSec) {
+                     const QString& album, int totalSec) {
     lastfm::MutableTrack t;
     t.setArtist(artist);
     t.setTitle(title);
+    t.setAlbum(album);
     t.setDuration(totalSec);
     as->nowPlaying(t);
 }

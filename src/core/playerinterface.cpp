@@ -72,7 +72,8 @@ void PlayerInterface::notify() {
 #ifdef BUILD_LASTFM
         if(currentState == PState::Play && !track.artist.isEmpty())
             if(scrobbler)
-                scrobbler->init(track.artist, track.title, track.totalSec);
+                scrobbler->init(track.artist, track.title, track.album,
+                                track.totalSec);
 #endif // BUILD_LASTFM
     }
 #ifdef BUILD_LASTFM
