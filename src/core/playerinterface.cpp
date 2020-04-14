@@ -17,11 +17,13 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+
+#include "config.h"
+
 #include <QDir>
 #include <QProcess>
 #include <QDateTime>
 
-#include "config.h"
 #ifdef BUILD_LASTFM
   #include "scrobbler.h"
 #endif // BUILD_LASTFM
@@ -57,9 +59,6 @@ void PlayerInterface::notify() {
     track.caption.clear();
     static PState state = PState::Offline;
     PState currentState = updateInfo();
-#ifdef BUILD_LASTFM
-    Scrobbler* scrobbler = Scrobbler::self();
-#endif // BUILD_LASTFM
     if(state != currentState) {
         state = currentState;
         emit newStatus(currentState);
@@ -71,7 +70,7 @@ void PlayerInterface::notify() {
         emit newTrack(getCover());
 #ifdef BUILD_LASTFM
         if(currentState == PState::Play && !track.artist.isEmpty())
-            if(scrobbler)
+            if(auto scrobbler = Scrobbler::self())
                 scrobbler->init(track.artist, track.title, track.album,
                                 track.totalSec);
 #endif // BUILD_LASTFM
@@ -90,7 +89,7 @@ void PlayerInterface::notify() {
                           || (track.currSec > 4*60 && track.totalSec > 8*60))) {
         listened = true; // ending
         if(QDateTime::currentDateTime() > threshold)
-            if(scrobbler)
+            if(auto scrobbler = Scrobbler::self())
                 scrobbler->submit(track.artist, track.title, track.album,
                                   track.totalSec);
     }
