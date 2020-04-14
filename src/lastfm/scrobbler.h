@@ -29,12 +29,14 @@ class Audioscrobbler;
 
 class Scrobbler : public QObject
 {
+    friend class ScrobblerAuth;
+
+    static const char* apiKey;
+    static const char* secret;
     static Scrobbler* object;
     std::unique_ptr<lastfm::Audioscrobbler> as;
 
 public:
-    static const char* apiKey;
-    static const char* secret;
     explicit Scrobbler(QObject* parent = nullptr);
     virtual ~Scrobbler();
     static Scrobbler* self() { return object; }
