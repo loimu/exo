@@ -352,7 +352,7 @@ void TrayIcon::enableScrobbler(bool checked) {
 void TrayIcon::loadScrobbler(bool checked) {
     Scrobbler* scrobbler = Scrobbler::self();
     if(!scrobbler && checked)
-        scrobbler = new Scrobbler(this);
+        new Scrobbler(this);
     else if(scrobbler && !checked)
         scrobbler->deleteLater();
 }
