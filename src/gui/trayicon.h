@@ -27,7 +27,7 @@
 #include <QVector>
 
 class PlayerInterface;
-struct BookmarkEntry;
+
 enum class PlayerState;
 using PState = PlayerState;
 
@@ -74,7 +74,7 @@ class TrayIcon : public QWidget
 public:
     explicit TrayIcon(QWidget* parent = nullptr);
     static TrayIcon* self() { return object; }
-    void refreshBookmarks(const QVector<BookmarkEntry>& list);
+    void refreshBookmarks();
     void showLyricsWindow();
 };
 

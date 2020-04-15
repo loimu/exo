@@ -36,10 +36,7 @@ void ExoObject::showLyricsWindow() {
 }
 
 void ExoObject::bookmarkCurrent() {
-    BookmarkList list(BookmarkManager::getList());
-    BookmarkManager::addBookmark(list, PLAYER->getTrack().file);
-    if(TrayIcon::self())
-        TrayIcon::self()->refreshBookmarks(list);
+    BookmarkManager::addBookmark(PLAYER->getTrack().file);
 }
 
 void ExoObject::clearPlaylist() {

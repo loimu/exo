@@ -55,7 +55,7 @@ class BookmarkManager : public BaseDialog
 
 public:
     static BookmarkList getList();
-    static void addBookmark(BookmarkList&, const QString& url);
+    static void addBookmark(const QString& url);
     explicit BookmarkManager(QWidget* parent = nullptr);
 };
 

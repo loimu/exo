@@ -153,7 +153,7 @@ void TrayIcon::createTrayIcon() {
     bookmarksMenu = new QMenu(trayIconMenu);
     bookmarksMenu->setTitle(tr("Lin&ks"));
     trayIconMenu->addAction(bookmarksMenu->menuAction());
-    refreshBookmarks(BookmarkManager::getList());
+    refreshBookmarks();
     // end of Bookmarks submenu
     // Settings submenu
     auto settingsMenu = new QMenu(trayIconMenu);
@@ -284,9 +284,7 @@ void TrayIcon::addFiles() {
 }
 
 void TrayIcon::addCurrent() {
-    BookmarkList list(BookmarkManager::getList());
-    BookmarkManager::addBookmark(list, player->getTrack().file);
-    refreshBookmarks(list);
+    BookmarkManager::addBookmark(player->getTrack().file);
 }
 
 void TrayIcon::showManager() {
@@ -297,7 +295,8 @@ void TrayIcon::showManager() {
             this, [this] { bookmarkManagerAction->setEnabled(true); });
 }
 
-void TrayIcon::refreshBookmarks(const BookmarkList& list) {
+void TrayIcon::refreshBookmarks() {
+    const BookmarkList& list = BookmarkManager::getList();
     bookmarksMenu->clear();
     bookmarksMenu->addAction(bookmarkCurrentAction);
     if(list.isEmpty())

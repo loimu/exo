@@ -105,13 +105,18 @@ BookmarkList BookmarkManager::getList() {
     return list;
 }
 
-void BookmarkManager::addBookmark(BookmarkList& list, const QString& url) {
+void BookmarkManager::addBookmark(const QString& url) {
     if(!url.isEmpty()) {
-        QString name = url.split(
+        const QString name = url.split(
                     QChar::fromLatin1('/'), QString::SkipEmptyParts).last();
-        BookmarkEntry entry{name, url};
-        list.append(entry);
-        BookmarkManager::saveList(list);
+        QSettings settings;
+        QString string = settings.value(
+                    QStringLiteral("bookmarkmanager/bookmarks")).toString();
+        string.append(name + QChar::fromLatin1('|') +
+                      url + QChar::fromLatin1(';'));
+        settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
+        if(TrayIcon::self())
+            TrayIcon::self()->refreshBookmarks();
     }
 }
 
@@ -119,8 +124,8 @@ void BookmarkManager::saveList(const BookmarkList& list) {
     QSettings settings;
     QString string;
     for(const BookmarkEntry& entry: list) {
-        string.append(entry.name + QChar::fromLatin1('|') + entry.uri);
-        string.append(QChar::fromLatin1(';'));
+        string.append(entry.name + QChar::fromLatin1('|') +
+                      entry.uri + QChar::fromLatin1(';'));
     }
     settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
 }
@@ -183,7 +188,7 @@ void BookmarkManager::updateLineEdit(int cur) {
 
 void BookmarkManager::accepted() {
     BookmarkManager::saveList(list);
-    TrayIcon::self()->refreshBookmarks(list);
+    TrayIcon::self()->refreshBookmarks();
     close();
 }
 
