@@ -305,7 +305,8 @@ void TrayIcon::refreshBookmarks(const BookmarkList& list) {
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
     connect(bookmarksMenu, &QMenu::triggered, this, [] (QAction* action) {
-        PLAYER->openUri(action->data().toString()); });
+        if(!action->data().isNull())
+            PLAYER->openUri(action->data().toString()); });
     for(const BookmarkEntry& entry : list) {
         auto bookmark = new QAction(entry.name, this);
         bookmark->setData(entry.uri);
