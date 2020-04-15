@@ -42,23 +42,6 @@
 #endif // BUILD_LASTFM
 
 
-class TagEditor : public QAction {
-    QString editorPath;
-public:
-    explicit TagEditor(const QString &text, QObject* parent)
-        : QAction(text, parent), editorPath(text)
-    {
-        const QString app = text.split(QChar::fromLatin1('/')).last();
-        this->setText(app.at(0).toUpper() + app.mid(1));
-        this->setIcon(QIcon::fromTheme(app));
-        connect(this, &TagEditor::triggered, this, [this] {
-            const QString file = PLAYER->getTrack().file;
-            if(!PLAYER->getTrack().isStream)
-                QProcess::startDetached(editorPath, QStringList() << file); });
-    }
-};
-
-
 TrayIcon* TrayIcon::object = nullptr;
 
 TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
@@ -146,8 +129,16 @@ void TrayIcon::createTrayIcon() {
         auto tagEditorsMenu = new QMenu(trayIconMenu);
         tagEditorsMenu->setTitle(tr("&Edit with"));
         trayIconMenu->addAction(tagEditorsMenu->menuAction());
+        connect(tagEditorsMenu, &QMenu::triggered, this, [] (QAction* action) {
+            if(!PLAYER->getTrack().isStream)
+                QProcess::startDetached(action->data().toString(),
+                                        QStringList{PLAYER->getTrack().file});
+        });
         for(const QString& entry : editors) {
-            auto newEditor = new TagEditor(entry, this);
+            const QString app = entry.split(QChar::fromLatin1('/')).last();
+            auto newEditor = new QAction(app.at(0).toUpper() + app.mid(1),this);
+            newEditor->setIcon(QIcon::fromTheme(app));
+            newEditor->setData(entry);
             tagEditorsMenu->addAction(newEditor);
         }
     }
