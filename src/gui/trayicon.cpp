@@ -42,19 +42,6 @@
 #endif // BUILD_LASTFM
 
 
-class Bookmark : public QAction {
-    QString path;
-public:
-    explicit Bookmark(
-            const QString &text, const QString &uri, QObject* parent = nullptr)
-        : QAction(text, parent), path(uri)
-    {
-        connect(this, &Bookmark::triggered,
-                this, [this] { PLAYER->openUri(path); });
-    }
-};
-
-
 class TagEditor : public QAction {
     QString editorPath;
 public:
@@ -326,8 +313,11 @@ void TrayIcon::refreshBookmarks(const BookmarkList& list) {
         return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
+    connect(bookmarksMenu, &QMenu::triggered, this, [] (QAction* action) {
+        PLAYER->openUri(action->data().toString()); });
     for(const BookmarkEntry& entry : list) {
-        auto bookmark = new Bookmark(entry.name, entry.uri, this);
+        auto bookmark = new QAction(entry.name, this);
+        bookmark->setData(entry.uri);
         bookmarksMenu->addAction(bookmark);
     }
 }
