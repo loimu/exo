@@ -27,6 +27,7 @@
 #include <QCoreApplication>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QVector>
 
 // core
 #include "playerinterface.h"

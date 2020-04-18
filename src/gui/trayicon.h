@@ -24,9 +24,10 @@
 
 #include <QWidget>
 #include <QSystemTrayIcon>
-#include <QVector>
 
 class PlayerInterface;
+template <typename>
+class QVector;
 
 enum class PlayerState;
 using PState = PlayerState;
