@@ -11,6 +11,7 @@ set(exo_SRCS main.cpp
     core/mocinterface.cpp
     core/playerinterface.cpp
     core/singleinstance.cpp
+    core/sysutils.cpp
     gui/aboutdialog.cpp
     gui/basedialog.cpp
     gui/bookmarkmanager.cpp
@@ -65,6 +66,7 @@ if(BUILD_TESTS)
   set(test_LIBS Qt5::Core Qt5::Test)
   set(tests_SRCS tests/tests.cpp
       tests/pitests.cpp
+      core/sysutils.cpp
       core/playerinterface.cpp
       core/mocinterface.cpp
       core/cmusinterface.cpp)
