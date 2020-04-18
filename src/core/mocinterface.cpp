@@ -110,13 +110,13 @@ SEND_COMMAND_PARAM(volume, QStringLiteral("-v%1"))
 SEND_COMMAND_PARAM(changeVolume, QStringLiteral("-v+%1"))
 
 void MocInterface::showPlayer() {
-    const QStringList apps = Process::detect(
-                QStringList{
+    const QVector<QString> apps = Process::detect(
+                QVector<QString> {
                     QStringLiteral("x-terminal-emulator"),
                     QStringLiteral("gnome-terminal"),
                     QStringLiteral("konsole"),
                     QStringLiteral("xfce4-terminal"),
-                    QStringLiteral("lxterminal")});
+                    QStringLiteral("lxterminal") });
     const QString term = apps.isEmpty() ? QStringLiteral("xterm") : apps.at(0);
     QProcess::startDetached(
                 term,

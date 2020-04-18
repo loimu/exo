@@ -21,21 +21,17 @@
 #include "config.h"
 
 #include <QDir>
-#include <QProcess>
 #include <QDateTime>
 
+#include "sysutils.h"
 #ifdef BUILD_LASTFM
   #include "scrobbler.h"
 #endif // BUILD_LASTFM
 #include "playerinterface.h"
 
 
-QStringList Process::detect(const QStringList& apps) {
-    QProcess proc;
-    proc.start(QStringLiteral("which"), apps);
-    proc.waitForFinished();
-    return QString::fromUtf8(proc.readAllStandardOutput())
-            .split(QStringLiteral("\n"), QString::SkipEmptyParts);
+const QVector<QString> Process::detect(const QVector<QString>& apps) {
+    return SysUtils::findFullPaths(apps);
 }
 
 
@@ -49,10 +45,7 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent)
 }
 
 bool PlayerInterface::isPlayerRunning(const QString &player) {
-    QProcess proc;
-    proc.start(QStringLiteral("pidof"), QStringList{player});
-    proc.waitForFinished();
-    return !QString::fromUtf8(proc.readAllStandardOutput()).isEmpty();
+    return SysUtils::findProcessId(player) > -1;
 }
 
 void PlayerInterface::notify() {

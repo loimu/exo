@@ -40,13 +40,13 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
 }
 
 void CmusInterface::runPlayer() {
-    const QStringList apps = Process::detect(
-                QStringList{
+    const QVector<QString> apps = Process::detect(
+                QVector<QString> {
                     QStringLiteral("x-terminal-emulator"),
                     QStringLiteral("gnome-terminal"),
                     QStringLiteral("konsole"),
                     QStringLiteral("xfce4-terminal"),
-                    QStringLiteral("lxterminal")});
+                    QStringLiteral("lxterminal") });
     const QString term = apps.isEmpty() ? QStringLiteral("xterm") : apps.at(0);
     QProcess::startDetached(term, QStringList{QStringLiteral("-e"),
                                               QStringLiteral("cmus")});

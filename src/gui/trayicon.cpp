@@ -119,12 +119,12 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
-    const QStringList editors = Process::detect(
-                QStringList{
+    const QVector<QString> editors = Process::detect(
+                QVector<QString> {
                     QStringLiteral("picard"),
                     QStringLiteral("kid3"),
                     QStringLiteral("easytag"),
-                    QStringLiteral("puddletag")}); // detects tag editors
+                    QStringLiteral("puddletag") }); // detects tag editors
     if(!editors.isEmpty()) {
         auto tagEditorsMenu = new QMenu(trayIconMenu);
         tagEditorsMenu->setTitle(tr("&Edit with"));

@@ -21,12 +21,13 @@
 #define PLAYERINTERFACE_H
 
 #include <QObject>
+#include <QVector>
 
 #define PLAYER PlayerInterface::self()
 
 
 namespace Process {
-QStringList detect(const QStringList& apps);
+const QVector<QString> detect(const QVector<QString>& apps);
 }
 
 enum class PlayerState { Offline, Stop, Play, Pause };
