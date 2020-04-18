@@ -30,11 +30,6 @@
 #include "playerinterface.h"
 
 
-const QVector<QString> Process::detect(const QVector<QString>& apps) {
-    return SysUtils::findFullPaths(apps);
-}
-
-
 PlayerInterface* PlayerInterface::object = nullptr;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent)

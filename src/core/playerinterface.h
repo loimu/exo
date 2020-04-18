@@ -26,10 +26,6 @@
 #define PLAYER PlayerInterface::self()
 
 
-namespace Process {
-const QVector<QString> detect(const QVector<QString>& apps);
-}
-
 enum class PlayerState { Offline, Stop, Play, Pause };
 struct PlayerTrack {
     bool isStream;

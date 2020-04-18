@@ -31,6 +31,7 @@
 
 // core
 #include "playerinterface.h"
+#include "sysutils.h"
 // gui
 #include "aboutdialog.h"
 #include "bookmarkmanager.h"
@@ -120,7 +121,7 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
     trayIconMenu->addAction(lyricsAction);
-    const QVector<QString> editors = Process::detect(
+    const QVector<QString> editors = SysUtils::findFullPaths(
                 QVector<QString> {
                     QStringLiteral("picard"),
                     QStringLiteral("kid3"),

@@ -21,6 +21,7 @@
 #include <QProcess>
 #include <QRegularExpression>
 
+#include "sysutils.h"
 #include "cmusinterface.h"
 
 
@@ -40,7 +41,7 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
 }
 
 void CmusInterface::runPlayer() {
-    const QVector<QString> apps = Process::detect(
+    const QVector<QString> apps = SysUtils::findFullPaths(
                 QVector<QString> {
                     QStringLiteral("x-terminal-emulator"),
                     QStringLiteral("gnome-terminal"),

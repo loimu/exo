@@ -23,6 +23,7 @@
 #include <QProcess>
 #include <QRegularExpression>
 
+#include "sysutils.h"
 #include "mocinterface.h"
 
 #define OSD_OPT "OnSongChange=" INSTALL_PREFIX "/bin/moc-osd"
@@ -110,7 +111,7 @@ SEND_COMMAND_PARAM(volume, QStringLiteral("-v%1"))
 SEND_COMMAND_PARAM(changeVolume, QStringLiteral("-v+%1"))
 
 void MocInterface::showPlayer() {
-    const QVector<QString> apps = Process::detect(
+    const QVector<QString> apps = SysUtils::findFullPaths(
                 QVector<QString> {
                     QStringLiteral("x-terminal-emulator"),
                     QStringLiteral("gnome-terminal"),
