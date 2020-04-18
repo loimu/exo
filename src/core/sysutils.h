@@ -20,10 +20,10 @@
 #ifndef SYS_UTILS
 #define SYS_UTILS
 
-#include <QVector>
-
 
 class QString;
+template <typename>
+class QVector;
 
 
 namespace SysUtils {

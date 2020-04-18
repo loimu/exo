@@ -20,6 +20,7 @@
 #include <unistd.h>
 
 #include <QString>
+#include <QVector>
 #include <QFile>
 #include <QDir>
 
