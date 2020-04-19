@@ -38,7 +38,7 @@ class Scrobbler : public QObject
 
 public:
     explicit Scrobbler(QObject* parent = nullptr);
-    virtual ~Scrobbler();
+    ~Scrobbler();
     static Scrobbler* self() { return object; }
     void init(const QString& artist, const QString& title,
               const QString& album, int totalSec);
