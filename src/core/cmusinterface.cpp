@@ -29,10 +29,7 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     cmus(new QProcess(this)),
     cli(QStringLiteral("cmus-remote"))
 {
-    QProcess proc;
-    proc.start(QStringLiteral("pidof"), QStringList{QStringLiteral("cmus")});
-    proc.waitForFinished();
-    if(QString::fromUtf8(proc.readAllStandardOutput()).isEmpty())
+    if(!isPlayerRunning(QStringLiteral("cmus")))
         runPlayer();
     startTimer(1500);
     connect(cmus, QOverload<int>::of(&QProcess::finished),
