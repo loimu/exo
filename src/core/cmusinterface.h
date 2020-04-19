@@ -27,7 +27,7 @@ class QProcess;
 class CmusInterface : public PlayerInterface
 {
     QProcess* cmus;
-    QString cli;
+    const QString cli;
     void runPlayer();
     QString find(const QString&, const QString&);
     PState updateInfo() override;
