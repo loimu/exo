@@ -34,7 +34,7 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     proc.waitForFinished();
     if(QString::fromUtf8(proc.readAllStandardOutput()).isEmpty())
         runPlayer();
-    startTimer(1000);
+    startTimer(1500);
     connect(cmus, QOverload<int>::of(&QProcess::finished),
             this, &CmusInterface::notify);
     qInfo("using cmus interface");
@@ -167,7 +167,6 @@ void CmusInterface::clearPlaylist() {
 
 void CmusInterface::timerEvent(QTimerEvent *event) {
     Q_UNUSED(event);
-    cmus->close();
     cmus->start(cli, QStringList{QStringLiteral("-Q")});
 }
 
