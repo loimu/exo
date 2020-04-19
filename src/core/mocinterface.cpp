@@ -38,6 +38,10 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
         QProcess::startDetached(player,
                                 QStringList{QStringLiteral("-SO"),
                                             QStringLiteral(OSD_OPT)});
+    moc->setProgram(player);
+    moc->setArguments(QStringList { QStringLiteral("-Q"), QStringLiteral(
+                                    "%state{a}%a{t}%t{A}%A{f}%file{tt}%tt"
+                                    "{ts}%ts{cs}%cs{T}%title") });
     startTimer(1000);
     connect(moc, QOverload<int>::of(&QProcess::finished),
             this, &MocInterface::notify);
@@ -149,10 +153,7 @@ void MocInterface::appendFile(const QStringList& files) {
 
 void MocInterface::timerEvent(QTimerEvent* event) {
     Q_UNUSED(event);
-    moc->start(player, QStringList{
-                   QStringLiteral("-Q"),
-                   QStringLiteral("%state{a}%a{t}%t{A}%A{f}%file{tt}%tt{ts}%ts"
-                   "{cs}%cs{T}%title")});
+    moc->start(QIODevice::ReadOnly);
 }
 
 void MocInterface::shutdown() {
