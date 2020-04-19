@@ -31,6 +31,8 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
 {
     if(!isPlayerRunning(QStringLiteral("cmus")))
         runPlayer();
+    cmus->setProgram(cli);
+    cmus->setArguments(QStringList{ QStringLiteral("-Q") });
     startTimer(1500);
     connect(cmus, QOverload<int>::of(&QProcess::finished),
             this, &CmusInterface::notify);
@@ -164,7 +166,7 @@ void CmusInterface::clearPlaylist() {
 
 void CmusInterface::timerEvent(QTimerEvent *event) {
     Q_UNUSED(event);
-    cmus->start(cli, QStringList{QStringLiteral("-Q")});
+    cmus->start(QIODevice::ReadOnly);
 }
 
 void CmusInterface::shutdown() {
