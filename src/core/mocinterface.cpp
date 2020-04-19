@@ -35,9 +35,9 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     player(QStringLiteral(PLAYER_EXECUTABLE))
 {
     if(!isPlayerRunning(player))
-        QProcess::startDetached(player,
-                                QStringList{QStringLiteral("-SO"),
-                                            QStringLiteral(OSD_OPT)});
+        QProcess::startDetached(
+                    player,
+                    QStringList{QStringLiteral("-SO"),QStringLiteral(OSD_OPT)});
     moc->setProgram(player);
     moc->setArguments(QStringList { QStringLiteral("-Q"), QStringLiteral(
                                     "%state{a}%a{t}%t{A}%A{f}%file{tt}%tt"
@@ -45,6 +45,16 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     startTimer(1000);
     connect(moc, QOverload<int>::of(&QProcess::finished),
             this, &MocInterface::notify);
+}
+
+void MocInterface::runServer() {
+    if(!isPlayerRunning(player)) {
+        QProcess p;
+        p.start(player,
+                QStringList{ QStringLiteral("-SO"), QStringLiteral(OSD_OPT) },
+                QIODevice::NotOpen);
+        p.waitForFinished();
+    }
 }
 
 PState MocInterface::updateInfo() {
@@ -130,23 +140,13 @@ void MocInterface::showPlayer() {
 }
 
 void MocInterface::openUri(const QString& file) {
-    if(!isPlayerRunning(player)) {
-        QProcess procPlayer;
-        procPlayer.start(player, QStringList{QStringLiteral("-SO"),
-                                             QStringLiteral(OSD_OPT)});
-        procPlayer.waitForFinished();
-    }
+    runServer();
     QProcess::startDetached(player,
                             QStringList() << QStringLiteral("-l") << file);
 }
 
 void MocInterface::appendFile(const QStringList& files) {
-    if(!isPlayerRunning(player)) {
-        QProcess procPlayer;
-        procPlayer.start(player, QStringList{QStringLiteral("-SO"),
-                                             QStringLiteral(OSD_OPT)});
-        procPlayer.waitForFinished();
-    }
+    runServer();
     QProcess::startDetached(player,
                             QStringList() << QStringLiteral("-a") << files);
 }
