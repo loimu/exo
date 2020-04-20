@@ -44,7 +44,6 @@ class PlayerInterface : public QObject
 
 protected:
     PTrack track{};
-    bool isPlayerRunning(const QString& player);
     void notify();
     virtual PState updateInfo() = 0;
 

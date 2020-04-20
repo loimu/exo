@@ -23,7 +23,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include "sysutils.h"
 #ifdef BUILD_LASTFM
   #include "scrobbler.h"
 #endif // BUILD_LASTFM
@@ -37,10 +36,6 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent)
     if(object)
         qFatal("PlayerInterface: only one instance is allowed");
     object = this;
-}
-
-bool PlayerInterface::isPlayerRunning(const QString &player) {
-    return SysUtils::findProcessId(player) > -1;
 }
 
 void PlayerInterface::notify() {

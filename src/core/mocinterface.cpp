@@ -35,7 +35,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     moc(new QProcess(this)),
     player(QStringLiteral(PLAYER_EXECUTABLE))
 {
-    if(!isPlayerRunning(player))
+    if(SysUtils::findProcessId(player) < 0)  // check if player is running
         QProcess::startDetached(
                     player,
                     QStringList{QStringLiteral("-SO"),QStringLiteral(OSD_OPT)});
@@ -49,7 +49,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
 }
 
 void MocInterface::runServer() {
-    if(!isPlayerRunning(player)) {
+    if(SysUtils::findProcessId(player) < 0) {  // check if player is running
         QProcess p;
         p.start(player,
                 QStringList{ QStringLiteral("-SO"), QStringLiteral(OSD_OPT) },

@@ -30,7 +30,7 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     cmus(new QProcess(this)),
     cli(QStringLiteral("cmus-remote"))
 {
-    if(!isPlayerRunning(QStringLiteral("cmus")))
+    if(SysUtils::findProcessId(QStringLiteral("cmus")) < 0)
         runPlayer();
     cmus->setProgram(cli);
     cmus->setArguments(QStringList{ QStringLiteral("-Q") });
