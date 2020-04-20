@@ -101,28 +101,28 @@ const QString MocInterface::id() const {
 
 #define SEND_COMMAND(__method, __option)\
     void MocInterface::__method() {\
-    QProcess::startDetached(player, QStringList{__option});\
+    QProcess::startDetached(player, QStringList{QStringLiteral(__option)});\
     }
 
-SEND_COMMAND(play, QStringLiteral("-p"))
-SEND_COMMAND(pause,QStringLiteral("-P"))
-SEND_COMMAND(playPause, QStringLiteral("-G"))
-SEND_COMMAND(prev, QStringLiteral("-r"))
-SEND_COMMAND(next, QStringLiteral("-f"))
-SEND_COMMAND(stop, QStringLiteral("-s"))
-SEND_COMMAND(quit, QStringLiteral("-x"))
-SEND_COMMAND(clearPlaylist, QStringLiteral("-c"))
+SEND_COMMAND(play, "-p")
+SEND_COMMAND(pause,"-P")
+SEND_COMMAND(playPause, "-G")
+SEND_COMMAND(prev, "-r")
+SEND_COMMAND(next, "-f")
+SEND_COMMAND(stop, "-s")
+SEND_COMMAND(quit, "-x")
+SEND_COMMAND(clearPlaylist, "-c")
 
 #define SEND_COMMAND_PARAM(__method, __option)\
     void MocInterface::__method(int param) {\
     QProcess::startDetached(player,\
-    QStringList() << QString(__option).arg(param));\
+    QStringList() << QString(QStringLiteral(__option)).arg(param));\
     }
 
-SEND_COMMAND_PARAM(jump, QStringLiteral("-j%1s"))
-SEND_COMMAND_PARAM(seek, QStringLiteral("-k%1"))
-SEND_COMMAND_PARAM(volume, QStringLiteral("-v%1"))
-SEND_COMMAND_PARAM(changeVolume, QStringLiteral("-v+%1"))
+SEND_COMMAND_PARAM(jump, "-j%1s")
+SEND_COMMAND_PARAM(seek, "-k%1")
+SEND_COMMAND_PARAM(volume, "-v%1")
+SEND_COMMAND_PARAM(changeVolume, "-v+%1")
 
 void MocInterface::showPlayer() {
     const QVector<QString> apps = SysUtils::findFullPaths(
