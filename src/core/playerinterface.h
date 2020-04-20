@@ -21,7 +21,6 @@
 #define PLAYERINTERFACE_H
 
 #include <QObject>
-#include <QVector>
 
 #define PLAYER PlayerInterface::self()
 

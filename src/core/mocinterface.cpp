@@ -19,6 +19,7 @@
 
 #include "config.h"
 
+#include <QVector>
 #include <QStringList>
 #include <QProcess>
 #include <QRegularExpression>

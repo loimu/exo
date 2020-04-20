@@ -17,6 +17,7 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include <QVector>
 #include <QStringList>
 #include <QProcess>
 #include <QRegularExpression>
