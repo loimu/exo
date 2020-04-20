@@ -104,15 +104,15 @@ const QString CmusInterface::id() const {
 
 #define SEND_COMMAND(__method, __option)\
     void CmusInterface::__method() {\
-    QProcess::startDetached(cli, QStringList{__option});\
+    QProcess::startDetached(cli, QStringList{QStringLiteral(__option)});\
     }
 
-SEND_COMMAND(play, QStringLiteral("-p"))
-SEND_COMMAND(pause, QStringLiteral("-u"))
-SEND_COMMAND(playPause, QStringLiteral("-u"))
-SEND_COMMAND(prev, QStringLiteral("-r"))
-SEND_COMMAND(next, QStringLiteral("-n"))
-SEND_COMMAND(stop, QStringLiteral("-s"))
+SEND_COMMAND(play, "-p")
+SEND_COMMAND(pause, "-u")
+SEND_COMMAND(playPause, "-u")
+SEND_COMMAND(prev, "-r")
+SEND_COMMAND(next, "-n")
+SEND_COMMAND(stop, "-s")
 
 void CmusInterface::quit() {
     QProcess::startDetached(cli, QStringList{QStringLiteral("-C"),
