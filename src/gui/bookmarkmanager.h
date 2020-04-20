@@ -21,8 +21,6 @@
 #ifndef BOOKMARKMANAGER_H
 #define BOOKMARKMANAGER_H
 
-#include <QVector>
-
 #include "basedialog.h"
 
 class QLineEdit;
@@ -32,6 +30,8 @@ struct BookmarkEntry {
     QString name;
     QString uri;
 };
+template <typename>
+class QVector;
 
 using BookmarkList = QVector<BookmarkEntry>;
 
