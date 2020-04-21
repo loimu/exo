@@ -20,16 +20,42 @@
 #include <QObject>
 #include <QDBusConnection>
 
-#include "dbus.h"
-#include "exoobject.h"
+#include "bookmarkmanager.h"
+#include "trayicon.h"
+#include "playerinterface.h"
 //MPRISv2
 #include "rootobject.h"
 #include "playerobject.h"
 
+#include "dbus.h"
+
+
+class DBusAdaptor : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "local.exo_player")
+
+public:
+    explicit DBusAdaptor(QObject* parent = nullptr) : QObject(parent) {}
+
+public Q_SLOTS:
+    void showLyricsWindow() {
+        if(TrayIcon::self())
+            TrayIcon::self()->showLyricsWindow();
+    }
+
+    void bookmarkCurrent() {
+        BookmarkManager::addBookmark(PLAYER->getTrack().file);
+    }
+
+    void clearPlaylist() { PLAYER->clearPlaylist(); }
+};
+
+
 DBus::DBus(QObject* parent)
 {
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject(QStringLiteral("/exo"), new ExoObject(parent),
+    connection.registerObject(QStringLiteral("/exo"), new DBusAdaptor(parent),
                               QDBusConnection::ExportAllContents);
     if(!connection.registerService(QStringLiteral("local.exo_player")))
         qWarning("DBus: service registration failed");
@@ -40,3 +66,5 @@ DBus::DBus(QObject* parent)
                 QStringLiteral("org.mpris.MediaPlayer2.exo")))
         qWarning("DBus: MPRISv2 service registration failed");
 }
+
+#include "dbus.moc"

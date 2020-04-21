@@ -24,7 +24,6 @@ endif()
 
 if(BUILD_DBUS)
   list(APPEND exo_SRCS dbus/dbus.cpp
-      dbus/exoobject.cpp
       dbus/rootobject.cpp
       dbus/playerobject.cpp)
   find_package(Qt5DBus)
