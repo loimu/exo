@@ -20,7 +20,9 @@
 #ifndef DBUS_H
 #define DBUS_H
 
-class DBus : public QObject
+class QObject;
+
+class DBus
 {
 public:
     explicit DBus(QObject* parent = nullptr);
