@@ -21,7 +21,7 @@ make -j2
 ```
 -DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
 -DBUILD_LASTFM=OFF   - disable scrobbler module (enabled by default);
--DUSE_CMUS=ON        - switch to Cmus player, experimental option;
+-DBUILD_CMUS=ON      - enable Cmus interface (disabled by default);
 -DBUILD_TRANSLATIONS=OFF - disable translations (enabled by default);
 ```
 

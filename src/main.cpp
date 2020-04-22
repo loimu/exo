@@ -42,9 +42,9 @@
   #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
 
-#ifdef USE_CMUS
+#ifdef BUILD_CMUS
   #include "core/cmusinterface.h"
-#endif // USE_CMUS
+#endif // BUILD_CMUS
 #include "core/mocinterface.h"
 #include "gui/trayicon.h"
 
@@ -52,10 +52,11 @@
 int main(int argc, char *argv[]) {
     bool useGui = true;
     bool forceReauth = false;
+    bool useCmus = false;
     if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
-            qInfo("Usage: exo [-h] [-b] [-f]\nSee also `man exo`");
+            qInfo("Usage: exo [-h] [-b] [-c] [-f]\nSee also `man exo`");
             return 0;
         }
         else if(arg == QByteArray("-d") || arg == QByteArray("-b")
@@ -65,6 +66,11 @@ int main(int argc, char *argv[]) {
             if(fork() != 0) return 0;
             else qDebug("Running in the background");
         }
+#ifdef BUILD_CMUS
+        else if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
+            useCmus = true;
+        }
+#endif // BUILD_CMUS
         else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")){
             useGui = false;
             forceReauth = true;
@@ -98,11 +104,13 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
-#ifdef USE_CMUS
-        CmusInterface player(&app);
-#else // USE_CMUS
-        MocInterface player(&app);
-#endif // USE_CMUS
+        PlayerInterface* player;
+#ifdef BUILD_CMUS
+        if(useCmus)
+            player = new CmusInterface(&app);
+        else
+#endif // BUILD_CMUS
+        player = new MocInterface(&app);
 
 #ifdef BUILD_DBUS
         new DBus(&app);
@@ -122,9 +130,9 @@ int main(int argc, char *argv[]) {
         Q_UNUSED(trayIcon);
 
         result = app.exec();
-        player.shutdown();
+        player->shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool())
-            player.quit();
+            player->quit();
         /* end of graphical application */
     } else {
         /* console application */
@@ -150,11 +158,13 @@ int main(int argc, char *argv[]) {
 #endif // BUILD_LASTFM
         }
 
-#ifdef USE_CMUS
-        CmusInterface player(&app);
-#else // USE_CMUS
-        MocInterface player(&app);
-#endif // USE_CMUS
+        PlayerInterface* player;
+#ifdef BUILD_CMUS
+        if(useCmus)
+            player = new CmusInterface(&app);
+        else
+#endif // BUILD_CMUS
+        player = new MocInterface(&app);
 
 #ifdef BUILD_DBUS
         if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
@@ -169,9 +179,9 @@ int main(int argc, char *argv[]) {
 #endif // BUILD_LASTFM
 
         result = app.exec();
-        player.shutdown();
+        player->shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool())
-            player.quit();
+            player->quit();
         /* end of console application */
     }
     return result;

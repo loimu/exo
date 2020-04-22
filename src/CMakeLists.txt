@@ -18,7 +18,7 @@ set(exo_SRCS main.cpp
     gui/lyricsdialog.cpp
     gui/trayicon.cpp)
 
-if(USE_CMUS)
+if(BUILD_CMUS)
   list(APPEND exo_SRCS core/cmusinterface.cpp)
 endif()
 
