@@ -2,23 +2,26 @@
 .\"  Title: \fBeXo\fR
 .\"  Author: Blaze <blaze@vivaldi.net>
 .\"  Language: English
-.TH EXO 1 "Dec 20, 2016"
+.TH EXO 1 "Apr 22, 2020"
 .SH NAME
-exo \- Exoskeleton (GUI) for moc player
+eXo \- exoskeleton (GUI) for MOC player
 .SH DESCRIPTION
-GUI for moc player also known as mocp\&. Has experimental support of Cmus player\&.
+GUI for MOC player also known as mocp\&. Has experimental support of Cmus player\&.
 .PP
 Supports scrobbling, shows lyrics from web, stores bookmarks, detects tag editors\&.
 .SH OPTIONS
 .TP
 .B \-b or \-\-background
-Run in background mode (without GUI)\&.
+Run in the background (with no GUI)\&.
 .TP
 .B \-d
 Same as above\&.
 .TP
+.B \-c or \-\-use\-cmus
+Use the CMus player interface if it is available\&. Compile time option has to be enabled\&.
+.TP
 .B \-f or \-\-force\-reauth
-Force auth to audioscrobbler service via CLI\&. You'll get new session key\&.
+Force reauth to audioscrobbler service via CLI\&. You'll get a new session key\&. No password is stored anywhere\&.
 .TP
 To enable proxy use the system variable $http_proxy
 .SH AUTHOR
