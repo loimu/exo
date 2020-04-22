@@ -48,8 +48,7 @@ public Q_SLOTS:
 };
 
 
-DBus::DBus(QObject* parent)
-{
+void DBus::init(QObject* parent) {
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.registerObject(QStringLiteral("/exo"), new DBusAdaptor(parent),
                               QDBusConnection::ExportAllContents);

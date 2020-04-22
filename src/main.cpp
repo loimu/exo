@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
         player = new MocInterface(&app);
 
 #ifdef BUILD_DBUS
-        new DBus(&app);
+        DBus::init(&app);
 #endif // BUILD_DBUS
 
         QSettings settings;
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
 
 #ifdef BUILD_DBUS
         if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
-            new DBus(&app);
+            DBus::init(&app);
 #endif // BUILD_DBUS
 
         QSettings settings;

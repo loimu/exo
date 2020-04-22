@@ -22,10 +22,11 @@
 
 class QObject;
 
-class DBus
-{
-public:
-    explicit DBus(QObject* parent = nullptr);
-};
+
+namespace DBus {
+
+    void init(QObject* parent = nullptr);
+
+}
 
 #endif // DBUS_H
