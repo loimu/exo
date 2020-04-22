@@ -89,7 +89,7 @@ void TrayIcon::createActions() {
     quitAction->setIcon(QIcon(QStringLiteral(":/images/close.png")));
     bookmarkCurrentAction = new QAction(tr("Bookmark &Current"), this);
     connect(bookmarkCurrentAction, &QAction::triggered,
-            this, &TrayIcon::addCurrent);
+            this, &BookmarkManager::bookmarkCurrent);
     bookmarkCurrentAction->setIcon(
                 QIcon::fromTheme(QStringLiteral("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark &Manager"), this);
@@ -283,10 +283,6 @@ void TrayIcon::addFiles() {
                                "Playlists (*.m3u *.pls *.xspf );;All files (*)"
                                ));
     player->appendFile(files);
-}
-
-void TrayIcon::addCurrent() {
-    BookmarkManager::addBookmark(player->getTrack().file);
 }
 
 void TrayIcon::showManager() {

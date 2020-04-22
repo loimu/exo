@@ -106,7 +106,8 @@ BookmarkList BookmarkManager::getList() {
     return list;
 }
 
-void BookmarkManager::addBookmark(const QString& url) {
+void BookmarkManager::bookmarkCurrent() {
+    const QString& url = PLAYER->getTrack().file;
     if(!url.isEmpty()) {
         const QString name = url.split(
                     QChar::fromLatin1('/'), QString::SkipEmptyParts).last();

@@ -43,11 +43,7 @@ public Q_SLOTS:
         if(TrayIcon::self())
             TrayIcon::self()->showLyricsWindow();
     }
-
-    void bookmarkCurrent() {
-        BookmarkManager::addBookmark(PLAYER->getTrack().file);
-    }
-
+    void bookmarkCurrent() { BookmarkManager::bookmarkCurrent(); }
     void clearPlaylist() { PLAYER->clearPlaylist(); }
 };
 
