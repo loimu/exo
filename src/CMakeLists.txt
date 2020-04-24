@@ -41,13 +41,11 @@ endif()
 qt5_add_resources(exo_RESOURCES_RCC ../images/exo.qrc)
 
 # translations
-if(BUILD_TRANSLATIONS)
-  SET(TRANSLATION
-      ../translations/be_BY.ts
-  )
-  find_package(Qt5LinguistTools REQUIRED)
-  qt5_add_translation(QM_FILES ${TRANSLATION})
-endif()
+SET(TRANSLATION
+    ../translations/be_BY.ts
+    )
+find_package(Qt5LinguistTools REQUIRED)
+qt5_add_translation(QM_FILES ${TRANSLATION})
 
 add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC} ${exo_RESOURCES_RCC} ${QM_FILES})
 target_include_directories(exo PRIVATE ${CMAKE_CURRENT_BINARY_DIR} core dbus gui lastfm)
@@ -55,10 +53,7 @@ target_link_libraries(exo PRIVATE ${qt_LIBS} ${LASTFM_LIBRARIES})
 target_compile_features(exo PRIVATE cxx_nullptr cxx_generalized_initializers)
 
 install(TARGETS exo RUNTIME DESTINATION bin)
-
-if(BUILD_TRANSLATIONS)
-  install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/exo/translations)
-endif()
+install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/exo/translations)
 
 # tests
 if(BUILD_TESTS)
