@@ -18,11 +18,14 @@ make -j2
 ```
 
 ### Build options: ###
-```
--DBUILD_DBUS=OFF     - disable DBus and MPRISv2 interfaces (enabled by default);
--DBUILD_LASTFM=OFF   - disable scrobbler module (enabled by default);
--DBUILD_CMUS=ON      - enable Cmus interface (disabled by default);
--DBUILD_TRANSLATIONS=OFF - disable translations (enabled by default);
+```bash
+cmake .. \
+#  disable DBus and MPRISv2 interfaces (enabled by default)
+-DBUILD_DBUS=OFF \
+#  disable scrobbler module (enabled by default)
+-DBUILD_LASTFM=OFF \
+#  enable Cmus interface (disabled by default)
+-DBUILD_CMUS=ON
 ```
 
 ### Screenshot ###
