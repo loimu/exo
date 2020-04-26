@@ -96,11 +96,12 @@ BookmarkList BookmarkManager::getList() {
     const QStringList stringList = string.split(
                 QChar::fromLatin1(';'), QString::SkipEmptyParts);
     BookmarkList list;
-    for(const QString& str: stringList) {
+    list.reserve(stringList.size());
+    for(const QString& str : stringList) {
         QStringList bookmark = str.split(QChar::fromLatin1('|'));
         if(bookmark.size() == 2) {
             BookmarkEntry entry{bookmark.at(0), bookmark.at(1)};
-            list.append(entry);
+            list.push_back(entry);
         }
     }
     return list;
