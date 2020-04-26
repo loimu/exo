@@ -89,7 +89,7 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
             this, &BookmarkManager::appendToPlaylist);
     //  populate list widget
     int index = 0;
-    for(BookmarkEntry& entry : list) {
+    for(const BookmarkEntry& entry : list) {
         auto item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name +
                       QChar::fromLatin1('\n') + entry.uri);
@@ -110,7 +110,7 @@ BookmarkList BookmarkManager::getList() {
     for(const QString& str : stringList) {
         QStringList bookmark = str.split(QChar::fromLatin1('|'));
         if(bookmark.size() == 2) {
-            BookmarkEntry entry{bookmark.at(0), bookmark.at(1)};
+            const BookmarkEntry entry{bookmark.at(0), bookmark.at(1)};
             list.push_back(entry);
         }
     }
