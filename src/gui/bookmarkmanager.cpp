@@ -89,7 +89,7 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
             this, &BookmarkManager::appendToPlaylist);
     //  populate list widget
     int index = 0;
-    for(const BookmarkEntry& entry : list) {
+    for(const BookmarkEntry& entry : qAsConst(list)) {
         auto item = new QListWidgetItem();
         item->setText(tr("Name: ") + entry.name +
                       QChar::fromLatin1('\n') + entry.uri);
@@ -161,16 +161,20 @@ void BookmarkManager::deleteBookmark() {
 
 void BookmarkManager::renameBookmark(QString name) {
     int index = listWidget->currentItem()->data(Qt::UserRole).toInt();
-    list[index].name = name.replace(QChar::fromLatin1(';'), QString()).replace(
-                QChar::fromLatin1('|'), QString());
+    list[index].name = name.replace(QChar::fromLatin1(';'), QChar())
+            .replace(QChar::fromLatin1('|'), QChar());
     listWidget->currentItem()->setText(tr("Name: ") + name +
                                        QChar::fromLatin1('\n') +
                                        list.at(index).uri);
 }
 
 void BookmarkManager::updateLineEdit(int cur) {
-    int index = listWidget->item(cur)->data(Qt::UserRole).toInt();
-    lineEdit->setText(list.at(index).name);
+    if(cur > -1) {
+        int index = listWidget->item(cur)->data(Qt::UserRole).toInt();
+        lineEdit->setText(list.at(index).name);
+    } else {
+        lineEdit->clear();
+    }
 }
 
 void BookmarkManager::accepted() {
