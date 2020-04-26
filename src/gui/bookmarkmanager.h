@@ -42,8 +42,6 @@ class BookmarkManager : public BaseDialog
     QLineEdit* lineEdit;
     QListWidget* listWidget;
     BookmarkList list;
-    static void saveList(const BookmarkList& list);
-    void refreshView();
     void moveUp();
     void moveDown();
     void deleteBookmark();

@@ -86,7 +86,16 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
             this, &BookmarkManager::moveDown);
     connect(listWidget, &QListWidget::activated,
             this, &BookmarkManager::appendToPlaylist);
-    refreshView();
+    //  populate list widget
+    int index = 0;
+    for(BookmarkEntry& entry : list) {
+        auto item = new QListWidgetItem();
+        item->setText(tr("Name: ") + entry.name +
+                      QChar::fromLatin1('\n') + entry.uri);
+        item->setIcon(QIcon::fromTheme(QStringLiteral("audio-x-generic")));
+        item->setData(Qt::UserRole, index++);
+        listWidget->addItem(item);
+    }
 }
 
 BookmarkList BookmarkManager::getList() {
@@ -123,86 +132,65 @@ void BookmarkManager::bookmarkCurrent() {
     }
 }
 
-void BookmarkManager::saveList(const BookmarkList& list) {
-    QSettings settings;
-    QString string;
-    for(const BookmarkEntry& entry: list) {
-        string.append(entry.name + QChar::fromLatin1('|') +
-                      entry.uri + QChar::fromLatin1(';'));
-    }
-    settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
-}
-
-void BookmarkManager::refreshView() {
-    lineEdit->clear();
-    listWidget->clear();
-    for(BookmarkEntry& entry : list) {
-        auto item = new QListWidgetItem();
-        item->setText(tr("Name: ") + entry.name
-                      + QLatin1String("\n") + entry.uri);
-        item->setIcon(QIcon::fromTheme(QStringLiteral("audio-x-generic")));
-        listWidget->addItem(item);
-    }
-}
-
 void BookmarkManager::moveUp() {
     int cur = listWidget->currentRow();
     /* Always check if index is valid before usage.
      * QListWidget doesn't care about your selection. */
     if(cur-1 > -1) {
-        qSwap(list[cur], list[cur-1]);
-        refreshView();
-        listWidget->setCurrentRow(cur-1);
+        QListWidgetItem* currentItem = listWidget->takeItem(cur);
+        listWidget->insertItem(cur - 1, currentItem);
     }
 }
 
 void BookmarkManager::moveDown() {
     int cur = listWidget->currentRow();
-    if(cur > -1 && cur+1 < list.size()) {
-        qSwap(list[cur], list[cur+1]);
-        refreshView();
-        listWidget->setCurrentRow(cur+1);
+    if(cur > -1 && cur+1 < listWidget->count()) {
+        QListWidgetItem* currentItem = listWidget->takeItem(cur);
+        listWidget->insertItem(cur + 1, currentItem);
     }
 }
 
 void BookmarkManager::deleteBookmark() {
     int cur = listWidget->currentRow();
     if(cur > -1) {
-        list.remove(cur);
-        refreshView();
+        QListWidgetItem* item = listWidget->takeItem(listWidget->currentRow());
+        delete item;
     }
 }
 
 void BookmarkManager::renameBookmark(QString name) {
-    int cur = listWidget->currentRow();
-    if(cur > -1) {
-        list[cur].name = name.replace(QChar::fromLatin1(';'), QString())
-                .replace(QChar::fromLatin1('|'), QString());
-        listWidget->currentItem()->setText(tr("Name: ") + name
-                                           + QLatin1String("\n")
-                                           + list.at(cur).uri);
-    }
+    int index = listWidget->currentItem()->data(Qt::UserRole).toInt();
+    list[index].name = name.replace(QChar::fromLatin1(';'), QString()).replace(
+                QChar::fromLatin1('|'), QString());
+    listWidget->currentItem()->setText(tr("Name: ") + name +
+                                       QChar::fromLatin1('\n') +
+                                       list.at(index).uri);
 }
 
 void BookmarkManager::updateLineEdit(int cur) {
-    if(cur > -1)
-        lineEdit->setText(list.at(cur).name);
+    int index = listWidget->item(cur)->data(Qt::UserRole).toInt();
+    lineEdit->setText(list.at(index).name);
 }
 
 void BookmarkManager::accepted() {
-    BookmarkManager::saveList(list);
+    QSettings settings;
+    QString string;
+    for(int i = 0; i < listWidget->count(); i++) {
+        int index = listWidget->item(i)->data(Qt::UserRole).toInt();
+        string.append(list.at(index).name + QChar::fromLatin1('|') +
+                      list.at(index).uri + QChar::fromLatin1(';'));
+    }
+    settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
     TrayIcon::self()->refreshBookmarks();
     close();
 }
 
 void BookmarkManager::copyToClipboard() {
-    int cur = listWidget->currentRow();
-    if(cur > -1)
-        QApplication::clipboard()->setText(list.at(cur).uri);
+    int index = listWidget->currentItem()->data(Qt::UserRole).toInt();
+    QApplication::clipboard()->setText(list.at(index).uri);
 }
 
 void BookmarkManager::appendToPlaylist() {
-    int cur = listWidget->currentRow();
-    if(cur > -1)
-        PLAYER->appendFile(QStringList{list.at(cur).uri});
+    int index = listWidget->currentItem()->data(Qt::UserRole).toInt();
+    PLAYER->appendFile(QStringList{list.at(index).uri});
 }
