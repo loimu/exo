@@ -41,6 +41,7 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
     auto verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     listWidget->setIconSize(QSize(32, 32));
+    listWidget->setDragDropMode(QAbstractItemView::InternalMove);
     verticalLayout->addWidget(listWidget);
     auto horizontalLayout = new QHBoxLayout();
     auto deleteButton = new QPushButton(this);
