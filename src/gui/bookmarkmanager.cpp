@@ -120,7 +120,7 @@ BookmarkList BookmarkManager::getList() {
 
 void BookmarkManager::bookmarkCurrent() {
     const QString& url = PLAYER->getTrack().file;
-    if(!url.isEmpty()) {
+    if(!url.isEmpty() && PLAYER->getTrack().isStream) {
         const QString name = url.split(
                     QChar::fromLatin1('/'), QString::SkipEmptyParts).last();
         QSettings settings;
@@ -131,7 +131,7 @@ void BookmarkManager::bookmarkCurrent() {
         settings.setValue(QStringLiteral("bookmarkmanager/bookmarks"), string);
         if(TrayIcon::self())
             TrayIcon::self()->refreshBookmarks();
-    }
+    } else { qInfo("invalid bookmark"); }
 }
 
 void BookmarkManager::moveUp() {
