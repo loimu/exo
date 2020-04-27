@@ -63,11 +63,9 @@ int main(int argc, char *argv[]) {
             if(fork() != 0) return 0;
             else qDebug("Running in the background");
         }
-#ifdef BUILD_CMUS
         else if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
             useCmus = true;
         }
-#endif // BUILD_CMUS
         else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")){
             useGui = false;
             forceReauth = true;
