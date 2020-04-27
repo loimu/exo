@@ -140,6 +140,7 @@ void BookmarkManager::moveUp() {
     if(cur-1 > -1) {
         QListWidgetItem* currentItem = listWidget->takeItem(cur);
         listWidget->insertItem(cur - 1, currentItem);
+        listWidget->setCurrentItem(currentItem);
     }
 }
 
@@ -148,6 +149,7 @@ void BookmarkManager::moveDown() {
     if(cur > -1 && cur+1 < listWidget->count()) {
         QListWidgetItem* currentItem = listWidget->takeItem(cur);
         listWidget->insertItem(cur + 1, currentItem);
+        listWidget->setCurrentItem(currentItem);
     }
 }
 
