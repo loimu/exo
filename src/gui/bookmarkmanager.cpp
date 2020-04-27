@@ -41,7 +41,6 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
     auto verticalLayout = new QVBoxLayout(this);
     listWidget = new QListWidget(this);
     listWidget->setIconSize(QSize(32, 32));
-    listWidget->setDragDropMode(QAbstractItemView::InternalMove);
     verticalLayout->addWidget(listWidget);
     auto horizontalLayout = new QHBoxLayout();
     auto deleteButton = new QPushButton(this);
@@ -70,6 +69,8 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
     moveDownAction->setShortcut(Qt::CTRL + Qt::Key_J);
     listWidget->addAction(moveDownAction);
     listWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+    listWidget->setDragDropMode(QAbstractItemView::InternalMove);
+    listWidget->setSelectionMode(QAbstractItemView::MultiSelection);
     connect(listWidget, &QListWidget::currentRowChanged,
             this, &BookmarkManager::updateLineEdit);
     connect(deleteButton, &QPushButton::released,
@@ -154,11 +155,9 @@ void BookmarkManager::moveDown() {
 }
 
 void BookmarkManager::deleteBookmark() {
-    int cur = listWidget->currentRow();
-    if(cur > -1) {
-        QListWidgetItem* item = listWidget->takeItem(listWidget->currentRow());
+    const QList<QListWidgetItem*>& selection = listWidget->selectedItems();
+    for(auto item : selection)
         delete item;
-    }
 }
 
 void BookmarkManager::renameBookmark(QString name) {
