@@ -70,7 +70,7 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent),
     listWidget->addAction(moveDownAction);
     listWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     listWidget->setDragDropMode(QAbstractItemView::InternalMove);
-    listWidget->setSelectionMode(QAbstractItemView::MultiSelection);
+    listWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     connect(listWidget, &QListWidget::currentRowChanged,
             this, &BookmarkManager::updateLineEdit);
     connect(deleteButton, &QPushButton::released,
