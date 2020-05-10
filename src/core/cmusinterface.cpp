@@ -147,9 +147,9 @@ void CmusInterface::showPlayer() {
 }
 
 void CmusInterface::openUri(const QString& file) {
+    /* all three methods here are operating on the queue, not playlist */
     clearPlaylist();
-    QProcess::startDetached(cli, QStringList() << QStringLiteral("-q")
-                            << file); // append file to queue
+    QProcess::startDetached(cli, QStringList() << QStringLiteral("-q") << file);
     next();
     play();
 }
