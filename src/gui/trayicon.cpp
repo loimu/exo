@@ -238,7 +238,7 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
     if(track.isStream) {
         tooltip = QString(QStringLiteral("<b>%1</b>")).arg(track.caption);
     } else {
-        /* try to guess a year from file path
+        /* try to guess a year from the file path
          * only years starting with 19, 20  are considered to be valid
          *  in order to exclude false positives as much as possible */
         static const QRegularExpression re(QStringLiteral("((19|20){1}\\d{2})"));
