@@ -47,13 +47,13 @@ const QVector<QString> SysUtils::findFullPaths(
         const QVector<QString>& executables) {
     const QStringList paths = QString(QLatin1String(getenv("PATH")))
             .split(QChar::fromLatin1(':'), QString::SkipEmptyParts);
-    QVector<QString> binaries;
+    QVector<QString> fullPaths;
     for(const QString& path : paths) {
         for(const QString &executable : executables) {
             const QString pp = path + QChar::fromLatin1('/') + executable;
             if(QFile::exists(pp))
-                binaries.push_back(pp);
+                fullPaths.push_back(pp);
         }
     }
-    return binaries;
+    return fullPaths;
 }
