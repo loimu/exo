@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
         player = new MocInterface(&app);
 
 #ifdef BUILD_DBUS
-        if(!QString(QLatin1String(getenv("DISPLAY"))).isEmpty())
+        if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty())
             DBus::init(&app);
 #endif // BUILD_DBUS
 

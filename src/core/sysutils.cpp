@@ -17,8 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include <unistd.h>
-
 #include <QString>
 #include <QVector>
 #include <QFile>
@@ -45,7 +43,7 @@ int SysUtils::findProcessId(const QString& name) {
 
 const QVector<QString> SysUtils::findFullPaths(
         const QVector<QString>& executables) {
-    const QStringList paths = QString(QLatin1String(getenv("PATH")))
+    const QStringList paths = QString(QLatin1String(qgetenv("PATH")))
             .split(QChar::fromLatin1(':'), QString::SkipEmptyParts);
     QVector<QString> fullPaths;
     for(const QString& path : paths) {
