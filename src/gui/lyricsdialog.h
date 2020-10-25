@@ -32,20 +32,21 @@ class LyricsDialog : public BaseDialog
 {
     Q_OBJECT
 
+public:
+    explicit LyricsDialog(QWidget* parent = nullptr);
+
+private:
     QLabel* label;
     QTextBrowser* lyricsBrowser;
     QLineEdit* artistLineEdit;
     QLineEdit* titleLineEdit;
     QNetworkAccessManager* httpObject;
-    QNetworkReply* replyObject;
     QString artistString, titleString;
     QString format(QString string);
+    QString replace(QString string);
     void showText(QNetworkReply* reply);
     void update();
     void search();
-
-public:
-    explicit LyricsDialog(QWidget* parent = nullptr);
 };
 
 #endif // LYRICSDIALOG_H

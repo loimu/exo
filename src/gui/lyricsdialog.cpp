@@ -35,8 +35,7 @@
 #include "lyricsdialog.h"
 
 LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
-    httpObject(new QNetworkAccessManager(this)),
-    replyObject(nullptr)
+    httpObject(new QNetworkAccessManager(this))
 {
     resize(388, 488);
     setWindowTitle(tr("Lyrics"));
@@ -101,62 +100,27 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     if(reply->error() != QNetworkReply::NoError) {
         label->setText(tr("Network error"));
         lyricsBrowser->setText(reply->errorString());
-        replyObject = nullptr;
         reply->deleteLater();
         return;
     }
-    QString content = QString::fromUtf8(reply->readAll().constData());
-    if(replyObject == reply) {
-        replyObject = nullptr;
-        reply->deleteLater();
-        QRegularExpression re(
-                    QStringLiteral("<artist>(.*)</artist>.*<song>(.*)</song>"
-                                   ".*<lyrics>(.*)</lyrics>.*<url>(.*)</url>"),
-                    QRegularExpression::DotMatchesEverythingOption);
-        QRegularExpressionMatch match = re.match(content);
-        if(!match.hasMatch()) {
-            lyricsBrowser->setHtml(QLatin1String("<b>")
-                                   + tr("Error")
-                                   + QLatin1String("</b>"));
-            return;
-        } else if(match.captured(3) == QStringLiteral("Not found")) {
-            lyricsBrowser->setHtml(QLatin1String("<b>")
-                                   + tr("Not found")
-                                   + QLatin1String("</b>"));
-            return;
-        } else {
-            artistString = match.captured(1);
-            titleString = match.captured(2);
-        }
-        QString urlString = match.captured(4).toLatin1();
-        urlString.replace(
-                    QLatin1String("http://lyrics.wikia.com/"),
-                    QLatin1String("https://lyrics.fandom.com/index.php?title="));
-        urlString.append(QLatin1String("&action=edit"));
-        QNetworkRequest request;
-        request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
-        request.setRawHeader("Referer", match.captured(4).toLatin1());
-        label->setText(tr("Downloading"));
-        httpObject->get(request);
-        reply->deleteLater();
-        return;
-    }
-    QRegularExpression re(QStringLiteral("&lt;lyrics>(.*)&lt;/lyrics>"),
+    const QString content = reply->readAll();
+    QRegularExpression re(QStringLiteral("<p>(.*)</p>"),
                           QRegularExpression::DotMatchesEverythingOption);
     QRegularExpressionMatch match = re.match(content);
-    QString text = QString(QStringLiteral("<h2>%1 - %2</h2>"))
-            .arg(artistString, titleString);
-    if(match.hasMatch()) {
-        QString lyrics = match.captured(1).trimmed();
-        lyrics.replace(QLatin1String("\n"), QLatin1String("<br>"));
-        text.append(lyrics);
-    }
-    lyricsBrowser->setHtml(text);
+    if(match.hasMatch())
+        lyricsBrowser->setHtml(match.captured(1).trimmed());
     reply->deleteLater();
 }
 
 QString LyricsDialog::format(QString string) {
     return string.replace(QChar::fromLatin1('&'), QLatin1String("and"));
+}
+
+QString LyricsDialog::replace(QString string) {
+    const QString rep = QString::fromLatin1(" _@,;&\"");
+    for(const QChar& c: rep)
+        string = string.replace(c, QChar::fromLatin1('_'));
+    return string.replace(QChar::fromLatin1('.'), QChar());
 }
 
 void LyricsDialog::update() {
@@ -167,14 +131,16 @@ void LyricsDialog::update() {
 }
 
 void LyricsDialog::search() {
-    label->setText(tr("Searching"));
+    label->setText(tr("Fetching"));
     setWindowTitle(QString(QStringLiteral("%1 - %2"))
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
-    request.setUrl(QUrl(QStringLiteral("https://lyrics.fandom.com/api.php"
-                                       "?action=lyrics&artist=")
-                        + artistLineEdit->text() + QLatin1String("&song=")
-                        + titleLineEdit->text() + QLatin1String("&fmt=xml")));
+    request.setUrl(QUrl(QLatin1String("http://www.lyriki.com/")
+                        + replace(artistLineEdit->text()) + QChar::fromLatin1(':')
+                        + replace(titleLineEdit->text())));
+    request.setRawHeader("Accept",
+                         "text/html,application/xhtml+xml,application/xml;q=0.9,"
+                         "image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
     request.setRawHeader("User-Agent", "Mozilla/5.0");
-    replyObject = httpObject->get(request);
+    httpObject->get(request);
 }
