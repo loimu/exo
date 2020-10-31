@@ -44,7 +44,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
                                     "%state{a}%a{t}%t{A}%A{f}%file{tt}%tt"
                                     "{ts}%ts{cs}%cs{T}%title") });
     startTimer(1000);
-    connect(moc, QOverload<int>::of(&QProcess::finished),
+    connect(moc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &MocInterface::notify);
 }
 

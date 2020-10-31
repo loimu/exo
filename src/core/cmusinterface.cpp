@@ -35,7 +35,7 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
     cmus->setProgram(cli);
     cmus->setArguments(QStringList{ QStringLiteral("-Q") });
     startTimer(1500);
-    connect(cmus, QOverload<int>::of(&QProcess::finished),
+    connect(cmus, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &CmusInterface::notify);
     qInfo("using cmus interface");
 }
