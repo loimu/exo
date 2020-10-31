@@ -104,11 +104,13 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         return;
     }
     const QString content = reply->readAll();
-    QRegularExpression re(QStringLiteral("<p>(.*)</p>"),
+    QRegularExpression re(QStringLiteral("\\>\\\n\\\t(.+?)\\<br\\>\\<br\\>"),
                           QRegularExpression::DotMatchesEverythingOption);
     QRegularExpressionMatch match = re.match(content);
     if(match.hasMatch())
-        lyricsBrowser->setHtml(match.captured(1).trimmed());
+        lyricsBrowser->setHtml(
+                    match.captured(1).trimmed()
+                    .replace(QChar::fromLatin1('\n'), QLatin1String("<br />")));
     reply->deleteLater();
 }
 
@@ -117,10 +119,11 @@ QString LyricsDialog::format(QString string) {
 }
 
 QString LyricsDialog::replace(QString string) {
-    const QString rep = QString::fromLatin1(" _@,;&\"");
+    const QString rep { QStringLiteral(" _@,;&\\/\"") };
     for(const QChar& c: rep)
-        string = string.replace(c, QChar::fromLatin1('_'));
-    return string.replace(QChar::fromLatin1('.'), QChar());
+        string = string.replace(c, QChar::fromLatin1('-'));
+    return string.replace(QChar::fromLatin1('.'), QChar())
+            .replace(QChar::fromLatin1('\''), QChar());
 }
 
 void LyricsDialog::update() {
@@ -135,9 +138,9 @@ void LyricsDialog::search() {
     setWindowTitle(QString(QStringLiteral("%1 - %2"))
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
-    request.setUrl(QUrl(QLatin1String("http://www.lyriki.com/")
-                        + replace(artistLineEdit->text()) + QChar::fromLatin1(':')
-                        + replace(titleLineEdit->text())));
+    request.setUrl(QUrl(QString(QStringLiteral("https://www.lyrics.com/lyrics/%1/%2.html"))
+                        .arg(replace(artistLineEdit->text()),
+                             replace(titleLineEdit->text()))));
     request.setRawHeader("Accept",
                          "text/html,application/xhtml+xml,application/xml;q=0.9,"
                          "image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
