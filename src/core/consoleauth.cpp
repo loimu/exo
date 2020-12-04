@@ -36,29 +36,31 @@ ConsoleAuth::ConsoleAuth(QObject *parent) : QObject(parent)
 void ConsoleAuth::auth() {
     QTextStream so(stdout);
     QTextStream si(stdin);
-    so << tr("Last.fm authentication") << endl;
-    so << tr("Login:") << endl;
+    so << tr("Last.fm authentication") << '\n';
+    so << tr("Login:") << '\n' << Qt::flush;
     QString login = si.readLine();
-    so << tr("Password:") << endl;
+    so << tr("Password:") << '\n' << Qt::flush;
     QString password = si.readLine();
     scrobblerAuth->auth(login, password);
 }
 
 void ConsoleAuth::authFail(const QString& errmsg) {
     QTextStream so(stdout);
-    so << errmsg << endl;
-    so << tr("Try again? (y/n)") << endl;
+    so << errmsg << '\n';
+    so << tr("Try again? (y/n)") << '\n' << Qt::flush;
     QTextStream si(stdin);
     QString input = si.readLine();
     if(!(input.startsWith(QChar::fromLatin1('y'), Qt::CaseInsensitive)
          || input.startsWith(tr("y"), Qt::CaseInsensitive))) {
-        so << tr("Exiting authentication procedure") << endl;
+        so << tr("Exiting authentication procedure") << '\n' << Qt::flush;
         qApp->exit();
-    } else auth();
+    } else {
+        auth();
+    }
 }
 
 void ConsoleAuth::authSuccess() {
     QTextStream so(stdout);
-    so << tr("Authentication succesful!") << endl;
+    so << tr("Authentication succesful!") << '\n' << Qt::flush;
     qApp->exit();
 }
