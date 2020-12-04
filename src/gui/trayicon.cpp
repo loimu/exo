@@ -211,7 +211,7 @@ bool TrayIcon::eventFilter(QObject* object, QEvent* event) {
     }
     if(event->type() == QEvent::Wheel) {
         QWheelEvent* e = static_cast<QWheelEvent*>(event);
-        player->changeVolume(e->delta()/100);
+        player->changeVolume(e->angleDelta().y() / 100);
         return true;
     }
     return false;
