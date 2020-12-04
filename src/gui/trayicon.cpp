@@ -55,6 +55,7 @@ TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
     createTrayIcon();
     connect(player, &PlayerInterface::newStatus, this, &TrayIcon::updateStatus);
     connect(player, &PlayerInterface::newTrack, this, &TrayIcon::updateTrack);
+    isPlatformTrayBroken = qgetenv("XDG_CURRENT_DESKTOP") == QByteArray("KDE");
 }
 
 void TrayIcon::createActions() {
@@ -220,7 +221,7 @@ void TrayIcon::updateStatus(PState state) {
     playerState = state;
     if(state < PState::Play)
         trayIcon->setToolTip(state < PState::Stop ? tr("Player isn't running")
-                                                  : tr("<b>Stopped</b>") );
+                                                  : tr("Stopped") );
 }
 
 void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
@@ -236,7 +237,7 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
         coverArt = cover;
     }
     if(track.isStream) {
-        tooltip = QString(QStringLiteral("<b>%1</b>")).arg(track.caption);
+        tooltip = track.caption;
     } else {
         /* try to guess a year from the file path
          * only years starting with 19, 20  are considered to be valid
@@ -245,13 +246,14 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
         QRegularExpressionMatch match = re.match(track.file);
         /* only tooltips with fixed size have acceptable look in some DEs
          * therefore we are using a fixed-size table here */
-        tooltip = QString(
-                    QStringLiteral("<table width=\"320\"><tr><td><b>%1 %2 (%3)"
+        static const QString tooltipText = isPlatformTrayBroken ?
+                    QStringLiteral("%1 %2 (%3)")
+                  : QStringLiteral("<table width=\"320\"><tr><td><b>%1 %2 (%3)"
                                    "</b></td></tr></table><br /><img src=\"%4\""
-                                   " width=\"320\" height=\"320\" />"))
-                .arg(track.caption, match.captured(1), time,
-                     cover.isEmpty()
-                     ? QStringLiteral(":/images/nocover.png") : cover);
+                                   " width=\"320\" height=\"320\" />");
+        tooltip = tooltipText.arg(
+                    track.caption, match.captured(1), time,
+                    cover.isEmpty() ? QStringLiteral(":/images/nocover.png") : cover);
     }
     trayIcon->setToolTip(tooltip);
 }

@@ -36,6 +36,14 @@ class TrayIcon : public QWidget
 {
     Q_OBJECT
 
+public:
+    explicit TrayIcon(QWidget* parent = nullptr);
+    static TrayIcon* self() { return object; }
+    void refreshBookmarks();
+    void showLyricsWindow();
+
+private:
+    bool isPlatformTrayBroken;
     static TrayIcon* object;
     PlayerInterface* player;
     QMenu* bookmarksMenu;
@@ -70,12 +78,6 @@ class TrayIcon : public QWidget
     void enableScrobbler(bool);
     void loadScrobbler(bool);
 #endif // BUILD_LASTFM
-
-public:
-    explicit TrayIcon(QWidget* parent = nullptr);
-    static TrayIcon* self() { return object; }
-    void refreshBookmarks();
-    void showLyricsWindow();
 };
 
 #endif // TRAYICON_H
