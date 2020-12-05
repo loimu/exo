@@ -44,7 +44,7 @@ int SysUtils::findProcessId(const QString& name) {
 const QVector<QString> SysUtils::findFullPaths(
         const QVector<QString>& executables) {
     const QStringList paths = QString(QLatin1String(qgetenv("PATH")))
-            .split(QChar::fromLatin1(':'), QString::SkipEmptyParts);
+            .split(QChar::fromLatin1(':'), Qt::SkipEmptyParts);
     QVector<QString> fullPaths;
     for(const QString& path : paths) {
         for(const QString &executable : executables) {
