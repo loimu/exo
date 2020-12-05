@@ -104,8 +104,12 @@ BookmarkList BookmarkManager::getList() {
     QSettings settings;
     const QString string = settings.value(
                 QStringLiteral("bookmarkmanager/bookmarks")).toString();
-    const QStringList stringList = string.split(
-                QChar::fromLatin1(';'), Qt::SkipEmptyParts);
+    const QStringList stringList = string
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+            .split(QChar::fromLatin1(';'), Qt::SkipEmptyParts);
+#else
+            .split(QChar::fromLatin1(';'), QString::SkipEmptyParts);
+#endif
     BookmarkList list;
     list.reserve(stringList.size());
     for(const QString& str : stringList) {
@@ -121,8 +125,12 @@ BookmarkList BookmarkManager::getList() {
 void BookmarkManager::bookmarkCurrent() {
     const QString& url = PLAYER->getTrack().file;
     if(!url.isEmpty() && PLAYER->getTrack().isStream) {
-        const QString name = url.split(
-                    QChar::fromLatin1('/'), Qt::SkipEmptyParts).last();
+        const QString name = url
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+                .split(QChar::fromLatin1('/'), Qt::SkipEmptyParts).last();
+#else
+                .split(QChar::fromLatin1('/'), QString::SkipEmptyParts).last();
+#endif
         QSettings settings;
         QString string = settings.value(
                     QStringLiteral("bookmarkmanager/bookmarks")).toString();
