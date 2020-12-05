@@ -20,6 +20,7 @@
 #include <QStringList>
 #include <QDBusMessage>
 #include <QDBusConnection>
+#include <QRandomGenerator>
 
 #include "playerinterface.h"
 #include "playerobject.h"
@@ -103,7 +104,7 @@ void PlayerObject::trackChanged(const QString& coverString) {
                                   : QLatin1String("file://") + coverString;
     trackID = QDBusObjectPath(
                 QString(QStringLiteral("/org/exo/MediaPlayer2/Track/%1"))
-                .arg(qrand()));
+                .arg(QRandomGenerator::global()->generate()));
     emitPropsChanged(PState::Play);
 }
 
