@@ -51,6 +51,8 @@ const QVector<QString> SysUtils::findFullPaths(
 #endif
     QVector<QString> fullPaths;
     for(const QString& path : paths) {
+        if(QFileInfo(path).isSymbolicLink())
+            break;
         for(const QString &executable : executables) {
             const QString pp = path + QChar::fromLatin1('/') + executable;
             if(QFile::exists(pp))
