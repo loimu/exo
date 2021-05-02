@@ -149,7 +149,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
             captured.append("<br />");
         }
         captured.append(QString(QSL("<p><a href=\"%1\">%1</a></p>"))
-                        .arg(reply->url().toString()));
+                        .arg(QString(reply->url().toString())));
         lyricsBrowser->setHtml(
                     captured
                     .replace(QChar::fromLatin1('\n'), QLatin1String("<br />")));
@@ -182,10 +182,8 @@ void LyricsDialog::search() {
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
     request.setUrl(QUrl(QString(QSL("https://www.musixmatch.com/search/%1%2"))
-                        .arg(QUrl::toPercentEncoding(
-                                 replace(artistLineEdit->text())+" "),
-                             QUrl::toPercentEncoding(
-                                 replace(titleLineEdit->text())))));
+                        .arg(replace(artistLineEdit->text() + " "),
+                             replace(titleLineEdit->text()))));
     request.setRawHeader("accept", "*/*");
     request.setRawHeader("user-agent", "Mozilla/5.0");
     replyObject = httpObject->get(request);
