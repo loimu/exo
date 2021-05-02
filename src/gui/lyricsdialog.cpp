@@ -162,10 +162,10 @@ QString LyricsDialog::format(QString string) {
 }
 
 QString LyricsDialog::replace(QString string) {
-    const QString rep { QStringLiteral(" _@,;&\\/\"") };
+    const QString rep { QStringLiteral("_@,;&\\/\"") };
     for(const QChar& c: rep)
         string = string.replace(c, QChar::fromLatin1('-'));
-    return string.replace(QChar::fromLatin1('.'), QChar());
+    return string;
 }
 
 void LyricsDialog::update() {
