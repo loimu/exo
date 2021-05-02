@@ -41,6 +41,7 @@ private:
     QLineEdit* artistLineEdit;
     QLineEdit* titleLineEdit;
     QNetworkAccessManager* httpObject;
+    QNetworkReply* replyObject;
     QString artistString, titleString;
     QString format(QString string);
     QString replace(QString string);
