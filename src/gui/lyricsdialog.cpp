@@ -119,10 +119,6 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
             return;
-        } else if(match.captured(1).isEmpty()) {
-            lyricsBrowser->setHtml(QSL("<b>") + tr("Error") + QSL("</b>"));
-            return;
-        } else {
         }
         QString urlString = QSL("https://www.musixmatch.com")
                 + match.captured(1).toLatin1();
@@ -149,7 +145,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
             captured.append("<br />");
         }
         captured.append(QString(QSL("<p><a href=\"%1\">%1</a></p>"))
-                        .arg(QString(reply->url().toString())));
+                        .arg(reply->url().toString()));
         lyricsBrowser->setHtml(
                     captured
                     .replace(QChar::fromLatin1('\n'), QLatin1String("<br />")));
