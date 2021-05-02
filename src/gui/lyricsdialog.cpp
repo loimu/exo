@@ -177,8 +177,9 @@ void LyricsDialog::search() {
     setWindowTitle(QString(QStringLiteral("%1 - %2"))
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
-    request.setUrl(QUrl(QString(QSL("https://www.musixmatch.com/search/%1%2"))
-                        .arg(replace(artistLineEdit->text() + " "),
+    request.setUrl(QUrl(QString(
+                            QSL("https://www.musixmatch.com/search/%1 %2/tracks"))
+                        .arg(replace(artistLineEdit->text()),
                              replace(titleLineEdit->text()))));
     request.setRawHeader("accept", "*/*");
     request.setRawHeader("user-agent", "Mozilla/5.0");
