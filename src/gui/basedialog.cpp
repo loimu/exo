@@ -21,13 +21,15 @@
 
 #include "basedialog.h"
 
+
 BaseDialog::BaseDialog(QWidget *parent) : QWidget(parent)
 {
     setWindowFlags(Qt::Dialog);
     setAttribute(Qt::WA_DeleteOnClose);
+    raise();  // a workaround for KDE Plasma environment
 }
 
 void BaseDialog::keyPressEvent(QKeyEvent *e) {
     if(e->key() == Qt::Key_Escape)
-        this->close();
+        close();
 }
