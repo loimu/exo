@@ -6,6 +6,8 @@ set(VERSION_MINOR 9)
 set(VERSION_PATCH 98)
 set(EXO_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
+file(READ rev EXO_REVISION LIMIT 9)
+
 option(BUILD_DBUS         "Enable DBus support"           ON)
 option(BUILD_LASTFM       "Enable Last.fm support"        ON)
 option(BUILD_CMUS         "Enable Cmus interface"        OFF)
