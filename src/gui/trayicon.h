@@ -26,9 +26,6 @@
 #include <QSystemTrayIcon>
 
 class PlayerInterface;
-template <typename>
-class QVector;
-
 enum class PlayerState;
 using PState = PlayerState;
 
@@ -39,6 +36,7 @@ class TrayIcon : public QWidget
 public:
     explicit TrayIcon(QWidget* parent = nullptr);
     static TrayIcon* self() { return object; }
+    void createBookmarks();
     void refreshBookmarks();
     void showLyricsWindow();
 

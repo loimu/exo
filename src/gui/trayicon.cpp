@@ -156,7 +156,7 @@ void TrayIcon::createTrayIcon() {
     bookmarksMenu = new QMenu(trayIconMenu);
     bookmarksMenu->setTitle(tr("Lin&ks"));
     trayIconMenu->addAction(bookmarksMenu->menuAction());
-    refreshBookmarks();
+    createBookmarks();
     // end of Bookmarks submenu
     // Settings submenu
     auto settingsMenu = new QMenu(trayIconMenu);
@@ -295,21 +295,31 @@ void TrayIcon::showManager() {
             this, [this] { bookmarkManagerAction->setEnabled(true); });
 }
 
-void TrayIcon::refreshBookmarks() {
+void TrayIcon::createBookmarks() {
     const BookmarkList& list = BookmarkManager::getList();
-    bookmarksMenu->clear();
     bookmarksMenu->addAction(bookmarkCurrentAction);
     if(list.isEmpty())
         return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
-    connect(bookmarksMenu, &QMenu::triggered, this, [] (QAction* action) {
-        if(!action->data().isNull())
-            PLAYER->openUri(action->data().toString()); });
+    refreshBookmarks();
+}
+
+void TrayIcon::refreshBookmarks() {
+    static QVector<QAction*> vector;
+    for(QAction* action : vector) {
+        delete action;
+    }
+    vector.clear();
+    const BookmarkList& list = BookmarkManager::getList();
     for(const BookmarkEntry& entry : list) {
         auto bookmark = new QAction(entry.name, this);
         bookmark->setData(entry.uri);
         bookmarksMenu->addAction(bookmark);
+        connect(bookmark, &QAction::triggered, this, [bookmark] () {
+            PLAYER->openUri(bookmark->data().toString());
+        });
+        vector.push_back(bookmark);
     }
 }
 
