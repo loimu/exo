@@ -30,12 +30,31 @@
 #include <QUrl>
 #include <QRegularExpression>
 #include <QTimer>
+#include <QAction>
 
 #include "playerinterface.h"
 #include "lyricsdialog.h"
 
 #define QSL QStringLiteral
 
+
+struct Provider {
+    const QString searchUrl;
+    const QString urlTemplate;
+    const QString urlRegExp;
+    const QString dataRegExp;
+};
+
+const QVector<Provider> LyricsDialog::providers = {
+    { QSL("https://www.musixmatch.com/search/%1 %2/tracks"),
+      QSL("https://www.musixmatch.com%1"),
+      QSL("<a class=\"title\" href=\"([^\"]*)"),
+      QSL("\\<p class=\"mxm-lyrics__content \">(.*?)\\</p\\>")},
+    { QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
+      "?songTitle=%2&amp;bandName=%1&amp;ExactBandMatch=1"),
+      QSL("https://www.metal-archives.com/release/ajax-view-lyrics/id/%1"),
+      QSL("lyricsLink_(\\d+)"), QSL("(.*)")}
+};
 
 LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
     httpObject(new QNetworkAccessManager(this)),
@@ -64,7 +83,7 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
     label = new QLabel(this);
     horizontalLayout2->addWidget(label);
     auto* spacer = new QSpacerItem(0, 0,
-                                  QSizePolicy::Expanding, QSizePolicy::Fixed);
+                                   QSizePolicy::Expanding, QSizePolicy::Fixed);
     horizontalLayout2->addItem(spacer);
     auto* autoButton = new QPushButton(this);
     autoButton->setText(tr("Auto"));
@@ -80,6 +99,14 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
     buttonBox->setStandardButtons(QDialogButtonBox::Close);
     horizontalLayout2->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout2);
+    auto* switchNext = new QAction(this);
+    switchNext->setShortcut(Qt::CTRL + Qt::Key_N);
+    connect(switchNext, &QAction::triggered, this, [this] { index = 1; });
+    this->addAction(switchNext);
+    auto* switchPrev = new QAction(this);
+    switchPrev->setShortcut(Qt::CTRL + Qt::Key_P);
+    connect(switchPrev, &QAction::triggered, this, [this] { index = 0; });
+    this->addAction(switchPrev);
     connect(httpObject, &QNetworkAccessManager::finished,
             this, &LyricsDialog::showText);
     connect(artistLineEdit, &QLineEdit::returnPressed,
@@ -88,9 +115,8 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
             this, &LyricsDialog::search);
     connect(updateButton, &QPushButton::released, this, &LyricsDialog::update);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &LyricsDialog::close);
-    connect(PLAYER, &PlayerInterface::newTrack, this, [this, autoButton] {
-        if(autoButton->isChecked()) update();
-    });
+    connect(PLAYER, &PlayerInterface::newTrack, this,
+            [this, autoButton] { if(autoButton->isChecked()) update(); });
     connect(autoButton, &QPushButton::pressed, this, [this] {
         if(artistLineEdit->text() != format(PLAYER->getTrack().artist)
                 || titleLineEdit->text() != format(
@@ -112,7 +138,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
 
     if(replyObject == reply) {
         replyObject = nullptr;
-        QRegularExpression re(QSL("<a class=\"title\" href=\"([^\"]*)"));
+        QRegularExpression re(LyricsDialog::providers.at(index).urlRegExp);
         QString content = QString::fromUtf8(reply->readAll().constData());
         reply->deleteLater();
         QRegularExpressionMatch match = re.match(content);
@@ -120,8 +146,8 @@ void LyricsDialog::showText(QNetworkReply* reply) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
             return;
         }
-        QString urlString = QSL("https://www.musixmatch.com")
-                + match.captured(1).toLatin1();
+        QString urlString = LyricsDialog::providers.at(index).urlTemplate
+                .arg(match.captured(1));
         QNetworkRequest request;
         request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
         request.setRawHeader("accept", "*/*");
@@ -131,8 +157,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         reply->deleteLater();
     } else {
         QString content = QString::fromUtf8(reply->readAll().constData());
-        QRegularExpression re(
-                    QSL("\\<p class=\"mxm-lyrics__content \">(.*?)\\</p\\>"),
+        QRegularExpression re(LyricsDialog::providers.at(index).dataRegExp,
                     QRegularExpression::DotMatchesEverythingOption);
         QRegularExpressionMatch match = re.match(content);
         QString captured{};
@@ -177,8 +202,7 @@ void LyricsDialog::search() {
     setWindowTitle(QString(QStringLiteral("%1 - %2"))
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
-    request.setUrl(QUrl(QString(
-                            QSL("https://www.musixmatch.com/search/%1 %2/tracks"))
+    request.setUrl(QUrl(QString(LyricsDialog::providers.at(index).searchUrl)
                         .arg(replace(artistLineEdit->text()),
                              replace(titleLineEdit->text()))));
     request.setRawHeader("accept", "*/*");

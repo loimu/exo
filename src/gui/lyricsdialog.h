@@ -27,6 +27,7 @@ class QTextBrowser;
 class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
+struct Provider;
 
 class LyricsDialog : public BaseDialog
 {
@@ -36,6 +37,8 @@ public:
     explicit LyricsDialog(QWidget* parent = nullptr);
 
 private:
+    static const QVector<Provider> providers;
+    int index = 0;
     QLabel* label;
     QTextBrowser* lyricsBrowser;
     QLineEdit* artistLineEdit;
