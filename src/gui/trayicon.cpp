@@ -296,9 +296,8 @@ void TrayIcon::showManager() {
 }
 
 void TrayIcon::createBookmarks() {
-    const BookmarkList& list = BookmarkManager::getList();
     bookmarksMenu->addAction(bookmarkCurrentAction);
-    if(list.isEmpty())
+    if(BookmarkManager::getList().isEmpty())
         return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();

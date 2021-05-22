@@ -90,12 +90,8 @@ qlonglong PlayerObject::position() const {
     return track.isStream ? 0 : track.currSec * 1000000;
 }
 
-double PlayerObject::volume() const {
-    // dummy method - can't get the volume
-    return 0.5;
-}
-
 void PlayerObject::setVolume(double value) {
+    volume = value;
     player->volume(value * 100);
 }
 

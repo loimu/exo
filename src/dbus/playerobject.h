@@ -43,11 +43,12 @@ class PlayerObject : public QDBusAbstractAdaptor
     Q_PROPERTY(QVariantMap Metadata READ metadata)
     Q_PROPERTY(QString PlaybackStatus READ playbackStatus)
     Q_PROPERTY(qlonglong Position READ position)
-    Q_PROPERTY(double Volume READ volume WRITE setVolume)
+    Q_PROPERTY(double Volume MEMBER volume WRITE setVolume)
 
-    PlayerInterface* player;
-    QVariantMap props;
+    PlayerInterface* player = nullptr;
+    double volume = 0.5;
     PState status;
+    QVariantMap props;
     QString cover;
     QDBusObjectPath trackID;
     void syncProperties();
@@ -65,7 +66,6 @@ public:
     QVariantMap metadata() const;
     QString playbackStatus() const;
     qlonglong position() const;
-    double volume() const;
     void setVolume(double value);
 
 public Q_SLOTS:
