@@ -246,14 +246,15 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
         QRegularExpressionMatch match = re.match(track.file);
         /* only tooltips with fixed size have acceptable look in some DEs
          * therefore we are using a fixed-size table here */
-        static const QString tooltipText = isPlatformTrayBroken ?
-                    QStringLiteral("%1 %2 (%3)")
-                  : QStringLiteral("<table width=\"320\"><tr><td><b>%1 %2 (%3)"
+        tooltip = isPlatformTrayBroken
+                ? QStringLiteral("%1 %2 (%3)").arg(
+                      track.caption, match.captured(1), time)
+                : QStringLiteral("<table width=\"320\"><tr><td><b>%1 %2 (%3)"
                                    "</b></td></tr></table><br /><img src=\"%4\""
-                                   " width=\"320\" height=\"320\" />");
-        tooltip = tooltipText.arg(
-                    track.caption, match.captured(1), time,
-                    cover.isEmpty() ? QStringLiteral(":/images/nocover.png") : cover);
+                                   " width=\"320\" height=\"320\" />").arg(
+                      track.caption, match.captured(1), time,
+                      cover.isEmpty() ? QStringLiteral(":/images/nocover.png")
+                                      : cover);
     }
     trayIcon->setToolTip(tooltip);
 }
