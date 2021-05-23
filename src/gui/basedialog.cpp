@@ -24,9 +24,10 @@
 
 BaseDialog::BaseDialog(QWidget *parent) : QWidget(parent)
 {
-    setWindowFlags(Qt::Dialog);
+    // Normally we have to use Qt::Dialog flag here, but some environments
+    // are just not good with the situtation when there's no main window at all
+    setWindowFlags(Qt::Window);
     setAttribute(Qt::WA_DeleteOnClose);
-    raise();  // a workaround for KDE Plasma environment
 }
 
 void BaseDialog::keyPressEvent(QKeyEvent *e) {
