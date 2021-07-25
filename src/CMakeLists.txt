@@ -43,6 +43,8 @@ qt5_add_resources(exo_RESOURCES_RCC ../images/exo.qrc)
 # translations
 SET(TRANSLATION
     ../translations/be_BY.ts
+    ../translations/pl_PL.ts
+    ../translations/ru_RU.ts
     )
 find_package(Qt5LinguistTools REQUIRED)
 qt5_add_translation(QM_FILES ${TRANSLATION})
