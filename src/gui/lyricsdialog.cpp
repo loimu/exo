@@ -206,6 +206,8 @@ void LyricsDialog::search() {
                         .arg(replace(artistLineEdit->text()),
                              replace(titleLineEdit->text()))));
     request.setRawHeader("accept", "*/*");
-    request.setRawHeader("user-agent", "Mozilla/5.0");
+    request.setRawHeader("user-agent",
+                         "Mozilla/5.0 (X11; Linux x86_64; rv:57.0)"
+                         " Gecko/20100101 Firefox/57.0");
     replyObject = httpObject->get(request);
 }
