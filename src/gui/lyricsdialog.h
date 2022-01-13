@@ -46,7 +46,6 @@ private:
     QNetworkAccessManager* httpObject;
     QNetworkReply* replyObject;
     QString artistString, titleString;
-    QString format(QString string);
     QString replace(QString string);
     void showText(QNetworkReply* reply);
     void update();

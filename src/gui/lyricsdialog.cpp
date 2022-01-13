@@ -118,9 +118,8 @@ LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
     connect(PLAYER, &PlayerInterface::newTrack, this,
             [this, autoButton] { if(autoButton->isChecked()) update(); });
     connect(autoButton, &QPushButton::pressed, this, [this] {
-        if(artistLineEdit->text() != format(PLAYER->getTrack().artist)
-                || titleLineEdit->text() != format(
-                    PLAYER->getTrack().title)) update();
+        if(artistLineEdit->text() != PLAYER->getTrack().artist
+                || titleLineEdit->text() != PLAYER->getTrack().title) update();
     });
     update();
 }
@@ -178,10 +177,6 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     }
 }
 
-QString LyricsDialog::format(QString string) {
-    return string.replace(QChar::fromLatin1('&'), QLatin1String("and"));
-}
-
 QString LyricsDialog::replace(QString string) {
     const QString rep { QStringLiteral("_@,;&\\/\"") };
     for(const QChar& c: rep)
@@ -190,8 +185,8 @@ QString LyricsDialog::replace(QString string) {
 }
 
 void LyricsDialog::update() {
-    artistLineEdit->setText(format(PLAYER->getTrack().artist));
-    titleLineEdit->setText(format(PLAYER->getTrack().title));
+    artistLineEdit->setText(PLAYER->getTrack().artist);
+    titleLineEdit->setText(PLAYER->getTrack().title);
     if(!artistLineEdit->text().isEmpty())
         search();
 }
