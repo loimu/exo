@@ -282,9 +282,12 @@ void TrayIcon::addFiles() {
                 this,
                 QStringLiteral("Add files to playlist"),
                 QString(),
-                QStringLiteral("Media (*.aac *.flac *.m4a *.mp3 *.ogg *.wma);;"
-                               "Playlists (*.m3u *.pls *.xspf );;All files (*)"
-                               ));
+                QStringLiteral(
+                    "Media (*.aac *.flac *.m4a *.mp3 *.ogg *.wma);;"
+                    "Playlists (*.m3u *.pls *.xspf);;"
+                    "Media and Playlists "
+                    "(*.aac *.flac *.m4a *.mp3 *.ogg *.wma *.m3u *.pls *.xspf);;"
+                    "All files (*)"));
     player->appendFile(files);
 }
 
