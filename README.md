@@ -10,7 +10,7 @@
 * OSD (additional Python script)
 
 ### Build dependencies ###
-Extra CMake Modules, QtBase, QtTools, LibLastfm (optional)
+CMake, QtBase, QtTools, LibLastfm (optional)
 
 ```bash
 sudo apt install qtbase5-dev qttools5-dev liblastfm5-dev cmake
@@ -22,20 +22,16 @@ moc, python3-notify2
 ### Build and run ###
 ```bash
 mkdir build && cd build
-cmake ..
+cmake -DBUILD_DBUS=ON -DBUILD_LASTFM=ON ..
 make -j2
 ./src/exo
 ```
 
 ### Build options: ###
-```bash
-cmake .. \
-#  disable DBus and MPRISv2 interfaces (enabled by default)
--DBUILD_DBUS=OFF \
-#  disable scrobbler module (enabled by default)
--DBUILD_LASTFM=OFF \
-#  enable Cmus interface (disabled by default)
--DBUILD_CMUS=ON
+```
+BUILD_DBUS=OFF   # disable DBus and MPRISv2 interfaces (enabled by default)
+BUILD_LASTFM=OFF # disable scrobbler module (enabled by default)
+BUILD_CMUS=ON    # enable Cmus interface (disabled by default)
 ```
 
 ### Screenshot ###
