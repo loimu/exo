@@ -9,6 +9,16 @@
 * Bookmarks
 * OSD (additional Python script)
 
+### Build dependencies ###
+Extra CMake Modules, QtBase, QtTools, LibLastfm (optional)
+
+```bash
+sudo apt install qtbase5-dev qttools5-dev liblastfm5-dev cmake
+```
+
+### Runtime dependencies ###
+moc, python3-notify2
+
 ### Build and run ###
 ```bash
 mkdir build && cd build
