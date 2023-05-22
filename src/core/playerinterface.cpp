@@ -74,8 +74,8 @@ void PlayerInterface::notify() {
     if(currentState != PState::Play || track.isStream) return;
     static bool listened = true;
     static QDateTime threshold;
-    if(listened && ((track.currSec < track.totalSec/2 && track.totalSec <= full)
-                    || (track.currSec < half && track.totalSec > full))) {
+    if(listened && ((track.currSec <= track.totalSec/2 && track.totalSec <= full)
+                    || (track.currSec <= half && track.totalSec > full))) {
         listened = false; // beginning
         threshold = QDateTime::currentDateTime()
                 .addSecs((track.totalSec > 2 * 60) ? 60 : track.totalSec/2);
@@ -83,7 +83,7 @@ void PlayerInterface::notify() {
     else if(!listened && (track.currSec > track.totalSec/2
                           || (track.currSec > half && track.totalSec > full))) {
         listened = true; // ending
-        if(QDateTime::currentDateTime() > threshold)
+        if(QDateTime::currentDateTime() >= threshold)
             if(auto scrobbler = Scrobbler::self()) {
                 scrobbler->cache(track.artist, track.title,
                                  track.album, track.totalSec);
