@@ -29,6 +29,15 @@
 #include "playerinterface.h"
 
 
+namespace PlayerInterfaceConstants
+{
+   // when the track is long enough we don't want to wait until half-time is passed
+   constexpr int full = 6 * 60;  // full length of boundary condition time
+   constexpr int half = full/2;  // half length ... (seconds)
+}
+using namespace PlayerInterfaceConstants;
+
+
 PlayerInterface* PlayerInterface::object = nullptr;
 
 PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent)
@@ -52,29 +61,34 @@ void PlayerInterface::notify() {
         if(track.caption.isEmpty()) return;
         emit newTrack(getCover());
 #ifdef BUILD_LASTFM
-        if(currentState == PState::Play && !track.artist.isEmpty())
-            if(auto scrobbler = Scrobbler::self())
-                scrobbler->init(track.artist, track.title, track.album,
-                                track.totalSec);
+        if(auto scrobbler = Scrobbler::self()) {
+            if(currentState == PState::Play && !track.artist.isEmpty()) {
+                scrobbler->init(track.artist, track.title,
+                                track.album, track.totalSec);
+                scrobbler->submit();
+            }
+        }
 #endif // BUILD_LASTFM
     }
 #ifdef BUILD_LASTFM
     if(currentState != PState::Play || track.isStream) return;
     static bool listened = true;
     static QDateTime threshold;
-    if(listened && ((track.currSec < track.totalSec/2 && track.totalSec <= 8*60)
-                    || (track.currSec < 4*60 && track.totalSec > 8*60))) {
+    if(listened && ((track.currSec < track.totalSec/2 && track.totalSec <= full)
+                    || (track.currSec < half && track.totalSec > full))) {
         listened = false; // beginning
         threshold = QDateTime::currentDateTime()
-                .addSecs(track.totalSec > 2*60 ? 60 : track.totalSec/2);
+                .addSecs((track.totalSec > 2 * 60) ? 60 : track.totalSec/2);
     }
     else if(!listened && (track.currSec > track.totalSec/2
-                          || (track.currSec > 4*60 && track.totalSec > 8*60))) {
+                          || (track.currSec > half && track.totalSec > full))) {
         listened = true; // ending
         if(QDateTime::currentDateTime() > threshold)
-            if(auto scrobbler = Scrobbler::self())
-                scrobbler->submit(track.artist, track.title, track.album,
-                                  track.totalSec);
+            if(auto scrobbler = Scrobbler::self()) {
+                scrobbler->cache(track.artist, track.title,
+                                 track.album, track.totalSec);
+                scrobbler->submit();
+            }
     }
 #endif // BUILD_LASTFM
 }

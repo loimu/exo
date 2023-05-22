@@ -42,8 +42,9 @@ public:
     static Scrobbler* self() { return object; }
     void init(const QString& artist, const QString& title,
               const QString& album, int totalSec);
-    void submit(const QString& artist, const QString& title,
+    void cache(const QString& artist, const QString& title,
                 const QString& album, int totalSec);
+    void submit();
 };
 
 #endif // SCROBBLER_H

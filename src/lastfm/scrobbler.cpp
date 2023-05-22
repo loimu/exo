@@ -57,7 +57,7 @@ void Scrobbler::init(const QString& artist, const QString& title,
     as->nowPlaying(t);
 }
 
-void Scrobbler::submit(const QString& artist, const QString& title,
+void Scrobbler::cache(const QString& artist, const QString& title,
                        const QString& album, int totalSec) {
     lastfm::MutableTrack t;
     t.setArtist(artist);
@@ -66,5 +66,8 @@ void Scrobbler::submit(const QString& artist, const QString& title,
     t.setDuration(totalSec);
     t.stamp(); //sets track start time
     as->cache(t);
+}
+
+void Scrobbler::submit() {
     as->submit();
 }
