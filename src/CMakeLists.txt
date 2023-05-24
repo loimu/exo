@@ -63,6 +63,7 @@ if(BUILD_TESTS)
   set(test_LIBS Qt5::Core Qt5::Test)
   set(tests_SRCS tests/tests.cpp
       tests/pitests.cpp
+      tests/systests.cpp
       core/sysutils.cpp
       core/playerinterface.cpp
       core/mocinterface.cpp

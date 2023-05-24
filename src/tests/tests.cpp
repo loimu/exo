@@ -20,10 +20,15 @@
 #include <QtTest/QtTest>
 
 #include "pitests.h"
+#include "systests.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
     PITests t1;
     return QTest::qExec(&t1);
+
+    SysTests t2;
+    QTest::qExec(&t2);
+    return 0;
 }
