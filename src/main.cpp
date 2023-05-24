@@ -21,30 +21,44 @@
 
 #include <unistd.h>
 
-#include <QByteArray>
 #include <QNetworkProxyFactory>
-#include <QSettings>
 #include <QApplication>
-#include <QMessageBox>
+#include <QSettings>
 #include <QTranslator>
 
 #include "core/singleinstance.h"
-
 #ifdef BUILD_DBUS
   #include "dbus/dbus.h"
 #endif // BUILD_DBUS
-
 #ifdef BUILD_LASTFM
   #include "core/consoleauth.h"
   #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
-
 #ifdef BUILD_CMUS
   #include "core/cmusinterface.h"
 #endif // BUILD_CMUS
 #include "core/mocinterface.h"
 #include "gui/trayicon.h"
 
+#ifdef BUILD_CMUS
+  #define INIT_PLAYER \
+    if(useCmus) player = new CmusInterface(&app);\
+    else player = new MocInterface(&app);
+#else
+  #define INIT_PLAYER player = new MocInterface(&app);
+#endif
+
+
+void initObjects(QCoreApplication& app, const QSettings& settings) {
+  #ifdef BUILD_DBUS
+    if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty())
+        DBus::init(&app);
+  #endif // BUILD_DBUS
+  #ifdef BUILD_LASTFM
+    if(settings.value(QStringLiteral("scrobbler/enabled")).toBool())
+        new Scrobbler(&app);
+  #endif // BUILD_LASTFM
+}
 
 int main(int argc, char *argv[]) {
     bool useGui = true;
@@ -53,7 +67,8 @@ int main(int argc, char *argv[]) {
     if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
-            qInfo("Usage: exo [-h] [-b] [-c] [-f]\nSee also `man exo`");
+            QTextStream out(stdout);
+            out << "Usage: exo [-h] [-b] [-c] [-f]\nSee also `man exo`\n";
             return 0;
         }
         else if(arg == QByteArray("-d") || arg == QByteArray("-b")
@@ -63,9 +78,11 @@ int main(int argc, char *argv[]) {
             if(::fork() != 0) return 0;
             else qDebug("Running in the background");
         }
+#ifdef BUILD_CMUS
         else if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
             useCmus = true;
         }
+#endif // BUILD_CMUS
         else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")){
             useGui = false;
             forceReauth = true;
@@ -77,8 +94,8 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationVersion(QLatin1String(EXO_VERSION));
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     SingleInstance instance;
-    int result = 0;
     QTranslator translator;
+    PlayerInterface* player = nullptr;
 
     if(useGui) {
         /* graphical application */
@@ -89,42 +106,20 @@ int main(int argc, char *argv[]) {
                         QLocale::system().name() + QLatin1String(".qm"));
         app.installTranslator(&translator);
         if(!instance.isUnique()) {
-            QMessageBox::critical(
-                        nullptr, app.applicationName(),
-                        QObject::tr("Application is already running"));
-            return 1;
+            INIT_PLAYER
+            player->showPlayer();
+            return 0;
         }
-
-        PlayerInterface* player;
-#ifdef BUILD_CMUS
-        if(useCmus)
-            player = new CmusInterface(&app);
-        else
-#endif // BUILD_CMUS
-        player = new MocInterface(&app);
-
-#ifdef BUILD_DBUS
-        DBus::init(&app);
-#endif // BUILD_DBUS
-
+        INIT_PLAYER
         QSettings settings;
-
-#ifdef BUILD_LASTFM
-        if(settings.value(QStringLiteral("scrobbler/enabled")).toBool())
-            new Scrobbler(&app);
-#endif // BUILD_LASTFM
-
-        if(!QSystemTrayIcon::isSystemTrayAvailable())
-            qWarning("System tray is not available. Running with no tray");
+        initObjects(app, settings);
         Q_INIT_RESOURCE(exo);
         TrayIcon trayIcon;
         Q_UNUSED(trayIcon);
-
-        result = app.exec();
+        app.exec();
         player->shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool())
             player->quit();
-        /* end of graphical application */
     } else {
         /* console application */
         QCoreApplication app(argc, argv);
@@ -132,7 +127,6 @@ int main(int argc, char *argv[]) {
             qWarning("Application is already running");
             return 1;
         }
-
         translator.load(QApplication::applicationDirPath() +
                         QLatin1String("/../share/exo/translations/") +
                         QLocale::system().name() + QLatin1String(".qm"));
@@ -146,32 +140,13 @@ int main(int argc, char *argv[]) {
             return 1;
 #endif // BUILD_LASTFM
         }
-
-        PlayerInterface* player;
-#ifdef BUILD_CMUS
-        if(useCmus)
-            player = new CmusInterface(&app);
-        else
-#endif // BUILD_CMUS
-        player = new MocInterface(&app);
-
-#ifdef BUILD_DBUS
-        if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty())
-            DBus::init(&app);
-#endif // BUILD_DBUS
-
+        INIT_PLAYER
         QSettings settings;
-
-#ifdef BUILD_LASTFM
-        if(settings.value(QStringLiteral("scrobbler/enabled")).toBool())
-            new Scrobbler(&app);
-#endif // BUILD_LASTFM
-
-        result = app.exec();
+        initObjects(app, settings);
+        app.exec();
         player->shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool())
             player->quit();
-        /* end of console application */
     }
-    return result;
+    return 0;
 }
