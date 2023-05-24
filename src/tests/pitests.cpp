@@ -19,6 +19,8 @@
 
 #include <QTest>
 
+#include "config.h"
+
 #include "mocinterface.h"
 #include "cmusinterface.h"
 #include "pitests.h"

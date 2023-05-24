@@ -67,8 +67,13 @@ if(BUILD_TESTS)
       core/playerinterface.cpp
       core/mocinterface.cpp
       core/cmusinterface.cpp)
+
+  set(BUILD_LASTFM OFF)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/tests_includedir/config.h)
+
   add_executable(tests ${tests_SRCS})
-  target_include_directories(tests PRIVATE ${CMAKE_CURRENT_BINARY_DIR} core)
+  target_include_directories(tests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/tests_includedir core)
   target_link_libraries(tests PRIVATE ${test_LIBS})
   target_compile_features(tests PRIVATE cxx_nullptr)
 endif()
