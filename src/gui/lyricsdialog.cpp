@@ -39,21 +39,31 @@
 
 
 struct Provider {
+    const QString name;
     const QString searchUrl;
     const QString urlTemplate;
     const QString urlRegExp;
     const QString dataRegExp;
+    const QVector<QPair<QString, QString>> replaceList;
 };
 
 const QVector<Provider> LyricsDialog::providers = {
-    { QSL("https://www.musixmatch.com/search/%1 %2/tracks"),
+    {
+      QSL("Musixmatch"),
+      QSL("https://www.musixmatch.com/search/%1 %2/tracks"),
       QSL("https://www.musixmatch.com%1"),
       QSL("<a class=\"title\" href=\"([^\"]*)"),
-      QSL("\\<p class=\"mxm-lyrics__content \">(.*?)\\</p\\>")},
-    { QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
+      QSL("\\<p class=\"mxm-lyrics__content \">(.*?)\\</p\\>"),
+      {}
+    },
+    {
+      QSL("Metal Archives"),
+      QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
       "?songTitle=%2&amp;bandName=%1&amp;ExactBandMatch=1"),
       QSL("https://www.metal-archives.com/release/ajax-view-lyrics/id/%1"),
-      QSL("lyricsLink_(\\d+)"), QSL("(.*)")}
+      QSL("lyricsLink_(\\d+)"), QSL("(.*)"),
+      {{QSL("\r\n"), QString()}}
+    }
 };
 
 LyricsDialog::LyricsDialog(QWidget* parent) : BaseDialog(parent),
@@ -157,7 +167,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     } else {
         QString content = QString::fromUtf8(reply->readAll().constData());
         QRegularExpression re(LyricsDialog::providers.at(index).dataRegExp,
-                    QRegularExpression::DotMatchesEverythingOption);
+                              QRegularExpression::DotMatchesEverythingOption);
         QRegularExpressionMatch match = re.match(content);
         QString captured{};
         QRegularExpressionMatchIterator matchIter = re.globalMatch(content);
@@ -168,8 +178,11 @@ void LyricsDialog::showText(QNetworkReply* reply) {
             captured.append(match.captured(1).trimmed());
             captured.append("<br />");
         }
-        captured.append(QString(QSL("<p><a href=\"%1\">%1</a></p>"))
-                        .arg(reply->url().toString()));
+        for(const auto& [find, replace] : LyricsDialog::providers.at(index).replaceList) {
+            captured = captured.replace(find, replace);
+        }
+        captured.append(QString(QSL("<p><a href=\"%1\">%1</a></p>")).arg(
+                            reply->url().toString()));
         lyricsBrowser->setHtml(
                     captured
                     .replace(QChar::fromLatin1('\n'), QLatin1String("<br />")));
