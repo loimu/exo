@@ -28,7 +28,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
-#include <QRegularExpression>
 #include <QTimer>
 #include <QAction>
 
@@ -43,6 +42,8 @@ LyricsDialog::LyricsDialog(const Provider& provider_, QWidget* parent)
     , httpObject(new QNetworkAccessManager(this))
     , replyObject(nullptr)
     , provider(provider_)
+    , rgUrl(provider.urlRegExp)
+    , rgData(provider.dataRegExp,QRegularExpression::DotMatchesEverythingOption)
 {
     resize(388, 488);
     setWindowTitle(tr("Lyrics"));
@@ -113,10 +114,9 @@ void LyricsDialog::showText(QNetworkReply* reply) {
 
     if(replyObject == reply) {
         replyObject = nullptr;
-        QRegularExpression re(provider.urlRegExp);
         QString content = QString::fromUtf8(reply->readAll().constData());
         reply->deleteLater();
-        QRegularExpressionMatch match = re.match(content);
+        QRegularExpressionMatch match = rgUrl.match(content);
         if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
             return;
@@ -131,11 +131,8 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         reply->deleteLater();
     } else {
         QString content = QString::fromUtf8(reply->readAll().constData());
-        QRegularExpression re(provider.dataRegExp,
-                              QRegularExpression::DotMatchesEverythingOption);
-        QRegularExpressionMatch match = re.match(content);
         QString captured{};
-        QRegularExpressionMatchIterator matchIter = re.globalMatch(content);
+        QRegularExpressionMatchIterator matchIter = rgData.globalMatch(content);
         if(!matchIter.hasNext()) {
             captured.append(tr("No lyrics available"));
         }
