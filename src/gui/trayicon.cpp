@@ -43,6 +43,27 @@
   #include "scrobbler.h"
 #endif // BUILD_LASTFM
 
+#define QSL QStringLiteral
+
+
+const QVector<Provider> TrayIcon::providers = {
+    {
+      QSL("Musixmatch"),
+      QSL("https://www.musixmatch.com/search/%1 %2/tracks"),
+      QSL("https://www.musixmatch.com%1"),
+      QSL("<a class=\"title\" href=\"([^\"]*)"),
+      QSL("\\<p class=\"mxm-lyrics__content \">(.*?)\\</p\\>"),
+      {}
+    },
+    {
+      QSL("Metal Archives"),
+      QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
+      "?songTitle=%2&amp;bandName=%1&amp;ExactBandMatch=1"),
+      QSL("https://www.metal-archives.com/release/ajax-view-lyrics/id/%1"),
+      QSL("lyricsLink_(\\d+)"), QSL("(.*)"),
+      {{QSL("\r\n"), QString()}}
+    }
+};
 
 TrayIcon* TrayIcon::object = nullptr;
 
@@ -260,7 +281,7 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
 }
 
 void TrayIcon::showLyricsWindow() {
-    auto lyricsDialog = new LyricsDialog(this);
+    auto lyricsDialog = new LyricsDialog(providers.at(0), this);
     lyricsDialog->show();
 }
 

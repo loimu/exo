@@ -27,24 +27,31 @@ class QTextBrowser;
 class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
-struct Provider;
+
+struct Provider {
+    const QString name;
+    const QString searchUrl;
+    const QString urlTemplate;
+    const QString urlRegExp;
+    const QString dataRegExp;
+    const QVector<QPair<QString, QString>> replaceList;
+};
 
 class LyricsDialog : public BaseDialog
 {
     Q_OBJECT
 
 public:
-    explicit LyricsDialog(QWidget* parent = nullptr);
+    LyricsDialog(const Provider& provider, QWidget* parent = nullptr);
 
 private:
-    static const QVector<Provider> providers;
-    int index = 0;
     QLabel* label;
     QTextBrowser* lyricsBrowser;
     QLineEdit* artistLineEdit;
     QLineEdit* titleLineEdit;
     QNetworkAccessManager* httpObject;
     QNetworkReply* replyObject;
+    const Provider& provider;
     QString artistString, titleString;
     QString replace(QString string);
     void showText(QNetworkReply* reply);

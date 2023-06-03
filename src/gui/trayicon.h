@@ -26,6 +26,7 @@
 #include <QSystemTrayIcon>
 
 class PlayerInterface;
+struct Provider;
 enum class PlayerState;
 using PState = PlayerState;
 
@@ -43,6 +44,7 @@ public:
 private:
     bool isPlatformTrayBroken;
     static TrayIcon* object;
+    static const QVector<Provider> providers;
     PlayerInterface* player;
     QMenu* bookmarksMenu;
     QAction* showAction;
