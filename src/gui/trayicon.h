@@ -25,6 +25,7 @@
 #include <QWidget>
 #include <QSystemTrayIcon>
 
+class QActionGroup;
 class PlayerInterface;
 struct Provider;
 enum class PlayerState;
@@ -61,6 +62,7 @@ private:
     QAction* quitAction;
     QAction* setQuitBehaviourAction;
     QAction* setScrobblingAction;
+    QActionGroup* lyricsMenuGroup;
     QSystemTrayIcon* trayIcon;
     QString coverArt;
     PState playerState;

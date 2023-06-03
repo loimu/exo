@@ -113,7 +113,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
 
     if(replyObject == reply) {
         replyObject = nullptr;
-        static QRegularExpression re(provider.urlRegExp);
+        QRegularExpression re(provider.urlRegExp);
         QString content = QString::fromUtf8(reply->readAll().constData());
         reply->deleteLater();
         QRegularExpressionMatch match = re.match(content);
@@ -131,8 +131,8 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         reply->deleteLater();
     } else {
         QString content = QString::fromUtf8(reply->readAll().constData());
-        static QRegularExpression re(provider.dataRegExp,
-                                     QRegularExpression::DotMatchesEverythingOption);
+        QRegularExpression re(provider.dataRegExp,
+                              QRegularExpression::DotMatchesEverythingOption);
         QRegularExpressionMatch match = re.match(content);
         QString captured{};
         QRegularExpressionMatchIterator matchIter = re.globalMatch(content);

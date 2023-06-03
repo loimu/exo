@@ -20,6 +20,7 @@
 #include <QAction>
 #include <QIcon>
 #include <QMenu>
+#include <QActionGroup>
 #include <QSystemTrayIcon>
 #include <QWheelEvent>
 #include <QSettings>
@@ -85,7 +86,7 @@ void TrayIcon::createActions() {
             player, &PlayerInterface::showPlayer);
     filesAction = new QAction(tr("A&dd ..."), this);
     connect(filesAction, &QAction::triggered, this, &TrayIcon::addFiles);
-    lyricsAction = new QAction(tr("&Lyrics"), this);
+    lyricsAction = new QAction(tr("Show Lyrics"), this);
     connect(lyricsAction, &QAction::triggered,
             this, &TrayIcon::showLyricsWindow);
     playAction = new QAction(tr("&Play"), this);
@@ -142,7 +143,24 @@ void TrayIcon::createTrayIcon() {
     auto trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(showAction);
     trayIconMenu->addAction(filesAction);
-    trayIconMenu->addAction(lyricsAction);
+    // Lyrics submenu
+    auto lyricsMenu = new QMenu(this);
+    lyricsMenu->setTitle(tr("&Lyrics"));
+    trayIconMenu->addAction(lyricsMenu->menuAction());
+    lyricsMenu->addAction(lyricsAction);
+    lyricsMenu->addSeparator();
+    lyricsMenuGroup = new QActionGroup(this);
+    int counter = 0;
+    for(const Provider& provider : providers) {
+        auto lyricsAction = new QAction(provider.name, this);
+        lyricsAction->setCheckable(true);
+        lyricsAction->setActionGroup(lyricsMenuGroup);
+        lyricsAction->setData(counter);
+        lyricsMenu->addAction(lyricsAction);
+        counter++;
+    }
+    lyricsMenuGroup->actions().at(0)->setChecked(true);
+    // end of Lyrics submenu
     const QVector<QString> editors = SysUtils::findFullPaths(
                 QVector<QString> {
                     QStringLiteral("picard"),
@@ -281,7 +299,8 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
 }
 
 void TrayIcon::showLyricsWindow() {
-    auto lyricsDialog = new LyricsDialog(providers.at(0), this);
+    int index = lyricsMenuGroup->checkedAction()->data().toInt();
+    auto lyricsDialog = new LyricsDialog(providers.at(index), this);
     lyricsDialog->show();
 }
 
