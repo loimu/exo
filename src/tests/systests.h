@@ -10,8 +10,8 @@ public:
     SysTests(QObject *parent = nullptr) : QObject(parent) {;}
 
 private Q_SLOTS:
-    void initTestCase();
-    void findFullPaths();
+    void findFullPathsTest();
+    void findProcessIdTest();
 };
 
 #endif // SYSTESTS_H

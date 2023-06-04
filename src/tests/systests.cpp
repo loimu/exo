@@ -18,19 +18,24 @@
 * ======================================================================== */
 
 #include <QTest>
-
 #include <QProcess>
 
 #include "sysutils.h"
 #include "systests.h"
 
 
-void SysTests::initTestCase() {
-
-}
-
-void SysTests::findFullPaths() {
+void SysTests::findFullPathsTest() {
     auto ret = SysUtils::findFullPaths(QVector<QString>{QStringLiteral("bash")});
 
     QCOMPARE(ret.at(0), "/usr/bin/bash");
+}
+
+void SysTests::findProcessIdTest() {
+    QProcess process;
+    process.start("sleep", QStringList{"3"});
+    int expected = process.processId();
+    int actual = SysUtils::findProcessId("sleep");
+    process.close();
+
+    QCOMPARE(expected, actual);
 }
