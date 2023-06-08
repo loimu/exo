@@ -78,7 +78,7 @@ void PlayerInterface::notify() {
                     || (track.currSec <= half && track.totalSec > full))) {
         listened = false; // beginning
         threshold = QDateTime::currentDateTime()
-                .addSecs((track.totalSec > 2 * 60) ? 60 : track.totalSec/2);
+                .addSecs((track.totalSec > 2 * 60) ? 59 : track.totalSec/2 - 1);
     }
     else if(!listened && (track.currSec > track.totalSec/2
                           || (track.currSec > half && track.totalSec > full))) {
