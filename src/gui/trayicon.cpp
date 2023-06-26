@@ -341,28 +341,38 @@ void TrayIcon::showManager() {
 
 void TrayIcon::createBookmarks() {
     bookmarksMenu->addAction(bookmarkCurrentAction);
-    if(BookmarkManager::getList().isEmpty())
-        return;
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
     refreshBookmarks();
 }
 
 void TrayIcon::refreshBookmarks() {
-    static QVector<QAction*> vector;
-    for(QAction* action : vector) {
-        delete action;
-    }
-    vector.clear();
     const BookmarkList& list = BookmarkManager::getList();
+    const auto actions = bookmarksMenu->actions();
+
     for(const BookmarkEntry& entry : list) {
-        auto bookmark = new QAction(entry.name, this);
-        bookmark->setData(entry.uri);
-        bookmarksMenu->addAction(bookmark);
-        connect(bookmark, &QAction::triggered, this, [bookmark] () {
-            PLAYER->openUri(bookmark->data().toString());
-        });
-        vector.push_back(bookmark);
+        const auto it = std::find_if(
+            actions.cbegin(), actions.cend(), [&entry] (const QAction* action) {
+                return action->text() == entry.name; });
+        if(it == actions.cend()) {
+            auto bookmark = new QAction(entry.name, this);
+            bookmark->setData(entry.uri);
+            bookmarksMenu->addAction(bookmark);
+            connect(bookmark, &QAction::triggered, this, [bookmark] () {
+                PLAYER->openUri(bookmark->data().toString());
+            });
+        }
+    }
+    for(QAction* action : actions) {
+        const auto it = std::find_if(
+            std::reverse_iterator<const BookmarkEntry*>(list.cend()),
+            std::reverse_iterator<const BookmarkEntry*>(list.cbegin()),
+            [action] (const BookmarkEntry& entry) { return action->text() == entry.name; });
+        if(it == std::reverse_iterator<const BookmarkEntry*>(list.cbegin())
+            && !(action == bookmarkCurrentAction || action == bookmarkManagerAction
+                 || action->isSeparator())) {
+            action->deleteLater();
+        }
     }
 }
 
