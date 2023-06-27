@@ -39,17 +39,17 @@
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="62"/>
         <source>Copy URL to clipboard</source>
-        <translation>Скапіраваць адрас у буфер абмену</translation>
+        <translation>Скапіяваць адрас у буфер абмену</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="65"/>
         <source>Move up</source>
-        <translation>Перамясьціць уверх</translation>
+        <translation>Перасунуць уверх</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="68"/>
         <source>Move down</source>
-        <translation>Перамясьціць уніз</translation>
+        <translation>Перасунуць уніз</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="95"/>
@@ -68,7 +68,7 @@
     <message>
         <location filename="../src/core/consoleauth.cpp" line="40"/>
         <source>Login:</source>
-        <translation>Логін:</translation>
+        <translation>Лёгін:</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="43"/>
@@ -78,7 +78,7 @@
     <message>
         <location filename="../src/core/consoleauth.cpp" line="52"/>
         <source>Try again? (y/n)</source>
-        <translation>Паспрабаваць яшчэ? (т/н)</translation>
+        <translation>Паспрабаваць зноў? (т/н)</translation>
     </message>
     <message>
         <location filename="../src/core/consoleauth.cpp" line="57"/>
@@ -157,7 +157,7 @@
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="166"/>
         <source>No lyrics available</source>
-        <translation>Тэкст не дасяжны</translation>
+        <translation>Тэкст недасяжны</translation>
     </message>
     <message>
         <location filename="../src/gui/lyricsdialog.cpp" line="200"/>
@@ -201,7 +201,7 @@
     <message>
         <location filename="../src/gui/scrobblersettings.cpp" line="36"/>
         <source>login</source>
-        <translation>логін</translation>
+        <translation>лёгін</translation>
     </message>
     <message>
         <location filename="../src/gui/scrobblersettings.cpp" line="40"/>
