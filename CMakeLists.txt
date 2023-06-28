@@ -1,5 +1,5 @@
-project(exo)
 cmake_minimum_required(VERSION 3.1.0)
+project(exo)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 9)
