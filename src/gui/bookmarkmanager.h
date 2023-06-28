@@ -23,17 +23,9 @@
 
 #include "basedialog.h"
 
+
 class QLineEdit;
 class QListWidget;
-
-struct BookmarkEntry {
-    QString name;
-    QString uri;
-};
-template <typename>
-class QVector;
-
-using BookmarkList = QVector<BookmarkEntry>;
 
 class BookmarkManager : public BaseDialog
 {
@@ -41,19 +33,17 @@ class BookmarkManager : public BaseDialog
 
     QLineEdit* lineEdit;
     QListWidget* listWidget;
-    BookmarkList list;
     void moveUp();
     void moveDown();
     void deleteBookmark();
-    void renameBookmark(QString);
+    void renameBookmark(const QString);
     void updateLineEdit(int cur);
     void accepted();
     void copyToClipboard();
     void appendToPlaylist();
 
 public:
-    static BookmarkList getList();
-    static void bookmarkCurrent();
+    static void migrateBookmarks();
     explicit BookmarkManager(QWidget* parent = nullptr);
 };
 

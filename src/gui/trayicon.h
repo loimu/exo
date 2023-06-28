@@ -38,8 +38,7 @@ class TrayIcon : public QWidget
 public:
     explicit TrayIcon(QWidget* parent = nullptr);
     static TrayIcon* self() { return object; }
-    void createBookmarks();
-    void refreshBookmarks();
+    void refreshBookmarks(const QList<QVariant>& bookmarks);
     void showLyricsWindow();
 
 private:
@@ -75,7 +74,9 @@ private:
     void showAboutDialog();
     void setQuitBehaviour(bool);
     void addFiles();
+    void bookmarkCurrent();
     void showManager();
+    void createBookmarks();
 #ifdef BUILD_LASTFM
     void enableScrobbler(bool);
     void loadScrobbler(bool);

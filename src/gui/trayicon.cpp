@@ -73,6 +73,7 @@ TrayIcon::TrayIcon(QWidget* parent) : QWidget(parent),
 {
     setAttribute(Qt::WA_DontShowOnScreen);
     object = this;
+    BookmarkManager::migrateBookmarks();
     createActions();
     createTrayIcon();
     connect(player, &PlayerInterface::newStatus, this, &TrayIcon::updateStatus);
@@ -111,8 +112,7 @@ void TrayIcon::createActions() {
     connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
     quitAction->setIcon(QIcon(QStringLiteral(":/images/close.png")));
     bookmarkCurrentAction = new QAction(tr("Bookmark &Current"), this);
-    connect(bookmarkCurrentAction, &QAction::triggered,
-            this, &BookmarkManager::bookmarkCurrent);
+    connect(bookmarkCurrentAction, &QAction::triggered, this, &TrayIcon::bookmarkCurrent);
     bookmarkCurrentAction->setIcon(
                 QIcon::fromTheme(QStringLiteral("bookmark-new-list")));
     bookmarkManagerAction = new QAction(tr("Bookmark &Manager"), this);
@@ -331,6 +331,25 @@ void TrayIcon::addFiles() {
     player->appendFile(files);
 }
 
+void TrayIcon::bookmarkCurrent() {
+    const QString& url = PLAYER->getTrack().file;
+    if(!url.isEmpty() && PLAYER->getTrack().isStream) {
+        QSettings settings;
+        QList<QVariant> list = settings.value("bookmarkmanager/bookmarks2").toList();
+        const QString name = url
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+                                 .split(QChar::fromLatin1('/'), Qt::SkipEmptyParts).last();
+#else
+                                 .split(QChar::fromLatin1('/'), QString::SkipEmptyParts).last();
+#endif
+        list.append(QStringList{name, url});
+        settings.setValue("bookmarkmanager/bookmarks2", list);
+        refreshBookmarks(list);
+    } else {
+        qInfo("invalid bookmark");
+    }
+}
+
 void TrayIcon::showManager() {
     bookmarkManagerAction->setEnabled(false);
     auto bm = new BookmarkManager(this);
@@ -343,20 +362,21 @@ void TrayIcon::createBookmarks() {
     bookmarksMenu->addAction(bookmarkCurrentAction);
     bookmarksMenu->addAction(bookmarkManagerAction);
     bookmarksMenu->addSeparator();
-    refreshBookmarks();
+    QSettings settings;
+    refreshBookmarks(settings.value("bookmarkmanager/bookmarks2").toList());
 }
 
-void TrayIcon::refreshBookmarks() {
-    const BookmarkList& list = BookmarkManager::getList();
+void TrayIcon::refreshBookmarks(const QList<QVariant>& bookmarks) {
     const auto actions = bookmarksMenu->actions();
 
-    for(const BookmarkEntry& entry : list) {
+    for(const auto& entry : bookmarks) {
+        const QString& key = entry.toStringList().at(0);
         const auto it = std::find_if(
-            actions.cbegin(), actions.cend(), [&entry] (const QAction* action) {
-                return action->text() == entry.name; });
+            actions.cbegin(), actions.cend(), [&key] (const QAction* action) {
+                return action->text() == key; });
         if(it == actions.cend()) {
-            auto bookmark = new QAction(entry.name, this);
-            bookmark->setData(entry.uri);
+            auto bookmark = new QAction(key, this);
+            bookmark->setData(entry.toStringList().at(1));
             bookmarksMenu->addAction(bookmark);
             connect(bookmark, &QAction::triggered, this, [bookmark] () {
                 PLAYER->openUri(bookmark->data().toString());
@@ -364,11 +384,11 @@ void TrayIcon::refreshBookmarks() {
         }
     }
     for(QAction* action : actions) {
+        const QString& key = action->text();
         const auto it = std::find_if(
-            std::reverse_iterator<const BookmarkEntry*>(list.cend()),
-            std::reverse_iterator<const BookmarkEntry*>(list.cbegin()),
-            [action] (const BookmarkEntry& entry) { return action->text() == entry.name; });
-        if(it == std::reverse_iterator<const BookmarkEntry*>(list.cbegin())
+            bookmarks.cbegin(), bookmarks.cend(), [&key] (const QVariant& bookmark) {
+                return bookmark.toStringList().at(0) == key; });
+        if(it == bookmarks.cend()
             && !(action == bookmarkCurrentAction || action == bookmarkManagerAction
                  || action->isSeparator())) {
             action->deleteLater();

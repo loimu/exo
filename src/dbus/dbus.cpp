@@ -20,7 +20,6 @@
 #include <QObject>
 #include <QDBusConnection>
 
-#include "bookmarkmanager.h"
 #include "trayicon.h"
 #include "playerinterface.h"
 //MPRISv2
@@ -43,7 +42,6 @@ public Q_SLOTS:
         if(TrayIcon::self())
             TrayIcon::self()->showLyricsWindow();
     }
-    void bookmarkCurrent() { BookmarkManager::bookmarkCurrent(); }
     void clearPlaylist() { PLAYER->clearPlaylist(); }
 };
 
