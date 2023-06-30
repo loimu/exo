@@ -369,30 +369,22 @@ void TrayIcon::createBookmarks() {
 void TrayIcon::refreshBookmarks(const QList<QVariant>& bookmarks) {
     const auto actions = bookmarksMenu->actions();
 
-    for(const auto& entry : bookmarks) {
-        const QString& key = entry.toStringList().at(0);
-        const auto it = std::find_if(
-            actions.cbegin(), actions.cend(), [&key] (const QAction* action) {
-                return action->text() == key; });
-        if(it == actions.cend()) {
-            auto bookmark = new QAction(key, this);
-            bookmark->setData(entry.toStringList().at(1));
-            bookmarksMenu->addAction(bookmark);
-            connect(bookmark, &QAction::triggered, this, [bookmark] () {
-                PLAYER->openUri(bookmark->data().toString());
-            });
-        }
-    }
     for(QAction* action : actions) {
-        const QString& key = action->text();
-        const auto it = std::find_if(
-            bookmarks.cbegin(), bookmarks.cend(), [&key] (const QVariant& bookmark) {
-                return bookmark.toStringList().at(0) == key; });
-        if(it == bookmarks.cend()
-            && !(action == bookmarkCurrentAction || action == bookmarkManagerAction
-                 || action->isSeparator())) {
+        if(!(action == bookmarkCurrentAction || action == bookmarkManagerAction
+              || action->isSeparator())) {
             action->deleteLater();
         }
+    }
+    for(const auto& entry : bookmarks) {
+        const auto& bookmark = entry.toStringList();
+        if(bookmark.count() < 2) continue;
+        const QString& key = bookmark.at(0);
+        auto action = new QAction(key, bookmarksMenu);
+        action->setData(bookmark.at(1));
+        bookmarksMenu->addAction(action);
+        connect(action, &QAction::triggered, this, [action] () {
+            PLAYER->openUri(action->data().toString());
+        });
     }
 }
 
