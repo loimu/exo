@@ -1,10 +1,12 @@
 [Desktop Entry]
 Categories=Qt;Audio;AudioVideo;
-Exec=/usr/bin/exo
+Exec=exo %U
+TryExec=exo
 Icon=exo
 StartupNotify=true
 Terminal=false
 Type=Application
+MimeType=audio/mpeg;application/ogg;application/x-ogg;audio/flac;audio/aac;audio/x-aac;audio/m4a;audio/x-m4a;
 
 Name=eXo
 Name[pt_BR]=Reprodutor de Multimídia eXo

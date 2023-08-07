@@ -25,6 +25,7 @@
 #include <QApplication>
 #include <QSettings>
 #include <QTranslator>
+#include <QFile>
 
 #include "core/singleinstance.h"
 #ifdef BUILD_DBUS
@@ -64,6 +65,8 @@ int main(int argc, char *argv[]) {
     bool useGui = true;
     bool forceReauth = false;
     bool useCmus = false;
+    QString inputFile{};
+
     if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
@@ -78,14 +81,23 @@ int main(int argc, char *argv[]) {
             if(::fork() != 0) return 0;
             else qDebug("Running in the background");
         }
-#ifdef BUILD_CMUS
-        else if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
-            useCmus = true;
-        }
-#endif // BUILD_CMUS
         else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")){
             useGui = false;
             forceReauth = true;
+        }
+        else {
+            // non-exclusive input options are being processed in a cycle
+            for(int i = 1; i < argc; i++) {
+                QByteArray arg = argv[i];
+                if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
+#ifdef USE_CMUS
+                    useCmus = true;
+#endif // USE_CMUS
+                }
+                else {
+                    inputFile = arg;
+                }
+            }
         }
     }
 
@@ -108,6 +120,9 @@ int main(int argc, char *argv[]) {
         if(!instance.isUnique()) {
             INIT_PLAYER
             player->showPlayer();
+            if(!inputFile.isEmpty() && QFile::exists(inputFile)) {
+                player->openUri(inputFile);
+            }
             return 0;
         }
         INIT_PLAYER
@@ -116,6 +131,9 @@ int main(int argc, char *argv[]) {
         Q_INIT_RESOURCE(exo);
         TrayIcon trayIcon;
         Q_UNUSED(trayIcon);
+        if(!inputFile.isEmpty() && QFile::exists(inputFile)) {
+            player->openUri(inputFile);
+        }
         app.exec();
         player->shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool())
@@ -148,5 +166,6 @@ int main(int argc, char *argv[]) {
         if(settings.value(QStringLiteral("player/quit")).toBool())
             player->quit();
     }
+
     return 0;
 }
