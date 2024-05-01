@@ -90,11 +90,8 @@ int main(int argc, char *argv[]) {
             for(int i = 1; i < argc; i++) {
                 QByteArray arg = argv[i];
                 if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
-#ifdef USE_CMUS
                     useCmus = true;
-#endif // USE_CMUS
-                }
-                else {
+                } else {
                     inputFile = arg;
                 }
             }
