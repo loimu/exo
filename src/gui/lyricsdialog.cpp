@@ -37,6 +37,8 @@
 #define QSL QStringLiteral
 
 
+const char* UserAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0";
+
 LyricsDialog::LyricsDialog(const Provider& provider_, QWidget* parent)
     : BaseDialog(parent)
     , httpObject(new QNetworkAccessManager(this))
@@ -67,8 +69,8 @@ LyricsDialog::LyricsDialog(const Provider& provider_, QWidget* parent)
     auto* horizontalLayout2 = new QHBoxLayout();
     label = new QLabel(this);
     horizontalLayout2->addWidget(label);
-    auto* spacer = new QSpacerItem(0, 0,
-                                   QSizePolicy::Expanding, QSizePolicy::Fixed);
+    auto* spacer =
+        new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
     horizontalLayout2->addItem(spacer);
     auto* autoButton = new QPushButton(this);
     autoButton->setText(tr("Auto"));
@@ -125,7 +127,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         QNetworkRequest request;
         request.setUrl(QUrl::fromEncoded(urlString.toLatin1()));
         request.setRawHeader("accept", "*/*");
-        request.setRawHeader("user-agent", "Mozilla/5.0");
+        request.setRawHeader("user-agent", UserAgent);
         label->setText(tr("Preparing"));
         httpObject->get(request);
         reply->deleteLater();
@@ -179,8 +181,9 @@ void LyricsDialog::search() {
                         .arg(replace(artistLineEdit->text()),
                              replace(titleLineEdit->text()))));
     request.setRawHeader("accept", "*/*");
-    request.setRawHeader("user-agent",
-                         "Mozilla/5.0 (X11; Linux x86_64; rv:57.0)"
-                         " Gecko/20100101 Firefox/57.0");
-    replyObject = httpObject->get(request);
+    request.setRawHeader("user-agent", UserAgent);
+    if(!provider.urlTemplate.isEmpty())
+    {
+        replyObject = httpObject->get(request);
+    }
 }
