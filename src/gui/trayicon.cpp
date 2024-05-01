@@ -49,14 +49,6 @@
 
 const QVector<Provider> TrayIcon::providers = {
     {
-      QSL("Musixmatch"),
-      QSL("https://www.musixmatch.com/search/%1 %2/tracks"),
-      QSL("https://www.musixmatch.com%1"),
-      QSL("<a class=\"title\" href=\"([^\"]*)"),
-      QSL("\\<p class=\"mxm-lyrics__content \">(.*?)\\</p\\>"),
-      {}
-    },
-    {
       QSL("Metal Archives"),
       QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
       "?songTitle=%2&amp;bandName=%1&amp;ExactBandMatch=1"),
