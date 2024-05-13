@@ -4,8 +4,13 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
 
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt5 5.12.3 REQUIRED COMPONENTS Core Network Widgets Xml Test)
-set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
+if(WITH_QT6)
+    find_package(Qt6 6.2 REQUIRED COMPONENTS Core Network Widgets Xml Test)
+    set(qt_LIBS Qt6::Core Qt6::Network Qt6::Widgets Qt6::Xml)
+else()
+    find_package(Qt5 5.12.3 REQUIRED COMPONENTS Core Network Widgets Xml Test)
+    set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
+endif()
 
 set(exo_SRCS main.cpp
     core/mocinterface.cpp
@@ -26,8 +31,13 @@ if(BUILD_DBUS)
   list(APPEND exo_SRCS dbus/dbus.cpp
       dbus/rootobject.cpp
       dbus/playerobject.cpp)
-  find_package(Qt5DBus)
-  list(APPEND qt_LIBS Qt5::DBus)
+  if(WITH_QT6)
+      find_package(Qt6DBus)
+      list(APPEND qt_LIBS Qt6::DBus)
+    else()
+      find_package(Qt5DBus)
+      list(APPEND qt_LIBS Qt5::DBus)
+    endif()
 endif()
 
 if(BUILD_LASTFM)
@@ -35,10 +45,19 @@ if(BUILD_LASTFM)
       lastfm/scrobblerauth.cpp
       core/consoleauth.cpp
       gui/scrobblersettings.cpp)
-  find_library(LASTFM_LIBRARIES lastfm5)
+  if(WITH_QT6)
+    # FIXME: lastfm5 not supposed to be installed, otherwise may link against it
+    find_library(LASTFM_LIBRARIES lastfm6)
+  else()
+    find_library(LASTFM_LIBRARIES lastfm5)
+  endif()
 endif()
 
-qt5_add_resources(exo_RESOURCES_RCC ../images/exo.qrc)
+if(WITH_QT6)
+  qt_add_resources(exo_RESOURCES_RCC ../images/exo.qrc)
+else()
+  qt5_add_resources(exo_RESOURCES_RCC ../images/exo.qrc)
+endif()
 
 # translations
 SET(TRANSLATION
@@ -47,8 +66,13 @@ SET(TRANSLATION
     ../translations/pt_BR.ts
     ../translations/ru_RU.ts
     )
-find_package(Qt5LinguistTools REQUIRED)
-qt5_add_translation(QM_FILES ${TRANSLATION})
+if(WITH_QT6)
+  find_package(Qt6LinguistTools REQUIRED)
+  qt_add_translation(QM_FILES ${TRANSLATION})
+else()
+  find_package(Qt5LinguistTools REQUIRED)
+  qt5_add_translation(QM_FILES ${TRANSLATION})
+endif()
 
 add_executable(exo ${exo_SRCS} ${exo_HEADERS_MOC} ${exo_RESOURCES_RCC} ${QM_FILES})
 target_include_directories(exo PRIVATE ${CMAKE_CURRENT_BINARY_DIR} core dbus gui lastfm)
@@ -60,7 +84,11 @@ install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/exo/translat
 
 # tests
 if(BUILD_TESTS)
-  set(test_LIBS Qt5::Core Qt5::Test)
+  if(WITH_QT6)
+    set(test_LIBS Qt6::Core Qt6::Test)
+  else()
+    set(test_LIBS Qt5::Core Qt5::Test)
+  endif()
   set(tests_SRCS tests/tests.cpp
       tests/pitests.cpp
       tests/systests.cpp

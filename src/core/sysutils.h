@@ -20,11 +20,15 @@
 #ifndef SYS_UTILS
 #define SYS_UTILS
 
+#include "config.h"
 
-class QString;
+#ifdef WITH_QT6
+#include "qvector.h"
+#else
 template <typename>
 class QVector;
-
+#endif
+class QString;
 
 namespace SysUtils {
     int findProcessId(const QString& processName);
