@@ -328,12 +328,7 @@ void TrayIcon::bookmarkCurrent() {
     if(!url.isEmpty() && PLAYER->getTrack().isStream) {
         QSettings settings;
         QList<QVariant> list = settings.value("bookmarkmanager/bookmarks2").toList();
-        const QString name = url
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-                                 .split(QChar::fromLatin1('/'), Qt::SkipEmptyParts).last();
-#else
-                                 .split(QChar::fromLatin1('/'), QString::SkipEmptyParts).last();
-#endif
+        const QString name = url.split(QChar::fromLatin1('/'), Qt::SkipEmptyParts).last();
         list.append(QStringList{name, url});
         settings.setValue("bookmarkmanager/bookmarks2", list);
         refreshBookmarks(list);

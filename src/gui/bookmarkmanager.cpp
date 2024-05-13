@@ -104,12 +104,7 @@ void BookmarkManager::migrateBookmarks() {
     QSettings settings;
     const QString string = settings.value(QStringLiteral("bookmarkmanager/bookmarks")).toString();
     if(string.isEmpty()) return;
-    const QStringList stringList = string
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-            .split(QChar::fromLatin1(';'), Qt::SkipEmptyParts);
-#else
-            .split(QChar::fromLatin1(';'), QString::SkipEmptyParts);
-#endif
+    const QStringList stringList = string.split(QChar::fromLatin1(';'), Qt::SkipEmptyParts);
     QList<QVariant> list{};
     for(const QString& str : stringList) {
         QStringList bookmark = str.split(QChar::fromLatin1('|'));

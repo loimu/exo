@@ -18,7 +18,6 @@
 * ======================================================================== */
 
 #include <QString>
-#include <QVector>
 #include <QFile>
 #include <QDir>
 
@@ -34,8 +33,9 @@ int SysUtils::findProcessId(const QString& name) {
         QFile file(QString(QStringLiteral("/proc/%1/cmdline")).arg(pid));
         if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             const QString ll = file.readLine();
-            if(ll.section(QChar(0x20), 0, 0).section(QChar(0x2F), -1) == name)
+            if(ll.section(QChar(0x20), 0, 0).section(QChar(0x2F), -1) == name) {
                 return pid.toInt();
+            }
         }
     }
     return -1;
@@ -44,19 +44,16 @@ int SysUtils::findProcessId(const QString& name) {
 const QVector<QString> SysUtils::findFullPaths(
         const QVector<QString>& executables) {
     const QStringList paths = QString(QLatin1String(qgetenv("PATH")))
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-            .split(QChar::fromLatin1(':'), Qt::SkipEmptyParts);
-#else
-            .split(QChar::fromLatin1(':'), QString::SkipEmptyParts);
-#endif
+                                  .split(QChar::fromLatin1(':'), Qt::SkipEmptyParts);
     QVector<QString> fullPaths;
     for(const QString& path : paths) {
         if(QFileInfo(path).isSymLink())
             break;
         for(const QString &executable : executables) {
             const QString pp = path + QChar::fromLatin1('/') + executable;
-            if(QFile::exists(pp))
+            if(QFile::exists(pp)) {
                 fullPaths.push_back(pp);
+            }
         }
     }
     return fullPaths;

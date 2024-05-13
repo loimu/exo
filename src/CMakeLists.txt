@@ -8,7 +8,7 @@ if(WITH_QT6)
     find_package(Qt6 6.2 REQUIRED COMPONENTS Core Network Widgets Xml Test)
     set(qt_LIBS Qt6::Core Qt6::Network Qt6::Widgets Qt6::Xml)
 else()
-    find_package(Qt5 5.12.3 REQUIRED COMPONENTS Core Network Widgets Xml Test)
+    find_package(Qt5 5.14.0 REQUIRED COMPONENTS Core Network Widgets Xml Test)
     set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
 endif()
 
