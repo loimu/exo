@@ -110,9 +110,10 @@ int main(int argc, char *argv[]) {
         /* graphical application */
         QApplication app(argc, argv);
         app.setQuitOnLastWindowClosed(false);
-        translator.load(QApplication::applicationDirPath() +
-                        QLatin1String("/../share/exo/translations/") +
-                        QLocale::system().name() + QLatin1String(".qm"));
+        bool res = translator.load(QApplication::applicationDirPath() +
+                                   QLatin1String("/../share/exo/translations/") +
+                                   QLocale::system().name() + QLatin1String(".qm"));
+        Q_UNUSED(res);
         app.installTranslator(&translator);
         if(!instance.isUnique()) {
             INIT_PLAYER
@@ -142,9 +143,10 @@ int main(int argc, char *argv[]) {
             qWarning("Application is already running");
             return 1;
         }
-        translator.load(QApplication::applicationDirPath() +
-                        QLatin1String("/../share/exo/translations/") +
-                        QLocale::system().name() + QLatin1String(".qm"));
+        bool res = translator.load(QApplication::applicationDirPath() +
+                                   QLatin1String("/../share/exo/translations/") +
+                                   QLocale::system().name() + QLatin1String(".qm"));
+        Q_UNUSED(res);
         app.installTranslator(&translator);
         if(forceReauth) {
 #ifdef BUILD_LASTFM

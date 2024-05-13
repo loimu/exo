@@ -58,13 +58,13 @@ BookmarkManager::BookmarkManager(QWidget* parent) : BaseDialog(parent) {
     horizontalLayout->addWidget(buttonBox);
     verticalLayout->addLayout(horizontalLayout);
     auto copyAction = new QAction(tr("Copy URL to clipboard"), this);
-    copyAction->setShortcut(Qt::CTRL + Qt::Key_C);
+    copyAction->setShortcut(Qt::CTRL | Qt::Key_C);
     listWidget->addAction(copyAction);
     auto moveUpAction = new QAction(tr("Move up"), this);
-    moveUpAction->setShortcut(Qt::CTRL + Qt::Key_K);
+    moveUpAction->setShortcut(Qt::CTRL | Qt::Key_K);
     listWidget->addAction(moveUpAction);
     auto moveDownAction = new QAction(tr("Move down"), this);
-    moveDownAction->setShortcut(Qt::CTRL + Qt::Key_J);
+    moveDownAction->setShortcut(Qt::CTRL | Qt::Key_J);
     listWidget->addAction(moveDownAction);
     listWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
     listWidget->setDragDropMode(QAbstractItemView::InternalMove);
