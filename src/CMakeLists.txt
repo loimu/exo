@@ -46,7 +46,9 @@ if(BUILD_LASTFM)
       core/consoleauth.cpp
       gui/scrobblersettings.cpp)
   if(WITH_QT6)
-    # FIXME: lastfm5 not supposed to be installed, otherwise may link against it
+    # NOTE: lastfm5 not supposed to be installed, otherwise may link against it
+    # as a workaround give full path to the library:
+    #   -DLASTFM_LIBRARIES=/usr/lib/x86_64-linux-gnu/liblastfm6.so
     find_library(LASTFM_LIBRARIES lastfm6)
   else()
     find_library(LASTFM_LIBRARIES lastfm5)
