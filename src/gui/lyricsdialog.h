@@ -37,6 +37,7 @@ struct Provider {
     const QString urlRegExp;
     const QString dataRegExp;
     const QVector<QPair<QString, QString>> replaceList;
+    const QVector<QString> excludeList;
 };
 
 class LyricsDialog : public BaseDialog

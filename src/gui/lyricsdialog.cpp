@@ -37,7 +37,7 @@
 #define QSL QStringLiteral
 
 
-const char* UserAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0";
+const char* UserAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0";
 
 LyricsDialog::LyricsDialog(const Provider& provider_, QWidget* parent)
     : BaseDialog(parent)
@@ -146,6 +146,9 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         for(const auto& [find, replace] : provider.replaceList) {
             captured = captured.replace(find, replace);
         }
+        for(const auto& exclude : provider.excludeList) {
+            captured = captured.replace(QRegularExpression(exclude), QString());
+        }
         captured.append(QString(QSL("<p><a href=\"%1\">%1</a></p>")).arg(
                             reply->url().toString()));
         lyricsBrowser->setHtml(
@@ -178,12 +181,16 @@ void LyricsDialog::search() {
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
     request.setUrl(QUrl(QString(provider.searchUrl)
-                        .arg(replace(artistLineEdit->text()),
-                             replace(titleLineEdit->text()))));
+                            .arg(replace(artistLineEdit->text()),
+                                 replace(titleLineEdit->text()),
+                                 replace(artistLineEdit->text().at(0).toLower())
+                                 )));
     request.setRawHeader("accept", "*/*");
     request.setRawHeader("user-agent", UserAgent);
-    if(!provider.urlTemplate.isEmpty())
-    {
+    if(!provider.urlTemplate.isEmpty()) {
         replyObject = httpObject->get(request);
+    } else {
+        replyObject = nullptr;
+        httpObject->get(request);
     }
 }

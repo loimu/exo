@@ -49,12 +49,21 @@
 
 const QVector<Provider> TrayIcon::providers = {
     {
-      QSL("Metal Archives"),
-      QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
-      "?songTitle=%2&amp;bandName=%1&amp;ExactBandMatch=1"),
-      QSL("https://www.metal-archives.com/release/ajax-view-lyrics/id/%1"),
-      QSL("lyricsLink_(\\d+)"), QSL("(.*)"),
-      {{QSL("\r\n"), QString()}}
+        QSL("chartlyrics.com"),
+        QSL("http://www.chartlyrics.com/search.aspx?q=%1+%2"),
+        QSL("http://www.chartlyrics.com%1"),
+        QSL("<td>[^\\w]+<a href=\"([^\"]*)"),
+        QSL("<p>(.*)</p>"),
+        {{QSL("\r\n"), QString()}},
+        {QSL("<img class=\"alignright\".*?/>")}
+    },
+    {
+        QSL("elyrics.net"),
+        QSL("https://www.elyrics.net/read/%3/%1-lyrics/%2-lyrics.html"),
+        QString(), QString(),
+        QSL("<div id='inlyr'>(.*)</div><br>"),
+        {{QSL("<br>"), QString()}},
+        {QSL("<div.+div>")}
     }
 };
 
