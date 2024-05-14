@@ -64,6 +64,14 @@ const QVector<Provider> TrayIcon::providers = {
         QSL("<div id='inlyr'>(.*)</div><br>"),
         {{QSL("<br>"), QString()}},
         {QSL("<div.+div>")}
+    },
+    {
+        QSL("songlyrics.com"),
+        QSL("https://www.songlyrics.com/%1/%2-lyrics/"),
+        QString(), QString(),
+        QSL("<p id=\"songLyricsDiv\".*?\">(.*?)</p>"),
+        {{QSL("\r\n"), QString()}},
+        {}
     }
 };
 

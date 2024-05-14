@@ -149,7 +149,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         for(const auto& exclude : provider.excludeList) {
             captured = captured.replace(QRegularExpression(exclude), QString());
         }
-        captured.append(QString(QSL("<p><a href=\"%1\">%1</a></p>")).arg(
+        captured.append(QString(QSL("\n<a href=\"%1\">%1</a>")).arg(
                             reply->url().toString()));
         lyricsBrowser->setHtml(
                     captured
@@ -180,11 +180,15 @@ void LyricsDialog::search() {
     setWindowTitle(QString(QStringLiteral("%1 - %2"))
                    .arg(artistLineEdit->text(), titleLineEdit->text()));
     QNetworkRequest request;
+    QString artist = artistLineEdit->text();
+    QString title = titleLineEdit->text();
+    const QChar firstLetterArtist = artistLineEdit->text().at(0).toLower();
+    if(provider.urlTemplate.isEmpty()) {
+        artist = artist.toLower();
+        title = title.toLower();
+    }
     request.setUrl(QUrl(QString(provider.searchUrl)
-                            .arg(replace(artistLineEdit->text()),
-                                 replace(titleLineEdit->text()),
-                                 replace(artistLineEdit->text().at(0).toLower())
-                                 )));
+                            .arg( replace(artist), replace(title), firstLetterArtist )));
     request.setRawHeader("accept", "*/*");
     request.setRawHeader("user-agent", UserAgent);
     if(!provider.urlTemplate.isEmpty()) {
