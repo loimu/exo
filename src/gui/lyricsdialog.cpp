@@ -117,8 +117,10 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         replyObject = nullptr;
         QString content = QString::fromUtf8(reply->readAll().constData());
         reply->deleteLater();
-        const QRegularExpression urlRegex(provider.urlRegExp.arg(artistLineEdit->text()),
-                                          QRegularExpression::DotMatchesEverythingOption);
+        const QRegularExpression urlRegex(
+            provider.urlRegExp.contains(QSL("%1"))
+                ? provider.urlRegExp.arg(artistLineEdit->text()) : provider.urlRegExp,
+            QRegularExpression::DotMatchesEverythingOption);
         QRegularExpressionMatch match = urlRegex.match(content);
         if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
@@ -188,8 +190,10 @@ void LyricsDialog::search() {
         artist = artist.toLower();
         title = title.toLower();
     }
-    request.setUrl(QUrl(QString(provider.searchUrl)
-                            .arg( replace(artist), replace(title), firstLetterArtist )));
+    request.setUrl(
+        QUrl(provider.searchUrl.contains(QSL("%3"))
+                 ? provider.searchUrl.arg( replace(artist), replace(title), firstLetterArtist )
+                 : provider.searchUrl.arg( replace(artist), replace(title) )));
     request.setRawHeader("accept", "*/*");
     request.setRawHeader("user-agent", UserAgent);
     if(!provider.urlTemplate.isEmpty()) {
