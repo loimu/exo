@@ -80,6 +80,15 @@ const QVector<Provider> TrayIcon::providers = {
         QSL("{\"lyrics\":\"(.*)\"}"),
         {{QSL("\\n"), QSL("\n")}, {QSL("\\r"), QString()}},
         {}
+    },
+    {
+        QSL("metal-archives.com"),
+        QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
+            "?songTitle=%2&amp;bandName=%1&amp;ExactBandMatch=1"),
+        QSL("https://www.metal-archives.com/release/ajax-view-lyrics/id/%1"),
+        QSL("%1.*?lyricsLink_(\\d+)"),
+        QSL("(.*)"),
+        {{QSL("\r\n"), QString()}}
     }
 };
 

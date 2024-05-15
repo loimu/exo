@@ -44,7 +44,6 @@ LyricsDialog::LyricsDialog(const Provider& provider_, QWidget* parent)
     , httpObject(new QNetworkAccessManager(this))
     , replyObject(nullptr)
     , provider(provider_)
-    , rgUrl(provider.urlRegExp)
     , rgData(provider.dataRegExp,QRegularExpression::DotMatchesEverythingOption)
 {
     resize(388, 488);
@@ -118,7 +117,9 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         replyObject = nullptr;
         QString content = QString::fromUtf8(reply->readAll().constData());
         reply->deleteLater();
-        QRegularExpressionMatch match = rgUrl.match(content);
+        const QRegularExpression urlRegex(provider.urlRegExp.arg(artistLineEdit->text()),
+                                          QRegularExpression::DotMatchesEverythingOption);
+        QRegularExpressionMatch match = urlRegex.match(content);
         if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
             return;
