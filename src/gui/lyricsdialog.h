@@ -57,6 +57,7 @@ private:
     const Provider& provider;
     QString artistString, titleString;
     QString replace(QString string);
+    QString escapeRegexInput(QString string);
     const QRegularExpression rgData;
     void showText(QNetworkReply* reply);
     void update();

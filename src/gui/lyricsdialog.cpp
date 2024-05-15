@@ -119,8 +119,8 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         reply->deleteLater();
         const QRegularExpression urlRegex(
             provider.urlRegExp.contains(QSL("%1"))
-                ? provider.urlRegExp.arg(artistLineEdit->text()) : provider.urlRegExp,
-            QRegularExpression::DotMatchesEverythingOption);
+                ? provider.urlRegExp.arg(escapeRegexInput(artistLineEdit->text()))
+                : provider.urlRegExp, QRegularExpression::DotMatchesEverythingOption);
         QRegularExpressionMatch match = urlRegex.match(content);
         if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
@@ -167,6 +167,14 @@ QString LyricsDialog::replace(QString string) {
     const QString rep { QStringLiteral("_@,;&\\/\"") };
     for(const QChar& c: rep) {
         string = string.replace(c, QChar::fromLatin1('-'));
+    }
+    return string;
+}
+
+QString LyricsDialog::escapeRegexInput(QString string) {
+    const QString rep { QStringLiteral("^$()<>[{\\|*+?") };
+    for(const QChar& c: rep) {
+        string = string.replace(c, QString::fromLatin1("\\") + c);
     }
     return string;
 }
