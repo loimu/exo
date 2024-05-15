@@ -39,7 +39,7 @@ public:
     explicit TrayIcon(QWidget* parent = nullptr);
     static TrayIcon* self() { return object; }
     void refreshBookmarks(const QList<QVariant>& bookmarks);
-    void showLyricsWindow();
+    void showLyricsWindow(int providerNum);
 
 private:
     bool isPlatformTrayBroken;
@@ -49,7 +49,6 @@ private:
     QMenu* bookmarksMenu;
     QAction* showAction;
     QAction* filesAction;
-    QAction* lyricsAction;
     QAction* bookmarkCurrentAction;
     QAction* bookmarkManagerAction;
     QAction* playAction;

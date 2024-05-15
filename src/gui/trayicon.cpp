@@ -113,9 +113,6 @@ void TrayIcon::createActions() {
             player, &PlayerInterface::showPlayer);
     filesAction = new QAction(tr("A&dd ..."), this);
     connect(filesAction, &QAction::triggered, this, &TrayIcon::addFiles);
-    lyricsAction = new QAction(tr("Show Lyrics"), this);
-    connect(lyricsAction, &QAction::triggered,
-            this, &TrayIcon::showLyricsWindow);
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, &QAction::triggered, player, &PlayerInterface::play);
     playAction->setIcon(QIcon(QStringLiteral(":/images/play.png")));
@@ -173,19 +170,17 @@ void TrayIcon::createTrayIcon() {
     auto lyricsMenu = new QMenu(this);
     lyricsMenu->setTitle(tr("&Lyrics"));
     trayIconMenu->addAction(lyricsMenu->menuAction());
-    lyricsMenu->addAction(lyricsAction);
-    lyricsMenu->addSeparator();
     lyricsMenuGroup = new QActionGroup(this);
     int counter = 0;
     for(const Provider& provider : providers) {
         auto lyricsAction = new QAction(provider.name, this);
-        lyricsAction->setCheckable(true);
-        lyricsAction->setActionGroup(lyricsMenuGroup);
         lyricsAction->setData(counter);
         lyricsMenu->addAction(lyricsAction);
+        connect(lyricsAction, &QAction::triggered, this, [this, counter] {
+            showLyricsWindow(counter);
+        });
         counter++;
     }
-    lyricsMenuGroup->actions().at(0)->setChecked(true);
     // end of Lyrics submenu
     const QVector<QString> editors = SysUtils::findFullPaths(
                 QVector<QString> {
@@ -324,9 +319,8 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
     trayIcon->setToolTip(tooltip);
 }
 
-void TrayIcon::showLyricsWindow() {
-    int index = lyricsMenuGroup->checkedAction()->data().toInt();
-    auto lyricsDialog = new LyricsDialog(providers.at(index), this);
+void TrayIcon::showLyricsWindow(int providerNum) {
+    auto lyricsDialog = new LyricsDialog(providers.at(providerNum), this);
     lyricsDialog->show();
 }
 
