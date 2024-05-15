@@ -150,7 +150,9 @@ void LyricsDialog::showText(QNetworkReply* reply) {
             captured = captured.replace(find, replace);
         }
         for(const auto& exclude : provider.excludeList) {
-            captured = captured.replace(QRegularExpression(exclude), QString());
+            captured = captured.replace(
+                QRegularExpression(exclude,
+                                   QRegularExpression::DotMatchesEverythingOption), QString());
         }
         captured.append(QString(QSL("\n<a href=\"%1\">%1</a>")).arg(
                             reply->url().toString()));
