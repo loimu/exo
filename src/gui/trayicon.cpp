@@ -274,7 +274,7 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
 }
 
 void TrayIcon::showLyricsWindow(int providerNum) {
-    auto lyricsDialog = new LyricsDialog(LyricsProviders::providers.at(providerNum), this);
+    auto lyricsDialog = new LyricsDialog(providerNum, this);
     lyricsDialog->show();
 }
 

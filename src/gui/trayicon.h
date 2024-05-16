@@ -27,7 +27,6 @@
 
 class QActionGroup;
 class PlayerInterface;
-struct Provider;
 enum class PlayerState;
 using PState = PlayerState;
 

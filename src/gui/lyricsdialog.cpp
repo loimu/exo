@@ -32,6 +32,7 @@
 #include <QAction>
 
 #include "playerinterface.h"
+#include "lyricsproviders.h"
 #include "lyricsdialog.h"
 
 #define QSL QStringLiteral
@@ -39,12 +40,12 @@
 
 const char* UserAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0";
 
-LyricsDialog::LyricsDialog(const Provider& provider_, QWidget* parent)
+LyricsDialog::LyricsDialog(int providerNum_, QWidget* parent)
     : BaseDialog(parent)
     , httpObject(new QNetworkAccessManager(this))
     , replyObject(nullptr)
-    , provider(provider_)
-    , rgData(provider.dataRegExp,QRegularExpression::DotMatchesEverythingOption)
+    , providerNum(providerNum_)
+    , rgData(LyricsProviders::providers[providerNum_].dataRegExp,QRegularExpression::DotMatchesEverythingOption)
 {
     resize(388, 488);
     setWindowTitle(tr("Lyrics"));
@@ -97,7 +98,7 @@ LyricsDialog::LyricsDialog(const Provider& provider_, QWidget* parent)
             [this, autoButton] { if(autoButton->isChecked()) update(); });
     connect(autoButton, &QPushButton::pressed, this, [this] {
         if(artistLineEdit->text() != PLAYER->getTrack().artist
-                || titleLineEdit->text() != PLAYER->getTrack().title) update();
+            || titleLineEdit->text() != PLAYER->getTrack().title) update();
     });
     update();
 }
@@ -113,6 +114,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         label->setText(QStringLiteral("OK"));
     }
 
+    const Provider& provider = LyricsProviders::providers[providerNum];
     if(replyObject == reply) {
         replyObject = nullptr;
         QString content = QString::fromUtf8(reply->readAll().constData());
@@ -196,6 +198,7 @@ void LyricsDialog::search() {
     QString artist = artistLineEdit->text();
     QString title = titleLineEdit->text();
     const QChar firstLetterArtist = artistLineEdit->text().at(0).toLower();
+    const Provider& provider = LyricsProviders::providers[providerNum];
     if(provider.urlTemplate.isEmpty()) {
         artist = artist.toLower();
         title = title.toLower();
