@@ -44,7 +44,6 @@ public:
 private:
     bool isPlatformTrayBroken;
     static TrayIcon* object;
-    static const QVector<Provider> providers;
     PlayerInterface* player;
     QMenu* bookmarksMenu;
     QAction* showAction;

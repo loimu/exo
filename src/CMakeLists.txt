@@ -20,6 +20,7 @@ set(exo_SRCS main.cpp
     gui/aboutdialog.cpp
     gui/basedialog.cpp
     gui/bookmarkmanager.cpp
+    gui/lyricsproviders.cpp
     gui/lyricsdialog.cpp
     gui/trayicon.cpp)
 

@@ -36,6 +36,7 @@
 // gui
 #include "aboutdialog.h"
 #include "bookmarkmanager.h"
+#include "lyricsproviders.h"
 #include "lyricsdialog.h"
 #include "trayicon.h"
 
@@ -44,53 +45,6 @@
   #include "scrobbler.h"
 #endif // BUILD_LASTFM
 
-#define QSL QStringLiteral
-
-
-const QVector<Provider> TrayIcon::providers = {
-    {
-        QSL("chartlyrics.com"),
-        QSL("http://www.chartlyrics.com/search.aspx?q=%1+%2"),
-        QSL("http://www.chartlyrics.com%1"),
-        QSL("<td>[^\\w]+<a href=\"([^\"]*)"),
-        QSL("<p>(.*)</p>"),
-        {{QSL("\r\n"), QString()}},
-        {QSL("<img class=\"alignright\".*?/>")}
-    },
-    {
-        QSL("elyrics.net"),
-        QSL("https://www.elyrics.net/read/%3/%1-lyrics/%2-lyrics.html"),
-        QString(), QString(),
-        QSL("<div id='inlyr'>(.*)</div><br>"),
-        {{QSL("<br>"), QString()}},
-        {QSL("<div.+div>")}
-    },
-    {
-        QSL("songlyrics.com"),
-        QSL("https://www.songlyrics.com/%1/%2-lyrics/"),
-        QString(), QString(),
-        QSL("<p id=\"songLyricsDiv\".*?\">(.*?)</p>"),
-        {{QSL("\r\n"), QString()}},
-        {}
-    },
-    {
-        QSL("lyrics.ovh"),
-        QSL("https://api.lyrics.ovh/v1/%1/%2"),
-        QString(), QString(),
-        QSL("{\"lyrics\":\"(.*)\"}"),
-        {{QSL("\\n"), QSL("\n")}, {QSL("\\r"), QString()}},
-        {}
-    },
-    {
-        QSL("metal-archives.com"),
-        QSL("https://www.metal-archives.com/search/ajax-advanced/searching/songs/"
-            "?songTitle=%2&amp;bandName=%1&amp;ExactBandMatch=1"),
-        QSL("https://www.metal-archives.com/release/ajax-view-lyrics/id/%1"),
-        QSL("%1.*?lyricsLink_(\\d+)"),
-        QSL("(.*)"),
-        {{QSL("\r\n"), QString()}}
-    }
-};
 
 TrayIcon* TrayIcon::object = nullptr;
 
@@ -172,7 +126,7 @@ void TrayIcon::createTrayIcon() {
     trayIconMenu->addAction(lyricsMenu->menuAction());
     lyricsMenuGroup = new QActionGroup(this);
     int counter = 0;
-    for(const Provider& provider : providers) {
+    for(const Provider& provider : LyricsProviders::providers) {
         auto lyricsAction = new QAction(provider.name, this);
         lyricsAction->setData(counter);
         lyricsMenu->addAction(lyricsAction);
@@ -320,7 +274,7 @@ void TrayIcon::updateTrack(const QString& cover, bool toolTipEvent) {
 }
 
 void TrayIcon::showLyricsWindow(int providerNum) {
-    auto lyricsDialog = new LyricsDialog(providers.at(providerNum), this);
+    auto lyricsDialog = new LyricsDialog(LyricsProviders::providers.at(providerNum), this);
     lyricsDialog->show();
 }
 
