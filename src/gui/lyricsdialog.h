@@ -23,22 +23,12 @@
 #include "basedialog.h"
 #include <QRegularExpression>
 
-
 class QLabel;
 class QTextBrowser;
 class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
 
-struct Provider {
-    const QString name;
-    const QString searchUrl;
-    const QString urlTemplate;
-    const QString urlRegExp;
-    const QString dataRegExp;
-    const QVector<QPair<QString, QString>> replaceList;
-    const QVector<QString> excludeList;
-};
 
 class LyricsDialog : public BaseDialog
 {

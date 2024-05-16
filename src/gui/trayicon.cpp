@@ -130,7 +130,7 @@ void TrayIcon::createTrayIcon() {
     lyricsMenu->addSeparator();
     lyricsMenuGroup = new QActionGroup(this);
     int counter = 0;
-    for(const Provider& provider : LyricsProviders::providers) {
+    for(const LyricsProviders::Provider& provider : LyricsProviders::providers) {
         auto lyricsAction = new QAction(provider.name, this);
         lyricsAction->setData(counter);
         lyricsMenu->addAction(lyricsAction);

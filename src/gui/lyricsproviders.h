@@ -22,9 +22,17 @@
 
 #include "qvector.h"
 
-struct Provider;
-
 namespace LyricsProviders {
+struct Provider {
+    const QString name;
+    const QString searchUrl;
+    const QString urlTemplate;
+    const QString urlRegExp;
+    const QString dataRegExp;
+    const QVector<QPair<QString, QString>> replaceList;
+    const QVector<QString> excludeList;
+};
+
 extern const QVector<Provider> providers;
 } // namespace LyricsProviders
 

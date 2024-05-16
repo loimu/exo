@@ -19,12 +19,12 @@
 
 #include <QVector>
 
-#include "lyricsdialog.h"
 #include "lyricsproviders.h"
 
 #define QSL QStringLiteral
 
-const QVector<Provider> LyricsProviders::providers = {
+
+const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
     {
         QSL("chartlyrics.com"),
         QSL("http://www.chartlyrics.com/search.aspx?q=%1+%2"),

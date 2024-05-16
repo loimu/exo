@@ -116,7 +116,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         label->setText(QStringLiteral("OK"));
     }
 
-    const Provider& provider = LyricsProviders::providers[providerNum];
+    const LyricsProviders::Provider& provider = LyricsProviders::providers[providerNum];
     if(replyObject == reply) {
         replyObject = nullptr;
         QString content = QString::fromUtf8(reply->readAll().constData());
@@ -225,7 +225,7 @@ void LyricsDialog::search() {
     QString artist = artistLineEdit->text();
     QString title = titleLineEdit->text();
     const QChar firstLetterArtist = artistLineEdit->text().at(0).toLower();
-    const Provider& provider = LyricsProviders::providers[providerNum];
+    const LyricsProviders::Provider& provider = LyricsProviders::providers[providerNum];
     if(provider.urlTemplate.isEmpty()) {
         artist = artist.toLower();
         title = title.toLower();
