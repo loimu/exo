@@ -67,6 +67,8 @@ void TrayIcon::createActions() {
             player, &PlayerInterface::showPlayer);
     filesAction = new QAction(tr("A&dd ..."), this);
     connect(filesAction, &QAction::triggered, this, &TrayIcon::addFiles);
+    lyricsAction = new QAction(tr("Show Lyrics"), this);
+    connect(lyricsAction, &QAction::triggered, this, [this] { showLyricsWindow(-1); });
     playAction = new QAction(tr("&Play"), this);
     connect(playAction, &QAction::triggered, player, &PlayerInterface::play);
     playAction->setIcon(QIcon(QStringLiteral(":/images/play.png")));
@@ -124,6 +126,8 @@ void TrayIcon::createTrayIcon() {
     auto lyricsMenu = new QMenu(this);
     lyricsMenu->setTitle(tr("&Lyrics"));
     trayIconMenu->addAction(lyricsMenu->menuAction());
+    lyricsMenu->addAction(lyricsAction);
+    lyricsMenu->addSeparator();
     lyricsMenuGroup = new QActionGroup(this);
     int counter = 0;
     for(const Provider& provider : LyricsProviders::providers) {

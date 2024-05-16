@@ -45,7 +45,7 @@ class LyricsDialog : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit LyricsDialog(int providerNum = -1, QWidget* parent = nullptr);
+    explicit LyricsDialog(int providerNum, QWidget* parent = nullptr);
 
 private:
     bool cycleThroughProviders = false;
@@ -57,7 +57,6 @@ private:
     QNetworkReply* replyObject;
     int providerNum;
     QString artistString, titleString;
-    const QRegularExpression rgData;
     QString replace(QString string);
     QString escapeRegexInput(QString string);
     void showText(QNetworkReply* reply);

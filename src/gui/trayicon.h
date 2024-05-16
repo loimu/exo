@@ -47,6 +47,7 @@ private:
     QMenu* bookmarksMenu;
     QAction* showAction;
     QAction* filesAction;
+    QAction* lyricsAction;
     QAction* bookmarkCurrentAction;
     QAction* bookmarkManagerAction;
     QAction* playAction;

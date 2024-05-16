@@ -45,7 +45,6 @@ LyricsDialog::LyricsDialog(int providerNum_, QWidget* parent)
     , httpObject(new QNetworkAccessManager(this))
     , replyObject(nullptr)
     , providerNum(providerNum_)
-    , rgData(LyricsProviders::providers[providerNum_].dataRegExp,QRegularExpression::DotMatchesEverythingOption)
 {
     resize(388, 488);
     setWindowTitle(tr("Lyrics"));
@@ -146,7 +145,9 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     } else {
         QString content = QString::fromUtf8(reply->readAll().constData());
         QString captured{};
-        QRegularExpressionMatchIterator matchIter = rgData.globalMatch(content);
+        const QRegularExpression dataRegex(LyricsProviders::providers[providerNum].dataRegExp,
+                                           QRegularExpression::DotMatchesEverythingOption);
+        QRegularExpressionMatchIterator matchIter = dataRegex.globalMatch(content);
         if(!matchIter.hasNext()) {
             lyricsBrowser->setHtml(tr("No lyrics available"));
             reply->deleteLater();
