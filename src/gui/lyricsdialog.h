@@ -45,21 +45,23 @@ class LyricsDialog : public BaseDialog
     Q_OBJECT
 
 public:
-    LyricsDialog(int providerNum, QWidget* parent = nullptr);
+    explicit LyricsDialog(int providerNum = -1, QWidget* parent = nullptr);
 
 private:
+    bool cycleThroughProviders = false;
     QLabel* label;
     QTextBrowser* lyricsBrowser;
     QLineEdit* artistLineEdit;
     QLineEdit* titleLineEdit;
     QNetworkAccessManager* httpObject;
     QNetworkReply* replyObject;
-    const int providerNum;
+    int providerNum;
     QString artistString, titleString;
     const QRegularExpression rgData;
     QString replace(QString string);
     QString escapeRegexInput(QString string);
     void showText(QNetworkReply* reply);
+    void checkNextProvider();
     void update();
     void search();
 };

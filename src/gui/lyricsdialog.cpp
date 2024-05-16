@@ -105,10 +105,13 @@ LyricsDialog::LyricsDialog(int providerNum_, QWidget* parent)
 
 void LyricsDialog::showText(QNetworkReply* reply) {
     if(reply->error() != QNetworkReply::NoError) {
-        label->setText(tr("Network error"));
-        lyricsBrowser->setText(reply->errorString());
+        label->setText(tr("Error"));
+        lyricsBrowser->setHtml(QSL("<b>") + tr("Page not available") + QSL("</b>"));
         replyObject = nullptr;
         reply->deleteLater();
+        if(cycleThroughProviders) {
+            checkNextProvider();
+        }
         return;
     } else {
         label->setText(QStringLiteral("OK"));
@@ -126,6 +129,10 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         QRegularExpressionMatch match = urlRegex.match(content);
         if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
+            reply->deleteLater();
+            if(cycleThroughProviders) {
+                checkNextProvider();
+            }
             return;
         }
         QString urlString = provider.urlTemplate.arg(match.captured(1));
@@ -141,9 +148,13 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         QString captured{};
         QRegularExpressionMatchIterator matchIter = rgData.globalMatch(content);
         if(!matchIter.hasNext()) {
-            captured.append(tr("No lyrics available"));
-        }
-        while(matchIter.hasNext()) {
+            lyricsBrowser->setHtml(tr("No lyrics available"));
+            reply->deleteLater();
+            if(cycleThroughProviders) {
+                checkNextProvider();
+            }
+            return;
+        } else {
             QRegularExpressionMatch match = matchIter.next();
             captured.append(match.captured(1).trimmed());
             captured.append("<br />");
@@ -181,7 +192,22 @@ QString LyricsDialog::escapeRegexInput(QString string) {
     return string;
 }
 
+void LyricsDialog::checkNextProvider() {
+    providerNum++;
+    if(providerNum < LyricsProviders::providers.size()) {
+        search();
+    }
+}
+
 void LyricsDialog::update() {
+    if(LyricsProviders::providers.isEmpty()) {
+        return;
+    }
+    // check if provider number is out of bounds
+    if(providerNum < 0 || providerNum >= LyricsProviders::providers.size()) {
+        providerNum = 0;
+        cycleThroughProviders = true;
+    }
     artistLineEdit->setText(PLAYER->getTrack().artist);
     titleLineEdit->setText(PLAYER->getTrack().title);
     if(!artistLineEdit->text().isEmpty()) {

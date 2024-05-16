@@ -39,8 +39,9 @@ public:
 
 public Q_SLOTS:
     void showLyricsWindow() {
-        if(TrayIcon::self())
-            TrayIcon::self()->showLyricsWindow(0);
+        if(TrayIcon::self()) {
+            TrayIcon::self()->showLyricsWindow(-1);
+        }
     }
     void clearPlaylist() { PLAYER->clearPlaylist(); }
 };
