@@ -20,8 +20,8 @@
 #ifndef LYRICSPROVIDERS_H
 #define LYRICSPROVIDERS_H
 
-template <typename>
-class QVector;
+#include "qvector.h"
+
 struct Provider;
 
 namespace LyricsProviders {
