@@ -24,9 +24,7 @@ class QObject;
 
 
 namespace DBus {
-
-    void init(QObject* parent = nullptr);
-
+void init(QObject* parent = nullptr);
 }
 
 #endif // DBUS_H

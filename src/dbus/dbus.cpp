@@ -21,7 +21,6 @@
 #include <QDBusConnection>
 
 #include "trayicon.h"
-#include "playerinterface.h"
 //MPRISv2
 #include "rootobject.h"
 #include "playerobject.h"
@@ -43,7 +42,6 @@ public Q_SLOTS:
             TrayIcon::self()->showLyricsWindow(-1);
         }
     }
-    void clearPlaylist() { PLAYER->clearPlaylist(); }
 };
 
 
