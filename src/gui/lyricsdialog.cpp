@@ -158,7 +158,6 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         } else {
             QRegularExpressionMatch match = matchIter.next();
             captured.append(match.captured(1).trimmed());
-            captured.append("<br />");
         }
         for(const auto& [find, replace] : provider.replaceList) {
             captured = captured.replace(find, replace);

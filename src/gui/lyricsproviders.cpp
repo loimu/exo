@@ -47,16 +47,14 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("https://www.songlyrics.com/%1/%2-lyrics/"),
         QString(), QString(),
         QSL("<p id=\"songLyricsDiv\".*?\">(.*?)</p>"),
-        {{QSL("\r\n"), QString()}},
-        {}
+        {{QSL("\r\n"), QString()}, {QSL("<br />\n"), QSL("<br />")}}
     },
     {
         QSL("lyrics.ovh"),
         QSL("https://api.lyrics.ovh/v1/%1/%2"),
         QString(), QString(),
         QSL("{\"lyrics\":\"(.*)\"}"),
-        {{QSL("\\n"), QSL("\n")}, {QSL("\\r"), QString()}},
-        {}
+        {{QSL("\\n"), QSL("\n")}, {QSL("\\r"), QString()}}
     },
     {
         QSL("metal-archives.com"),
