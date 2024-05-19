@@ -120,7 +120,7 @@ void BookmarkManager::moveUp() {
     int cur = listWidget->currentRow();
     /* Always check if index is valid before usage.
      * QListWidget doesn't care about your selection. */
-    if(cur-1 > -1) {
+    if(cur > 0) {
         QListWidgetItem* currentItem = listWidget->takeItem(cur);
         listWidget->insertItem(cur - 1, currentItem);
         listWidget->setCurrentItem(currentItem);
@@ -129,7 +129,7 @@ void BookmarkManager::moveUp() {
 
 void BookmarkManager::moveDown() {
     int cur = listWidget->currentRow();
-    if(cur > -1 && cur+1 < listWidget->count()) {
+    if(cur > -1 && cur <= listWidget->count()) {
         QListWidgetItem* currentItem = listWidget->takeItem(cur);
         listWidget->insertItem(cur + 1, currentItem);
         listWidget->setCurrentItem(currentItem);
