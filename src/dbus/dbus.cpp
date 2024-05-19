@@ -27,6 +27,8 @@
 
 #include "dbus.h"
 
+#define QSL QStringLiteral
+
 
 class DBusAdaptor : public QObject
 {
@@ -46,17 +48,18 @@ public Q_SLOTS:
 
 
 void DBus::init(QObject* parent) {
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject(QStringLiteral("/exo"), new DBusAdaptor(parent),
-                              QDBusConnection::ExportAllContents);
-    if(!connection.registerService(QStringLiteral("local.exo_player")))
-        qWarning("DBus: service registration failed");
     new RootObject(parent);
     new PlayerObject(parent);
-    connection.registerObject(QStringLiteral("/org/mpris/MediaPlayer2"),parent);
-    if(!connection.registerService(
-                QStringLiteral("org.mpris.MediaPlayer2.exo")))
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.registerObject(
+        QSL("/exo"),new DBusAdaptor(parent),QDBusConnection::ExportAllContents);
+    if(!connection.registerService(QSL("local.exo_player"))) {
+        qWarning("DBus: service registration failed");
+    }
+    connection.registerObject(QSL("/org/mpris/MediaPlayer2"), parent);
+    if(!connection.registerService(QSL("org.mpris.MediaPlayer2.exo"))) {
         qWarning("DBus: MPRISv2 service registration failed");
+    }
 }
 
 #include "dbus.moc"
