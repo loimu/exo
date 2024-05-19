@@ -122,9 +122,9 @@ void LyricsDialog::showText(QNetworkReply* reply) {
         QString content = QString::fromUtf8(reply->readAll().constData());
         reply->deleteLater();
         const QRegularExpression urlRegex(
-            provider.urlRegExp.contains(QSL("%1"))
-                ? provider.urlRegExp.arg(escapeRegexInput(artistLineEdit->text()))
-                : provider.urlRegExp, QRegularExpression::DotMatchesEverythingOption);
+            provider.urlRegex.contains(QSL("%1"))
+                ? provider.urlRegex.arg(escapeRegexInput(artistLineEdit->text()))
+                : provider.urlRegex, QRegularExpression::DotMatchesEverythingOption);
         QRegularExpressionMatch match = urlRegex.match(content);
         if(!match.hasMatch()) {
             lyricsBrowser->setHtml(QSL("<b>") + tr("Not found") + QSL("</b>"));
@@ -145,7 +145,7 @@ void LyricsDialog::showText(QNetworkReply* reply) {
     } else {
         QString content = QString::fromUtf8(reply->readAll().constData());
         QString captured{};
-        const QRegularExpression dataRegex(LyricsProviders::providers[providerNum].dataRegExp,
+        const QRegularExpression dataRegex(LyricsProviders::providers[providerNum].dataRegex,
                                            QRegularExpression::DotMatchesEverythingOption);
         QRegularExpressionMatchIterator matchIter = dataRegex.globalMatch(content);
         if(!matchIter.hasNext()) {
@@ -159,10 +159,10 @@ void LyricsDialog::showText(QNetworkReply* reply) {
             QRegularExpressionMatch match = matchIter.next();
             captured.append(match.captured(1).trimmed());
         }
-        for(const auto& [find, replace] : provider.replaceList) {
+        for(const auto& [find, replace] : provider.dataReplace) {
             captured = captured.replace(find, replace);
         }
-        for(const auto& exclude : provider.excludeList) {
+        for(const auto& exclude : provider.dataExcludeRegex) {
             captured = captured.replace(
                 QRegularExpression(exclude,
                                    QRegularExpression::DotMatchesEverythingOption), QString());
@@ -177,9 +177,11 @@ void LyricsDialog::showText(QNetworkReply* reply) {
 }
 
 QString LyricsDialog::replace(QString string) {
-    const QString rep { QStringLiteral("_@,;&\\/\"") };
-    for(const QChar& c: rep) {
-        string = string.replace(c, QChar::fromLatin1('-'));
+    const LyricsProviders::Provider& provider = LyricsProviders::providers[providerNum];
+    for(const auto& [rep, chr] : provider.searchReplace) {
+        for(const QChar& c : rep) {
+            string = string.replace(c, chr);
+        }
     }
     return string;
 }

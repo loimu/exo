@@ -27,10 +27,11 @@ struct Provider {
     const QString name;
     const QString searchUrl;
     const QString urlTemplate;
-    const QString urlRegExp;
-    const QString dataRegExp;
-    const QVector<QPair<QString, QString>> replaceList;
-    const QVector<QString> excludeList;
+    const QString urlRegex;
+    const QString dataRegex;
+    const QVector<QPair<QString, QChar>> searchReplace;
+    const QVector<QPair<QString, QString>> dataReplace;
+    const QVector<QString> dataExcludeRegex;
 };
 
 extern const QVector<Provider> providers;

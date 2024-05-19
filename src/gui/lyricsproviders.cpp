@@ -31,6 +31,7 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("http://www.chartlyrics.com%1"),
         QSL("<td>[^\\w]+<a href=\"([^\"]*)"),
         QSL("<p>(.*)</p>"),
+        {{QSL("_@,;&\\/\""), QChar::fromLatin1('-')}},
         {{QSL("\r\n"), QString()}},
         {QSL("<img class=\"alignright\".*?/>")}
     },
@@ -39,6 +40,7 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("https://www.elyrics.net/read/%3/%1-lyrics/%2-lyrics.html"),
         QString(), QString(),
         QSL("<div id='inlyr'>(.*)</div><br>"),
+        {{QSL(" _@;&\\/\""), QChar::fromLatin1('-')}, {QSL("'"), QChar::fromLatin1('_')}},
         {{QSL("<br>"), QString()}},
         {QSL("<div.+div>")}
     },
@@ -47,6 +49,7 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("https://www.songlyrics.com/%1/%2-lyrics/"),
         QString(), QString(),
         QSL("<p id=\"songLyricsDiv\".*?\">(.*?)</p>"),
+        {{QSL(" ._@,;&\\/\""), QChar::fromLatin1('-')}},
         {{QSL("\r\n"), QString()}, {QSL("<br />\n"), QSL("<br />")}}
     },
     {
@@ -54,7 +57,8 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("https://api.lyrics.ovh/v1/%1/%2"),
         QString(), QString(),
         QSL("{\"lyrics\":\"(.*)\"}"),
-        {{QSL("\\n"), QSL("\n")}, {QSL("\\r"), QString()}}
+        {{QSL("_@,;&\\/\""), QChar::fromLatin1('-')}},
+        {{QSL("\\n"), QSL("\n")}, {QSL("\\r"), QString()}, {QSL("\n\n"), QSL("\n")}}
     },
     {
         QSL("metal-archives.com"),
@@ -63,6 +67,7 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("https://www.metal-archives.com/release/ajax-view-lyrics/id/%1"),
         QSL("%1.*?lyricsLink_(\\d+)"),
         QSL("(.*)"),
+        {{QSL("_@,;&\\\""), QChar::fromLatin1('-')}, {QSL("/"), QChar::Space}},
         {{QSL("\r\n"), QString()}}
     }
 };
