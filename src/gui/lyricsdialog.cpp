@@ -232,9 +232,10 @@ void LyricsDialog::search() {
         title = title.toLower();
     }
     request.setUrl(
-        QUrl(provider.searchUrl.contains(QSL("%3"))
-                 ? provider.searchUrl.arg( replace(artist), replace(title), firstLetterArtist )
-                 : provider.searchUrl.arg( replace(artist), replace(title) )));
+        QUrl((provider.searchUrl.contains(QSL("%3"))
+                  ? provider.searchUrl.arg(replace(artist), replace(title), firstLetterArtist)
+                  : provider.searchUrl.arg(replace(artist), replace(title)))
+                 .replace(QRegularExpression(QSL("-{2,}")), QChar::fromLatin1('-'))));
     request.setRawHeader("accept", "*/*");
     request.setRawHeader("user-agent", UserAgent);
     if(!provider.urlTemplate.isEmpty()) {

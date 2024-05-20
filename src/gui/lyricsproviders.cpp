@@ -40,7 +40,7 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("https://www.elyrics.net/read/%3/%1-lyrics/%2-lyrics.html"),
         QString(), QString(),
         QSL("<div id='inlyr'>(.*)</div><br>"),
-        {{QSL(" _@;&\\/\""), QChar::fromLatin1('-')}, {QSL("'"), QChar::fromLatin1('_')}},
+        {{QSL(" _@;&\\/\"?"), QChar::fromLatin1('-')}, {QSL("'"), QChar::fromLatin1('_')}},
         {{QSL("<br>"), QString()}},
         {QSL("<div.+div>")}
     },
@@ -49,7 +49,7 @@ const QVector<LyricsProviders::Provider> LyricsProviders::providers = {
         QSL("https://www.songlyrics.com/%1/%2-lyrics/"),
         QString(), QString(),
         QSL("<p id=\"songLyricsDiv\".*?\">(.*?)</p>"),
-        {{QSL(" ._@,;&\\/\""), QChar::fromLatin1('-')}},
+        {{QSL(". _@,;&\\/\"'?"), QChar::fromLatin1('-')}},
         {{QSL("\r\n"), QString()}, {QSL("<br />\n"), QSL("<br />")}}
     },
     {
