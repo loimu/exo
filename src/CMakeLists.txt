@@ -14,6 +14,7 @@ endif()
 
 set(exo_SRCS main.cpp
     core/mocinterface.cpp
+    core/spotifyinterface.cpp
     core/playerinterface.cpp
     core/singleinstance.cpp
     core/sysutils.cpp

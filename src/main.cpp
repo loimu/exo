@@ -39,6 +39,7 @@
   #include "core/cmusinterface.h"
 #endif // BUILD_CMUS
 #include "core/mocinterface.h"
+#include "core/spotifyinterface.h"
 #include "gui/trayicon.h"
 
 #ifdef BUILD_CMUS
@@ -63,6 +64,7 @@ void initObjects(QCoreApplication& app, const QSettings& settings) {
 
 int main(int argc, char *argv[]) {
     bool useGui = true;
+    bool useSpotify = false;
     bool forceReauth = false;
     bool useCmus = false;
     QString inputFile{};
@@ -71,7 +73,7 @@ int main(int argc, char *argv[]) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
             QTextStream out(stdout);
-            out << "Usage: exo [-h] [-b] [-c] [-f]\nSee also `man exo`\n";
+            out << "Usage: exo [-h] [-b] [-c] [-f] [-s]\nSee also `man exo`\n";
             return 0;
         }
         else if(arg == QByteArray("-d") || arg == QByteArray("-b")
@@ -81,10 +83,15 @@ int main(int argc, char *argv[]) {
             if(::fork() != 0) return 0;
             else qDebug("Running in the background");
         }
-        else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")){
+        else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
             useGui = false;
             forceReauth = true;
         }
+#ifdef BUILD_LASTFM
+        else if(arg == QByteArray("-s") || arg == QByteArray("--use-spotify")) {
+            useSpotify = true;
+        }
+#endif // BUILD_LASTFM
         else {
             // non-exclusive input options are being processed in a cycle
             for(int i = 1; i < argc; i++) {
@@ -99,12 +106,31 @@ int main(int argc, char *argv[]) {
     }
 
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
-    QCoreApplication::setApplicationName(QLatin1String("eXo"));
+    QCoreApplication::setApplicationName(useSpotify ? QLatin1String("eXo_spotify") : QLatin1String("eXo"));
     QCoreApplication::setApplicationVersion(QLatin1String(EXO_VERSION));
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     SingleInstance instance;
     QTranslator translator;
     PlayerInterface* player = nullptr;
+
+#ifdef BUILD_LASTFM
+    if(useSpotify) {
+        QCoreApplication app(argc, argv);
+        if(QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()) {
+            qWarning("No graphical session is detected");
+            return 1;
+        }
+        if(!instance.isUnique()) {
+            qWarning("Application is already running");
+            return 1;
+        }
+        player = new SpotifyInterface(&app);
+        Q_UNUSED(player);
+        QSettings settings;
+        new Scrobbler(&app);
+        app.exec();
+    }
+#endif // BUILD_LASTFM
 
     if(useGui) {
         /* graphical application */
