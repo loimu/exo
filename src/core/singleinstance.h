@@ -24,6 +24,7 @@
 
 
 class QFile;
+class QString;
 
 /**
  * @brief The SingleInstance class
@@ -35,7 +36,7 @@ class SingleInstance
     bool success = true;
 
 public:
-    SingleInstance();
+    explicit SingleInstance(const QString& appName);
     ~SingleInstance();
 
     /**

@@ -31,6 +31,7 @@ ScrobblerAuth::ScrobblerAuth(QObject* parent) : QObject(parent)
 {
     lastfm::ws::ApiKey = Scrobbler::apiKey;
     lastfm::ws::SharedSecret = Scrobbler::secret;
+    lastfm::ws::setScheme(lastfm::ws::Https);
 }
 
 void ScrobblerAuth::auth(const QString& username, const QString& password) {

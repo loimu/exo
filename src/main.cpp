@@ -106,10 +106,10 @@ int main(int argc, char *argv[]) {
     }
 
     QCoreApplication::setOrganizationName(QLatin1String("exo"));
-    QCoreApplication::setApplicationName(useSpotify ? QLatin1String("eXo_spotify") : QLatin1String("eXo"));
+    QCoreApplication::setApplicationName(QLatin1String("eXo"));
     QCoreApplication::setApplicationVersion(QLatin1String(EXO_VERSION));
     QNetworkProxyFactory::setUseSystemConfiguration(true);
-    SingleInstance instance;
+    SingleInstance instance(useSpotify ? QLatin1String("eXo_spotify") : QLatin1String("eXo"));
     QTranslator translator;
     PlayerInterface* player = nullptr;
 

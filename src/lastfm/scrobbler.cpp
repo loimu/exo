@@ -43,6 +43,7 @@ Scrobbler::Scrobbler(QObject* parent) : QObject(parent),
                 QStringLiteral("scrobbler/sessionkey")).toString();
     lastfm::ws::ApiKey = apiKey;
     lastfm::ws::SharedSecret = secret;
+    lastfm::ws::setScheme(lastfm::ws::Https);
 }
 
 Scrobbler::~Scrobbler() { object = nullptr; }

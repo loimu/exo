@@ -22,13 +22,14 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QDir>
+#include <QString>
 
 #include "singleinstance.h"
 
 
-SingleInstance::SingleInstance()
+SingleInstance::SingleInstance(const QString& appName)
     : lockFile(new QFile(QDir::tempPath() + QLatin1Char('/')
-                         + qApp->applicationName() + QLatin1String(".lock")))
+                         + appName + QLatin1String(".lock")))
 {
     lockFile->open(QIODevice::ReadWrite);
     if(flock(lockFile->handle(), LOCK_EX | LOCK_NB) == -1)
