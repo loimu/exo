@@ -90,6 +90,9 @@ int main(int argc, char *argv[]) {
 #ifdef BUILD_LASTFM
         else if(arg == QByteArray("-s") || arg == QByteArray("--use-spotify")) {
             useSpotify = true;
+            if(::fork() != 0) return 0;
+            if(::fork() != 0) return 0;
+            else qDebug("Running in the background as Spotify adaptor");
         }
 #endif // BUILD_LASTFM
         else {
