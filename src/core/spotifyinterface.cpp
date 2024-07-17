@@ -45,14 +45,6 @@ SpotifyInterface::SpotifyInterface(QObject* parent) : PlayerInterface(parent),
     QT_PREPEND_NAMESPACE(qt_dbus_metaobject_skip_annotations) = true;
 }
 
-void SpotifyInterface::runServer() {
-    if(SysUtils::findProcessId(player) < 0) {  // check if player is running
-        QProcess p;
-        p.start(player, QStringList{}, QIODevice::NotOpen);
-        p.waitForFinished();
-    }
-}
-
 PState SpotifyInterface::updateInfo() {
     QDBusInterface spotify{"org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2",
                            "org.mpris.MediaPlayer2.Player"};

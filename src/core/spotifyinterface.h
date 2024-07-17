@@ -26,11 +26,16 @@
 
 class QProcess;
 
+/**
+ * @brief The SpotifyInterface class
+ * Aimed to be just an AudioScrobbler adaptor.
+ * Spotify application should be responisble for the rest:
+ * Lyrics, GUI and DBus interface functionality.
+ */
 class SpotifyInterface : public PlayerInterface
 {
     const QString player;
 
-    void runServer();
     PState updateInfo() override;
     void timerEvent(QTimerEvent* event) override;
 
