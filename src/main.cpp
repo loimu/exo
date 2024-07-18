@@ -35,20 +35,13 @@
   #include "core/consoleauth.h"
   #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
-#ifdef BUILD_CMUS
-  #include "core/cmusinterface.h"
-#endif // BUILD_CMUS
+#include "core/cmusinterface.h"
 #include "core/mocinterface.h"
 #include "core/spotifyinterface.h"
 #include "gui/trayicon.h"
 
-#ifdef BUILD_CMUS
-  #define INIT_PLAYER \
-    if(useCmus) player = new CmusInterface(&app);\
-    else player = new MocInterface(&app);
-#else
-  #define INIT_PLAYER player = new MocInterface(&app);
-#endif
+#define INIT_PLAYER if(useCmus) player = new CmusInterface(&app);\
+  else player = new MocInterface(&app);
 
 
 void initObjects(QCoreApplication& app, const QSettings& settings) {

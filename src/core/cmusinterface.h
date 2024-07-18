@@ -24,6 +24,11 @@
 
 class QProcess;
 
+/**
+ * @brief The CmusInterface class
+ * An interface to Cmus (C Music Player).
+ * Tested against version 2.10.0.
+ */
 class CmusInterface : public PlayerInterface
 {
     QProcess* cmus;

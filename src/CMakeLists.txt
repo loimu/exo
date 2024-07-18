@@ -13,10 +13,11 @@ else()
 endif()
 
 set(exo_SRCS main.cpp
+    core/cmusinterface.cpp
     core/mocinterface.cpp
-    core/spotifyinterface.cpp
     core/playerinterface.cpp
     core/singleinstance.cpp
+    core/spotifyinterface.cpp
     core/sysutils.cpp
     gui/aboutdialog.cpp
     gui/basedialog.cpp
@@ -24,10 +25,6 @@ set(exo_SRCS main.cpp
     gui/lyricsproviders.cpp
     gui/lyricsdialog.cpp
     gui/trayicon.cpp)
-
-if(BUILD_CMUS)
-  list(APPEND exo_SRCS core/cmusinterface.cpp)
-endif()
 
 if(BUILD_DBUS)
   list(APPEND exo_SRCS dbus/dbus.cpp
