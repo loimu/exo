@@ -2,11 +2,11 @@
 .\"  Title: \fBeXo\fR
 .\"  Author: Blaze <blaze@vivaldi.net>
 .\"  Language: English
-.TH EXO 1 "Apr 22, 2020"
+.TH EXO 1 "Jul 19, 2024"
 .SH NAME
 eXo \- exoskeleton (GUI) for MOC player
 .SH DESCRIPTION
-GUI for MOC player also known as mocp\&. Has experimental support of Cmus player\&.
+GUI for MOC player also known as mocp\&. Has experimental support of CMus player\&.
 .PP
 Supports scrobbling, shows lyrics from web, stores bookmarks, detects tag editors\&.
 .SH OPTIONS
@@ -18,7 +18,10 @@ Run in the background (with no GUI)\&.
 Same as above\&.
 .TP
 .B \-c or \-\-use\-cmus
-Use the CMus player interface if it is available\&. Compile time option has to be enabled\&.
+Run with CMus player interface\&.
+.TP
+.B \-s or \-\-use\-spotify
+Run with Spotify player interface\&. This way app can run in parallel with other interfaces as a second process\&.
 .TP
 .B \-f or \-\-force\-reauth
 Force reauth to audioscrobbler service via CLI\&. You'll get a new session key\&. No password is stored anywhere\&.

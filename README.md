@@ -2,11 +2,11 @@
  Qt frontend to MOC player
 
 ### Features: ###
-* Scrobbling to last.fm (optional)
 * Lyrics from web
 * Background mode
 * DBus and MPRISv2 interfaces (optional)
-* Bookmarks
+* Scrobbling to last.fm (optional)
+* Bookmarks for radio streams
 * OSD (additional Python script)
 
 ### Build dependencies ###
@@ -31,7 +31,7 @@ make -j2
 ```
 BUILD_DBUS=OFF   # disable DBus and MPRISv2 interfaces (enabled by default)
 BUILD_LASTFM=OFF # disable scrobbler module (enabled by default)
-BUILD_CMUS=ON    # enable Cmus interface (disabled by default)
+WITH_QT6=ON      # build with Qt6 (disabled by default)
 ```
 
 ### Screenshot ###
