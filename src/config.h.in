@@ -22,7 +22,6 @@
 
 #cmakedefine BUILD_DBUS
 #cmakedefine BUILD_LASTFM
-#cmakedefine WITH_QT6
 
 #define INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
 #define SOURCE_ROOT "${PROJECT_SOURCE_DIR}"
