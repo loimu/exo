@@ -20,7 +20,6 @@
 #ifndef CONFIG_H_IN
 #define CONFIG_H_IN
 
-#cmakedefine BUILD_DBUS
 #cmakedefine BUILD_LASTFM
 
 #define INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"

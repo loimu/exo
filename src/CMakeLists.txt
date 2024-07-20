@@ -5,11 +5,11 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
 set(CMAKE_AUTOMOC ON)
 
 if(WITH_QT6)
-    find_package(Qt6 6.2 REQUIRED COMPONENTS Core Network Widgets Xml Test)
-    set(qt_LIBS Qt6::Core Qt6::Network Qt6::Widgets Qt6::Xml)
+    find_package(Qt6 6.2 REQUIRED COMPONENTS Core Network Widgets Xml DBus Test)
+    set(qt_LIBS Qt6::Core Qt6::Network Qt6::Widgets Qt6::Xml Qt6::DBus)
 else()
-    find_package(Qt5 5.14.0 REQUIRED COMPONENTS Core Network Widgets Xml Test)
-    set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml)
+    find_package(Qt5 5.14.0 REQUIRED COMPONENTS Core Network Widgets Xml DBus Test)
+    set(qt_LIBS Qt5::Core Qt5::Network Qt5::Widgets Qt5::Xml Qt5::DBus)
 endif()
 
 set(exo_SRCS main.cpp
@@ -19,25 +19,16 @@ set(exo_SRCS main.cpp
     core/singleinstance.cpp
     core/spotifyinterface.cpp
     core/sysutils.cpp
+    dbus/dbus.cpp
+    dbus/playerobject.cpp
+    dbus/rootobject.cpp
     gui/aboutdialog.cpp
     gui/basedialog.cpp
     gui/bookmarkmanager.cpp
     gui/lyricsproviders.cpp
     gui/lyricsdialog.cpp
-    gui/trayicon.cpp)
-
-if(BUILD_DBUS)
-  list(APPEND exo_SRCS dbus/dbus.cpp
-      dbus/rootobject.cpp
-      dbus/playerobject.cpp)
-  if(WITH_QT6)
-      find_package(Qt6DBus)
-      list(APPEND qt_LIBS Qt6::DBus)
-    else()
-      find_package(Qt5DBus)
-      list(APPEND qt_LIBS Qt5::DBus)
-    endif()
-endif()
+    gui/trayicon.cpp
+)
 
 if(BUILD_LASTFM)
   list(APPEND exo_SRCS lastfm/scrobbler.cpp

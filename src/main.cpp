@@ -28,32 +28,34 @@
 #include <QFile>
 
 #include "core/singleinstance.h"
-#ifdef BUILD_DBUS
-  #include "dbus/dbus.h"
-#endif // BUILD_DBUS
-#ifdef BUILD_LASTFM
-  #include "core/consoleauth.h"
-  #include "lastfm/scrobbler.h"
-#endif // BUILD_LASTFM
 #include "core/cmusinterface.h"
 #include "core/mocinterface.h"
 #include "core/spotifyinterface.h"
+#include "dbus/dbus.h"
 #include "gui/trayicon.h"
+
+#ifdef BUILD_LASTFM
+#include "core/consoleauth.h"
+#include "lastfm/scrobbler.h"
+#endif // BUILD_LASTFM
 
 #define CAST_PI static_cast<std::unique_ptr<PlayerInterface>>
 
 
 void initObjects(QObject* parent, const QSettings& settings) {
-  #ifdef BUILD_DBUS
     if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()) {
         DBus::init(parent);
     }
-  #endif // BUILD_DBUS
-  #ifdef BUILD_LASTFM
+#ifdef BUILD_LASTFM
     if(settings.value(QStringLiteral("scrobbler/enabled")).toBool()) {
         new Scrobbler(parent);
     }
-  #endif // BUILD_LASTFM
+#endif // BUILD_LASTFM
+    if(QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()
+        && !settings.value(QStringLiteral("scrobbler/enabled")).toBool()) {
+        qWarning("Both scrobbler and DBus interface were disabled. "
+                 "Please remember that running the app in background as such is pointless.");
+    }
 }
 
 int main(int argc, char *argv[]) {
