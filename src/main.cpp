@@ -40,18 +40,19 @@
 #include "core/spotifyinterface.h"
 #include "gui/trayicon.h"
 
-#define INIT_PLAYER if(useCmus) player = new CmusInterface(&app);\
-  else player = new MocInterface(&app);
+#define CAST_PI static_cast<std::unique_ptr<PlayerInterface>>
 
 
-void initObjects(QCoreApplication& app, const QSettings& settings) {
+void initObjects(QObject* parent, const QSettings& settings) {
   #ifdef BUILD_DBUS
-    if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty())
-        DBus::init(&app);
+    if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()) {
+        DBus::init(parent);
+    }
   #endif // BUILD_DBUS
   #ifdef BUILD_LASTFM
-    if(settings.value(QStringLiteral("scrobbler/enabled")).toBool())
-        new Scrobbler(&app);
+    if(settings.value(QStringLiteral("scrobbler/enabled")).toBool()) {
+        new Scrobbler(parent);
+    }
   #endif // BUILD_LASTFM
 }
 
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
     QNetworkProxyFactory::setUseSystemConfiguration(true);
     SingleInstance instance(useSpotify ? QLatin1String("eXo_spotify") : QLatin1String("eXo"));
     QTranslator translator;
-    PlayerInterface* player = nullptr;
+    std::unique_ptr<PlayerInterface> player = nullptr;
 
 #ifdef BUILD_LASTFM
     if(useSpotify) {
@@ -120,10 +121,10 @@ int main(int argc, char *argv[]) {
             qWarning("Application is already running");
             return 1;
         }
-        player = new SpotifyInterface(&app);
+        player = std::make_unique<SpotifyInterface>();
         Q_UNUSED(player);
         QSettings settings;
-        new Scrobbler(&app);
+        new Scrobbler(player.get());
         app.exec();
     }
 #endif // BUILD_LASTFM
@@ -138,16 +139,18 @@ int main(int argc, char *argv[]) {
         Q_UNUSED(res);
         app.installTranslator(&translator);
         if(!instance.isUnique()) {
-            INIT_PLAYER
+            player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
+                             : std::make_unique<MocInterface>();
             player->showPlayer();
             if(!inputFile.isEmpty() && QFile::exists(inputFile)) {
                 player->openUri(inputFile);
             }
             return 0;
         }
-        INIT_PLAYER
+        player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
+                         : std::make_unique<MocInterface>();
         QSettings settings;
-        initObjects(app, settings);
+        initObjects(player.get(), settings);
         Q_INIT_RESOURCE(exo);
         TrayIcon trayIcon;
         Q_UNUSED(trayIcon);
@@ -156,8 +159,9 @@ int main(int argc, char *argv[]) {
         }
         app.exec();
         player->shutdown();
-        if(settings.value(QStringLiteral("player/quit")).toBool())
+        if(settings.value(QStringLiteral("player/quit")).toBool()) {
             player->quit();
+        }
     } else {
         /* console application */
         QCoreApplication app(argc, argv);
@@ -179,13 +183,15 @@ int main(int argc, char *argv[]) {
             return 1;
 #endif // BUILD_LASTFM
         }
-        INIT_PLAYER
+        player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
+                         : std::make_unique<MocInterface>();
         QSettings settings;
-        initObjects(app, settings);
+        initObjects(player.get(), settings);
         app.exec();
         player->shutdown();
-        if(settings.value(QStringLiteral("player/quit")).toBool())
+        if(settings.value(QStringLiteral("player/quit")).toBool()) {
             player->quit();
+        }
     }
 
     return 0;
