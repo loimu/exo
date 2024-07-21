@@ -20,6 +20,8 @@
 #ifndef PLAYERINTERFACE_H
 #define PLAYERINTERFACE_H
 
+#include "config.h"
+
 #include <QObject>
 
 #define PLAYER PlayerInterface::self()
@@ -44,6 +46,9 @@ class PlayerInterface : public QObject
 
 protected:
     PTrack track{};
+#ifdef BUILD_LASTFM
+    bool scrobbleStreams = false;
+#endif // BUILD_LASTFM
     void notify();
     virtual PState updateInfo() = 0;
 
@@ -70,6 +75,9 @@ public:
     virtual void shutdown() = 0;
     Q_SIGNAL void newStatus(PState);
     Q_SIGNAL void newTrack(const QString&, bool check = false);
+#ifdef BUILD_LASTFM
+    void enableStreamsScrobbling(bool enable) { scrobbleStreams = enable; }
+#endif // BUILD_LASTFM
 };
 
 #endif // PLAYERINTERFACE_H

@@ -17,16 +17,15 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-
-#include "config.h"
+#include "playerinterface.h"
 
 #include <QDir>
 #include <QDateTime>
+#include <QSettings>
 
 #ifdef BUILD_LASTFM
-  #include "scrobbler.h"
+#include "scrobbler.h"
 #endif // BUILD_LASTFM
-#include "playerinterface.h"
 
 
 namespace PlayerInterfaceConstants
@@ -56,39 +55,61 @@ void PlayerInterface::notify() {
         emit newStatus(currentState);
     }
     static QString nowPlaying;
+#ifdef BUILD_LASTFM
+    static QDateTime begin;
+#endif // BUILD_LASTFM
     if(nowPlaying != track.caption) {
         nowPlaying = track.caption;
-        if(track.caption.isEmpty()) return;
+        if(track.caption.isEmpty()) {
+            return;
+        }
         emit newTrack(getCover());
 #ifdef BUILD_LASTFM
+        begin = QDateTime::currentDateTimeUtc();
         if(auto scrobbler = Scrobbler::self()) {
+            scrobbler->submit();
+            if(track.isStream && !scrobbleStreams) {
+                return;
+            }
             if(currentState == PState::Play && !track.artist.isEmpty()) {
                 scrobbler->init(track.artist, track.title,
                                 track.album, track.totalSec);
-                scrobbler->submit();
             }
         }
 #endif // BUILD_LASTFM
     }
 #ifdef BUILD_LASTFM
-    if(currentState != PState::Play || track.isStream) return;
-    static bool listened = true;
-    static QDateTime threshold;
-    if(listened && ((track.currSec <= track.totalSec/2 && track.totalSec <= full)
-                    || (track.currSec <= half && track.totalSec > full))) {
-        listened = false; // beginning
-        threshold = QDateTime::currentDateTime()
-                .addSecs((track.totalSec > 2 * 60) ? 59 : track.totalSec/2 - 1);
+    if(currentState != PState::Play || (track.isStream && !scrobbleStreams)) {
+        return;
     }
-    else if(!listened && (track.currSec > track.totalSec/2
-                          || (track.currSec > half && track.totalSec > full))) {
-        listened = true; // ending
-        if(QDateTime::currentDateTime() >= threshold)
+    const qint64 delta = begin.secsTo(QDateTime::currentDateTimeUtc());
+    qint64 currSec = -1;
+    if(track.isStream) {
+        track.totalSec = 2*60;  // workaround for short tracks during streams
+        currSec = delta;
+    } else {
+        currSec = track.currSec;
+    }
+    if (currSec < 0) {
+        return;
+    }
+    static bool listened = true;
+    if(listened && ((currSec <= track.totalSec/2 && track.totalSec <= full)
+                     || (currSec <= half && track.totalSec > full))) {
+        listened = false;  // track started
+    }
+    else if(!listened && (currSec > track.totalSec/2
+                           || (currSec > half && track.totalSec > full))) {
+        listened = true;  // track listened
+        const qint64 threshold =
+            (track.totalSec > 2 * 60) ? 59 : track.totalSec/2 - 1;
+        if(delta >= threshold) {
             if(auto scrobbler = Scrobbler::self()) {
                 scrobbler->cache(track.artist, track.title,
                                  track.album, track.totalSec);
                 scrobbler->submit();
             }
+        }
     }
 #endif // BUILD_LASTFM
 }
@@ -101,8 +122,9 @@ QString PlayerInterface::getCover() {
                                QStringLiteral("*.png"),
                                QStringLiteral("*.jpg"),
                                QStringLiteral("*.jpeg")});
-        if(!dir.entryList().isEmpty())
+        if(!dir.entryList().isEmpty()) {
             return path + QChar::fromLatin1('/') + dir.entryList().at(0);
+        }
     }
     return QString();
 }

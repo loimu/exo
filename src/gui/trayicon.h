@@ -59,6 +59,7 @@ private:
     QAction* quitAction;
     QAction* setQuitBehaviourAction;
     QAction* setScrobblingAction;
+    QAction* setStreamsAction;
     QActionGroup* lyricsMenuGroup;
     QSystemTrayIcon* trayIcon;
     QString coverArt;
@@ -78,6 +79,7 @@ private:
 #ifdef BUILD_LASTFM
     void enableScrobbler(bool);
     void loadScrobbler(bool);
+    void enableStreamsScrobbling(bool);
 #endif // BUILD_LASTFM
 };
 

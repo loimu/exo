@@ -88,7 +88,7 @@ PState CmusInterface::updateInfo() {
         return state;
     const QString title = find(info, QStringLiteral("stream\\s(.*)"));
     track.caption += QLatin1String("<br />") + title;
-    track.totalSec = 8*60;
+    track.totalSec = 10*60;
     if(!title.isEmpty()) {
         const QString dash = QStringLiteral(" - ");
         if(title.contains(dash)) {

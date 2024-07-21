@@ -86,7 +86,7 @@ PState MocInterface::updateInfo() {
     if(track.caption.isEmpty())
         track.caption = track.file;
     if(track.isStream) {
-        track.totalSec = 8*60;
+        track.totalSec = 10*60;
         const QString dash = QStringLiteral(" - ");
         if(track.caption.contains(dash)) {
             track.artist = track.caption.section(dash, 0, 0);

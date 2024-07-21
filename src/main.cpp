@@ -42,13 +42,16 @@
 #define CAST_PI static_cast<std::unique_ptr<PlayerInterface>>
 
 
-void initObjects(QObject* parent, const QSettings& settings) {
+void initObjects(PlayerInterface* player, const QSettings& settings) {
     if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()) {
-        DBus::init(parent);
+        DBus::init(player);
     }
 #ifdef BUILD_LASTFM
     if(settings.value(QStringLiteral("scrobbler/enabled")).toBool()) {
-        new Scrobbler(parent);
+        new Scrobbler(player);
+    }
+    if(settings.value(QStringLiteral("scrobbler/streams")).toBool()) {
+        player->enableStreamsScrobbling(true);
     }
 #endif // BUILD_LASTFM
     if(QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()
@@ -160,10 +163,10 @@ int main(int argc, char *argv[]) {
             player->openUri(inputFile);
         }
         app.exec();
-        player->shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool()) {
             player->quit();
         }
+        player->shutdown();
     } else {
         /* console application */
         QCoreApplication app(argc, argv);
@@ -190,10 +193,10 @@ int main(int argc, char *argv[]) {
         QSettings settings;
         initObjects(player.get(), settings);
         app.exec();
-        player->shutdown();
         if(settings.value(QStringLiteral("player/quit")).toBool()) {
             player->quit();
         }
+        player->shutdown();
     }
 
     return 0;

@@ -114,6 +114,12 @@ void TrayIcon::createActions() {
                 settings.value(QStringLiteral("scrobbler/enabled")).toBool());
     connect(setScrobblingAction, &QAction::triggered,
             this, &TrayIcon::enableScrobbler);
+    setStreamsAction = new QAction(tr("Scrobble s&treams"), this);
+    setStreamsAction->setCheckable(true);
+    setStreamsAction->setChecked(
+        settings.value(QStringLiteral("scrobbler/streams")).toBool());
+    connect(setStreamsAction, &QAction::triggered,
+            this, &TrayIcon::enableStreamsScrobbling);
 #endif // BUILD_LASTFM
 }
 
@@ -184,6 +190,7 @@ void TrayIcon::createTrayIcon() {
 
 #ifdef BUILD_LASTFM
     settingsMenu->addAction(setScrobblingAction);
+    settingsMenu->addAction(setStreamsAction);
 #endif // BUILD_LASTFM
 
     // end of Settings submenu
@@ -384,5 +391,11 @@ void TrayIcon::loadScrobbler(bool checked) {
         new Scrobbler(this);
     else if(scrobbler && !checked)
         scrobbler->deleteLater();
+}
+
+void TrayIcon::enableStreamsScrobbling(bool checked) {
+    QSettings settings;
+    settings.setValue(QStringLiteral("scrobbler/streams"), checked);
+    player->enableStreamsScrobbling(checked);
 }
 #endif // BUILD_LASTFM
