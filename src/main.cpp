@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     bool useSpotify = false;
     bool forceReauth = false;
     bool useCmus = false;
-    QString inputFile{};
+    QStringList inputFiles{};
 
     if(argc > 1) {
         QByteArray arg = argv[1];
@@ -101,7 +101,9 @@ int main(int argc, char *argv[]) {
                 if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
                     useCmus = true;
                 } else {
-                    inputFile = arg;
+                    if(QFile::exists(arg)) {
+                        inputFiles.append(arg);
+                    }
                 }
             }
         }
@@ -143,24 +145,28 @@ int main(int argc, char *argv[]) {
                                    QLocale::system().name() + QLatin1String(".qm"));
         Q_UNUSED(res);
         app.installTranslator(&translator);
+        player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
+                         : std::make_unique<MocInterface>();
         if(!instance.isUnique()) {
-            player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
-                             : std::make_unique<MocInterface>();
-            player->showPlayer();
-            if(!inputFile.isEmpty() && QFile::exists(inputFile)) {
-                player->openUri(inputFile);
+            if(inputFiles.size() == 1) {
+                player->openUri(inputFiles.at(0));
+            } else if(inputFiles.size() > 1) {
+                player->appendFile(inputFiles);
+            } else {
+                qWarning("Application is already running. Showing player window.");
+                player->showPlayer();
             }
             return 0;
         }
-        player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
-                         : std::make_unique<MocInterface>();
         QSettings settings;
         initObjects(player.get(), settings);
         Q_INIT_RESOURCE(exo);
         TrayIcon trayIcon;
         Q_UNUSED(trayIcon);
-        if(!inputFile.isEmpty() && QFile::exists(inputFile)) {
-            player->openUri(inputFile);
+        if(inputFiles.size() == 1) {
+            player->openUri(inputFiles.at(0));
+        } else if(inputFiles.size() > 1) {
+            player->appendFile(inputFiles);
         }
         app.exec();
         if(settings.value(QStringLiteral("player/quit")).toBool()) {
