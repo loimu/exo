@@ -52,18 +52,13 @@ PState SpotifyInterface::updateInfo() {
     if(status != QStringLiteral("Paused") && status != QStringLiteral("Playing")) {
         return PState::Offline;
     }
-
     const QVariantMap metadata = spotify.property("Metadata").toMap();
-
     track.artist = metadata["xesam:artist"].toString();
     track.title = metadata["xesam:title"].toString();
     track.album = metadata["xesam:album"].toString();
-    track.file = QString();
-    track.totalTime = QString();
     track.totalSec = metadata["mpris:length"].toULongLong() / 1000000;
     track.currSec = spotify.property("Position").toULongLong() / 1000000;
     track.caption = QString(QStringLiteral("%1 - %2")).arg(track.artist, track.title);
-
     return status.startsWith("Playing") ? PState::Play : PState::Pause;
 }
 
