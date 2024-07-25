@@ -14,6 +14,7 @@ endif()
 
 set(exo_SRCS main.cpp
     core/cmusinterface.cpp
+    core/mocinterfacenative.cpp
     core/mocinterface.cpp
     core/playerinterface.cpp
     core/singleinstance.cpp
