@@ -35,7 +35,17 @@
 
 constexpr int MOCN_ERROR = -1;
 constexpr int INT_SIZE = sizeof(int);
-constexpr char TAG_END = static_cast<char>(0xff);
+
+struct TagInfo
+{
+    bool success = false;
+    int number = 0;
+    int time  = -1;
+    int filled = 0;
+    QString artist;
+    QString title;
+    QString album;
+};
 
 
 MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent),
@@ -49,7 +59,7 @@ MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent
 }
 
 bool MocInterfaceNative::tryConnectToServer(QLocalSocket& socket) {
-    QString path(QDir::homePath() + "/.moc/socket2");
+    QString path(QDir::homePath() + QStringLiteral("/.moc/socket2"));
     socket.connectToServer(path);
     if(socket.waitForConnected()) {
         return true;
@@ -71,77 +81,94 @@ void MocInterfaceNative::writeInt(QLocalSocket& socket, int command) {
 int MocInterfaceNative::readInt(QLocalSocket& socket) {
     QByteArray buf = socket.read(INT_SIZE);
     const char* data = buf.constData();
-    int result = (
+    return (
         static_cast<int>(static_cast<unsigned char>(data[0])) |
         (static_cast<int>(static_cast<unsigned char>(data[1])) << 8) |
         (static_cast<int>(static_cast<unsigned char>(data[2])) << 16)|
         (static_cast<int>(static_cast<unsigned char>(data[3])) << 24)
         );  // would not work on big endian platform
-    return result;
 }
 
-bool MocInterfaceNative::readPingResponse(QLocalSocket& socket) {
-    if(socket.waitForReadyRead()) {
-        int result = readInt(socket);
-        if(result == EV_PONG) {
-            return true;
-        }
-    }
-    return false;
-}
-
-int MocInterfaceNative::readIntResponse(QLocalSocket& socket) {
-    if(socket.waitForReadyRead()) {
-        int result = readInt(socket);
-        if(result == EV_DATA) {
-            return readInt(socket);
-        }
-    }
-    return MOCN_ERROR;
-}
-
-QString MocInterfaceNative::readStringResponse(QLocalSocket& socket) {
-    int result = readIntResponse(socket);
-    if(result > 0) {
-        QByteArray buf = socket.read(result);
+QString MocInterfaceNative::readString(QLocalSocket& socket) {
+    int length = readInt(socket);
+    if(length > 0) {
+        QByteArray buf = socket.read(length);
         return QString::fromLocal8Bit(buf);
     }
     return QString();
 }
 
-QVector<QString> MocInterfaceNative::readTagResponse(QLocalSocket& socket) {
-    int result = readIntResponse(socket);
-    QVector<QString> data;
-    while(result > 0) {
-        QByteArray buf = socket.read(result);
-        if(buf.contains(TAG_END) && buf.contains(QByteArray(TAG_END, result))) {
-            qDebug("Complete!");
-            break;
-        }
-        data.append(QString::fromLocal8Bit(buf));
-        result = readInt(socket);
+bool MocInterfaceNative::readPingResponse(QLocalSocket& socket) {
+    int result = readInt(socket);
+    if(result == EV_PONG) {
+        return true;
     }
+    return false;
+}
+
+int MocInterfaceNative::readIntResponse(QLocalSocket& socket) {
+    int result = readInt(socket);
+    if(result == EV_DATA) {
+        return readInt(socket);
+    }
+    return MOCN_ERROR;
+}
+
+QString MocInterfaceNative::readStringResponse(QLocalSocket& socket) {
+    int result = readInt(socket);
+    if(result == EV_DATA) {
+        return readString(socket);
+    }
+    return QString();
+}
+
+TagInfo MocInterfaceNative::readTagResponse(QLocalSocket& socket) {
+    TagInfo data;
+        int result = readInt(socket);
+        if(result == EV_DATA) {
+            data.title = readString(socket);
+            data.artist = readString(socket);
+            data.album = readString(socket);
+            data.number = readInt(socket);
+            data.time = readInt(socket);
+            data.filled = readInt(socket);
+            data.success = true;
+        } else {
+            data.success = false;
+        }
     return data;
 }
 
 bool MocInterfaceNative::sendPingCommand(QLocalSocket& socket) {
     writeInt(socket, CMD_PING);
-    return readPingResponse(socket);
+    if(socket.waitForReadyRead()) {
+        return readPingResponse(socket);
+    }
+    return false;
 }
 
 int MocInterfaceNative::sendCommand(QLocalSocket& socket, int command) {
     writeInt(socket, command);
-    return readIntResponse(socket);
+    if(socket.waitForReadyRead()) {
+        return readIntResponse(socket);
+    }
+    return MOCN_ERROR;
 }
 
 QString MocInterfaceNative::sendStringCommand(QLocalSocket& socket, int command) {
     writeInt(socket, command);
-    return readStringResponse(socket);
+    if(socket.waitForReadyRead()) {
+        return readStringResponse(socket);
+    }
+    return QString();
 }
 
-QVector<QString> MocInterfaceNative::sendTagCommand(QLocalSocket& socket) {
+TagInfo MocInterfaceNative::sendTagCommand(QLocalSocket& socket) {
     writeInt(socket, CMD_GET_TAGS);
-    return readTagResponse(socket);
+    if(socket.waitForReadyRead()) {
+        return readTagResponse(socket);
+    }
+    return TagInfo();
 }
 
 void MocInterfaceNative::runServer() {
@@ -178,9 +205,11 @@ PState MocInterfaceNative::updateInfo() {
 
     const QString file = sendStringCommand(socket, CMD_GET_SNAME);
     const int ctime = sendCommand(socket, CMD_GET_CTIME);
-    const QVector<QString> tagInfo = sendTagCommand(socket);
+    const TagInfo tagInfo = sendTagCommand(socket);
 
     socket.disconnectFromServer();
+
+    int trackNumber = 0;
 
     if(!file.isEmpty()) {
         track.file = std::move(file);
@@ -188,18 +217,25 @@ PState MocInterfaceNative::updateInfo() {
     if(ctime > 0) {
         track.currSec = ctime;
     }
-    if(tagInfo.size() == 3) {
-        track.title = std::move(tagInfo.at(0));
-        track.artist = std::move(tagInfo.at(1));
-        track.album = std::move(tagInfo.at(2));
+    if(tagInfo.success
+        && !tagInfo.artist.isEmpty() && !tagInfo.title.isEmpty()) {
+        track.title = std::move(tagInfo.title);
+        track.artist = std::move(tagInfo.artist);
+        track.album = std::move(tagInfo.album);
+        trackNumber = tagInfo.number;
+        track.totalSec = tagInfo.filled ? tagInfo.time : 10*60;
     } else {
         return state;
     }
 
     track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
-    track.caption = track.isStream ? track.title
-                                   : QString("%1 - %2").arg(track.artist, track.title);
-    track.totalSec = 10*60;
+    track.caption = track.isStream
+                        ? track.title
+                        : QString("%1 %2 - %3 (%4)").arg(
+                              QString::number(trackNumber),
+                              track.artist,
+                              track.title,
+                              track.album);
     track.totalTime = QTime().addSecs(track.totalSec).toString("mm::ss");
 
     if(track.isStream) {
