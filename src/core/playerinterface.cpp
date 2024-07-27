@@ -47,7 +47,6 @@ PlayerInterface::PlayerInterface(QObject* parent) : QObject(parent)
 }
 
 void PlayerInterface::notify() {
-    track.caption.clear();
     static PState state = PState::Offline;
     PState currentState = updateInfo();
     if(state != currentState) {

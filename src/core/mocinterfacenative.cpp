@@ -35,12 +35,7 @@
 
 constexpr int MOCN_ERROR = -1;
 constexpr int INT_SIZE = sizeof(int);
-
-constexpr char TAG_END[] = {
-    static_cast<char>(0xff),
-    static_cast<char>(0xff),
-    static_cast<char>(0xff)
-};
+constexpr char TAG_END = static_cast<char>(0xff);
 
 
 MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent),
@@ -119,7 +114,7 @@ QVector<QString> MocInterfaceNative::readTagResponse(QLocalSocket& socket) {
     QVector<QString> data;
     while(result > 0) {
         QByteArray buf = socket.read(result);
-        if(buf == QByteArray(TAG_END)) {
+        if(buf.contains(TAG_END) && buf.contains(QByteArray(TAG_END, result))) {
             qDebug("Complete!");
             break;
         }
@@ -165,6 +160,7 @@ PState MocInterfaceNative::updateInfo() {
         state = PState::Offline;
     }
     if(!sendPingCommand(socket)) {
+        socket.disconnectFromServer();
         return state;
     }
 
@@ -176,6 +172,7 @@ PState MocInterfaceNative::updateInfo() {
     else if(receivedState == STATE_PAUSE)
         state = PState::Pause;
     else {
+        socket.disconnectFromServer();
         return state;
     }
 
@@ -188,16 +185,18 @@ PState MocInterfaceNative::updateInfo() {
     if(!file.isEmpty()) {
         track.file = std::move(file);
     }
-    track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
+    if(ctime > 0) {
+        track.currSec = ctime;
+    }
     if(tagInfo.size() == 3) {
         track.title = std::move(tagInfo.at(0));
         track.artist = std::move(tagInfo.at(1));
         track.album = std::move(tagInfo.at(2));
-    }
-    if(ctime > 0) {
-        track.currSec = ctime;
+    } else {
+        return state;
     }
 
+    track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
     track.caption = track.isStream ? track.title
                                    : QString("%1 - %2").arg(track.artist, track.title);
     track.totalSec = 10*60;
