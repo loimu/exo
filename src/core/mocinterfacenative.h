@@ -22,7 +22,8 @@
 
 #include "playerinterface.h"
 
-#include <QLocalSocket>
+class QLocalSocket;
+
 
 class MocInterfaceNative : public PlayerInterface
 {
@@ -33,16 +34,17 @@ class MocInterfaceNative : public PlayerInterface
 
     PState state = PState::Offline;
 
-    QLocalSocket socket;
-    void tryConnectToServer();
-    void writeInt(int command);
-    int readInt();
-    int readIntCommand();
-    QString readStringCommand();
-    QVector<QString> readTagCommand();
-    int sendCommand(int command);
-    QString sendStringCommand(int command);
-    QVector<QString> sendTagCommand(int command);
+    bool tryConnectToServer(QLocalSocket& socket);
+    void writeInt(QLocalSocket& socket, int command);
+    int readInt(QLocalSocket& socket);
+    bool readPingResponse(QLocalSocket& socket);
+    int readIntResponse(QLocalSocket& socket);
+    QString readStringResponse(QLocalSocket& socket);
+    QVector<QString> readTagResponse(QLocalSocket& socket);
+    bool sendPingCommand(QLocalSocket& socket);
+    int sendCommand(QLocalSocket& socket, int command);
+    QString sendStringCommand(QLocalSocket& socket, int command);
+    QVector<QString> sendTagCommand(QLocalSocket& socket);
 
 public:
     explicit MocInterfaceNative(QObject* parent = nullptr);

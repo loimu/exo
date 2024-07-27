@@ -22,20 +22,25 @@
 #include <QVector>
 #include <QStringList>
 #include <QProcess>
-#include <QRegularExpression>
-
+#include <QLocalSocket>
 #include <QTime>
 #include <QDir>
-#include "./socket/protocol.h"
 
+#include "socket/protocol.h"
 #include "sysutils.h"
 #include "mocinterfacenative.h"
 
 #define OSD_OPT "OnSongChange=" INSTALL_PREFIX "/bin/moc-osd"
 #define PLAYER_EXECUTABLE "mocp"
 
-#define MOCN_ERROR -1
-#define INT_SIZE sizeof(int)
+constexpr int MOCN_ERROR = -1;
+constexpr int INT_SIZE = sizeof(int);
+
+constexpr char TAG_END[] = {
+    static_cast<char>(0xff),
+    static_cast<char>(0xff),
+    static_cast<char>(0xff)
+};
 
 
 MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent),
@@ -43,96 +48,105 @@ MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent
 {
     if(SysUtils::findProcessId(player) < 0)  // check if player is running
         QProcess::startDetached(
-                    player,
-                    QStringList{QStringLiteral("-SO"),QStringLiteral(OSD_OPT)});
+            player,
+            QStringList{QStringLiteral("-SO"),QStringLiteral(OSD_OPT)});
     startTimer(1000);
-
-    connect(&socket, &QLocalSocket::disconnected,
-            this, [this] { qWarning("disconecting!"); state = PState::Offline; });
 }
 
-void MocInterfaceNative::tryConnectToServer() {
+bool MocInterfaceNative::tryConnectToServer(QLocalSocket& socket) {
     QString path(QDir::homePath() + "/.moc/socket2");
     socket.connectToServer(path);
-    if (socket.waitForConnected()) {
-        qDebug("Connected!");
-        state = PState::Stop;
+    if(socket.waitForConnected()) {
+        return true;
     }
+    return false;
 }
 
-void MocInterfaceNative::writeInt(int command) {
-    // would not work on big endian platform
+void MocInterfaceNative::writeInt(QLocalSocket& socket, int command) {
     const char data[] = {
         static_cast<char>(command & 0xFF),
         static_cast<char>((command >> 8) & 0xFF),
         static_cast<char>((command >> 16) & 0xFF),
         static_cast<char>((command >> 24) & 0xFF)
-    };
+    };  // would not work on big endian platform
     socket.write(QByteArray::fromRawData(data, sizeof(data)));
     socket.waitForBytesWritten();
 }
 
-int MocInterfaceNative::readInt() {
+int MocInterfaceNative::readInt(QLocalSocket& socket) {
     QByteArray buf = socket.read(INT_SIZE);
     const char* data = buf.constData();
-    // would not work on big endian platform
     int result = (
         static_cast<int>(static_cast<unsigned char>(data[0])) |
         (static_cast<int>(static_cast<unsigned char>(data[1])) << 8) |
         (static_cast<int>(static_cast<unsigned char>(data[2])) << 16)|
         (static_cast<int>(static_cast<unsigned char>(data[3])) << 24)
-        );
+        );  // would not work on big endian platform
     return result;
 }
 
-int MocInterfaceNative::readIntCommand() {
+bool MocInterfaceNative::readPingResponse(QLocalSocket& socket) {
     if(socket.waitForReadyRead()) {
-        int result = readInt();
+        int result = readInt(socket);
+        if(result == EV_PONG) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int MocInterfaceNative::readIntResponse(QLocalSocket& socket) {
+    if(socket.waitForReadyRead()) {
+        int result = readInt(socket);
         if(result == EV_DATA) {
-            return readInt();
+            return readInt(socket);
         }
     }
     return MOCN_ERROR;
 }
 
-QString MocInterfaceNative::readStringCommand() {
-    int result = readIntCommand();
+QString MocInterfaceNative::readStringResponse(QLocalSocket& socket) {
+    int result = readIntResponse(socket);
     if(result > 0) {
-        qDebug() << "trying to read " << result << " bytes!";
         QByteArray buf = socket.read(result);
         return QString::fromLocal8Bit(buf);
     }
     return QString();
 }
 
-QVector<QString> MocInterfaceNative::readTagCommand() {
-    int result = readIntCommand();
+QVector<QString> MocInterfaceNative::readTagResponse(QLocalSocket& socket) {
+    int result = readIntResponse(socket);
     QVector<QString> data;
-    if(result > 0 && result < INT_MAX) {
-        for(int i=0; i<3; i++) {
-            qDebug() << "trying to read " << result << " bytes!";
-            QByteArray buf = socket.read(result);
-            data.append(QString::fromLocal8Bit(buf));
-            result = readInt();
+    while(result > 0) {
+        QByteArray buf = socket.read(result);
+        if(buf == QByteArray(TAG_END)) {
+            qDebug("Complete!");
+            break;
         }
+        data.append(QString::fromLocal8Bit(buf));
+        result = readInt(socket);
     }
-    socket.readAll();  //flush
     return data;
 }
 
-int MocInterfaceNative::sendCommand(int command) {
-    writeInt(command);
-    return readIntCommand();
+bool MocInterfaceNative::sendPingCommand(QLocalSocket& socket) {
+    writeInt(socket, CMD_PING);
+    return readPingResponse(socket);
 }
 
-QString MocInterfaceNative::sendStringCommand(int command) {
-    writeInt(command);
-    return readStringCommand();
+int MocInterfaceNative::sendCommand(QLocalSocket& socket, int command) {
+    writeInt(socket, command);
+    return readIntResponse(socket);
 }
 
-QVector<QString> MocInterfaceNative::sendTagCommand(int command) {
-    writeInt(command);
-    return readTagCommand();
+QString MocInterfaceNative::sendStringCommand(QLocalSocket& socket, int command) {
+    writeInt(socket, command);
+    return readStringResponse(socket);
+}
+
+QVector<QString> MocInterfaceNative::sendTagCommand(QLocalSocket& socket) {
+    writeInt(socket, CMD_GET_TAGS);
+    return readTagResponse(socket);
 }
 
 void MocInterfaceNative::runServer() {
@@ -146,32 +160,46 @@ void MocInterfaceNative::runServer() {
 }
 
 PState MocInterfaceNative::updateInfo() {
-    if(state == PState::Offline) {
-        tryConnectToServer();
+    QLocalSocket socket;
+    if(!tryConnectToServer(socket)) {
+        state = PState::Offline;
+    }
+    if(!sendPingCommand(socket)) {
+        return state;
     }
 
-    int receivedState = sendCommand(CMD_GET_STATE);
+    int receivedState = sendCommand(socket, CMD_GET_STATE);
     if(receivedState == STATE_STOP)
         return PState::Stop;
     else if(receivedState == STATE_PLAY)
         state = PState::Play;
     else if(receivedState == STATE_PAUSE)
         state = PState::Pause;
-    else
-        qWarning() << "invalid state info";
-
-    track.file = sendStringCommand(CMD_GET_SNAME);
-    track.currSec = sendCommand(CMD_GET_CTIME);
-    track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
-
-    QVector<QString> tagInfo = sendTagCommand(CMD_GET_TAGS);
-    if(tagInfo.size() == 3) {
-        track.artist = std::move(tagInfo.at(0));
-        track.title = std::move(tagInfo.at(1));
-        track.album = std::move(tagInfo.at(2));
+    else {
+        return state;
     }
 
-    track.caption = QString();
+    const QString file = sendStringCommand(socket, CMD_GET_SNAME);
+    const int ctime = sendCommand(socket, CMD_GET_CTIME);
+    const QVector<QString> tagInfo = sendTagCommand(socket);
+
+    socket.disconnectFromServer();
+
+    if(!file.isEmpty()) {
+        track.file = std::move(file);
+    }
+    track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
+    if(tagInfo.size() == 3) {
+        track.title = std::move(tagInfo.at(0));
+        track.artist = std::move(tagInfo.at(1));
+        track.album = std::move(tagInfo.at(2));
+    }
+    if(ctime > 0) {
+        track.currSec = ctime;
+    }
+
+    track.caption = track.isStream ? track.title
+                                   : QString("%1 - %2").arg(track.artist, track.title);
     track.totalSec = 10*60;
     track.totalTime = QTime().addSecs(track.totalSec).toString("mm::ss");
 
@@ -191,9 +219,13 @@ const QString MocInterfaceNative::id() const {
 }
 
 #define SEND_COMMAND(__method, __option)\
-    void MocInterfaceNative::__method() {\
-        sendCommand(__option);\
-    }
+void MocInterfaceNative::__method() {\
+        QLocalSocket socket;\
+        tryConnectToServer(socket);\
+        sendCommand(socket, __option);\
+        socket.disconnectFromServer();\
+        socket.waitForDisconnected();\
+}
 
 SEND_COMMAND(play, CMD_PLAY)
 SEND_COMMAND(pause,CMD_PAUSE)
@@ -248,5 +280,5 @@ void MocInterfaceNative::timerEvent(QTimerEvent* event) {
 }
 
 void MocInterfaceNative::shutdown() {
-
+    // nothing to shutdown as far as we are not triggering QProcess periodically
 }
