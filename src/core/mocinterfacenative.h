@@ -38,6 +38,7 @@ class MocInterfaceNative : public PlayerInterface
     bool tryConnectToServer(QLocalSocket& socket);
     void writeInt(QLocalSocket& socket, int command);
     int readInt(QLocalSocket& socket);
+    void writeString(QLocalSocket& socket, const QString& string);
     QString readString(QLocalSocket& socket);
     bool readPingResponse(QLocalSocket& socket);
     int readIntResponse(QLocalSocket& socket);

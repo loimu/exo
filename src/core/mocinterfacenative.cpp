@@ -37,6 +37,7 @@ constexpr int MOCN_ERROR = -1;
 constexpr int INT_SIZE = sizeof(int);
 constexpr int TAGS_TIME	= 0x02;
 
+
 struct TagInfo
 {
     bool success = false;
@@ -90,6 +91,11 @@ int MocInterfaceNative::readInt(QLocalSocket& socket) {
         );  // would not work on big endian platform
 }
 
+void MocInterfaceNative::writeString(QLocalSocket& socket, const QString& string) {
+    socket.write(QByteArray(string.toLocal8Bit()));
+    socket.waitForBytesWritten();
+}
+
 QString MocInterfaceNative::readString(QLocalSocket& socket) {
     int length = readInt(socket);
     if(length > 0) {
@@ -125,18 +131,18 @@ QString MocInterfaceNative::readStringResponse(QLocalSocket& socket) {
 
 TagInfo MocInterfaceNative::readTagResponse(QLocalSocket& socket) {
     TagInfo data;
-        int result = readInt(socket);
-        if(result == EV_DATA) {
-            data.title = readString(socket);
-            data.artist = readString(socket);
-            data.album = readString(socket);
-            data.number = readInt(socket);
-            data.time = readInt(socket);
-            data.filled = readInt(socket);
-            data.success = true;
-        } else {
-            data.success = false;
-        }
+    int result = readInt(socket);
+    if(result == EV_DATA) {
+        data.title = readString(socket);
+        data.artist = readString(socket);
+        data.album = readString(socket);
+        data.number = readInt(socket);
+        data.time = readInt(socket);
+        data.filled = readInt(socket);
+        data.success = true;
+    } else {
+        data.success = false;
+    }
     return data;
 }
 
@@ -243,7 +249,7 @@ PState MocInterfaceNative::updateInfo() {
                               track.artist,
                               track.title,
                               track.album);
-    track.totalTime = QTime().addSecs(track.totalSec).toString("mm::ss");
+    track.totalTime = QTime(0, 0, 0).addSecs(track.totalSec).toString("mm::ss");
 
     if(track.isStream) {
         track.totalSec = 10*60;
