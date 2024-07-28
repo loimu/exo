@@ -154,7 +154,21 @@ bool MocInterfaceNative::sendPingCommand(QLocalSocket& socket) {
     return false;
 }
 
-int MocInterfaceNative::sendCommand(QLocalSocket& socket, int command) {
+void MocInterfaceNative::sendCommand(QLocalSocket& socket, int command) {
+    writeInt(socket, command);
+}
+
+void MocInterfaceNative::sendCommandParam(QLocalSocket& socket, int command, int param) {
+    writeInt(socket, command);
+    writeInt(socket, param);
+}
+
+void MocInterfaceNative::sendCommandParam(QLocalSocket& socket, int command, const QString& param) {
+    writeInt(socket, command);
+    writeString(socket, param);
+}
+
+int MocInterfaceNative::sendIntCommand(QLocalSocket& socket, int command) {
     writeInt(socket, command);
     if(socket.waitForReadyRead()) {
         return readIntResponse(socket);
@@ -200,9 +214,9 @@ PState MocInterfaceNative::updateInfo() {
         return state;
     }
 
-    int receivedState = sendCommand(socket, CMD_GET_STATE);
+    int receivedState = sendIntCommand(socket, CMD_GET_STATE);
     if(receivedState == STATE_STOP) {
-        state = PState::Offline;
+        state = PState::Stop;
         track.caption.clear();
         return state;
     }
@@ -216,7 +230,7 @@ PState MocInterfaceNative::updateInfo() {
     }
 
     const QString file = sendStringCommand(socket, CMD_GET_SNAME);
-    const int ctime = sendCommand(socket, CMD_GET_CTIME);
+    const int ctime = sendIntCommand(socket, CMD_GET_CTIME);
     const TagInfo tagInfo = sendTagCommand(socket);
 
     socket.disconnectFromServer();
@@ -249,7 +263,7 @@ PState MocInterfaceNative::updateInfo() {
                               track.artist,
                               track.title,
                               track.album);
-    track.totalTime = QTime(0, 0, 0).addSecs(track.totalSec).toString("mm::ss");
+    track.totalTime = QTime(0, 0, 0).addSecs(track.totalSec).toString("mm:ss");
 
     if(track.isStream) {
         track.totalSec = 10*60;
@@ -266,15 +280,6 @@ const QString MocInterfaceNative::id() const {
     return QStringLiteral("music on console");
 }
 
-#define SEND_COMMAND_OLD(__method, __option)\
-void MocInterfaceNative::__method() {\
-        QProcess::startDetached(player, QStringList{QStringLiteral(__option)});\
-}
-
-SEND_COMMAND_OLD(play, "-p")
-SEND_COMMAND_OLD(pause,"-P")
-SEND_COMMAND_OLD(playPause, "-G")
-
 #define SEND_COMMAND(__method, __option)\
 void MocInterfaceNative::__method() {\
         QLocalSocket socket;\
@@ -283,22 +288,63 @@ void MocInterfaceNative::__method() {\
         socket.disconnectFromServer();\
 }
 
-SEND_COMMAND(prev, CMD_PREV)
-SEND_COMMAND(next, CMD_NEXT)
-SEND_COMMAND(stop, CMD_STOP)
 SEND_COMMAND(quit, CMD_QUIT)
 SEND_COMMAND(clearPlaylist, CMD_CLI_PLIST_CLEAR)
 
 #define SEND_COMMAND_PARAM(__method, __option)\
-    void MocInterfaceNative::__method(int param) {\
-    QProcess::startDetached(player,\
-    QStringList() << QString(QStringLiteral(__option)).arg(param));\
-    }
+void MocInterfaceNative::__method(int param) {\
+        QLocalSocket socket;\
+        tryConnectToServer(socket);\
+        sendCommandParam(socket, __option, param);\
+        socket.disconnectFromServer();\
+}
 
-SEND_COMMAND_PARAM(jump, "-j%1s")
-SEND_COMMAND_PARAM(seek, "-k%1")
-SEND_COMMAND_PARAM(volume, "-v%1")
-SEND_COMMAND_PARAM(changeVolume, "-v+%1")
+SEND_COMMAND_PARAM(jump, CMD_JUMP_TO)
+SEND_COMMAND_PARAM(seek, CMD_SEEK)
+SEND_COMMAND_PARAM(volume, CMD_SET_MIXER)
+
+#define SEND_COMMAND_PARAM_EMPTY(__method, __option)\
+void MocInterfaceNative::__method() {\
+        QLocalSocket socket;\
+        tryConnectToServer(socket);\
+        sendCommandParam(socket, __option, CMD_DISCONNECT);\
+        socket.disconnectFromServer();\
+}
+
+SEND_COMMAND_PARAM_EMPTY(stop, CMD_STOP)
+SEND_COMMAND_PARAM_EMPTY(pause, CMD_PAUSE)
+SEND_COMMAND_PARAM_EMPTY(prev, CMD_PREV)
+SEND_COMMAND_PARAM_EMPTY(next, CMD_NEXT)
+
+void MocInterfaceNative::play() {
+        QLocalSocket socket;
+        tryConnectToServer(socket);
+        sendCommandParam(socket, CMD_PLAY, QString());
+        socket.disconnectFromServer();
+}
+
+void MocInterfaceNative::playPause() {
+    QLocalSocket socket;
+    tryConnectToServer(socket);
+    int result = sendIntCommand(socket, CMD_GET_STATE);
+    if(result == STATE_PAUSE) {
+        sendCommandParam(socket, CMD_UNPAUSE, CMD_DISCONNECT);
+    }
+    else if (result == STATE_PLAY) {
+        sendCommandParam(socket, CMD_PAUSE, CMD_DISCONNECT);
+    }
+    socket.disconnectFromServer();
+}
+
+void MocInterfaceNative::changeVolume(int diff) {
+    QLocalSocket socket;
+    tryConnectToServer(socket);
+    int result = sendIntCommand(socket, CMD_GET_MIXER);
+    result += diff;
+    qBound(0, result, 100);
+    sendCommandParam(socket, CMD_SET_MIXER, result);
+    socket.disconnectFromServer();
+}
 
 void MocInterfaceNative::showPlayer() {
     const QVector<QString> apps = SysUtils::findFullPaths(
