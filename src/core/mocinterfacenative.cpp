@@ -61,7 +61,7 @@ MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent
 bool MocInterfaceNative::tryConnectToServer(QLocalSocket& socket) {
     QString path(QDir::homePath() + QStringLiteral("/.moc/socket2"));
     socket.connectToServer(path);
-    if(socket.waitForConnected()) {
+    if(socket.waitForConnected(500)) {
         return true;
     }
     return false;
@@ -253,18 +253,23 @@ const QString MocInterfaceNative::id() const {
     return QStringLiteral("music on console");
 }
 
+#define SEND_COMMAND_OLD(__method, __option)\
+void MocInterfaceNative::__method() {\
+        QProcess::startDetached(player, QStringList{QStringLiteral(__option)});\
+}
+
+SEND_COMMAND_OLD(play, "-p")
+SEND_COMMAND_OLD(pause,"-P")
+SEND_COMMAND_OLD(playPause, "-G")
+
 #define SEND_COMMAND(__method, __option)\
 void MocInterfaceNative::__method() {\
         QLocalSocket socket;\
         tryConnectToServer(socket);\
         sendCommand(socket, __option);\
         socket.disconnectFromServer();\
-        socket.waitForDisconnected();\
 }
 
-SEND_COMMAND(play, CMD_PLAY)
-SEND_COMMAND(pause,CMD_PAUSE)
-SEND_COMMAND(playPause,CMD_PAUSE)
 SEND_COMMAND(prev, CMD_PREV)
 SEND_COMMAND(next, CMD_NEXT)
 SEND_COMMAND(stop, CMD_STOP)
