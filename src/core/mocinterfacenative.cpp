@@ -243,8 +243,7 @@ PState MocInterfaceNative::updateInfo() {
     if(ctime > 0) {
         track.currSec = ctime;
     }
-    if(tagInfo.success
-        && !tagInfo.artist.isEmpty() && !tagInfo.title.isEmpty()) {
+    if(tagInfo.success && !tagInfo.title.isEmpty()) {
         track.title = std::move(tagInfo.title);
         track.artist = std::move(tagInfo.artist);
         track.album = std::move(tagInfo.album);
@@ -303,25 +302,19 @@ SEND_COMMAND_PARAM(jump, CMD_JUMP_TO)
 SEND_COMMAND_PARAM(seek, CMD_SEEK)
 SEND_COMMAND_PARAM(volume, CMD_SET_MIXER)
 
-#define SEND_COMMAND_PARAM_EMPTY(__method, __option)\
+#define SEND_COMMAND_PARAM_EMPTY(__method, __option, __final)\
 void MocInterfaceNative::__method() {\
         QLocalSocket socket;\
         tryConnectToServer(socket);\
-        sendCommandParam(socket, __option, CMD_DISCONNECT);\
+        sendCommandParam(socket, __option, __final);\
         socket.disconnectFromServer();\
 }
 
-SEND_COMMAND_PARAM_EMPTY(stop, CMD_STOP)
-SEND_COMMAND_PARAM_EMPTY(pause, CMD_PAUSE)
-SEND_COMMAND_PARAM_EMPTY(prev, CMD_PREV)
-SEND_COMMAND_PARAM_EMPTY(next, CMD_NEXT)
-
-void MocInterfaceNative::play() {
-        QLocalSocket socket;
-        tryConnectToServer(socket);
-        sendCommandParam(socket, CMD_PLAY, QString());
-        socket.disconnectFromServer();
-}
+SEND_COMMAND_PARAM_EMPTY(stop, CMD_STOP, CMD_DISCONNECT)
+SEND_COMMAND_PARAM_EMPTY(play, CMD_PLAY, QString())
+SEND_COMMAND_PARAM_EMPTY(pause, CMD_PAUSE, CMD_DISCONNECT)
+SEND_COMMAND_PARAM_EMPTY(prev, CMD_PREV, CMD_DISCONNECT)
+SEND_COMMAND_PARAM_EMPTY(next, CMD_NEXT, CMD_DISCONNECT)
 
 void MocInterfaceNative::playPause() {
     QLocalSocket socket;
@@ -348,17 +341,20 @@ void MocInterfaceNative::changeVolume(int diff) {
 
 void MocInterfaceNative::showPlayer() {
     const QVector<QString> apps = SysUtils::findFullPaths(
-                QVector<QString> {
-                    QStringLiteral("x-terminal-emulator"),
-                    QStringLiteral("gnome-terminal"),
-                    QStringLiteral("konsole"),
-                    QStringLiteral("xfce4-terminal"),
-                    QStringLiteral("lxterminal") });
+        QVector<QString> {
+            QStringLiteral("x-terminal-emulator"),
+            QStringLiteral("gnome-terminal"),
+            QStringLiteral("konsole"),
+            QStringLiteral("xfce4-terminal"),
+            QStringLiteral("lxterminal"),
+            QStringLiteral("alacritty"),
+            QStringLiteral("urxvt")
+        });
     const QString term = apps.isEmpty() ? QStringLiteral("xterm") : apps.at(0);
     QProcess::startDetached(
-                term,
-                QStringList{QStringLiteral("-e"),
-                            QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
+        term,
+        QStringList{QStringLiteral("-e"),
+                    QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
 }
 
 void MocInterfaceNative::openUri(const QString& file) {
