@@ -288,7 +288,6 @@ void MocInterfaceNative::__method() {\
 }
 
 SEND_COMMAND(quit, CMD_QUIT)
-SEND_COMMAND(clearPlaylist, CMD_CLI_PLIST_CLEAR)
 
 #define SEND_COMMAND_PARAM(__method, __option)\
 void MocInterfaceNative::__method(int param) {\
@@ -311,7 +310,6 @@ void MocInterfaceNative::__method() {\
 }
 
 SEND_COMMAND_PARAM_EMPTY(stop, CMD_STOP, CMD_DISCONNECT)
-SEND_COMMAND_PARAM_EMPTY(play, CMD_PLAY, QString())
 SEND_COMMAND_PARAM_EMPTY(pause, CMD_PAUSE, CMD_DISCONNECT)
 SEND_COMMAND_PARAM_EMPTY(prev, CMD_PREV, CMD_DISCONNECT)
 SEND_COMMAND_PARAM_EMPTY(next, CMD_NEXT, CMD_DISCONNECT)
@@ -357,6 +355,13 @@ void MocInterfaceNative::showPlayer() {
                     QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
 }
 
+// native playlist operations is going to be the next big thing to implement here
+void MocInterfaceNative::play() {
+    runServer();
+    QProcess::startDetached(player,
+                            QStringList() << QStringLiteral("-p"));
+}
+
 void MocInterfaceNative::openUri(const QString& file) {
     runServer();
     QProcess::startDetached(player,
@@ -367,6 +372,11 @@ void MocInterfaceNative::appendFile(const QStringList& files) {
     runServer();
     QProcess::startDetached(player,
                             QStringList() << QStringLiteral("-a") << files);
+}
+
+void MocInterfaceNative::clearPlaylist() {
+    QProcess::startDetached(player,
+                            QStringList() << QStringLiteral("-c"));
 }
 
 void MocInterfaceNative::timerEvent(QTimerEvent* event) {
