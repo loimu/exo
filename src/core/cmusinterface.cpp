@@ -61,11 +61,15 @@ QString CmusInterface::find(const QString& string, const QString& regexp) {
 
 PState CmusInterface::updateInfo() {
     const QString info = cmus->readAllStandardOutput();
-    if(info.isEmpty())
+    if(info.isEmpty()) {
+        track.caption.clear();
         return PState::Offline;
+    }
     const QString string = find(info, QStringLiteral("status\\s(.*)"));
-    if(string == QLatin1String("stopped"))
+    if(string == QLatin1String("stopped")) {
+        track.caption.clear();
         return PState::Stop;
+    }
     PState state = PState::Offline;
     if(string == QLatin1String("playing"))
         state = PState::Play;

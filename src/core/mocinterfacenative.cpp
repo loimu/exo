@@ -35,6 +35,7 @@
 
 constexpr int MOCN_ERROR = -1;
 constexpr int INT_SIZE = sizeof(int);
+constexpr int TAGS_TIME	= 0x02;
 
 struct TagInfo
 {
@@ -185,6 +186,8 @@ PState MocInterfaceNative::updateInfo() {
     QLocalSocket socket;
     if(!tryConnectToServer(socket)) {
         state = PState::Offline;
+        track.caption.clear();
+        return state;
     }
     if(!sendPingCommand(socket)) {
         socket.disconnectFromServer();
@@ -192,8 +195,11 @@ PState MocInterfaceNative::updateInfo() {
     }
 
     int receivedState = sendCommand(socket, CMD_GET_STATE);
-    if(receivedState == STATE_STOP)
-        return PState::Stop;
+    if(receivedState == STATE_STOP) {
+        state = PState::Offline;
+        track.caption.clear();
+        return state;
+    }
     else if(receivedState == STATE_PLAY)
         state = PState::Play;
     else if(receivedState == STATE_PAUSE)
@@ -223,7 +229,8 @@ PState MocInterfaceNative::updateInfo() {
         track.artist = std::move(tagInfo.artist);
         track.album = std::move(tagInfo.album);
         trackNumber = tagInfo.number;
-        track.totalSec = tagInfo.filled ? tagInfo.time : 10*60;
+        int totalSec = tagInfo.filled & TAGS_TIME ? tagInfo.time : -1;
+        track.totalSec = totalSec > 0 ? totalSec : 10*60;
     } else {
         return state;
     }

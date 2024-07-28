@@ -50,6 +50,7 @@ PState SpotifyInterface::updateInfo() {
                            "org.mpris.MediaPlayer2.Player"};
     const QString status = spotify.property("PlaybackStatus").toString();
     if(status != QStringLiteral("Paused") && status != QStringLiteral("Playing")) {
+        track.caption.clear();
         return PState::Offline;
     }
     const QVariantMap metadata = spotify.property("Metadata").toMap();

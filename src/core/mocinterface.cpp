@@ -60,10 +60,14 @@ void MocInterface::runServer() {
 
 PState MocInterface::updateInfo() {
     const QString info = moc->readAllStandardOutput();
-    if(info.isEmpty())
+    if(info.isEmpty()) {
+        track.caption.clear();
         return PState::Offline;
-    if(info.startsWith(QLatin1String("STOP")))
+    }
+    if(info.startsWith(QLatin1String("STOP"))) {
+        track.caption.clear();
         return PState::Stop;
+    }
     static const QRegularExpression re(
                 QStringLiteral("^(.*)\\{a\\}(.*)\\{t\\}(.*)\\{A\\}(.*)"
                                "\\{f\\}(.*)\\{tt\\}(.*)\\{ts\\}(.*)"
