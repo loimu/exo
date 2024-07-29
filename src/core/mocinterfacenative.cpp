@@ -257,17 +257,11 @@ PState MocInterfaceNative::updateInfo() {
     }
 
     const int ctime = sendIntCommand(socket, CMD_GET_CTIME);
-    socket.disconnectFromServer();
-
-    if(!tryConnectToServer(socket)) { return state; }
     const QString file = sendStringCommand(socket, CMD_GET_SNAME);
-    socket.disconnectFromServer();
     if(!file.isEmpty()) {
         track.isStream = file.startsWith("http") || track.file.startsWith("ftp");
         track.file = std::move(file);
     }
-
-    if(!tryConnectToServer(socket)) { return state; }
     const TagInfo tagInfo = file.isEmpty()
                                 ? TagInfo() : track.isStream
                                       ? sendTagCommand(socket) : sendFileTagCommand(socket, file);
