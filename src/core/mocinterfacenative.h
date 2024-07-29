@@ -43,6 +43,7 @@ class MocInterfaceNative : public PlayerInterface
     bool readPingResponse(QLocalSocket& socket);
     int readIntResponse(QLocalSocket& socket);
     QString readStringResponse(QLocalSocket& socket);
+    void readTagInfo(QLocalSocket& socket, TagInfo& tagInfo);
     TagInfo readTagResponse(QLocalSocket& socket);
     TagInfo readFileTagResponse(QLocalSocket& socket, const QString& file);
     bool sendPingCommand(QLocalSocket& socket);

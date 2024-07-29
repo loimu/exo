@@ -131,17 +131,21 @@ QString MocInterfaceNative::readStringResponse(QLocalSocket& socket) {
     return QString();
 }
 
+void MocInterfaceNative::readTagInfo(QLocalSocket& socket, TagInfo& tagInfo) {
+    tagInfo.title = readString(socket);
+    tagInfo.artist = readString(socket);
+    tagInfo.album = readString(socket);
+    tagInfo.number = readInt(socket);
+    tagInfo.time = readInt(socket);
+    tagInfo.filled = readInt(socket);
+    tagInfo.success = true;
+}
+
 TagInfo MocInterfaceNative::readTagResponse(QLocalSocket& socket) {
     TagInfo data;
     int result = readInt(socket);
     if(result == EV_DATA) {
-        data.title = readString(socket);
-        data.artist = readString(socket);
-        data.album = readString(socket);
-        data.number = readInt(socket);
-        data.time = readInt(socket);
-        data.filled = readInt(socket);
-        data.success = true;
+        readTagInfo(socket, data);
     }
     return data;
 }
@@ -152,13 +156,7 @@ TagInfo MocInterfaceNative::readFileTagResponse(QLocalSocket& socket, const QStr
     if(result == EV_FILE_TAGS) {
         QString tagFile = readString(socket);
         if(tagFile == file) {
-            data.title = readString(socket);
-            data.artist = readString(socket);
-            data.album = readString(socket);
-            data.number = readInt(socket);
-            data.time = readInt(socket);
-            data.filled = readInt(socket);
-            data.success = true;
+            readTagInfo(socket, data);
         }
     }
     return data;
