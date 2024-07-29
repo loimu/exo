@@ -244,6 +244,7 @@ PState MocInterfaceNative::updateInfo() {
     if(receivedState == STATE_STOP) {
         state = PState::Stop;
         track.caption.clear();
+        socket.disconnectFromServer();
         return state;
     }
     else if(receivedState == STATE_PLAY)
@@ -256,31 +257,40 @@ PState MocInterfaceNative::updateInfo() {
     }
 
     const int ctime = sendIntCommand(socket, CMD_GET_CTIME);
-    const QString file = sendStringCommand(socket, CMD_GET_SNAME);
-    track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
-    const TagInfo tagInfo = track.isStream ? sendTagCommand(socket)
-                                           : sendFileTagCommand(socket, file);
     socket.disconnectFromServer();
 
-    int trackNumber = 0;
+    if(!tryConnectToServer(socket)) { return state; }
+    const QString file = sendStringCommand(socket, CMD_GET_SNAME);
+    socket.disconnectFromServer();
     if(!file.isEmpty()) {
+        track.isStream = file.startsWith("http") || track.file.startsWith("ftp");
         track.file = std::move(file);
     }
+
+    if(!tryConnectToServer(socket)) { return state; }
+    const TagInfo tagInfo = file.isEmpty()
+                                ? TagInfo() : track.isStream
+                                      ? sendTagCommand(socket) : sendFileTagCommand(socket, file);
+    socket.disconnectFromServer();
+
     if(ctime > 0) {
         track.currSec = ctime;
     }
-    if(tagInfo.success && !tagInfo.title.isEmpty()) {
+    int trackNumber = 0;
+    if(tagInfo.success) {
         track.title = std::move(tagInfo.title);
         track.artist = std::move(tagInfo.artist);
         track.album = std::move(tagInfo.album);
         trackNumber = tagInfo.number;
-        int totalSec = tagInfo.filled & TAGS_TIME ? tagInfo.time : -1;
-        track.totalSec = totalSec > 0 ? totalSec : 10*60;
+        static int totalSec = 10*60;
+        if(tagInfo.filled & TAGS_TIME && tagInfo.time > 0) {
+            totalSec = tagInfo.time;
+        }
+        track.totalSec = totalSec;
     } else {
         return state;
     }
 
-    track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
     track.caption = track.isStream
                         ? track.title
                         : QString("%1 %2 - %3 (%4)").arg(

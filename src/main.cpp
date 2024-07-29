@@ -30,6 +30,7 @@
 #include "core/singleinstance.h"
 #include "core/cmusinterface.h"
 #include "core/mocinterface.h"
+#include "core/mocinterfacenative.h"
 #include "core/spotifyinterface.h"
 #include "dbus/dbus.h"
 #include "gui/trayicon.h"
@@ -66,13 +67,14 @@ int main(int argc, char *argv[]) {
     bool useSpotify = false;
     bool forceReauth = false;
     bool useCmus = false;
+    bool useMocNative = false;
     QStringList inputFiles{};
 
     if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
             QTextStream out(stdout);
-            out << "Usage: exo [-h] [-b] [-c] [-f] [-s]\nSee also `man exo`\n";
+            out << "Usage: exo [-h] [-b] [-c] [-f] [-n] [-s]\nSee also `man exo`\n";
             return 0;
         }
         else if(arg == QByteArray("-d") || arg == QByteArray("-b")
@@ -100,6 +102,9 @@ int main(int argc, char *argv[]) {
                 QByteArray arg = argv[i];
                 if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
                     useCmus = true;
+                }
+                else if(arg == QByteArray("-n") || arg == QByteArray("--use-native")) {
+                    useMocNative = true;
                 } else {
                     if(QFile::exists(arg)) {
                         inputFiles.append(arg);
@@ -145,8 +150,9 @@ int main(int argc, char *argv[]) {
                                    QLocale::system().name() + QLatin1String(".qm"));
         Q_UNUSED(res);
         app.installTranslator(&translator);
-        player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
-                         : std::make_unique<MocInterface>();
+        player = useCmus ? std::make_unique<CmusInterface>()
+                 : useMocNative ? std::make_unique<MocInterfaceNative>()
+                                : CAST_PI(std::make_unique<MocInterface>());
         if(!instance.isUnique()) {
             if(inputFiles.size() == 1) {
                 player->openUri(inputFiles.at(0));
@@ -194,8 +200,9 @@ int main(int argc, char *argv[]) {
             return 1;
 #endif // BUILD_LASTFM
         }
-        player = useCmus ? CAST_PI(std::make_unique<CmusInterface>())
-                         : std::make_unique<MocInterface>();
+        player = useCmus ? std::make_unique<CmusInterface>()
+                 : useMocNative ? std::make_unique<MocInterfaceNative>()
+                                : CAST_PI(std::make_unique<MocInterface>());
         QSettings settings;
         initObjects(player.get(), settings);
         app.exec();
