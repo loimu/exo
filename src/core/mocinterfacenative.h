@@ -44,6 +44,7 @@ class MocInterfaceNative : public PlayerInterface
     int readIntResponse(QLocalSocket& socket);
     QString readStringResponse(QLocalSocket& socket);
     TagInfo readTagResponse(QLocalSocket& socket);
+    TagInfo readFileTagResponse(QLocalSocket& socket, const QString& file);
     bool sendPingCommand(QLocalSocket& socket);
     void sendCommand(QLocalSocket& socket, int command);
     void sendCommandParam(QLocalSocket& socket, int command, int param);
@@ -51,6 +52,7 @@ class MocInterfaceNative : public PlayerInterface
     int sendIntCommand(QLocalSocket& socket, int command);
     QString sendStringCommand(QLocalSocket& socket, int command);
     TagInfo sendTagCommand(QLocalSocket& socket);
+    TagInfo sendFileTagCommand(QLocalSocket& socket, const QString& file);
 
 public:
     explicit MocInterfaceNative(QObject* parent = nullptr);

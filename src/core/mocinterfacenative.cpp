@@ -92,7 +92,9 @@ int MocInterfaceNative::readInt(QLocalSocket& socket) {
 }
 
 void MocInterfaceNative::writeString(QLocalSocket& socket, const QString& string) {
-    socket.write(QByteArray(string.toLocal8Bit()));
+    QByteArray data(string.toLocal8Bit());
+    writeInt(socket, data.size());
+    socket.write(data);
     socket.waitForBytesWritten();
 }
 
@@ -140,8 +142,24 @@ TagInfo MocInterfaceNative::readTagResponse(QLocalSocket& socket) {
         data.time = readInt(socket);
         data.filled = readInt(socket);
         data.success = true;
-    } else {
-        data.success = false;
+    }
+    return data;
+}
+
+TagInfo MocInterfaceNative::readFileTagResponse(QLocalSocket& socket, const QString& file) {
+    TagInfo data;
+    int result = readInt(socket);
+    if(result == EV_FILE_TAGS) {
+        QString tagFile = readString(socket);
+        if(tagFile == file) {
+            data.title = readString(socket);
+            data.artist = readString(socket);
+            data.album = readString(socket);
+            data.number = readInt(socket);
+            data.time = readInt(socket);
+            data.filled = readInt(socket);
+            data.success = true;
+        }
     }
     return data;
 }
@@ -192,6 +210,16 @@ TagInfo MocInterfaceNative::sendTagCommand(QLocalSocket& socket) {
     return TagInfo();
 }
 
+TagInfo MocInterfaceNative::sendFileTagCommand(QLocalSocket& socket, const QString& file) {
+    writeInt(socket, CMD_GET_FILE_TAGS);
+    writeString(socket, file);
+    writeInt(socket, TAGS_TIME);
+    if(socket.waitForReadyRead()) {
+        return readFileTagResponse(socket, file);
+    }
+    return TagInfo();
+}
+
 void MocInterfaceNative::runServer() {
     if(SysUtils::findProcessId(player) < 0) {  // check if player is running
         QProcess p;
@@ -229,14 +257,14 @@ PState MocInterfaceNative::updateInfo() {
         return state;
     }
 
-    const QString file = sendStringCommand(socket, CMD_GET_SNAME);
     const int ctime = sendIntCommand(socket, CMD_GET_CTIME);
-    const TagInfo tagInfo = sendTagCommand(socket);
-
+    const QString file = sendStringCommand(socket, CMD_GET_SNAME);
+    track.isStream = track.file.startsWith("http") || track.file.startsWith("ftp");
+    const TagInfo tagInfo = track.isStream ? sendTagCommand(socket)
+                                           : sendFileTagCommand(socket, file);
     socket.disconnectFromServer();
 
     int trackNumber = 0;
-
     if(!file.isEmpty()) {
         track.file = std::move(file);
     }
