@@ -81,8 +81,7 @@ void MocInterfaceNative::writeInt(QLocalSocket& socket, int data) {
 
 int MocInterfaceNative::readInt(QLocalSocket& socket) {
     int data = MOCN_ERROR;
-    const QByteArray buf = socket.read(sizeof(data));
-    QDataStream read(buf);
+    QDataStream read(socket.read(sizeof(data)));
     read.setByteOrder(QDataStream::LittleEndian);
     read >> data;
     return data;
