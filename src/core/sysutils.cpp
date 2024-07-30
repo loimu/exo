@@ -21,19 +21,21 @@
 #include <QFile>
 #include <QDir>
 
+#include <QDebug>
+
 #include "sysutils.h"
 
 
 const int SysUtils::findProcessId(const QString& name) {
     const QDir procDir(QStringLiteral("/proc"));
     const QStringList pids = procDir.entryList(
-                QStringList { QStringLiteral("[0-9]???*") },
+                QStringList { QStringLiteral("[0-9]?*") },
                 QDir::Dirs|QDir::NoSymLinks|QDir::NoDotAndDotDot);
     for(const QString& pid : pids) {
-        QFile file(QString(QStringLiteral("/proc/%1/cmdline")).arg(pid));
+        QFile file(QString(QStringLiteral("/proc/%1/comm")).arg(pid));
         if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            const QString ll = file.readLine();
-            if(ll.section(QChar(0x20), 0, 0).section(QChar(0x2F), -1) == name) {
+            const QString ll = file.readLine().trimmed();
+            if(ll == name) {
                 return pid.toInt();
             }
         }
