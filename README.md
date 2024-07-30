@@ -73,6 +73,3 @@ or
 ## Tips ##
  ### Create a global hotkey to see the lyrics at any time by assigning the command below to a desired shortcut ###
     qdbus local.exo_player /exo local.exo_player.showLyricsWindow
-
-### Trick eXo into running without DBus and MPRISv2 interfaces, if needed, by resetting DISPLAY variable ###
-    DISPLAY="" exo &

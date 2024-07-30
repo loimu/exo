@@ -43,8 +43,8 @@
 #define CAST_PI static_cast<std::unique_ptr<PlayerInterface>>
 
 
-void initObjects(PlayerInterface* player, const QSettings& settings) {
-    if(!QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()) {
+void initObjects(PlayerInterface* player, const QSettings& settings, bool disableDbus = false) {
+    if(!disableDbus) {
         DBus::init(player);
     }
 #ifdef BUILD_LASTFM
@@ -55,7 +55,7 @@ void initObjects(PlayerInterface* player, const QSettings& settings) {
         player->enableStreamsScrobbling(true);
     }
 #endif // BUILD_LASTFM
-    if(QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()
+    if(disableDbus
         && !settings.value(QStringLiteral("scrobbler/enabled")).toBool()) {
         qWarning("Both scrobbler and DBus interface were disabled. "
                  "Please remember that running the app in background as such is pointless.");
@@ -63,26 +63,21 @@ void initObjects(PlayerInterface* player, const QSettings& settings) {
 }
 
 int main(int argc, char *argv[]) {
-    bool useGui = true;
-    bool useSpotify = false;
     bool forceReauth = false;
+    bool disableDbus = false;
     bool useCmus = false;
+    bool useGui = true;
     bool useMocNative = false;
+    bool useSpotify = false;
     QStringList inputFiles{};
 
     if(argc > 1) {
         QByteArray arg = argv[1];
         if(arg == QByteArray("-h") || arg == QByteArray("--help")) {
             QTextStream out(stdout);
-            out << "Usage: exo [-h] [-b] [-c] [-f] [-n] [-s]\nSee also `man exo`\n";
+            out << "Usage: exo [-h] [-b] [-c] [-f] [-n] [-s] [--disable-dbus] [file]\n"
+                   "See also `man exo`\n";
             return 0;
-        }
-        else if(arg == QByteArray("-d") || arg == QByteArray("-b")
-                || arg == QByteArray("--background")) {
-            useGui = false;
-            if(::fork() != 0) return 0;
-            if(::fork() != 0) return 0;
-            else qDebug("Running in the background");
         }
         else if(arg == QByteArray("-f") || arg == QByteArray("--force-reauth")) {
             useGui = false;
@@ -93,18 +88,31 @@ int main(int argc, char *argv[]) {
             useSpotify = true;
             if(::fork() != 0) return 0;
             if(::fork() != 0) return 0;
-            else qDebug("Running in the background as Spotify adaptor");
+            else qDebug("Running in background as Spotify adaptor");
         }
 #endif // BUILD_LASTFM
         else {
             // non-exclusive input options are being processed in a cycle
             for(int i = 1; i < argc; i++) {
                 QByteArray arg = argv[i];
-                if(arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) {
+                if(arg == QByteArray("-d") || arg == QByteArray("-b")
+                         || arg == QByteArray("--background")) {
+                    useGui = false;
+                    if(::fork() != 0) return 0;
+                    if(::fork() != 0) return 0;
+                    else qDebug("Running in background");
+                }
+                else if((arg == QByteArray("-c") || arg == QByteArray("--use-cmus")) && !useMocNative) {
+                    qDebug("Running with CMus interface enabled");
                     useCmus = true;
                 }
-                else if(arg == QByteArray("-n") || arg == QByteArray("--use-native")) {
+                else if((arg == QByteArray("-n") || arg == QByteArray("--use-native")) && !useCmus) {
+                    qDebug("Running with MOC native interface enabled");
                     useMocNative = true;
+                }
+                else if(arg == QByteArray("--disable-dbus")) {
+                    qDebug("Running without DBus and MPRISv2");
+                    disableDbus = true;
                 } else {
                     if(QFile::exists(arg)) {
                         inputFiles.append(arg);
@@ -125,12 +133,8 @@ int main(int argc, char *argv[]) {
 #ifdef BUILD_LASTFM
     if(useSpotify) {
         QCoreApplication app(argc, argv);
-        if(QString(QLatin1String(qgetenv("DISPLAY"))).isEmpty()) {
-            qWarning("No graphical session is detected");
-            return 1;
-        }
         if(!instance.isUnique()) {
-            qWarning("Application is already running");
+            qWarning("Application is already running. Exiting.");
             return 1;
         }
         player = std::make_unique<SpotifyInterface>();
@@ -165,7 +169,7 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         QSettings settings;
-        initObjects(player.get(), settings);
+        initObjects(player.get(), settings, disableDbus);
         Q_INIT_RESOURCE(exo);
         TrayIcon trayIcon;
         Q_UNUSED(trayIcon);
@@ -183,7 +187,7 @@ int main(int argc, char *argv[]) {
         /* console application */
         QCoreApplication app(argc, argv);
         if(!instance.isUnique()) {
-            qWarning("Application is already running");
+            qWarning("Application is already running. Exiting.");
             return 1;
         }
         bool res = translator.load(QApplication::applicationDirPath() +
@@ -196,7 +200,7 @@ int main(int argc, char *argv[]) {
             new ConsoleAuth(&app);
             return app.exec();
 #else
-            qWarning("Scrobbler has been disabled during the build time");
+            qWarning("Scrobbler has been disabled during build time");
             return 1;
 #endif // BUILD_LASTFM
         }
@@ -204,7 +208,7 @@ int main(int argc, char *argv[]) {
                  : useMocNative ? std::make_unique<MocInterfaceNative>()
                                 : CAST_PI(std::make_unique<MocInterface>());
         QSettings settings;
-        initObjects(player.get(), settings);
+        initObjects(player.get(), settings, disableDbus);
         app.exec();
         if(settings.value(QStringLiteral("player/quit")).toBool()) {
             player->quit();
