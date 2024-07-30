@@ -42,12 +42,7 @@ CmusInterface::CmusInterface(QObject* parent) : PlayerInterface(parent),
 
 void CmusInterface::runPlayer() {
     const QVector<QString> apps = SysUtils::findFullPaths(
-                QVector<QString> {
-                    QStringLiteral("x-terminal-emulator"),
-                    QStringLiteral("gnome-terminal"),
-                    QStringLiteral("konsole"),
-                    QStringLiteral("xfce4-terminal"),
-                    QStringLiteral("lxterminal") });
+        SysUtils::terminalApps);
     const QString term = apps.isEmpty() ? QStringLiteral("xterm") : apps.at(0);
     QProcess::startDetached(term, QStringList{QStringLiteral("-e"),
                                               QStringLiteral("cmus")});

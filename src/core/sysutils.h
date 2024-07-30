@@ -25,8 +25,10 @@
 class QString;
 
 namespace SysUtils {
-    int findProcessId(const QString& processName);
+    const int findProcessId(const QString& processName);
     const QVector<QString> findFullPaths(const QVector<QString>& executables);
+
+    extern const QVector <QString> terminalApps;
 }
 
 #endif // SYS_UTILS

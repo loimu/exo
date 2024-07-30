@@ -24,7 +24,7 @@
 #include "sysutils.h"
 
 
-int SysUtils::findProcessId(const QString& name) {
+const int SysUtils::findProcessId(const QString& name) {
     const QDir procDir(QStringLiteral("/proc"));
     const QStringList pids = procDir.entryList(
                 QStringList { QStringLiteral("[0-9]???*") },
@@ -58,3 +58,14 @@ const QVector<QString> SysUtils::findFullPaths(
     }
     return fullPaths;
 }
+
+const QVector<QString> SysUtils::terminalApps = {
+    QStringLiteral("x-terminal-emulator"),
+    QStringLiteral("gnome-terminal"),
+    QStringLiteral("mate-terminal"),
+    QStringLiteral("konsole"),
+    QStringLiteral("xfce4-terminal"),
+    QStringLiteral("lxterminal"),
+    QStringLiteral("alacritty"),
+    QStringLiteral("urxvt")
+};
