@@ -19,12 +19,13 @@
 
 #include "config.h"
 
-#include <QVector>
-#include <QStringList>
-#include <QProcess>
-#include <QLocalSocket>
-#include <QTime>
+#include <QDataStream>
 #include <QDir>
+#include <QLocalSocket>
+#include <QProcess>
+#include <QStringList>
+#include <QTime>
+#include <QVector>
 
 #include "socket/protocol.h"
 #include "sysutils.h"
@@ -34,7 +35,6 @@
 #define PLAYER_EXECUTABLE "mocp"
 
 constexpr int MOCN_ERROR = -1;
-constexpr int INT_SIZE = sizeof(int);
 constexpr int TAGS_TIME	= 0x02;
 
 
@@ -69,26 +69,23 @@ bool MocInterfaceNative::tryConnectToServer(QLocalSocket& socket) {
     return false;
 }
 
-void MocInterfaceNative::writeInt(QLocalSocket& socket, int command) {
-    const char data[] = {
-        static_cast<char>(command & 0xFF),
-        static_cast<char>((command >> 8) & 0xFF),
-        static_cast<char>((command >> 16) & 0xFF),
-        static_cast<char>((command >> 24) & 0xFF)
-    };  // would not work on big endian platform
-    socket.write(QByteArray::fromRawData(data, sizeof(data)));
+void MocInterfaceNative::writeInt(QLocalSocket& socket, int data) {
+    QByteArray buf;
+    buf.reserve(sizeof(data));
+    QDataStream write(&buf, QIODevice::WriteOnly);
+    write.setByteOrder(QDataStream::LittleEndian);
+    write << data;
+    socket.write(buf);
     socket.waitForBytesWritten();
 }
 
 int MocInterfaceNative::readInt(QLocalSocket& socket) {
-    QByteArray buf = socket.read(INT_SIZE);
-    const char* data = buf.constData();
-    return (
-        static_cast<int>(static_cast<unsigned char>(data[0])) |
-        (static_cast<int>(static_cast<unsigned char>(data[1])) << 8) |
-        (static_cast<int>(static_cast<unsigned char>(data[2])) << 16)|
-        (static_cast<int>(static_cast<unsigned char>(data[3])) << 24)
-        );  // would not work on big endian platform
+    int data = MOCN_ERROR;
+    const QByteArray buf = socket.read(sizeof(data));
+    QDataStream read(buf);
+    read.setByteOrder(QDataStream::LittleEndian);
+    read >> data;
+    return data;
 }
 
 void MocInterfaceNative::writeString(QLocalSocket& socket, const QString& string) {
