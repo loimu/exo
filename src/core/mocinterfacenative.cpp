@@ -268,6 +268,9 @@ PState MocInterfaceNative::updateInfo() {
     }
     int trackNumber = 0;
     if(tagInfo.success) {
+        if(tagInfo.title.isEmpty() && track.isStream) {
+            return state;  // workaround for unreliable tag reading
+        }
         track.title = std::move(tagInfo.title);
         track.artist = std::move(tagInfo.artist);
         track.album = std::move(tagInfo.album);
