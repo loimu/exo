@@ -8,7 +8,7 @@
 * DBus and MPRISv2 interfaces. Enables media controls in your desktop environment
 * Scrobbling to last.fm (optional)
 * Bookmarks for radio streams
-* OSD (additional Python script)
+* OSD notifications
 * Optional CMus support
 * Optional Spotify client support (limited functionality, scrobbling only)
 
@@ -22,7 +22,7 @@ sudo apt install qtbase5-dev qttools5-dev liblastfm5-dev cmake
 ```
 
 ## Runtime dependencies ##
-moc, python3-notify2, cmus(?), spotify(?)
+moc, cmus(?), spotify(?)
 
 ## Build and run ##
 ```bash

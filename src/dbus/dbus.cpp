@@ -19,11 +19,14 @@
 
 #include <QObject>
 #include <QDBusConnection>
+#include <QDBusInterface>
 
 #include "trayicon.h"
 //MPRISv2
 #include "rootobject.h"
 #include "playerobject.h"
+
+#include "playerinterface.h"
 
 #include "dbus.h"
 
@@ -60,6 +63,29 @@ void DBus::init(QObject* parent) {
     if(!connection.registerService(QSL("org.mpris.MediaPlayer2.exo"))) {
         qWarning("DBus: MPRISv2 service registration failed");
     }
+
+    // Show a system notification through a session DBus object
+    QObject::connect(PLAYER, &PlayerInterface::newTrack,
+                     parent, [connection] (const QString& cover) {
+        const PTrack track = PLAYER->getTrack();
+        const QString title = track.isStream ? track.title
+                                             : QString("%1 (%2)").arg(
+                                                   track.title, track.totalTime);
+        QDBusInterface notify{QSL("org.freedesktop.Notifications"),
+                              QSL("/org/freedesktop/Notifications"),
+                              QSL("org.freedesktop.Notifications"), connection};
+        notify.callWithArgumentList(QDBus::NoBlock, QStringLiteral("Notify"),
+                                    // signature: s u s s s as a{sv} i
+                                    QList<QVariant>{
+                                        PLAYER->id(), // app_name
+                                        quint32(0),   // replaces_id
+                                        cover,        // app_icon
+                                        track.artist, // summary
+                                        title,        // body
+                                        //  actions, hints, timeout
+                                        QStringList{}, QVariantMap{}, 10000
+                                    });
+    });
 }
 
 #include "dbus.moc"

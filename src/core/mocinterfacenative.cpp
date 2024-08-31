@@ -17,8 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "config.h"
-
 #include <QDataStream>
 #include <QDir>
 #include <QLocalSocket>
@@ -31,7 +29,6 @@
 #include "sysutils.h"
 #include "mocinterfacenative.h"
 
-#define OSD_OPT "OnSongChange=" INSTALL_PREFIX "/bin/moc-osd"
 #define PLAYER_EXECUTABLE "mocp"
 
 constexpr int MOCN_ERROR = -1;
@@ -54,9 +51,7 @@ MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent
     player(QStringLiteral(PLAYER_EXECUTABLE))
 {
     if(SysUtils::findProcessId(player) < 0)  // check if player is running
-        QProcess::startDetached(
-            player,
-            QStringList{QStringLiteral("-SO"),QStringLiteral(OSD_OPT)});
+        QProcess::startDetached(player, QStringList{});
     startTimer(1000);
 }
 
@@ -217,9 +212,7 @@ TagInfo MocInterfaceNative::sendFileTagCommand(QLocalSocket& socket, const QStri
 void MocInterfaceNative::runServer() {
     if(SysUtils::findProcessId(player) < 0) {  // check if player is running
         QProcess p;
-        p.start(player,
-                QStringList{ QStringLiteral("-SO"), QStringLiteral(OSD_OPT) },
-                QIODevice::NotOpen);
+        p.start(player, QStringList{}, QIODevice::NotOpen);
         p.waitForFinished();
     }
 }
@@ -373,7 +366,7 @@ void MocInterfaceNative::showPlayer() {
     QProcess::startDetached(
         term,
         QStringList{QStringLiteral("-e"),
-                    QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
+                    QStringLiteral(PLAYER_EXECUTABLE)});
 }
 
 // native playlist operations is going to be the next big thing to implement here

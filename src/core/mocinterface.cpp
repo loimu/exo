@@ -17,8 +17,6 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
-#include "config.h"
-
 #include <QVector>
 #include <QStringList>
 #include <QProcess>
@@ -27,7 +25,6 @@
 #include "sysutils.h"
 #include "mocinterface.h"
 
-#define OSD_OPT "OnSongChange=" INSTALL_PREFIX "/bin/moc-osd"
 #define PLAYER_EXECUTABLE "mocp"
 
 
@@ -36,9 +33,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
     player(QStringLiteral(PLAYER_EXECUTABLE))
 {
     if(SysUtils::findProcessId(player) < 0)  // check if player is running
-        QProcess::startDetached(
-                    player,
-                    QStringList{QStringLiteral("-SO"),QStringLiteral(OSD_OPT)});
+        QProcess::startDetached(player, QStringList{});
     moc->setProgram(player);
     moc->setArguments(QStringList { QStringLiteral("-Q"), QStringLiteral(
                                     "%state{a}%a{t}%t{A}%A{f}%file{tt}%tt"
@@ -51,9 +46,7 @@ MocInterface::MocInterface(QObject* parent) : PlayerInterface(parent),
 void MocInterface::runServer() {
     if(SysUtils::findProcessId(player) < 0) {  // check if player is running
         QProcess p;
-        p.start(player,
-                QStringList{ QStringLiteral("-SO"), QStringLiteral(OSD_OPT) },
-                QIODevice::NotOpen);
+        p.start(player, QStringList{}, QIODevice::NotOpen);
         p.waitForFinished();
     }
 }
@@ -136,7 +129,7 @@ void MocInterface::showPlayer() {
     QProcess::startDetached(
                 term,
                 QStringList{QStringLiteral("-e"),
-                            QStringLiteral(PLAYER_EXECUTABLE " -O " OSD_OPT)});
+                            QStringLiteral(PLAYER_EXECUTABLE)});
 }
 
 void MocInterface::openUri(const QString& file) {
