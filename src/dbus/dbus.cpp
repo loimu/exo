@@ -68,6 +68,9 @@ void DBus::init(QObject* parent) {
     QObject::connect(PLAYER, &PlayerInterface::newTrack,
                      parent, [connection] (const QString& cover) {
         const PTrack track = PLAYER->getTrack();
+        const QString artist = track.isStream ? track.artist
+                                             : QString("%1 - %2").arg(
+                                                   track.artist, track.album);
         const QString title = track.isStream ? track.title
                                              : QString("%1 (%2)").arg(
                                                    track.title, track.totalTime);
@@ -80,8 +83,8 @@ void DBus::init(QObject* parent) {
                                         PLAYER->id(), // app_name
                                         quint32(0),   // replaces_id
                                         cover,        // app_icon
-                                        track.artist, // summary
-                                        title,        // body
+                                        title,        // summary
+                                        artist,       // body
                                         //  actions, hints, timeout
                                         QStringList{}, QVariantMap{}, 10000
                                     });
