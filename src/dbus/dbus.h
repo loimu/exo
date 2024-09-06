@@ -21,10 +21,13 @@
 #define DBUS_H
 
 class QObject;
+class QString;
 
 
 namespace DBus {
-void init(QObject* parent = nullptr);
+extern void init(QObject* parent = nullptr);
+extern void notify(const QString& appName, const QString& icon,
+                   const QString& summary, const QString& body);
 }
 
 #endif // DBUS_H

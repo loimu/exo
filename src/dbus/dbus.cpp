@@ -64,31 +64,36 @@ void DBus::init(QObject* parent) {
         qWarning("DBus: MPRISv2 service registration failed");
     }
 
-    // Show a system notification through a session DBus object
-    QObject::connect(PLAYER, &PlayerInterface::newTrack,
-                     parent, [connection] (const QString& cover) {
+    auto newTrackHandler = [] (const QString& cover) {
         const PTrack track = PLAYER->getTrack();
         const QString artist = track.isStream ? track.artist
-                                             : QString("%1 - %2").arg(
-                                                   track.artist, track.album);
+                                              : QString("%1 - %2").arg(
+                                                    track.artist, track.album);
         const QString title = track.isStream ? track.title
                                              : QString("%1 (%2)").arg(
                                                    track.title, track.totalTime);
-        QDBusInterface notify{QSL("org.freedesktop.Notifications"),
-                              QSL("/org/freedesktop/Notifications"),
-                              QSL("org.freedesktop.Notifications"), connection};
-        notify.callWithArgumentList(QDBus::NoBlock, QStringLiteral("Notify"),
-                                    // signature: s u s s s as a{sv} i
-                                    QList<QVariant>{
-                                        PLAYER->id(), // app_name
-                                        quint32(0),   // replaces_id
-                                        cover,        // app_icon
-                                        title,        // summary
-                                        artist,       // body
-                                        //  actions, hints, timeout
-                                        QStringList{}, QVariantMap{}, 10000
-                                    });
-    });
+        notify(PLAYER->id(), cover, title, artist);
+    };
+    QObject::connect(PLAYER, &PlayerInterface::newTrack, parent, newTrackHandler);
+}
+
+void DBus::notify(const QString& appName, const QString& icon,
+                  const QString& summary, const QString& body) {
+    // Show a system notification through the session DBus object
+    QDBusInterface notify{QSL("org.freedesktop.Notifications"),
+                          QSL("/org/freedesktop/Notifications"),
+                          QSL("org.freedesktop.Notifications")};
+    notify.callWithArgumentList(QDBus::NoBlock, QStringLiteral("Notify"),
+                                // signature: s u s s s as a{sv} i
+                                QList<QVariant>{
+                                    appName,    // app_name
+                                    quint32(0), // replaces_id
+                                    icon,       // app_icon
+                                    summary,    // summary
+                                    body,       // body
+                                    //  actions, hints, timeout
+                                    QStringList{}, QVariantMap{}, 10000
+                                });
 }
 
 #include "dbus.moc"
