@@ -74,7 +74,8 @@ public:
     virtual void clearPlaylist() = 0;
     virtual void shutdown() = 0;
     Q_SIGNAL void newStatus(PState);
-    Q_SIGNAL void newTrack(const QString&, bool check = false);
+    Q_SIGNAL void paused(const QString&, bool paused);
+    Q_SIGNAL void newTrack(const QString&, bool toolTip = false);
 #ifdef BUILD_LASTFM
     void enableStreamsScrobbling(bool enable) { scrobbleStreams = enable; }
 #endif // BUILD_LASTFM

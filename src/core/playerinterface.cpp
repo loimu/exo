@@ -50,8 +50,14 @@ void PlayerInterface::notify() {
     static PState state = PState::Offline;
     PState currentState = updateInfo();
     if(state != currentState) {
-        state = currentState;
         emit newStatus(currentState);
+        if(state == PState::Pause && currentState == PState::Play) {
+            emit paused(getCover(), /* paused= */false);
+        }
+        else if(state == PState::Play && currentState == PState::Pause) {
+            emit paused(getCover(), /* paused= */true);
+        }
+        state = currentState;
     }
     static QString nowPlaying;
 #ifdef BUILD_LASTFM

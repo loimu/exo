@@ -75,6 +75,17 @@ void DBus::init(QObject* parent) {
         notify(PLAYER->id(), cover, title, artist);
     };
     QObject::connect(PLAYER, &PlayerInterface::newTrack, parent, newTrackHandler);
+
+    auto pauseHandler = [] (const QString& cover, bool paused) {
+        const PTrack track = PLAYER->getTrack();
+        const QString artist = track.isStream ? track.artist
+                                              : QString("%1 - %2").arg(
+                                                    track.artist, track.album);
+        const QString title = QString("%1 (%2)").arg(
+            track.title, paused ? QSL("Paused") : QSL("Playing"));
+        notify(PLAYER->id(), cover, title, artist);
+    };
+    QObject::connect(PLAYER, &PlayerInterface::paused, parent, pauseHandler);
 }
 
 void DBus::notify(const QString& appName, const QString& icon,
