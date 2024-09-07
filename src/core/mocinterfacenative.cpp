@@ -51,7 +51,7 @@ MocInterfaceNative::MocInterfaceNative(QObject* parent) : PlayerInterface(parent
     player(QStringLiteral(PLAYER_EXECUTABLE))
 {
     if(SysUtils::findProcessId(player) < 0)  // check if player is running
-        QProcess::startDetached(player, QStringList{});
+        QProcess::startDetached(player, QStringList{QStringLiteral("-S")});
     startTimer(1000);
 }
 
@@ -212,7 +212,7 @@ TagInfo MocInterfaceNative::sendFileTagCommand(QLocalSocket& socket, const QStri
 void MocInterfaceNative::runServer() {
     if(SysUtils::findProcessId(player) < 0) {  // check if player is running
         QProcess p;
-        p.start(player, QStringList{}, QIODevice::NotOpen);
+        p.start(player, QStringList{QStringLiteral("-S")}, QIODevice::NotOpen);
         p.waitForFinished();
     }
 }
