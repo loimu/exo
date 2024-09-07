@@ -66,28 +66,19 @@ void DBus::init(QObject* parent) {
         qWarning("DBus: MPRISv2 service registration failed");
     }
 
-    auto newTrackHandler = [] (const QString& cover) {
+    auto newTrackHandler = [] (const QString& cover, bool paused = false) {
         const PTrack track = PLAYER->getTrack();
         const QString artist = track.isStream ? track.artist
-                                              : QString("%1 - %2").arg(
+                                              : QString(QLatin1String("%1 - %2")).arg(
                                                     track.artist, track.album);
-        const QString title = track.isStream ? track.title
-                                             : QString("%1 (%2)").arg(
-                                                   track.title, track.totalTime);
+        const QString title = track.isStream && !paused
+                                  ? track.title : QString(QLatin1String("%1 (%2)")).arg(
+                                        track.title,
+                                        paused ? QObject::tr("Paused") : track.totalTime);
         notify(PLAYER->id(), cover, title, artist);
     };
     QObject::connect(PLAYER, &PlayerInterface::newTrack, parent, newTrackHandler);
-
-    auto pauseHandler = [] (const QString& cover, bool paused) {
-        const PTrack track = PLAYER->getTrack();
-        const QString artist = track.isStream ? track.artist
-                                              : QString("%1 - %2").arg(
-                                                    track.artist, track.album);
-        const QString title = QString("%1 (%2)").arg(
-            track.title, paused ? QSL("Paused") : QSL("Playing"));
-        notify(PLAYER->id(), cover, title, artist);
-    };
-    QObject::connect(PLAYER, &PlayerInterface::paused, parent, pauseHandler);
+    QObject::connect(PLAYER, &PlayerInterface::paused, parent, newTrackHandler);
 }
 
 void DBus::notify(const QString& appName, const QString& icon,
