@@ -72,7 +72,7 @@ void DBus::init(QObject* parent) {
         const QString title = track.isStream ? track.title
                                              : QString("%1 (%2)").arg(
                                                    track.title, track.totalTime);
-        notify(PLAYER->id(), cover, title, artist);
+        notify(PLAYER->id(), track.trackId, cover, title, artist);
     };
     QObject::connect(PLAYER, &PlayerInterface::newTrack, parent, newTrackHandler);
 
@@ -83,12 +83,12 @@ void DBus::init(QObject* parent) {
                                                     track.artist, track.album);
         const QString title = QString("%1 (%2)").arg(
             track.title, paused ? QSL("Paused") : QSL("Playing"));
-        notify(PLAYER->id(), cover, title, artist);
+        notify(PLAYER->id(), track.trackId, cover, title, artist);
     };
     QObject::connect(PLAYER, &PlayerInterface::paused, parent, pauseHandler);
 }
 
-void DBus::notify(const QString& appName, const QString& icon,
+void DBus::notify(const QString& appName, quint32 replacesId, const QString& icon,
                   const QString& summary, const QString& body) {
     // Show a system notification through the session DBus object
     QDBusInterface notify{QSL("org.freedesktop.Notifications"),
@@ -98,7 +98,7 @@ void DBus::notify(const QString& appName, const QString& icon,
                                 // signature: s u s s s as a{sv} i
                                 QList<QVariant>{
                                     appName,    // app_name
-                                    quint32(0), // replaces_id
+                                    replacesId, // replaces_id
                                     icon,       // app_icon
                                     summary,    // summary
                                     body,       // body

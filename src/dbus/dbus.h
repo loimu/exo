@@ -20,14 +20,17 @@
 #ifndef DBUS_H
 #define DBUS_H
 
+#include <QtCore/qglobal.h>
+
 class QObject;
 class QString;
 
 
 namespace DBus {
 extern void init(QObject* parent = nullptr);
-extern void notify(const QString& appName, const QString& icon,
-                   const QString& summary, const QString& body);
+extern void notify(
+    const QString& appName, quint32 replacesId, const QString& icon,
+    const QString& summary, const QString& body);
 }
 
 #endif // DBUS_H

@@ -22,6 +22,7 @@
 #include <QDir>
 #include <QDateTime>
 #include <QSettings>
+#include <QRandomGenerator>
 
 #ifdef BUILD_LASTFM
 #include "scrobbler.h"
@@ -68,6 +69,7 @@ void PlayerInterface::notify() {
         if(track.caption.isEmpty()) {
             return;
         }
+        track.trackId = QRandomGenerator::global()->generate();
         emit newTrack(getCover());
 #ifdef BUILD_LASTFM
         begin = QDateTime::currentDateTimeUtc();

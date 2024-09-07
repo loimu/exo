@@ -31,6 +31,7 @@ enum class PlayerState { Offline, Stop, Play, Pause };
 struct PlayerTrack {
     bool isStream;
     int totalSec, currSec;
+    quint32 trackId;
     QString artist, title, album, file, totalTime, caption;
 };
 using PState = PlayerState;
