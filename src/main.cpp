@@ -40,6 +40,8 @@
 #include "lastfm/scrobbler.h"
 #endif // BUILD_LASTFM
 
+#define QSL QStringLiteral
+
 #define CAST_PI static_cast<std::unique_ptr<PlayerInterface>>
 
 
@@ -135,6 +137,12 @@ int main(int argc, char *argv[]) {
         QCoreApplication app(argc, argv);
         if(!instance.isUnique()) {
             qWarning("Application is already running. Exiting.");
+            const QString message = QObject::tr("Application is already running."
+                                                " Exiting.");
+            if(!disableDbus) {
+                DBus::notify(qApp->applicationName(),
+                             QSL("exo"), QSL("Warning"), message);
+            }
             return 1;
         }
         player = std::make_unique<SpotifyInterface>();
@@ -163,7 +171,13 @@ int main(int argc, char *argv[]) {
             } else if(inputFiles.size() > 1) {
                 player->appendFile(inputFiles);
             } else {
-                qWarning("Application is already running. Showing player window.");
+                qInfo("Application is already running. Opening player window.");
+                const QString message = QObject::tr("Application is already running."
+                                                    " Opening player window.");
+                if(!disableDbus) {
+                    DBus::notify(qApp->applicationName(),
+                                 QSL("exo"), QSL("Info"), message);
+                }
                 player->showPlayer();
             }
             return 0;
@@ -188,6 +202,12 @@ int main(int argc, char *argv[]) {
         QCoreApplication app(argc, argv);
         if(!instance.isUnique()) {
             qWarning("Application is already running. Exiting.");
+            const QString message = QObject::tr("Application is already running."
+                                                " Exiting.");
+            if(!disableDbus) {
+                DBus::notify(qApp->applicationName(),
+                             QSL("exo"), QSL("Warning"), message);
+            }
             return 1;
         }
         bool res = translator.load(QApplication::applicationDirPath() +
