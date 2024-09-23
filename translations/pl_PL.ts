@@ -17,43 +17,43 @@
 <context>
     <name>BookmarkManager</name>
     <message>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="39"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="37"/>
         <source>Bookmark Manager</source>
         <translation>Zarządzanie zakładkami</translation>
     </message>
     <message>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="47"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="45"/>
         <source>&amp;Delete</source>
         <translation>&amp;Usunąć</translation>
     </message>
     <message>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="48"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="46"/>
         <source>Delete selected item</source>
         <translation>Usunąć wybrany element</translation>
     </message>
     <message>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="53"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="51"/>
         <source>Rename selected item</source>
         <translation>Przezwij wybrany element</translation>
     </message>
     <message>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="62"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="60"/>
         <source>Copy URL to clipboard</source>
         <translation>Skopiuj do schowka</translation>
     </message>
     <message>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="65"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="63"/>
         <source>Move up</source>
         <translation>Przenieś do góry</translation>
     </message>
     <message>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="68"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="66"/>
         <source>Move down</source>
         <translation>Przenieś w dół</translation>
     </message>
     <message>
         <location filename="../src/gui/bookmarkmanager.cpp" line="95"/>
-        <location filename="../src/gui/bookmarkmanager.cpp" line="175"/>
+        <location filename="../src/gui/bookmarkmanager.cpp" line="149"/>
         <source>Name: </source>
         <translation>Nazwa: </translation>
     </message>
@@ -100,72 +100,77 @@
 <context>
     <name>LyricsDialog</name>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="64"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="50"/>
         <source>Lyrics</source>
         <translation>Tekst</translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="70"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="56"/>
         <source>artist</source>
         <translation>Artysta</translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="71"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="57"/>
         <source>Edit artist and then press Enter</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="75"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="61"/>
         <source>title</source>
         <translation>nazwa</translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="76"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="62"/>
         <source>Edit title and then press Enter</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="89"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="75"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="90"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="76"/>
         <source>Autoupdate track when changed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="94"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="80"/>
         <source>Update</source>
         <translation>Update</translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="95"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="81"/>
         <source>Get lyrics for the current track</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="130"/>
-        <source>Network error</source>
-        <translation>Błąd</translation>
+        <location filename="../src/gui/lyricsdialog.cpp" line="107"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="155"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="108"/>
+        <source>Page not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/lyricsdialog.cpp" line="142"/>
         <source>Preparing</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="166"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="152"/>
         <source>No lyrics available</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="200"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="221"/>
         <source>Fetching</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/lyricsdialog.cpp" line="146"/>
+        <location filename="../src/gui/lyricsdialog.cpp" line="130"/>
         <source>Not found</source>
         <translation></translation>
     </message>
@@ -173,20 +178,31 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="94"/>
-        <source>Application is already running</source>
-        <translation></translation>
+        <location filename="../src/dbus/dbus.cpp" line="77"/>
+        <source>Paused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="140"/>
+        <location filename="../src/main.cpp" line="205"/>
+        <source>Application is already running. Exiting.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="175"/>
+        <source>Application is already running. Opening player window.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ScrobblerAuth</name>
     <message>
-        <location filename="../src/lastfm/scrobblerauth.cpp" line="45"/>
+        <location filename="../src/lastfm/scrobblerauth.cpp" line="46"/>
         <source>network error, try again</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/lastfm/scrobblerauth.cpp" line="59"/>
+        <location filename="../src/lastfm/scrobblerauth.cpp" line="60"/>
         <source>wrong data or connection error, try again</source>
         <translation></translation>
     </message>
@@ -212,97 +228,107 @@
 <context>
     <name>TrayIcon</name>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="62"/>
+        <location filename="../src/gui/trayicon.cpp" line="65"/>
         <source>Player</source>
         <translation>Odtwarzacz</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="65"/>
+        <location filename="../src/gui/trayicon.cpp" line="68"/>
         <source>A&amp;dd ...</source>
         <translation>&amp;Dodać ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="67"/>
+        <location filename="../src/gui/trayicon.cpp" line="133"/>
         <source>&amp;Lyrics</source>
         <translation>&amp;Tekst</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="70"/>
+        <location filename="../src/gui/trayicon.cpp" line="72"/>
         <source>&amp;Play</source>
         <translation>&amp;Graj</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="73"/>
+        <location filename="../src/gui/trayicon.cpp" line="70"/>
+        <source>Show Lyrics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/trayicon.cpp" line="75"/>
         <source>P&amp;ause</source>
         <translation>&amp;Przerwa</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="77"/>
+        <location filename="../src/gui/trayicon.cpp" line="79"/>
         <source>P&amp;rev</source>
         <translation>Pop&amp;rzedni</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="80"/>
+        <location filename="../src/gui/trayicon.cpp" line="82"/>
         <source>&amp;Next</source>
         <translation>&amp;Następny</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="83"/>
+        <location filename="../src/gui/trayicon.cpp" line="85"/>
         <source>&amp;Stop</source>
         <translation>&amp;Stop</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="86"/>
+        <location filename="../src/gui/trayicon.cpp" line="88"/>
         <source>A&amp;bout</source>
         <translation>O Pro&amp;gramie</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="88"/>
+        <location filename="../src/gui/trayicon.cpp" line="90"/>
         <source>&amp;Quit</source>
         <translation>&amp;Wyjście</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="91"/>
+        <location filename="../src/gui/trayicon.cpp" line="93"/>
         <source>Bookmark &amp;Current</source>
         <translation>Dodaj do za&amp;kładek bieżące</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="96"/>
+        <location filename="../src/gui/trayicon.cpp" line="97"/>
         <source>Bookmark &amp;Manager</source>
         <translation>&amp;Zarządzanie zakładkami</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="101"/>
+        <location filename="../src/gui/trayicon.cpp" line="102"/>
         <source>&amp;Close player on exit</source>
         <translation>&amp;Wyłącz odtwarzacz przy wyjściu z programu</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="110"/>
+        <location filename="../src/gui/trayicon.cpp" line="111"/>
         <source>&amp;Enable scrobbling</source>
         <translation>&amp;Włącz scroblling</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="133"/>
+        <location filename="../src/gui/trayicon.cpp" line="117"/>
+        <source>Scrobble s&amp;treams</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/trayicon.cpp" line="157"/>
         <source>&amp;Edit with</source>
         <translation>&amp;Edytuj w</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="157"/>
+        <location filename="../src/gui/trayicon.cpp" line="181"/>
         <source>Lin&amp;ks</source>
         <translation>&amp;Zakładki</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="163"/>
+        <location filename="../src/gui/trayicon.cpp" line="187"/>
         <source>Se&amp;ttings</source>
         <translation>&amp;Nastawy</translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="223"/>
+        <location filename="../src/gui/trayicon.cpp" line="248"/>
         <source>Player isn&apos;t running</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/gui/trayicon.cpp" line="224"/>
+        <location filename="../src/gui/trayicon.cpp" line="249"/>
         <source>Stopped</source>
         <translation></translation>
     </message>
