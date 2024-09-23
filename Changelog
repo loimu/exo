@@ -1,3 +1,13 @@
+ v0.10.0
+  - added multiple new lyrics sources with possibility to cycle through them
+  - OSD script got replaced with native OSD support
+  - added experimental native MOC interface
+  - added Spotify interface with scrobbling support
+  - added support of building the app with Qt6 and liblastfm6
+  - added possibility to scrobble titles from streams
+  - interface got translated to new languages
+  - more fixes and improvements
+
  v0.9.0
   - application now is fully translatable
   - fix lyrics urls, bring lyrics back to service
