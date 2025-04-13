@@ -17,6 +17,8 @@
 *    along with eXo.  If not, see <http://www.gnu.org/licenses/>.
 * ======================================================================== */
 
+#include "config.h"
+
 #include <QSettings>
 #ifdef WITH_QT6
 #include <lastfm6/ws.h>
