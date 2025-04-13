@@ -20,9 +20,15 @@
 #include "config.h"
 
 #include <QSettings>
+#ifdef WITH_QT6
+#include <lastfm6/ws.h>
+#include <lastfm6/misc.h>
+#include <lastfm6/XmlQuery.h>
+#else
 #include <lastfm5/ws.h>
 #include <lastfm5/misc.h>
 #include <lastfm5/XmlQuery.h>
+#endif // WITH_QT6
 
 #include "scrobbler.h"
 #include "scrobblerauth.h"

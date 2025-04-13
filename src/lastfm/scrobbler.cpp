@@ -18,9 +18,15 @@
 * ======================================================================== */
 
 #include <QSettings>
+#ifdef WITH_QT6
+#include <lastfm6/ws.h>
+#include <lastfm6/Audioscrobbler.h>
+#include <lastfm6/Track.h>
+#else
 #include <lastfm5/ws.h>
 #include <lastfm5/Audioscrobbler.h>
 #include <lastfm5/Track.h>
+#endif // WITH_QT6
 
 #include "scrobbler.h"
 
