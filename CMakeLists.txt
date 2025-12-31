@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(exo)
 
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 9)
-set(VERSION_PATCH 98)
+set(VERSION_MINOR 10)
+set(VERSION_PATCH 0)
 set(EXO_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 file(READ rev EXO_REVISION LIMIT 9)
