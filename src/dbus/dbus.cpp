@@ -1,5 +1,5 @@
 /* ========================================================================
-*    Copyright (C) 2013-2024 Blaze <blaze@vivaldi.net>
+*    Copyright (C) 2013-2025 Blaze <blaze@vivaldi.net>
 *
 *    This file is part of eXo.
 *
